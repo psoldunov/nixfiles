@@ -1,6 +1,7 @@
 {config, ...}: {
   imports = [
     ./shell/shell.nix
+    ./dev/neovim.nix
     ./dev/dev.nix
     ./desktop/hyprland.nix
     ./desktop/hypridle.nix
@@ -12,6 +13,5 @@
     ./programs/ncmpcpp.nix
     ./programs/spotifyd.nix
     ./programs/kitty.nix
-    ./programs/neovim.nix
   ];
 }
