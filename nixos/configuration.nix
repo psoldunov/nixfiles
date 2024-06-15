@@ -415,7 +415,7 @@ in {
     extraRules = ''
       ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="${pkgs.sg3_utils}/bin/sg_raw %r/sr%n EA 00 00 00 00 00 01"
 
-      ACTION=="remove", ENV{ID_BUS}=="usb", ENV{ID_MODEL_ID}=="0407", ENV{ID_VENDOR_ID}=="1050", ENV{ID_VENDOR}=="Yubico", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+      # ACTION=="remove", ENV{ID_BUS}=="usb", ENV{ID_MODEL_ID}=="0407", ENV{ID_VENDOR_ID}=="1050", ENV{ID_VENDOR}=="Yubico", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
     '';
   };
 
@@ -549,10 +549,8 @@ in {
     jellyfin-media-player
     bottles
     figma-linux
-    # figma-agent
     libva-utils
     cargo
-    lunarvim
     pop
     wishlist
     nvtopPackages.amd
@@ -749,14 +747,11 @@ in {
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
-    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+    age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 
     secrets = {
-      CFD_ACC_TAG = {
-        owner = "psoldunov";
-      };
-      CFD_TUN_SEC = {
-        owner = "psoldunov";
+      CFD_OLLAMA_TUNNEL = {
+        owner = "cloudflared";
       };
     };
   };
@@ -764,15 +759,10 @@ in {
   # Cloudflare Tunnels
   services.cloudflared = {
     enable = true;
+    user = "cloudflared";
     tunnels = {
-      "aafff0e8-4451-4a51-945b-0dfd1e161ea2" = {
-        credentialsFile = "${pkgs.writeText "aafff0e8-4451-4a51-945b-0dfd1e161ea2.json" ''
-          {
-            "AccountTag":"${builtins.readFile config.sops.secrets.CFD_ACC_TAG.path}",
-            "TunnelSecret":"${builtins.readFile config.sops.secrets.CFD_TUN_SEC.path}",
-            "TunnelID":"aafff0e8-4451-4a51-945b-0dfd1e161ea2"
-          }
-        ''}";
+      "ollama-tunnel" = {
+        credentialsFile = config.sops.secrets.CFD_OLLAMA_TUNNEL.path;
         default = "http_status:404";
         originRequest = {
           httpHostHeader = "localhost:11434";
