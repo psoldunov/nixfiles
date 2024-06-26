@@ -10,18 +10,6 @@
 }: let
   systemStateVersion = "23.11";
 
-  customObsidian = pkgs.callPackage ./packages/obsidian.nix {};
-
-  catppuccinGtkMochaBlue = pkgs.catppuccin-gtk.override {
-    accents = ["blue"];
-    variant = "mocha";
-  };
-
-  catppuccinKvantumMochaGreen = pkgs.catppuccin-kvantum.override {
-    accent = "Green";
-    variant = "Mocha";
-  };
-
   scripts = import ./scripts/default.nix {
     pkgs = pkgs;
     config = config;
@@ -30,6 +18,16 @@ in {
   imports = [
     ./modules
   ];
+
+  catppuccin = {
+    enable = true;
+    flavor = "mocha";
+    accent = "peach";
+    pointerCursor = {
+      accent = "dark";
+      flavor = "mocha";
+    };
+  };
 
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
@@ -46,7 +44,12 @@ in {
 
   systemd.user.enable = true;
 
-  programs.nix-index.enable = true;
+  programs.nix-index = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+  };
 
   manual = {
     html.enable = false;
@@ -105,10 +108,15 @@ in {
     allowUnfree = true;
   };
 
+  programs.firefox = {
+    enable = true;
+  };
+
   home.packages = with pkgs; [
     deno
-    nodejs_latest
-    customObsidian
+    neovim
+    nodejs_20
+    obsidian
     pywal
     spotify
     gnome.gnome-font-viewer
@@ -125,10 +133,11 @@ in {
     telegram-desktop
     slack
     nextcloud-client
-    # (discord.override {
-    #   withVencord = true;
-    # })
+    deluge-gtk
     vesktop
+    lollypop
+    yt-dlp
+    pkgs.catppuccin-qt5ct
     scripts.idle_check
     scripts.record_screen
     scripts.grab_screen_text
@@ -138,6 +147,7 @@ in {
     scripts.start_static_wallpaper
     scripts.start_video_wallpaper
     scripts.hello_world
+    scripts.convert_all_to_webp
   ];
 
   dconf.settings = {
@@ -147,46 +157,29 @@ in {
     };
   };
 
-  home.pointerCursor = {
-    gtk.enable = true;
-    x11.enable = true;
-    package = pkgs.catppuccin-cursors.mochaDark;
-    name = "catppuccin-mocha-dark-cursors";
-    size = 24;
+  programs = {
+    btop.enable = true;
+    htop.enable = true;
   };
 
   gtk = {
     enable = true;
-    theme = {
-      name = "Catppuccin-Mocha-Standard-Blue-Dark";
-      package = catppuccinGtkMochaBlue;
+    catppuccin = {
+      enable = true;
     };
 
     font = {
       name = "SF Pro Display";
       size = 10;
     };
-
-    iconTheme = {
-      package = pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
-    };
   };
 
   qt = {
     enable = true;
     platformTheme.name = "qtct";
-  };
-
-  # Extra home files
-  home.file = {
-    ".config/gtk-4.0/gtk-dark.css" = {
-      source = "${catppuccinGtkMochaBlue}/share/themes/Catppuccin-Mocha-Standard-Blue-Dark/gtk-4.0/gtk-dark.css";
-    };
-
-    ".config/gtk-4.0/assets" = {
-      recursive = true;
-      source = "${catppuccinGtkMochaBlue}/share/themes/Catppuccin-Mocha-Standard-Blue-Dark/gtk-4.0/assets";
+    style = {
+      catppuccin.enable = false;
+      package = pkgs.catppuccin-qt5ct;
     };
   };
 

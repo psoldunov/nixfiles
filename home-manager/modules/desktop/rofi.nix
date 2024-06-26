@@ -7,6 +7,7 @@
   inherit (config.lib.formats.rasi) mkLiteral;
 in {
   programs.rofi = {
+    catppuccin.enable = false;
     enable = true;
     package = pkgs.rofi-wayland.override {
       plugins = with pkgs; [

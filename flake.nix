@@ -9,6 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    catppuccin.url = "github:catppuccin/nix";
+
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
     home-manager = {
@@ -29,6 +31,7 @@
     home-manager,
     arion,
     apple-fonts,
+    catppuccin,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -43,6 +46,7 @@
         ./nixos/configuration.nix
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
+        catppuccin.nixosModules.catppuccin
         arion.nixosModules.arion
         {
           fonts.packages = with apple-fonts.packages.${system}; [
@@ -63,7 +67,10 @@
             users = {
               psoldunov = import ./home-manager/home.nix;
             };
-            sharedModules = [sops-nix.homeManagerModules.sops];
+            sharedModules = [
+              sops-nix.homeManagerModules.sops
+              catppuccin.homeManagerModules.catppuccin
+            ];
           };
         }
       ];

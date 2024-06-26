@@ -27,87 +27,6 @@
         echo '{"text": "VPN connected", "alt": "connected", "tooltip": "'"$tooltip_text"'", "class": "connected", "percentage": ""}' | jq --unbuffered --compact-output
     fi
   '';
-
-  focus_spotify = pkgs.writeShellScriptBin "waybar_focus-spotify" ''
-    function get_windows_json() {
-        ${pkgs.hyprland}/bin/hyprctl clients -j
-    }
-
-    spotify_address=$(get_windows_json | jq -r '.[] | select(.class == "Spotify") | .address')
-
-    if [ -n "$spotify_address" ]; then
-        ${pkgs.hyprland}/bin/hyprctl dispatch focuswindow address:"$spotify_address"
-    else
-        echo "Spotify window not found."
-        ${pkgs.spotify}/bin/spotify --ozone-platform=x11 & disown
-
-        while [ -z "$spotify_address" ]; do
-            sleep 0.1
-            spotify_address=$(get_windows_json | jq -r '.[] | select(.class == "Spotify") | .address')
-        done
-
-        ${pkgs.hyprland}/bin/hyprctl dispatch focuswindow address:"$spotify_address"
-    fi
-  '';
-
-  spotify = pkgs.writeShellScriptBin "waybar_spotify" ''
-    counterFile="/tmp/spotify_counter.txt"
-    lastSongFile="/tmp/spotify_last_song.txt"
-
-    if [ ! -e "$counterFile" ]; then
-        echo 0 > "$counterFile"
-    fi
-    counter=$(cat "$counterFile")
-
-    song=$(${pkgs.playerctl}/bin/playerctl -p spotify metadata --format "{{ artist }} - {{ title }}" | tr '[:lower:]' '[:upper:]')
-    playStatus=$(${pkgs.playerctl}/bin/playerctl -p spotify status)
-
-    if [ -z "$song" ]; then
-        echo 0 > "$counterFile"
-        echo "" > "$lastSongFile"
-        exit 0
-    fi
-
-    song=$(echo "$song" | sed 's/"/\\"/g')
-
-    if [ -e "$lastSongFile" ]; then
-        lastSong=$(cat "$lastSongFile")
-        if [ "$lastSong" != "$song" ]; then
-            counter=0
-        fi
-    fi
-    echo "$song" > "$lastSongFile"
-
-    displayLength=32
-    separator=" | "
-    repeatingSong="$song$separator$song"
-    songLength=$(echo -n "$repeatingSong" | wc -c)
-
-    songLength=$(echo -n "$song" | wc -c)
-    if [ "$songLength" -le $displayLength ]; then
-        displayString="$song"
-    else
-        start=$((counter % (songLength - displayLength + 1) + 1))
-        displayString=$(echo "$repeatingSong" | cut -c $start-$(($start + $displayLength - 1)))
-
-        if [ "$start" -ge $((songLength - displayLength - 1)) ]; then
-            counter=0
-        fi
-    fi
-
-    counter=$((counter + 1))
-    echo "$counter" > "$counterFile"
-
-    alt=$(echo "$playStatus" | tr '[:upper:]' '[:lower:]')
-    case $playStatus in
-        'Playing')
-            echo "{\"text\": \"$displayString\", \"alt\": \"$alt\", \"tooltip\": \"$song\", \"class\": \"playing\"}"
-            ;;
-        'Paused')
-            echo "{\"text\": \"$displayString\", \"alt\": \"$alt\", \"tooltip\": \"$song\", \"class\": \"paused\"}"
-            ;;
-    esac
-  '';
 in {
   programs.waybar = {
     enable = true;
@@ -128,7 +47,6 @@ in {
         modules-center = ["hyprland/window"];
         modules-right = [
           "mpd"
-          "custom/spotify"
           "custom/wf-recorder"
           "custom/updates"
           "custom/vpn"
@@ -160,23 +78,6 @@ in {
           format-icons = {
             connected = "󰌾";
             disconnected = "󰿆";
-          };
-          tooltip = true;
-        };
-        "custom/spotify" = {
-          format = "{icon} {} ";
-          tooltip-format = "{}";
-          exec = "${spotify}/bin/waybar_spotify";
-          escape = true;
-          return-type = "json";
-          interval = 1;
-          on-click = "${pkgs.playerctl}/bin/playerctl -p spotify play-pause";
-          on-click-right = "${focus_spotify}/bin/waybar_focus-spotify";
-          on-scroll-down = "${pkgs.playerctl}/bin/playerctl -p spotify next";
-          on-scroll-up = "${pkgs.playerctl}/bin/playerctl -p spotify previous";
-          format-icons = {
-            playing = "";
-            paused = "";
           };
           tooltip = true;
         };
@@ -655,11 +556,6 @@ in {
     enable = true;
     extraOptions = ["--notify=none"];
   };
-
-  # services.nextcloud-client = {
-  #   enable = true;
-  #   startInBackground = true;
-  # };
 
   home.file = {
     "${config.xdg.configHome}/waybar/icons/nixos.svg" = {

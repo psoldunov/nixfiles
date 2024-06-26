@@ -115,4 +115,14 @@
       echo "Hello, World!"
     ''
   );
+
+  convert_all_to_webp = (
+    pkgs.writeShellScriptBin "convert_all_to_webp" ''
+      for img in *.{jpg,jpeg,png,gif}; do
+          if [ -e "$img" ]; then # Skip if no files are found
+              ${pkgs.imagemagick}/bin/convert "$img" "$(echo "$img" | sed 's/\.[^.]*$//').webp" && rm "$img"
+          fi
+      done
+    ''
+  );
 }

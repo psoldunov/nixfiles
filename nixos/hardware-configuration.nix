@@ -64,11 +64,11 @@
     options = ["defaults" "x-gvfs-show"];
   };
 
-  fileSystems."/mnt/Deluge" = {
-    device = "10.24.24.2:/volume1/Download/completed/";
-    fsType = "nfs";
-    options = ["defaults" "x-gvfs-show"];
-  };
+  # fileSystems."/mnt/Deluge" = {
+  #   device = "10.24.24.2:/volume1/Download/completed/";
+  #   fsType = "nfs";
+  #   options = ["defaults" "x-gvfs-show"];
+  # };
 
   fileSystems."/mnt/Camera" = {
     device = "10.24.24.2:/volume1/Camera/";

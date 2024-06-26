@@ -57,7 +57,6 @@ in {
 
   home.shellAliases = {
     ls = "lsd -laFh";
-    vim = "nvim";
     rm = "gio trash";
     fucking = "sudo";
     cat = "bat";
@@ -170,12 +169,14 @@ in {
     enableBashIntegration = true;
   };
 
+  programs.yazi = {
+    enable = true;
+    enableFishIntegration = true;
+    enableBashIntegration = true;
+  };
+
   programs.zellij = {
     enable = true;
     enableFishIntegration = false;
-    settings = {
-      theme_dir = "${config.xdg.cacheHome}/wal";
-      theme = "pywal";
-    };
   };
 }

@@ -13,11 +13,6 @@
 
   i686pkgs = pkgs.pkgsi686Linux;
 
-  catppuccinGtkMochaBlue = pkgs.catppuccin-gtk.override {
-    accents = ["blue"];
-    variant = "mocha";
-  };
-
   gguf = pkgs.python3Packages.buildPythonPackage rec {
     pname = "gguf";
     version = "0.6.0";
@@ -40,11 +35,20 @@ in {
     ./hardware-configuration.nix
   ];
 
+  catppuccin = {
+    enable = true;
+    accent = "peach";
+    flavor = "mocha";
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = false;
   boot.initrd.systemd.dbus.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.plymouth.enable = true;
+  boot.plymouth = {
+    enable = true;
+    catppuccin.enable = false;
+  };
   boot.loader.grub = {
     enable = true;
     device = "nodev";
@@ -86,7 +90,7 @@ in {
       GTK = {
         application_prefer_dark_theme = true;
         icon_theme_name = "Papirus";
-        theme_name = "Tokyonight-Dark-B-LB";
+        theme_name = "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard+default";
         font_name = "SF Pro Display 12";
       };
 
@@ -97,10 +101,9 @@ in {
     };
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       rocmPackages.clr.icd
       libva
@@ -110,7 +113,6 @@ in {
     ];
     extraPackages32 = with pkgs; [
       driversi686Linux.libvdpau-va-gl
-      driversi686Linux.vaapiVdpau
     ];
   };
 
@@ -173,10 +175,6 @@ in {
   systemd.services.mpd.environment = {
     # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
     XDG_RUNTIME_DIR = "/run/user/1000"; # User-id 1000 must match above user. MPD will look inside this directory for the PipeWire socket.
-  };
-
-  services.deluge = {
-    enable = true;
   };
 
   hardware = {
@@ -467,7 +465,6 @@ in {
     trashy
     gnome.file-roller
     kitty
-    canta-theme
     sg3_utils
     libsForQt5.kdenlive
     libsForQt5.qt5ct
@@ -477,11 +474,17 @@ in {
     kitty-themes
     bat
     lightly-qt
+    libsForQt5.lightly
+    lightly-boehs
     cloudflared
     hyprcursor
     linux-firmware
     libgcc
     fzf
+    (catppuccin-gtk.override {
+      accents = ["${config.catppuccin.accent}"];
+      variant = "${config.catppuccin.flavor}";
+    })
     wget
     evince
     shotwell
@@ -497,14 +500,12 @@ in {
     iperf
     yubikey-manager-qt
     yubikey-manager
-    firefox
     virt-manager
     gnome-icon-theme
     gnome.adwaita-icon-theme
     gnome.gnome-themes-extra
     hyprevents
     emojione
-    tokyonight-gtk-theme
     radeontop
     pkg-config
     thunderbird
@@ -576,8 +577,6 @@ in {
     gnome.dconf-editor
     cabextract
     killall
-    htop
-    btop
     sbctl
     pavucontrol
     ffmpeg-full
@@ -591,6 +590,7 @@ in {
       ];
     })
     go
+    ripgrep
     udiskie
     wlr-randr
     nix-prefetch-scripts
@@ -602,6 +602,8 @@ in {
     swaylock
     localsend
     calibre
+    unzip
+    woff2
     grim
     xdg-utils
     pass
@@ -617,11 +619,8 @@ in {
     libdigidocpp
     xwaylandvideobridge
     logitech-udev-rules
-    tmuxPlugins.catppuccin
     tmux
     fastfetch
-    catppuccin-plymouth
-    catppuccin-kde
     papirus-icon-theme
     papirus-folders
     libreoffice-fresh
@@ -652,6 +651,13 @@ in {
     keychain
     yubioath-flutter
   ];
+
+  systemd.user.services.mpris-proxy = {
+    description = "Mpris proxy";
+    after = ["network.target" "sound.target"];
+    wantedBy = ["default.target"];
+    serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+  };
 
   # █▀▀ ▄▀█ █▀▄▀█ █ █▄░█ █▀▀
   # █▄█ █▀█ █░▀░█ █ █░▀█ █▄█
@@ -697,7 +703,12 @@ in {
   # Network stuff
   networking = {
     defaultGateway = "10.24.24.1";
-    nameservers = ["10.24.24.7" "1.1.1.1" "8.8.8.8" "8.8.4.4"];
+    nameservers = [
+      "10.24.24.7"
+      # "1.1.1.1"
+      # "8.8.8.8"
+      # "8.8.4.4"
+    ];
   };
 
   # 10gbps card
@@ -711,7 +722,7 @@ in {
   # Wifi Card
 
   networking.wireless = {
-    enable = true;
+    enable = false;
     networks = {
       "Flying Tiger Dojo" = {
         psk = "U2qsWznpDKzUAk";
@@ -726,8 +737,8 @@ in {
 
   # Networking firewall configuration.
   networking.firewall = {
-    allowedTCPPorts = [22 8384 22000 9001 5173 4567 11434 5201 53317 47984 47989 47990 48010 27036 27037];
-    allowedUDPPorts = [22000 21027 53317 47998 47999 48000 27031 27036];
+    allowedTCPPorts = [22 8384 3000 3333 22000 9001 5173 4567 11434 5201 53317 47984 47989 47990 48010 27036 27037];
+    allowedUDPPorts = [3000 3333 22000 21027 53317 47998 47999 48000 27031 27036];
   };
 
   # Disable network manager
@@ -848,11 +859,6 @@ in {
     description = "Philipp Soldunov";
     extraGroups = ["networkmanager" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "deluge" "input"];
     shell = pkgs.fish;
-  };
-
-  qt = {
-    enable = true;
-    platformTheme = "qt5ct";
   };
 
   # █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█   █▀ ▀█▀ ▄▀█ ▀█▀ █▀▀   █░█ █▀▀ █▀█ █▀ █ █▀█ █▄░█
