@@ -19,6 +19,7 @@ in {
     PATH = "HOME/.local/bin:/usr/sbin:$HOME/.local/podman/bin:$HOME/.cargo/bin:$DENO_INSTALL/bin:$PATH";
     TERMINAL = "kitty";
     TERM = "xterm-256color";
+    MAILER = "${pkgs.thunderbird}/bin/thunderbird";
   };
 
   programs.fish = {

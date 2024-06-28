@@ -48,8 +48,13 @@ in {
   boot.plymouth = {
     enable = true;
     catppuccin.enable = false;
+    theme = "pedro-raccoon";
+    themePackages = with pkgs; [
+      pedro-raccoon-plymouth
+    ];
   };
   boot.loader.grub = {
+    catppuccin.enable = false;
     enable = true;
     device = "nodev";
     efiSupport = true;
@@ -245,16 +250,30 @@ in {
   services.blueman.enable = true;
 
   virtualisation = {
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings.dns_enabled = true;
-    };
+    docker.enable = true;
+    docker.enableOnBoot = true;
     libvirtd.enable = true;
+    containerd.enable = true;
+  };
+
+  virtualisation.oci-containers = {
+    backend = "docker";
+    containers = {
+      agent = {
+        image = "portainer/agent:2.19.5";
+        ports = [
+          "9001:9001"
+        ];
+        volumes = [
+          "/var/run/docker.sock:/var/run/docker.sock"
+          "/var/lib/docker/volumes:/var/lib/docker/volumes"
+        ];
+      };
+    };
   };
 
   virtualisation.arion = {
-    backend = "podman";
+    backend = "docker";
   };
 
   programs.direnv.enable = true;
@@ -283,6 +302,7 @@ in {
   programs = {
     _1password.enable = true;
     _1password-gui = {
+      package = pkgs._1password-gui-beta;
       enable = true;
       # Certain features, including CLI integration and system authentication support,
       # require enabling PolKit integration on some desktop environments (e.g. Plasma).
@@ -327,6 +347,7 @@ in {
     (import ./overlays/hyprprop.nix)
     (import ./overlays/figma-linux.nix)
     (import ./overlays/vscode.nix)
+    (import ./overlays/plymouth-pedro.nix)
   ];
 
   programs.nano = {
@@ -446,7 +467,6 @@ in {
 
   environment.systemPackages = with pkgs; [
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
-    (writeShellScriptBin "docker-compose" "exec -a $0 podman-compose $@")
     vscode
     sops
     alejandra
@@ -464,6 +484,8 @@ in {
     ddcui
     trashy
     gnome.file-roller
+    grilo
+    grilo-plugins
     kitty
     sg3_utils
     libsForQt5.kdenlive
@@ -473,9 +495,6 @@ in {
     kitty-img
     kitty-themes
     bat
-    lightly-qt
-    libsForQt5.lightly
-    lightly-boehs
     cloudflared
     hyprcursor
     linux-firmware
@@ -498,6 +517,7 @@ in {
     qpaeq
     run
     iperf
+    kdePackages.qt6ct
     yubikey-manager-qt
     yubikey-manager
     virt-manager
@@ -640,9 +660,7 @@ in {
     gsettings-qt
     qt6.qmake
     qt6.qtwayland
-    adwaita-qt
     jq
-    adwaita-qt6
     wget
     wlogout
     expressvpn
@@ -703,12 +721,7 @@ in {
   # Network stuff
   networking = {
     defaultGateway = "10.24.24.1";
-    nameservers = [
-      "10.24.24.7"
-      # "1.1.1.1"
-      # "8.8.8.8"
-      # "8.8.4.4"
-    ];
+    nameservers = ["10.24.24.9"];
   };
 
   # 10gbps card
@@ -722,10 +735,11 @@ in {
   # Wifi Card
 
   networking.wireless = {
-    enable = false;
+    enable = true;
+    environmentFile = config.sops.secrets."wireless.env".path;
     networks = {
-      "Flying Tiger Dojo" = {
-        psk = "U2qsWznpDKzUAk";
+      "@home_uuid@" = {
+        psk = "@home_psk@";
       };
     };
   };
@@ -761,9 +775,10 @@ in {
     age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 
     secrets = {
-      CFD_OLLAMA_TUNNEL = {
-        owner = "cloudflared";
-      };
+      "wireless.env" = {};
+      # CFD_OLLAMA_TUNNEL = {
+      #   owner = "cloudflared";
+      # };
     };
   };
 
@@ -771,20 +786,20 @@ in {
   services.cloudflared = {
     enable = true;
     user = "cloudflared";
-    tunnels = {
-      "ollama-tunnel" = {
-        credentialsFile = config.sops.secrets.CFD_OLLAMA_TUNNEL.path;
-        default = "http_status:404";
-        originRequest = {
-          httpHostHeader = "localhost:11434";
-        };
-        ingress = {
-          "ollama.theswisscheese.com" = {
-            service = "http://localhost:11434";
-          };
-        };
-      };
-    };
+    # tunnels = {
+    #   "ollama-tunnel" = {
+    #     credentialsFile = config.sops.secrets.CFD_OLLAMA_TUNNEL.path;
+    #     default = "http_status:404";
+    #     originRequest = {
+    #       httpHostHeader = "localhost:11434";
+    #     };
+    #     ingress = {
+    #       "ollama.theswisscheese.com" = {
+    #         service = "http://localhost:11434";
+    #       };
+    #     };
+    #   };
+    # };
   };
 
   # Syncthing
@@ -844,9 +859,10 @@ in {
   services.ollama = {
     enable = true;
     acceleration = "rocm";
+    host = "0.0.0.0";
+    rocmOverrideGfx = "11.0.0";
     environmentVariables = {
       OLLAMA_ORIGINS = "app://obsidian.md*";
-      HSA_OVERRIDE_GFX_VERSION = "11.0.0";
     };
   };
 

@@ -137,7 +137,6 @@ in {
     vesktop
     lollypop
     yt-dlp
-    pkgs.catppuccin-qt5ct
     scripts.idle_check
     scripts.record_screen
     scripts.grab_screen_text
@@ -168,6 +167,12 @@ in {
       enable = true;
     };
 
+    cursorTheme = {
+      name = "Catppuccin-Mocha-Dark-Cursors";
+      package = pkgs.catppuccin-cursors;
+      size = 24;
+    };
+
     font = {
       name = "SF Pro Display";
       size = 10;
@@ -178,8 +183,8 @@ in {
     enable = true;
     platformTheme.name = "qtct";
     style = {
-      catppuccin.enable = false;
-      package = pkgs.catppuccin-qt5ct;
+      name = "kvantum";
+      catppuccin.enable = true;
     };
   };
 

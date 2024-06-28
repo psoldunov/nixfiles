@@ -143,13 +143,8 @@ in {
   };
 
   home.sessionVariables = {
-    # GDK_SCALE = "1.1";
-    # GDK_DPI_SCALE = "1.1";
-    # QT_SCALE_FACTOR = "1.2";
-    # QT_AUTO_SCREEN_SCALE_FACTOR = "0";
-    # GTK_THEME = "Catppuccin-Mocha-Standard-Blue-Dark";
-    # HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-    # HYPRCURSOR_SIZE = "24";
+    HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+    HYPRCURSOR_SIZE = "24";
     ASAN_OPTIONS = "log_path=~/asan.log";
     CLUTTER_BACKEND = "wayland";
     MOZ_ENABLE_WAYLAND = 1;
@@ -158,6 +153,7 @@ in {
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     QT_QPA_PLATFORM = "wayland";
     SDL_VIDEODRIVER = "wayland";
+    XCURSOR_SIZE = "24";
   };
 
   home.file = {
