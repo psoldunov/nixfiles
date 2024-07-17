@@ -7,28 +7,12 @@
   lib,
   config,
   pkgs,
+  nixpkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
 
   i686pkgs = pkgs.pkgsi686Linux;
-
-  gguf = pkgs.python3Packages.buildPythonPackage rec {
-    pname = "gguf";
-    version = "0.6.0";
-    format = "pyproject";
-    src = pkgs.python3Packages.fetchPypi {
-      inherit pname version;
-      sha256 = "suIuq6KhBsGtFIGGoUrZ8pxCk1Fob+nXzhbfOaBgfmU=";
-    };
-
-    nativeBuildInputs = [pkgs.poetry];
-
-    propagatedBuildInputs = with pkgs.python3Packages; [
-      poetry-core
-      numpy
-    ];
-  };
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -39,6 +23,14 @@ in {
     enable = true;
     accent = "peach";
     flavor = "mocha";
+  };
+
+  console = {
+    catppuccin.enable = false;
+    earlySetup = true;
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
+    packages = with pkgs; [terminus_font];
+    keyMap = "us";
   };
 
   # Bootloader.
@@ -95,7 +87,7 @@ in {
       GTK = {
         application_prefer_dark_theme = true;
         icon_theme_name = "Papirus";
-        theme_name = "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard+default";
+        theme_name = "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
         font_name = "SF Pro Display 12";
       };
 
@@ -321,14 +313,31 @@ in {
     };
   };
 
+  services.postgresql = {
+    enable = true;
+    ensureUsers = [
+      {
+        name = "psoldunov";
+        ensureClauses.superuser = true;
+      }
+    ];
+  };
+
   # █▄░█ █ ▀▄▀ █▀█ █▄▀ █▀▀ █▀   ▄▀█ █▄░█ █▀▄   █▀█ █░█ █▀▀ █▀█ █░░ ▄▀█ █▄█ █▀
   # █░▀█ █ █░█ █▀▀ █░█ █▄█ ▄█   █▀█ █░▀█ █▄▀   █▄█ ▀▄▀ ██▄ █▀▄ █▄▄ █▀█ ░█░ ▄█
 
   nixpkgs = {
     config = {
+      joypixels.acceptLicense = true;
       allowUnfree = true;
       allowInsecure = true;
-      permittedInsecurePackages = ["python-2.7.18.6" "electron-24.8.6"];
+      rocmSupport = true;
+      allowBroken = true;
+      allowUnfreePredicate = pkg:
+        builtins.elem (lib.getName pkg) [
+          "joypixels"
+        ];
+      permittedInsecurePackages = ["python-2.7.18.6" "electron-24.8.6" "python3.12-youtube-dl-2021.12.17"];
       packageOverrides = pkgs: {
         allowUnfreePredicate = pkg:
           builtins.elem (lib.getName pkg) [
@@ -345,7 +354,6 @@ in {
   nixpkgs.overlays = [
     (import ./overlays/hyprevents.nix)
     (import ./overlays/hyprprop.nix)
-    (import ./overlays/figma-linux.nix)
     (import ./overlays/vscode.nix)
     (import ./overlays/plymouth-pedro.nix)
   ];
@@ -409,7 +417,7 @@ in {
   programs.dconf.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  # sound.enable = true;
   hardware.pulseaudio.enable = false;
 
   # Enable the pipewire service.
@@ -483,7 +491,7 @@ in {
     ddcutil
     ddcui
     trashy
-    gnome.file-roller
+    file-roller
     grilo
     grilo-plugins
     kitty
@@ -507,7 +515,7 @@ in {
     wget
     evince
     shotwell
-    gnome.simple-scan
+    simple-scan
     speedcrunch
     gparted
     zstd
@@ -522,10 +530,10 @@ in {
     yubikey-manager
     virt-manager
     gnome-icon-theme
-    gnome.adwaita-icon-theme
-    gnome.gnome-themes-extra
+    adwaita-icon-theme
+    gnome-themes-extra
     hyprevents
-    emojione
+    joypixels
     radeontop
     pkg-config
     thunderbird
@@ -543,21 +551,22 @@ in {
     openssl
     openssl.dev
     libsecret
-    (python3.withPackages (p:
-      with p; [
-        pygobject3
-        gst-python
-        numpy
-        pyinotify
-        pip
-        mutagen
-        setuptools
-        gguf
-        poetry-core
-        sentencepiece
-        openai-whisper
-        srt
-      ]))
+    python3
+    # (python3.withPackages (p:
+    #   with p; [
+    #     pygobject3
+    #     gst-python
+    #     numpy
+    #     pyinotify
+    #     pip
+    #     mutagen
+    #     setuptools
+    #     gguf
+    #     poetry-core
+    #     sentencepiece
+    #     openai-whisper
+    #     srt
+    #   ]))
     gcc
     protontricks
     ydotool
@@ -569,7 +578,6 @@ in {
     zoxide
     jellyfin-media-player
     bottles
-    figma-linux
     libva-utils
     cargo
     pop
@@ -593,8 +601,8 @@ in {
     libadwaita
     winetricks
     wineWowPackages.full
-    protonup-ng
-    gnome.dconf-editor
+    gnome-disk-utility
+    dconf-editor
     cabextract
     killall
     sbctl
@@ -710,8 +718,11 @@ in {
 
   programs.gamemode.enable = true;
 
-  services.sunshine.enable = true;
-  services.sunshine.openFirewall = true;
+  services.sunshine = {
+    enable = true;
+    openFirewall = true;
+    autoStart = false;
+  };
 
   # █▄░█ █▀▀ ▀█▀ █░█░█ █▀█ █▀█ █▄▀ █ █▄░█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀ █▀▀ █▀▀ █░█ █▀█ █ ▀█▀ █▄█
   # █░▀█ ██▄ ░█░ ▀▄▀▄▀ █▄█ █▀▄ █░█ █ █░▀█ █▄█   █▀█ █░▀█ █▄▀   ▄█ ██▄ █▄▄ █▄█ █▀▄ █ ░█░ ░█░
@@ -721,7 +732,10 @@ in {
   # Network stuff
   networking = {
     defaultGateway = "10.24.24.1";
-    nameservers = ["10.24.24.9"];
+    nameservers = [
+      #"1.1.1.1"
+      "10.24.24.9"
+    ];
   };
 
   # 10gbps card
@@ -751,8 +765,8 @@ in {
 
   # Networking firewall configuration.
   networking.firewall = {
-    allowedTCPPorts = [22 8384 3000 3333 22000 9001 5173 4567 11434 5201 53317 47984 47989 47990 48010 27036 27037];
-    allowedUDPPorts = [3000 3333 22000 21027 53317 47998 47999 48000 27031 27036];
+    allowedTCPPorts = [22 8384 3000 3333 22000 9001 5173 4567 11434 5201 53317 47984 27040 47989 47990 48010 27036 27037];
+    allowedUDPPorts = [27031 27032 27033 27034 27035 27036 3000 3333 22000 21027 53317 47998 47999 48000 27031 27036];
   };
 
   # Disable network manager
@@ -864,6 +878,7 @@ in {
     rocmOverrideGfx = "11.0.0";
     environmentVariables = {
       OLLAMA_ORIGINS = "app://obsidian.md*";
+      HSA_OVERRIDE_GFX_VERSION = "11.0.0";
     };
   };
 

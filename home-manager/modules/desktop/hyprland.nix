@@ -20,6 +20,7 @@
       ${pkgs.ferdium}/bin/ferdium
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
       ${pkgs.nextcloud-client}/bin/nextcloud-client --background
+      ${pkgs.bitwarden-desktop}/bin/bitwarden
       1password --silent
       steam -silent
       vesktop --start-minimized
@@ -98,9 +99,9 @@ in {
           pseudotile = "yes"; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds
           # preserve_split = "yes"; # you probably want this
         };
-        master = {
-          new_is_master = true;
-        };
+        # master = {
+        #   new_is_master = true;
+        # };
         debug = {
           overlay = "off";
         };

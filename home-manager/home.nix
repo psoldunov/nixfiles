@@ -6,6 +6,7 @@
   lib,
   config,
   pkgs,
+  nixpkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -14,9 +15,19 @@
     pkgs = pkgs;
     config = config;
   };
+
+  catppuccin-gtk-theme = pkgs.catppuccin-gtk.override {
+    variant = "mocha";
+    accents = ["peach"];
+  };
+
+  pkgs-stable = import nixpkgs-stable {
+    system = "x86_64-linux";
+  };
 in {
   imports = [
     ./modules
+    inputs.ags.homeManagerModules.default
   ];
 
   catppuccin = {
@@ -24,10 +35,17 @@ in {
     flavor = "mocha";
     accent = "peach";
     pointerCursor = {
+      enable = true;
       accent = "dark";
       flavor = "mocha";
     };
   };
+
+  # services.nextcloud-client = {
+  #   enable = true;
+  #   startInBackground = true;
+  #   package = pkgs-stable.nextcloud-client;
+  # };
 
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
@@ -106,6 +124,7 @@ in {
 
   nixpkgs.config = {
     allowUnfree = true;
+    allowInsecure = true;
   };
 
   programs.firefox = {
@@ -119,7 +138,10 @@ in {
     obsidian
     pywal
     spotify
-    gnome.gnome-font-viewer
+    bitwarden-desktop
+    bitwarden-cli
+    mattermost-desktop
+    gnome-font-viewer
     rofi-bluetooth
     duckstation
     pcsx2
@@ -129,14 +151,20 @@ in {
     prismlauncher
     ryujinx
     postman
+    gimp
     newman
     telegram-desktop
     slack
-    nextcloud-client
+    protonup-qt
+    protonup-ng
     deluge-gtk
     vesktop
     lollypop
-    yt-dlp
+    youtube-dl
+    ookla-speedtest
+    catppuccin-cursors
+    zed-editor
+    pkgs-stable.nextcloud-client
     scripts.idle_check
     scripts.record_screen
     scripts.grab_screen_text
@@ -163,13 +191,22 @@ in {
 
   gtk = {
     enable = true;
+    theme = {
+      name = "catppuccin-mocha-peach-standard";
+      package = catppuccin-gtk-theme;
+    };
     catppuccin = {
-      enable = true;
+      enable = false;
+      icon = {
+        enable = true;
+        accent = "peach";
+        flavor = "mocha";
+      };
     };
 
     cursorTheme = {
-      name = "Catppuccin-Mocha-Dark-Cursors";
-      package = pkgs.catppuccin-cursors;
+      name = "catppuccin-mocha-dark-cursors";
+      package = pkgs.catppuccin-cursors.mochaDark;
       size = 24;
     };
 
@@ -181,10 +218,44 @@ in {
 
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
+    platformTheme.name = "kvantum";
     style = {
       name = "kvantum";
       catppuccin.enable = true;
+    };
+  };
+
+  home.file = {
+    ".config/gtk-4.0/gtk-dark.css" = {
+      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/gtk-dark.css";
+    };
+    ".config/gtk-4.0/assets" = {
+      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/assets";
+      recursive = true;
+    };
+    ".local/share/applications/webflow.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Webflow
+        GenericName=Web Editor
+        Icon=/home/psoldunov/.icons/webflow.png
+        Exec=chromium --new-window --app=https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc %U
+        Terminal=false
+        Categories=Development;
+      '';
+    };
+    ".local/share/applications/figma.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Figma
+        GenericName=Design Tool
+        Icon=figma
+        Exec=chromium --new-window --app=https://www.figma.com/files/ %U
+        Terminal=false
+        Categories=Development;
+      '';
     };
   };
 

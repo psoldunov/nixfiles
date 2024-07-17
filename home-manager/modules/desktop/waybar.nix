@@ -37,14 +37,14 @@ in {
     settings = {
       main = {
         height = 42;
+        position = "bottom";
         layer = "top";
         margin-left = 4;
-        margin-top = 4;
+        margin-top = 0;
         margin-right = 4;
-        margin-bottom = 0;
+        margin-bottom = 4;
         spacing = 4;
-        modules-left = ["custom/logo" "hyprland/workspaces" "wlr/taskbar"];
-        modules-center = ["hyprland/window"];
+        modules-left = ["custom/logo" "hyprland/workspaces" "wlr/taskbar" "hyprland/window"];
         modules-right = [
           "mpd"
           "custom/wf-recorder"

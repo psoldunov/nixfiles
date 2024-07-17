@@ -6,6 +6,7 @@
     ./desktop/hyprland.nix
     ./desktop/hypridle.nix
     ./desktop/waybar.nix
+    ./desktop/ags
     ./desktop/rofi.nix
     ./desktop/swaync.nix
     ./desktop/pywal.nix
