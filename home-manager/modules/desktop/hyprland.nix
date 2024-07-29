@@ -10,17 +10,18 @@
 
   autoStart = pkgs.writeShellScript "autostart_applications" ''
     autostart_commands="
+      # ags
       ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
       ${pkgs.ydotool}/bin/ydotoold
       ${pkgs.solaar}/bin/solaar -w hide
       ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store
       ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store
-      ${pkgs.xwaylandvideobridge}/bin/xwaylandvideobridge
       ${pkgs.slack}/bin/slack -u
       ${pkgs.ferdium}/bin/ferdium
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
       ${pkgs.nextcloud-client}/bin/nextcloud-client --background
       ${pkgs.bitwarden-desktop}/bin/bitwarden
+      ${pkgs.localsend}/bin/localsend_app --hidden
       1password --silent
       steam -silent
       vesktop --start-minimized

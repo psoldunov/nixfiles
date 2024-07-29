@@ -14,5 +14,6 @@
     ./programs/ncmpcpp.nix
     ./programs/spotifyd.nix
     ./programs/kitty.nix
+    ./programs/zed.nix
   ];
 }

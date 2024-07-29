@@ -53,6 +53,7 @@
     "$MOD3, D, exec, discord"
     "$MOD3, P, exec, 1password"
     "$MOD3, G, exec, steam"
+    "$MOD3, L, exec, ags -q && ags"
 
     # MOD4 Move active window to a workspace
     "$MOD4, 1, movetoworkspace, 1"

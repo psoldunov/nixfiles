@@ -3,6 +3,10 @@
   config,
   ...
 }: {
+  restart_ags = pkgs.writeShellScriptBin "restart_ags" ''
+    ags -q && ags
+  '';
+
   idle_check = pkgs.writeShellScriptBin "idle_check" ''
     player_status=$(${pkgs.playerctl}/bin/playerctl status 2>/dev/null)
     if [ "$player_status" = "Playing" ]; then

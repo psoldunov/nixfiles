@@ -27,7 +27,7 @@
 in {
   imports = [
     ./modules
-    inputs.ags.homeManagerModules.default
+    # inputs.ags.homeManagerModules.default
   ];
 
   catppuccin = {
@@ -132,6 +132,7 @@ in {
   };
 
   home.packages = with pkgs; [
+    bambu-studio
     deno
     neovim
     nodejs_20
@@ -165,6 +166,7 @@ in {
     catppuccin-cursors
     zed-editor
     pkgs-stable.nextcloud-client
+    scripts.restart_ags
     scripts.idle_check
     scripts.record_screen
     scripts.grab_screen_text

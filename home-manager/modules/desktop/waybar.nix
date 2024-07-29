@@ -38,7 +38,6 @@ in {
       main = {
         height = 42;
         position = "bottom";
-        layer = "top";
         margin-left = 4;
         margin-top = 0;
         margin-right = 4;

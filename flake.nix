@@ -16,6 +16,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
     catppuccin = {
       url = "github:catppuccin/nix";
     };
@@ -41,8 +45,10 @@
     self,
     nixpkgs,
     ags,
+    chaotic,
     nixpkgs-stable,
     lix-module,
+    nix-gaming,
     sops-nix,
     home-manager,
     arion,
@@ -64,8 +70,11 @@
       inherit system;
       modules = [
         ./nixos/configuration.nix
+        nix-gaming.nixosModules.pipewireLowLatency
+        nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
+        chaotic.nixosModules.default
         catppuccin.nixosModules.catppuccin
         lix-module.nixosModules.default
         arion.nixosModules.arion
@@ -94,6 +103,7 @@
             sharedModules = [
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
+              ags.homeManagerModules.default
             ];
           };
         }

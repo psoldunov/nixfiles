@@ -59,7 +59,7 @@ in {
       warn-dirty = false;
       experimental-features = "nix-command flakes";
       auto-optimise-store = true;
-      substituters = ["https://nix-gaming.cachix.org" "https://hyprland.cachix.org"];
+      substituters = ["https://cache.nixos.org/" "https://nix-gaming.cachix.org" "https://hyprland.cachix.org"];
       trusted-public-keys = ["nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4=" "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
     };
   };
@@ -121,8 +121,6 @@ in {
   programs.hyprland = {
     enable = true;
   };
-
-  programs.waybar.enable = true;
 
   services.avahi = {
     enable = true;
@@ -432,6 +430,13 @@ in {
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
+    lowLatency = {
+      # enable this module
+      enable = true;
+      # defaults (no need to be set unless modified)
+      quantum = 64;
+      rate = 48000;
+    };
   };
 
   # Udev for Apple Superdrive
@@ -473,15 +478,18 @@ in {
 
   programs.nix-ld.enable = true;
 
+  services.fwupd.enable = true;
+
   environment.systemPackages = with pkgs; [
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
+    usbutils
+    pciutils
     vscode
     sops
     alejandra
     podman-tui
     podman-compose
     dive
-    dunst
     gperftools
     swww
     via
@@ -502,6 +510,7 @@ in {
     solaar
     kitty-img
     kitty-themes
+    sassc
     bat
     cloudflared
     hyprcursor
@@ -529,6 +538,7 @@ in {
     yubikey-manager-qt
     yubikey-manager
     virt-manager
+    # telegram-desktop_git
     gnome-icon-theme
     adwaita-icon-theme
     gnome-themes-extra
@@ -543,13 +553,13 @@ in {
     pciutils
     brave
     cliphist
-    waybar-mpris
     webp-pixbuf-loader
     libwebp
     slurp
     wl-clipboard
     openssl
     openssl.dev
+    imagemagick
     libsecret
     python3
     # (python3.withPackages (p:
@@ -641,7 +651,6 @@ in {
     i2c-tools
     cifs-utils
     tldr
-    waybar-mpris
     playerctl
     qdigidoc
     libdigidocpp
@@ -666,16 +675,18 @@ in {
     gsettings-desktop-schemas
     qt5.qtwayland
     gsettings-qt
+    libsForQt5.qt5.qtwayland
+    kdePackages.qtwayland
     qt6.qmake
     qt6.qtwayland
     jq
     wget
     wlogout
-    expressvpn
     mpc-cli
-    cinnamon.nemo-with-extensions
+    nemo-with-extensions
     keychain
     yubioath-flutter
+    expressvpn
   ];
 
   systemd.user.services.mpris-proxy = {
@@ -692,7 +703,7 @@ in {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    gamescopeSession.enable = true;
+    platformOptimizations.enable = true;
     package = pkgs.steam.override {
       extraEnv = {};
       extraLibraries = pkgs:
@@ -707,13 +718,8 @@ in {
           stdenv.cc.cc.lib
           libkrb5
           keyutils
-          gamescope
         ];
     };
-  };
-
-  programs.gamescope = {
-    capSysNice = true;
   };
 
   programs.gamemode.enable = true;
@@ -749,7 +755,7 @@ in {
   # Wifi Card
 
   networking.wireless = {
-    enable = true;
+    enable = false;
     environmentFile = config.sops.secrets."wireless.env".path;
     networks = {
       "@home_uuid@" = {
@@ -827,7 +833,10 @@ in {
       user = "psoldunov";
       password = "fbw7PAB8vej1zah!vjq";
     };
-    settings.options.relaysEnabled = true;
+    settings.options = {
+      urAccepted = -1;
+      relaysEnabled = true;
+    };
     overrideFolders = false;
     overrideDevices = false;
   };
