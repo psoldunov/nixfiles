@@ -6,7 +6,10 @@
 }: let
   wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers/porsche.jpg";
   windowRules = import ./hypr-modules/windowrules.nix;
-  keyBinds = import ./hypr-modules/keybinds.nix;
+  keyBinds = import ./hypr-modules/keybinds.nix {
+    inherit config;
+    inherit pkgs;
+  };
 
   autoStart = pkgs.writeShellScript "autostart_applications" ''
     autostart_commands="

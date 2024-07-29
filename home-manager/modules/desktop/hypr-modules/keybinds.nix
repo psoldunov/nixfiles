@@ -1,4 +1,36 @@
 {
+  config,
+  pkgs,
+}: let
+  projects =
+    import ../../../projects
+    {
+      config = config;
+    };
+
+  projectStrings = map (project: ''["${project.name}"]="${project.path}"'') projects.items;
+
+  projectsString = builtins.concatStringsSep "\n" projectStrings;
+
+  rofiProjects = pkgs.writeShellScript "rofi-project-manager" ''
+    declare -A projects
+    projects=(
+        ${projectsString}
+    )
+
+    project_names=$(printf "%s\n" "''${!projects[@]}")
+
+    echo $project_names
+
+    selected_project=$(echo -e "$project_names" | rofi -no-fixed-num-lines -dmenu -p "Select a project")
+
+    if [[ -n "$selected_project" && -n "''${projects[$selected_project]}" ]]; then
+        ${pkgs.zed-editor}/bin/zed -n "''${projects[$selected_project]}"
+    else
+        echo "No valid project selected."
+    fi
+  '';
+in {
   "$ctrl" = "SUPER";
   "$cmd" = "CTRL";
   "$option" = "ALT";
@@ -6,6 +38,7 @@
   "$MOD2" = "CTRL_SUPER_SHIFT";
   "$MOD3" = "CTRL_ALT";
   "$MOD4" = "CTRL_ALT_SHIFT";
+  "$optionShift" = "ALT_SHIFT";
   bind = [
     # MOD1 Hyprland navigation VIM style
     "$MOD1, H, movefocus, l"
@@ -155,6 +188,9 @@
     # # temp binds for ags
     # "$ctrl, q, exec, ags -q && ags"
     # "$ctrl, w, exec, ags -i"
+
+    # Custom scripts
+    "$optionShift, P, exec, ${rofiProjects}"
   ];
 
   # Move/resize windows with mainMod + LMB/RMB and dragging

@@ -16,6 +16,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-ld = {
+        url = "github:Mic92/nix-ld";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
@@ -48,6 +53,7 @@
     chaotic,
     nixpkgs-stable,
     lix-module,
+    nix-ld,
     nix-gaming,
     sops-nix,
     home-manager,
@@ -70,6 +76,7 @@
       inherit system;
       modules = [
         ./nixos/configuration.nix
+        nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops

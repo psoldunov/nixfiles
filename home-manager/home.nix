@@ -259,6 +259,17 @@ in {
         Categories=Development;
       '';
     };
+    ".local/share/applications/nixfiles-zed.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Open Nixfiles in Zed
+        GenericName=This opens nixfiles in Zed
+        Icon=nix-snowflake
+        Exec=zed --new /home/psoldunov/.nixfiles
+        Terminal=false
+      '';
+    };
   };
 
   home.stateVersion = systemStateVersion;

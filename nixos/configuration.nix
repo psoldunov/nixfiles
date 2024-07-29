@@ -476,7 +476,7 @@ in {
   # █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█   █▀█ ▄▀█ █▀▀ █▄▀ ▄▀█ █▀▀ █▀▀ █▀
   # ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█   █▀▀ █▀█ █▄▄ █░█ █▀█ █▄█ ██▄ ▄█
 
-  programs.nix-ld.enable = true;
+  programs.nix-ld.dev.enable = true;
 
   services.fwupd.enable = true;
 
@@ -484,6 +484,8 @@ in {
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
     usbutils
     pciutils
+    nixd
+    nixpkgs-fmt
     vscode
     sops
     alejandra
@@ -561,7 +563,6 @@ in {
     openssl.dev
     imagemagick
     libsecret
-    python3
     # (python3.withPackages (p:
     #   with p; [
     #     pygobject3
