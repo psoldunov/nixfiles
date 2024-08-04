@@ -5,10 +5,8 @@
     ./dev/dev.nix
     ./desktop/hyprland.nix
     ./desktop/hypridle.nix
-    ./desktop/waybar.nix
     ./desktop/ags.nix
     ./desktop/rofi.nix
-    ./desktop/swaync.nix
     ./desktop/pywal.nix
     ./desktop/mako.nix
     ./git/git.nix
