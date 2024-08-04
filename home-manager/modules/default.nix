@@ -10,6 +10,7 @@
     ./desktop/rofi.nix
     ./desktop/swaync.nix
     ./desktop/pywal.nix
+    ./desktop/mako.nix
     ./git/git.nix
     ./programs/ncmpcpp.nix
     ./programs/spotifyd.nix

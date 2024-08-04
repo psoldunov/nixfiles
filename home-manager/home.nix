@@ -132,6 +132,7 @@ in {
   };
 
   home.packages = with pkgs; [
+    pkgs-stable.mysql-workbench
     bambu-studio
     deno
     neovim
@@ -151,7 +152,6 @@ in {
     steam-rom-manager
     prismlauncher
     ryujinx
-    postman
     gimp
     newman
     telegram-desktop
@@ -165,6 +165,7 @@ in {
     ookla-speedtest
     catppuccin-cursors
     zed-editor
+    pantheon.elementary-iconbrowser
     pkgs-stable.nextcloud-client
     scripts.restart_ags
     scripts.idle_check
@@ -175,7 +176,6 @@ in {
     scripts.kill_gamescope
     scripts.start_static_wallpaper
     scripts.start_video_wallpaper
-    scripts.hello_world
     scripts.convert_all_to_webp
   ];
 
@@ -214,16 +214,15 @@ in {
 
     font = {
       name = "SF Pro Display";
-      size = 10;
+      size = 12;
     };
   };
 
   qt = {
     enable = true;
-    platformTheme.name = "kvantum";
+    platformTheme.name = "qtct";
     style = {
-      name = "kvantum";
-      catppuccin.enable = true;
+      catppuccin.enable = false;
     };
   };
 
@@ -243,6 +242,18 @@ in {
         GenericName=Web Editor
         Icon=/home/psoldunov/.icons/webflow.png
         Exec=chromium --new-window --app=https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc %U
+        Terminal=false
+        Categories=Development;
+      '';
+    };
+    ".local/share/applications/postman.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Postman
+        GenericName=API Editor
+        Icon=postman
+        Exec=chromium --new-window --app=https://web.postman.co/workspaces %U
         Terminal=false
         Categories=Development;
       '';

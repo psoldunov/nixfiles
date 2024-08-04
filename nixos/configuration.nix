@@ -59,8 +59,8 @@ in {
       warn-dirty = false;
       experimental-features = "nix-command flakes";
       auto-optimise-store = true;
-      substituters = ["https://cache.nixos.org/" "https://nix-gaming.cachix.org" "https://hyprland.cachix.org"];
-      trusted-public-keys = ["nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4=" "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+      substituters = ["https://cache.nixos.org/" "https://nix-gaming.cachix.org"];
+      trusted-public-keys = ["nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="];
     };
   };
 
@@ -300,6 +300,19 @@ in {
     };
   };
 
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    ensureUsers = [
+      {
+        name = "psoldunov";
+      }
+    ];
+    ensureDatabases = [
+      "psoldunov"
+    ];
+  };
+
   environment.etc = {
     "1password/custom_allowed_browsers" = {
       text = ''
@@ -309,16 +322,6 @@ in {
       '';
       mode = "0755";
     };
-  };
-
-  services.postgresql = {
-    enable = true;
-    ensureUsers = [
-      {
-        name = "psoldunov";
-        ensureClauses.superuser = true;
-      }
-    ];
   };
 
   # █▄░█ █ ▀▄▀ █▀█ █▄▀ █▀▀ █▀   ▄▀█ █▄░█ █▀▄   █▀█ █░█ █▀▀ █▀█ █░░ ▄▀█ █▄█ █▀
@@ -482,6 +485,8 @@ in {
 
   environment.systemPackages = with pkgs; [
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
+    appimage-run
+    wev
     usbutils
     pciutils
     nixd

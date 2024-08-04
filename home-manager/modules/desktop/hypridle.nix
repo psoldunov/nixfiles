@@ -63,6 +63,8 @@ in {
         unlock_cmd = "pkill -USR1 ${hyprlockBin}";
         before_sleep_cmd = "systemctl stop ollama.service && loginctl lock-session";
         after_sleep_cmd = "${hyprctlBin} dispatch dpms on && systemctl start ollama.service";
+        ignore_dbus_inhibit = false;
+        ignore_systemd_inhibit = false;
       };
       listener = [
         {

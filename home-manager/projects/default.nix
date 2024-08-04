@@ -6,6 +6,10 @@
 in {
   items = [
     {
+      name = "ags";
+      path = "${personal}/ags";
+    }
+    {
       name = "nixfiles";
       path = "${home}/.nixfiles";
     }

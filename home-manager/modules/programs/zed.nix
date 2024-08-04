@@ -2,10 +2,43 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  zedConfig = {
+    theme = "Catppuccin Mocha Peach";
+    vim_mode = false;
+    ui_font_size = 18.5;
+    buffer_font_size = 18.5;
+    auto_update = false;
+    font_family = "SFMono Nerd Font";
+    buffer_font_family = "SFMono Nerd Font";
+    relative_line_numbers = false;
+    soft_wrap = "editor_width";
+    terminal = {
+      font_size = 18.5;
+      copy_on_select = true;
+    };
+    file_types = {
+      "HTML" = ["html" "svg"];
+    };
+    languages = {
+      Nix = {
+        format_on_save = {
+          external = {
+            command = "${pkgs.alejandra}/bin/alejandra";
+            arguments = [];
+          };
+        };
+      };
+    };
+  };
+in {
   home.file."${config.xdg.dataHome}/zed/node/node-v18.15.0-linux-x64" = {
     source = "${pkgs.nodejs_18}";
     recursive = true;
+  };
+
+  home.file."${config.xdg.configHome}/zed/settings.json" = {
+    text = "${builtins.toJSON zedConfig}";
   };
 
   home.file."${config.xdg.configHome}/zed/themes/catppuccin-mocha-peach.json" = {

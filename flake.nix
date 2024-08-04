@@ -17,8 +17,8 @@
     };
 
     nix-ld = {
-        url = "github:Mic92/nix-ld";
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:Mic92/nix-ld";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-gaming.url = "github:fufexan/nix-gaming";

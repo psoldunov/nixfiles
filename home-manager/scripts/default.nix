@@ -4,7 +4,7 @@
   ...
 }: {
   restart_ags = pkgs.writeShellScriptBin "restart_ags" ''
-    ags -q && ags
+    ${config.programs.ags.finalPackage}/bin/ags -q && ${config.programs.ags.finalPackage}/bin/ags -i & disown
   '';
 
   idle_check = pkgs.writeShellScriptBin "idle_check" ''
@@ -111,12 +111,6 @@
       ${pkgs.ffmpeg-full}/bin/ffmpeg -y -i "$VIDEO_PATH" -vframes 1 "/tmp/lock_background.png"
       ${pkgs.imagemagick}/bin/convert "/tmp/lock_background.png" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
       exit 0
-    ''
-  );
-
-  hello_world = (
-    pkgs.writeShellScriptBin "hello_world" ''
-      echo "Hello, World!"
     ''
   );
 

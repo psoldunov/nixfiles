@@ -154,6 +154,15 @@ in {
         renamed = "襁 ";
         deleted = " ";
       };
+      bun = {
+        format = "via [🍔 $version](bold green) ";
+      };
+      nodejs = {
+        detect_files = ["package.json" ".node-version" "!bunfig.toml" "!bun.lockb" "!deno.json"];
+      };
+      deno = {
+        format = "via [🦕 $version](green bold) ";
+      };
       kubernetes = {
         format = ''via [ﴱ $context\($namespace\)](bold purple) '';
         disabled = false;

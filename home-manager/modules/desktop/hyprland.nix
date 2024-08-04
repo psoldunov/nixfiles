@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers/porsche.jpg";
+  wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers/porsche-uw.jpg";
   windowRules = import ./hypr-modules/windowrules.nix;
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
@@ -13,32 +13,31 @@
 
   autoStart = pkgs.writeShellScript "autostart_applications" ''
     autostart_commands="
-      # ags
       ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
       ${pkgs.ydotool}/bin/ydotoold
-      ${pkgs.solaar}/bin/solaar -w hide
       ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store
       ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store
+      ${pkgs.nextcloud-client}/bin/nextcloud-client --background
+      ${pkgs.solaar}/bin/solaar -w hide
       ${pkgs.slack}/bin/slack -u
       ${pkgs.ferdium}/bin/ferdium
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
-      ${pkgs.nextcloud-client}/bin/nextcloud-client --background
-      ${pkgs.bitwarden-desktop}/bin/bitwarden
-      ${pkgs.localsend}/bin/localsend_app --hidden
+      # ${pkgs.bitwarden-desktop}/bin/bitwarden
+      # ${pkgs.localsend}/bin/localsend_app --hidden
       1password --silent
       steam -silent
       vesktop --start-minimized
-      systemctl --user restart blueman-applet
     "
 
-    sleep 5
+    ${config.programs.ags.finalPackage}/bin/ags &
+
+    sleep 10
 
     echo "$autostart_commands" | while read -r cmd; do
-      eval "$cmd &"
+        eval "$cmd &"
     done
   '';
 in {
-  services.blueman-applet.enable = true;
   services.mpris-proxy.enable = true;
 
   wayland.windowManager.hyprland = {
@@ -71,9 +70,9 @@ in {
         general = {
           gaps_in = 4;
           gaps_out = 4;
-          border_size = 3;
-          "col.active_border" = "$foreground";
-          "col.inactive_border" = "$color11";
+          border_size = 2;
+          "col.active_border" = "rgb(fcfdfc)";
+          "col.inactive_border" = "rgb(2d3b53)";
           layout = "dwindle";
         };
 
@@ -113,7 +112,6 @@ in {
           focus_on_activate = true;
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
-          vrr = 0;
           allow_session_lock_restore = true;
         };
         device = [
@@ -159,6 +157,7 @@ in {
     QT_QPA_PLATFORM = "wayland";
     SDL_VIDEODRIVER = "wayland";
     XCURSOR_SIZE = "24";
+    GDK_SCALE = 1;
   };
 
   home.file = {
