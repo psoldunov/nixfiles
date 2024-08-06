@@ -107,9 +107,9 @@
       sleep 1
       RANDOM_VIDEO=$(find "$VIDEO_DIR" -type f \( -name "*.mp4" -o -name "*.mkv" \) | shuf -n 1)
       VIDEO_PATH=$RANDOM_VIDEO
-      ${pkgs.mpvpaper}/bin/mpvpaper -o "loop" '*' "$VIDEO_PATH" &
+      ${pkgs.mpvpaper}/bin/mpvpaper -o "loop no-audio" '*' "$VIDEO_PATH" &
       ${pkgs.ffmpeg-full}/bin/ffmpeg -y -i "$VIDEO_PATH" -vframes 1 "/tmp/lock_background.png"
-      ${pkgs.imagemagick}/bin/convert "/tmp/lock_background.png" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
+      ${pkgs.imagemagick}/bin/magick "/tmp/lock_background.png" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
       exit 0
     ''
   );

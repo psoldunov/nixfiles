@@ -176,6 +176,7 @@ in {
     openrazer = {
       enable = true;
       users = ["psoldunov"];
+      batteryNotifier.enable = true;
     };
     logitech = {
       wireless = {
@@ -479,11 +480,16 @@ in {
   # █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█   █▀█ ▄▀█ █▀▀ █▄▀ ▄▀█ █▀▀ █▀▀ █▀
   # ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█   █▀▀ █▀█ █▄▄ █░█ █▀█ █▄█ ██▄ ▄█
 
+  services.globalprotect = {
+    enable = true;
+  };
+
   programs.nix-ld.dev.enable = true;
 
   services.fwupd.enable = true;
 
   environment.systemPackages = with pkgs; [
+    globalprotect-openconnect
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
     appimage-run
     wev

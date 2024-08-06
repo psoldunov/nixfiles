@@ -132,7 +132,9 @@ in {
   };
 
   home.packages = with pkgs; [
+    hyprshade
     pkgs-stable.mysql-workbench
+    geekbench
     bambu-studio
     deno
     neovim
