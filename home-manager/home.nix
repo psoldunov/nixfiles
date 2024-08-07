@@ -162,7 +162,6 @@ in {
     protonup-ng
     deluge-gtk
     vesktop
-    lollypop
     youtube-dl
     ookla-speedtest
     catppuccin-cursors

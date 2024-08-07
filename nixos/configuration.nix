@@ -358,6 +358,7 @@ in {
     (import ./overlays/hyprprop.nix)
     (import ./overlays/vscode.nix)
     (import ./overlays/plymouth-pedro.nix)
+    (import ./overlays/globalprotect-openconnect_git.nix)
   ];
 
   programs.nano = {
@@ -480,16 +481,12 @@ in {
   # █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█   █▀█ ▄▀█ █▀▀ █▄▀ ▄▀█ █▀▀ █▀▀ █▀
   # ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█   █▀▀ █▀█ █▄▄ █░█ █▀█ █▄█ ██▄ ▄█
 
-  services.globalprotect = {
-    enable = true;
-  };
-
   programs.nix-ld.dev.enable = true;
 
   services.fwupd.enable = true;
 
   environment.systemPackages = with pkgs; [
-    globalprotect-openconnect
+    globalprotect-openconnect_git
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
     appimage-run
     wev

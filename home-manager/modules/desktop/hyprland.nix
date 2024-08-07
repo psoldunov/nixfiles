@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers/porsche-uw.jpg";
+  wallpaperPath = /home/psoldunov/Pictures/Wallpapers/porsche-uw.jpg;
   windowRules = import ./hypr-modules/windowrules.nix;
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
@@ -25,7 +25,7 @@
       ${pkgs.ferdium}/bin/ferdium
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
       # ${pkgs.bitwarden-desktop}/bin/bitwarden
-      # ${pkgs.localsend}/bin/localsend_app --hidden
+      ${pkgs.localsend}/bin/localsend_app --hidden
       1password --silent
       steam -silent
       vesktop --start-minimized
@@ -114,6 +114,7 @@ in {
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
           allow_session_lock_restore = true;
+          vrr = 2;
         };
         device = [
           {
@@ -167,7 +168,6 @@ in {
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
         # exec-once = start_static_wallpaper ${wallpaperPath}
         exec-once = start_video_wallpaper
-        #exec-once = ${pkgs.sox}/bin/play ${config.xdg.configHome}/startup-sounds/current.wav
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
       '';
