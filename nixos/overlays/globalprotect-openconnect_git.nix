@@ -14,6 +14,7 @@ self: super: {
       pkg-config
       libtool
       makeWrapper
+      patchelf
     ];
 
     buildInputs = with super; [
@@ -29,16 +30,60 @@ self: super: {
     '';
 
     patchPhase = ''
-      sed -i 's|\\$(DESTDIR)/usr|\\$(DESTDIR)|g' Makefile
-      cat Makefile
+      substituteInPlace Makefile \
+        --replace '$(DESTDIR)/usr/' $out/
+      substituteInPlace artifacts/usr/share/applications/gpgui.desktop \
+          --replace '/usr/bin/' $out/bin/
     '';
 
     installPhase = ''
       runHook preInstall
       mkdir -p $out/bin
       mkdir -p $out/share
-      make install DESTDIR=$out
+      make install
       runHook postInstall
+
+      # Move the original binaries
+      mkdir -p $out/lib/globalprotect-openconnect
+      for bin in gpauth gpclient gpgui gpgui-helper gpservice; do
+        mv $out/bin/$bin $out/lib/globalprotect-openconnect/$bin
+      done
+
+      # Patch executables to use correct library paths
+      for bin in $out/lib/globalprotect-openconnect/*; do
+        patchelf --set-interpreter $(cat $NIX_CC/nix-support/dynamic-linker) \
+                --set-rpath ${super.lib.makeLibraryPath buildInputs} \
+                $bin
+      done
+
+      # Create a temporary directory for symbolic links
+      mkdir -p $out/symlink-bin
+      for bin in gpauth gpclient gpgui gpgui-helper gpservice; do
+        ln -s $out/lib/globalprotect-openconnect/$bin $out/symlink-bin/$bin
+      done
+
+      # Create a wrapper script for each binary
+      for bin in gpauth gpclient gpgui gpgui-helper gpservice; do
+        makeWrapper $out/lib/globalprotect-openconnect/$bin $out/bin/$bin \
+          --prefix PATH : $out/symlink-bin \
+          --prefix LD_LIBRARY_PATH : ${super.lib.makeLibraryPath buildInputs}
+      done
+    '';
+  };
+
+  myFhsEnv = super.buildFHSUserEnv {
+    name = "globalprotect-openconnect-env";
+    targetPkgs = pkgs: [
+      pkgs.globalprotect-openconnect_git
+      pkgs.openconnect
+      pkgs.webkitgtk
+      pkgs.libsecret
+      pkgs.libayatana-appindicator
+    ];
+
+    runScript = ''
+      export PATH=/usr/bin:$PATH
+      exec /usr/bin/gpclient "$@"
     '';
   };
 }

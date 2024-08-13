@@ -18,6 +18,10 @@ in {
       path = "${boundary}/promise";
     }
     {
+      name = "weho-news";
+      path = "${boundary}/weho-news";
+    }
+    {
       name = "ESAW";
       path = "${boundary}/esaw";
     }

@@ -1,4 +1,11 @@
 {
+  windowrule = [
+    "fullscreen,class:(steam_app_)(.*)$"
+    "noanim,class:(steam_app_)(.*)$"
+    "noborder,class:(steam_app_)(.*)$"
+    "noshadow,class:(steam_app_)(.*)$"
+    "noblur,class:(steam_app_)(.*)$"
+  ];
   windowrulev2 = [
     "rounding 4,title:^(Firefox — Sharing Indicator)$"
     "noborder,title:^(Firefox — Sharing Indicator)$"
@@ -120,11 +127,6 @@
     "forceinput,class:(gamescope)"
     "fullscreen,class:(gamescope)"
     "fullscreen,title:(Steam Big Picture Mode)"
-    "fullscreen,class:^(steam_app_*)$"
-    "noanim,class:^(steam_app_*)$"
-    "noborder,class:^(steam_app_*)$"
-    "noshadow,class:^(steam_app_*)$"
-    "noblur,class:^(steam_app_*)$"
     "float,class:(yad),title:^(SteamTinkerLaunch-MainMenu)$"
     "float,class:(yad),title:^(SteamTinkerLaunch-*)$"
     "float,class:(org.speedcrunch.)"

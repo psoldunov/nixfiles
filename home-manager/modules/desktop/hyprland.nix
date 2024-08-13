@@ -19,7 +19,6 @@
       ${pkgs.ydotool}/bin/ydotoold
       ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store
       ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store
-      ${pkgs.nextcloud-client}/bin/nextcloud-client --background
       ${pkgs.solaar}/bin/solaar -w hide
       ${pkgs.slack}/bin/slack -u
       ${pkgs.ferdium}/bin/ferdium
@@ -42,6 +41,7 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = true;
+    catppuccin.enable = false;
     systemd = {
       enable = true;
       enableXdgAutostart = true;
@@ -51,7 +51,6 @@ in {
       {
         source = [
           "${config.xdg.configHome}/hypr/exec.conf"
-          "${config.xdg.cacheHome}/wal/colors-hyprland.conf"
         ];
         monitor = "DP-1,preferred,auto,1";
         input = {
@@ -59,6 +58,7 @@ in {
           kb_variant = ",mac";
           follow_mouse = true;
           mouse_refocus = false;
+          scroll_factor = "0.75";
           natural_scroll = "yes";
           # mouse_refocus = false;
           sensitivity = 0;
@@ -115,6 +115,8 @@ in {
           disable_splash_rendering = true;
           allow_session_lock_restore = true;
           vrr = 2;
+          mouse_move_enables_dpms = true;
+          key_press_enables_dpms = true;
         };
         device = [
           {
@@ -151,13 +153,14 @@ in {
     HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
     HYPRCURSOR_SIZE = "24";
     ASAN_OPTIONS = "log_path=~/asan.log";
-    CLUTTER_BACKEND = "wayland";
     MOZ_ENABLE_WAYLAND = 1;
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
-    QT_QPA_PLATFORM = "wayland";
-    SDL_VIDEODRIVER = "wayland";
+    QT_QPA_PLATFORM = "wayland;xcb";
+    GDK_BACKEND = "wayland,x11";
+    CLUTTER_BACKEND = "wayland";
+    # SDL_VIDEODRIVER = "wayland";
     XCURSOR_SIZE = "24";
     GDK_SCALE = 1;
   };
@@ -170,90 +173,6 @@ in {
         exec-once = start_video_wallpaper
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
-      '';
-    };
-  };
-
-  home.file = {
-    "${config.xdg.configHome}/hypr/mocha.conf" = {
-      text = ''
-        $rosewater = rgb(f5e0dc)
-        $rosewaterAlpha = f5e0dc
-
-        $flamingo = rgb(f2cdcd)
-        $flamingoAlpha = f2cdcd
-
-        $pink = rgb(f5c2e7)
-        $pinkAlpha = f5c2e7
-
-        $mauve = rgb(cba6f7)
-        $mauveAlpha = cba6f7
-
-        $red = rgb(f38ba8)
-        $redAlpha = f38ba8
-
-        $maroon = rgb(eba0ac)
-        $maroonAlpha = eba0ac
-
-        $peach = rgb(fab387)
-        $peachAlpha = fab387
-
-        $yellow = rgb(f9e2af)
-        $yellowAlpha = f9e2af
-
-        $green = rgb(a6e3a1)
-        $greenAlpha = a6e3a1
-
-        $teal = rgb(94e2d5)
-        $tealAlpha = 94e2d5
-
-        $sky = rgb(89dceb)
-        $skyAlpha = 89dceb
-
-        $sapphire = rgb(74c7ec)
-        $sapphireAlpha = 74c7ec
-
-        $blue = rgb(89b4fa)
-        $blueAlpha = 89b4fa
-
-        $lavender = rgb(b4befe)
-        $lavenderAlpha = b4befe
-
-        $text = rgb(cdd6f4)
-        $textAlpha = cdd6f4
-
-        $subtext1 = rgb(bac2de)
-        $subtext1Alpha = bac2de
-
-        $subtext0 = rgb(a6adc8)
-        $subtext0Alpha = a6adc8
-
-        $overlay2 = rgb(9399b2)
-        $overlay2Alpha = 9399b2
-
-        $overlay1 = rgb(7f849c)
-        $overlay1Alpha = 7f849c
-
-        $overlay0 = rgb(6c7086)
-        $overlay0Alpha = 6c7086
-
-        $surface2 = rgb(585b70)
-        $surface2Alpha = 585b70
-
-        $surface1 = rgb(45475a)
-        $surface1Alpha = 45475a
-
-        $surface0 = rgb(313244)
-        $surface0Alpha = 313244
-
-        $base = rgb(1e1e2e)
-        $baseAlpha = 1e1e2e
-
-        $mantle = rgb(181825)
-        $mantleAlpha = 181825
-
-        $crust = rgb(11111b)
-        $crustAlpha = 11111b
       '';
     };
   };

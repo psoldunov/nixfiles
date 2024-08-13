@@ -7,7 +7,7 @@
   lib,
   config,
   pkgs,
-  nixpkgs-stable,
+  pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -73,7 +73,7 @@ in {
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
 
-  boot.kernelParams = ["quiet"];
+  boot.kernelParams = ["quiet" "video=DP-1:3840x2160@144"];
 
   services.rpcbind.enable = true;
 
@@ -103,6 +103,14 @@ in {
     enable32Bit = true;
     extraPackages = with pkgs; [
       rocmPackages.clr.icd
+      rocmPackages.hipblas
+      rocmPackages.rocm-comgr
+      rocmPackages.rocblas
+      rocmPackages.rocminfo
+      rocmPackages.llvm.lld
+      rocmPackages.roctracer
+      rocmPackages.clr
+      rocmPackages.rocm-cmake
       libva
       vaapiVdpau
       libvdpau-va-gl
@@ -340,14 +348,14 @@ in {
           "joypixels"
         ];
       permittedInsecurePackages = ["python-2.7.18.6" "electron-24.8.6" "python3.12-youtube-dl-2021.12.17"];
-      packageOverrides = pkgs: {
-        allowUnfreePredicate = pkg:
-          builtins.elem (lib.getName pkg) [
-            "steam"
-            "steam-original"
-            "steam-runtime"
-          ];
-      };
+      # packageOverrides = pkgs: {
+      #   allowUnfreePredicate = pkg:
+      #     builtins.elem (lib.getName pkg) [
+      #       "steam"
+      #       "steam-original"
+      #       "steam-runtime"
+      #     ];
+      # };
     };
   };
 
@@ -358,7 +366,14 @@ in {
     (import ./overlays/hyprprop.nix)
     (import ./overlays/vscode.nix)
     (import ./overlays/plymouth-pedro.nix)
-    (import ./overlays/globalprotect-openconnect_git.nix)
+    (self: super: {
+      mpv = super.mpv.override {
+        scripts = [
+          self.mpvScripts.mpris
+        ];
+      };
+    })
+    # (import ./overlays/globalprotect-openconnect_git.nix)
   ];
 
   programs.nano = {
@@ -444,6 +459,10 @@ in {
     };
   };
 
+  systemd.tmpfiles.rules = [
+    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+  ];
+
   # Udev for Apple Superdrive
   services.udev = {
     packages = [
@@ -462,6 +481,8 @@ in {
     cups-pdf.enable = true;
     drivers = with pkgs; [hplipWithPlugin];
   };
+
+  hardware.amdgpu.opencl.enable = true;
 
   hardware.printers = {
     ensurePrinters = [
@@ -486,7 +507,14 @@ in {
   services.fwupd.enable = true;
 
   environment.systemPackages = with pkgs; [
-    globalprotect-openconnect_git
+    abcde
+    cddiscid
+    libmusicbrainz5
+    libmusicbrainz
+    # isrcsubmit
+    monkeysAudio
+    libdiscid
+    # globalprotect-openconnect_git
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
     appimage-run
     wev
@@ -494,6 +522,7 @@ in {
     pciutils
     nixd
     nixpkgs-fmt
+    bulky
     vscode
     sops
     alejandra
@@ -533,7 +562,7 @@ in {
     })
     wget
     evince
-    shotwell
+    eog
     simple-scan
     speedcrunch
     gparted
@@ -571,26 +600,21 @@ in {
     openssl.dev
     imagemagick
     libsecret
-    # (python3.withPackages (p:
-    #   with p; [
-    #     pygobject3
-    #     gst-python
-    #     numpy
-    #     pyinotify
-    #     pip
-    #     mutagen
-    #     setuptools
-    #     gguf
-    #     poetry-core
-    #     sentencepiece
-    #     openai-whisper
-    #     srt
-    #   ]))
+    (pkgs-stable.python3.withPackages (p:
+      with p; [
+        # torchWithRocm
+        discid
+        keyring
+        yt-dlp
+        musicbrainzngs
+        fontforge
+        openai-whisper
+      ]))
     gcc
+    libheif
     protontricks
     ydotool
     desktop-file-utils
-    poetry
     socat
     mangohud
     vulkan-tools
@@ -708,27 +732,35 @@ in {
   # █▀▀ ▄▀█ █▀▄▀█ █ █▄░█ █▀▀
   # █▄█ █▀█ █░▀░█ █ █░▀█ █▄█
 
+  programs.gamescope = {
+    enable = false;
+    capSysNice = true;
+    # env = {
+    #   WLR_RENDERER = "vulkan";
+    #   ENABLE_GAMESCOPE_WSI = "1";
+    #   WINE_FULLSCREEN_FSR = "1";
+    #   # Games allegedly prefer X11
+    #   SDL_VIDEODRIVER = "x11";
+    # };
+    # args = [
+    #   "--xwayland-count 2"
+    #   "--expose-wayland"
+    #   "-e" # Enable steam integration
+    #   "--adaptive-sync"
+    #   "--prefer-output DP-1"
+    #   "--output-width 3840"
+    #   "--output-height 2160"
+    #   "-r 144"
+    #   "--prefer-vk-device"
+    #   "1002:744c" # lspci -nn | grep VGA
+    # ];
+  };
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     platformOptimizations.enable = true;
-    package = pkgs.steam.override {
-      extraEnv = {};
-      extraLibraries = pkgs:
-        with pkgs; [
-          xorg.libXcursor
-          xorg.libXi
-          xorg.libXinerama
-          xorg.libXScrnSaver
-          libpng
-          libpulseaudio
-          libvorbis
-          stdenv.cc.cc.lib
-          libkrb5
-          keyutils
-        ];
-    };
   };
 
   programs.gamemode.enable = true;
@@ -763,17 +795,17 @@ in {
 
   # Wifi Card
 
-  networking.wireless = {
-    enable = false;
-    environmentFile = config.sops.secrets."wireless.env".path;
-    networks = {
-      "@home_uuid@" = {
-        psk = "@home_psk@";
-      };
-    };
-  };
+  # networking.wireless = {
+  #   enable = false;
+  #   environmentFile = config.sops.secrets."wireless.env".path;
+  #   networks = {
+  #     "@home_uuid@" = {
+  #       psk = "@home_psk@";
+  #     };
+  #   };
+  # };
 
-  networking.interfaces.wlp7s0.useDHCP = true;
+  # networking.interfaces.wlp7s0.useDHCP = true;
 
   # Built-in card
   networking.interfaces.enp6s0.useDHCP = true;
@@ -784,8 +816,9 @@ in {
     allowedUDPPorts = [27031 27032 27033 27034 27035 27036 3000 3333 22000 21027 53317 47998 47999 48000 27031 27036];
   };
 
-  # Disable network manager
+  # Enable network manager
   networking.networkmanager.enable = false;
+  programs.nm-applet.enable = false;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -869,7 +902,7 @@ in {
     pam = {
       yubico = {
         enable = true;
-        debug = true;
+        debug = false;
         mode = "challenge-response";
         id = ["19662979"];
       };
@@ -894,6 +927,7 @@ in {
     acceleration = "rocm";
     host = "0.0.0.0";
     rocmOverrideGfx = "11.0.0";
+    package = pkgs-stable.ollama;
     environmentVariables = {
       OLLAMA_ORIGINS = "app://obsidian.md*";
       HSA_OVERRIDE_GFX_VERSION = "11.0.0";
@@ -907,7 +941,7 @@ in {
   users.users.psoldunov = {
     isNormalUser = true;
     description = "Philipp Soldunov";
-    extraGroups = ["networkmanager" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "deluge" "input"];
+    extraGroups = ["networkmanager" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "input"];
     shell = pkgs.fish;
   };
 

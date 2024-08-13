@@ -6,7 +6,7 @@
   lib,
   config,
   pkgs,
-  nixpkgs-stable,
+  pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -20,14 +20,9 @@
     variant = "mocha";
     accents = ["peach"];
   };
-
-  pkgs-stable = import nixpkgs-stable {
-    system = "x86_64-linux";
-  };
 in {
   imports = [
     ./modules
-    # inputs.ags.homeManagerModules.default
   ];
 
   catppuccin = {
@@ -41,11 +36,11 @@ in {
     };
   };
 
-  # services.nextcloud-client = {
-  #   enable = true;
-  #   startInBackground = true;
-  #   package = pkgs-stable.nextcloud-client;
-  # };
+  services.nextcloud-client = {
+    enable = true;
+    startInBackground = true;
+    package = pkgs-stable.nextcloud-client;
+  };
 
   sops = {
     defaultSopsFile = ../secrets/secrets.yaml;
@@ -132,6 +127,7 @@ in {
   };
 
   home.packages = with pkgs; [
+    bruno
     hyprshade
     pkgs-stable.mysql-workbench
     geekbench
@@ -160,14 +156,12 @@ in {
     slack
     protonup-qt
     protonup-ng
-    deluge-gtk
     vesktop
-    youtube-dl
     ookla-speedtest
     catppuccin-cursors
     zed-editor
+    transmission-remote-gtk
     pantheon.elementary-iconbrowser
-    pkgs-stable.nextcloud-client
     scripts.restart_ags
     scripts.idle_check
     scripts.record_screen

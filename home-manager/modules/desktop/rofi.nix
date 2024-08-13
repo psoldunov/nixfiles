@@ -1,7 +1,7 @@
 {
   config,
   libs,
-  pkgs,
+  pkgs-stable,
   ...
 }: let
   inherit (config.lib.formats.rasi) mkLiteral;
@@ -9,8 +9,8 @@ in {
   programs.rofi = {
     catppuccin.enable = false;
     enable = true;
-    package = pkgs.rofi-wayland.override {
-      plugins = with pkgs; [
+    package = pkgs-stable.rofi-wayland.override {
+      plugins = with pkgs-stable; [
         (rofi-calc.override {
           rofi-unwrapped = rofi-wayland-unwrapped;
         })
@@ -34,7 +34,7 @@ in {
     };
     pass = {
       enable = true;
-      package = pkgs.rofi-pass-wayland;
+      package = pkgs-stable.rofi-pass-wayland;
     };
     theme = {
       "#window" = {

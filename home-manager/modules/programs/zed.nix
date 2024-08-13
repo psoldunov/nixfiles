@@ -33,7 +33,7 @@
   };
 in {
   home.file."${config.xdg.dataHome}/zed/node/node-v22.5.1-linux-x64" = {
-    source = "${pkgs.nodejs_22}";
+    source = pkgs.nodejs_22;
     recursive = true;
   };
 

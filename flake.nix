@@ -74,6 +74,9 @@
 
     nixosConfigurations.Whopper = nixpkgs.lib.nixosSystem {
       inherit system;
+      specialArgs = {
+        inherit inputs outputs pkgs-stable;
+      };
       modules = [
         ./nixos/configuration.nix
         nix-ld.nixosModules.nix-ld
@@ -86,7 +89,6 @@
         lix-module.nixosModules.default
         arion.nixosModules.arion
         {
-          services.ollama.package = pkgs-stable.ollama;
           fonts.packages = with apple-fonts.packages.${system}; [
             sf-pro
             sf-compact
@@ -98,15 +100,13 @@
         }
         {
           home-manager = {
-            extraSpecialArgs = {inherit inputs outputs nixpkgs-stable;};
+            extraSpecialArgs = {inherit inputs outputs pkgs-stable;};
             useGlobalPkgs = true;
             useUserPackages = true;
-
             users = {
               psoldunov =
                 import ./home-manager/home.nix;
             };
-
             sharedModules = [
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
