@@ -1,6 +1,5 @@
 {
   config,
-  libs,
   pkgs,
   ...
 }: let
@@ -12,7 +11,6 @@
   '';
 in {
   home.sessionVariables = {
-    STARSHIP_DISTRO = "";
     GOPATH = "/home/psoldunov/.go";
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     DENO_INSTALL = "/home/psoldunov/.deno";
@@ -20,12 +18,17 @@ in {
     TERMINAL = "kitty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
+    VSCODE_GALLERY_SERVICE_URL = "https://marketplace.visualstudio.com/_apis/public/gallery";
+    VSCODE_GALLERY_ITEM_URL = "https://marketplace.visualstudio.com/items";
+    VSCODE_GALLERY_CACHE_URL = "https://vscode.blob.core.windows.net/gallery/index";
+    VSCODE_GALLERY_CONTROL_URL = "";
   };
 
   programs.fish = {
     enable = true;
     shellAliases = {
       reload = "source ~/.config/fish/config.fish && echo 'FISH config reloaded.'";
+      suspend = "systemctl suspend";
     };
     functions = {
       mkcd = {
@@ -36,6 +39,9 @@ in {
       };
       open = {
         body = ''xdg-open "$argv" & disown'';
+      };
+      fzf_kill = {
+        body = ''pkill -9 $(ps aux | fzf | awk '{print $2}')'';
       };
       resetDE = {
         body = ''
@@ -48,6 +54,7 @@ in {
       };
     };
     shellInit = ''
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       set -Ua fish_user_paths $HOME/.cargo/bin
       set --export BUN_INSTALL "$HOME/.bun"
       set --export PATH $BUN_INSTALL/bin $PATH
@@ -98,74 +105,19 @@ in {
     enableFishIntegration = true;
     enableBashIntegration = true;
     settings = {
-      add_newline = true;
-      command_timeout = 1000;
       format = "$env_var $all";
-      character = {
-        success_symbol = "";
-        error_symbol = "";
-      };
-      env_var.A_STARSHIP_SHELL = {
-        format = ''\([$env_value](bold red)\) '';
-        variable = "STARSHIP_SHELL";
-        disabled = false;
-      };
-      env_var.STARSHIP_DISTRO = {
-        format = ''[$env_value](bold blue) '';
-        variable = "STARSHIP_DISTRO";
-        disabled = false;
-      };
-      env_var.USER = {
-        format = ''[$env_value](bold white) on'';
-        variable = "USER";
-        disabled = false;
-      };
       hostname = {
-        ssh_only = false;
-        format = ''[$hostname](bold yellow) '';
+        ssh_only = true;
         disabled = false;
-      };
-      directory = {
-        truncation_length = 1;
-        truncation_symbol = "…/";
-        home_symbol = " ~";
-        read_only_style = "197";
-        read_only = "  ";
-        format = "at [$path]($style)[$read_only]($read_only_style) ";
-      };
-      git_branch = {
-        symbol = " ";
-        format = "via [$symbol$branch]($style) ";
-        truncation_symbol = "…/";
-        style = "bold green";
-      };
-      git_status = {
-        format = ''[\($all_status$ahead_behind\)]($style) '';
-        style = "bold green";
-        conflicted = "🏳";
-        up_to_date = " ";
-        untracked = " ";
-        ahead = ''⇡$count'';
-        diverged = ''⇕⇡{$ahead_count}⇣{$behind_count}'';
-        behind = ''⇣{$count}'';
-        stashed = " ";
-        modified = " ";
-        staged = ''[++\($count\)](green)'';
-        renamed = "襁 ";
-        deleted = " ";
       };
       bun = {
-        format = "via [🍔 $version](bold green) ";
+        format = "via [🥟 $version](bold green) ";
       };
       nodejs = {
         detect_files = ["package.json" ".node-version" "!bunfig.toml" "!bun.lockb" "!deno.json"];
       };
       deno = {
         format = "via [🦕 $version](green bold) ";
-      };
-      kubernetes = {
-        format = ''via [ﴱ $context\($namespace\)](bold purple) '';
-        disabled = false;
       };
     };
   };

@@ -25,7 +25,7 @@
     selected_project=$(echo -e "$project_names" | rofi -no-fixed-num-lines -dmenu -p "Select a project")
 
     if [[ -n "$selected_project" && -n "''${projects[$selected_project]}" ]]; then
-        ${pkgs.zed-editor}/bin/zed -n "''${projects[$selected_project]}"
+        ${pkgs.vscode}/bin/code -n "''${projects[$selected_project]}"
     else
         echo "No valid project selected."
     fi
@@ -127,6 +127,8 @@ in {
     "$cmd $ctrl, Q, exec, lock_screen"
     "$ctrl, M, exit, "
     "$ctrl, E, exec, nemo"
+    "$ctrl, A, togglespecialworkspace, music"
+    "$ctrl SHIFT, A, movetoworkspace, special"
     "$ctrl, V, togglefloating, "
     "$ctrl SHIFT, V, togglefloating,"
     "$ctrl SHIFT, V, pin,"

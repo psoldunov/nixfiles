@@ -3,8 +3,32 @@
   config,
   ...
 }: {
+  convert_all_to_mkv = pkgs.writeShellScriptBin "convert_all_to_mkv" ''
+    # Use the current working directory
+    DIRECTORY=$(pwd)
+
+    # Loop over all mp4 files in the directory
+    for file in "$DIRECTORY"/*.mp4; do
+      # Extract the filename without extension
+      filename=$(basename -- "$file" .mp4)
+
+      # Convert the file using Quick Sync
+     ffmpeg -vaapi_device /dev/dri/renderD128 -i "$file" -vf 'format=nv12,hwupload' -c:v h264_vaapi -c:a copy "$DIRECTORY/$filename.mkv"
+
+      # Check if the conversion was successful before deleting the original file
+      if [ $? -eq 0 ]; then
+        echo "Converted $file to $DIRECTORY/$filename.mkv successfully."
+
+        # Delete the original file
+        rm "$file"
+      else
+        echo "Failed to convert $file. Skipping deletion."
+      fi
+    done
+  '';
+
   restart_ags = pkgs.writeShellScriptBin "restart_ags" ''
-    ${config.programs.ags.finalPackage}/bin/ags -q && ${config.programs.ags.finalPackage}/bin/ags -i & disown
+    ${config.programs.ags.finalPackage}/bin/ags -q && ${config.programs.ags.finalPackage}/bin/ags & disown
   '';
 
   idle_check = pkgs.writeShellScriptBin "idle_check" ''
@@ -86,8 +110,16 @@
       fi
       ${pkgs.swww}/bin/swww-daemon &
       ${pkgs.swww}/bin/swww img "$STATIC_WALLPAPER"
-      ${pkgs.imagemagick}/bin/convert "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
+      ${pkgs.imagemagick}/bin/magick "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
       exit 0
+    ''
+  );
+
+  update_system = (
+    pkgs.writeShellScriptBin "update_system" ''
+      cd /etc/nixos
+      sudo nix flake update
+      sudo nixos-rebuild switch --show-trace --upgrade-all
     ''
   );
 
@@ -118,7 +150,17 @@
     pkgs.writeShellScriptBin "convert_all_to_webp" ''
       for img in *.{jpg,jpeg,png,gif}; do
           if [ -e "$img" ]; then # Skip if no files are found
-              ${pkgs.imagemagick}/bin/convert "$img" "$(echo "$img" | sed 's/\.[^.]*$//').webp" && rm "$img"
+              ${pkgs.imagemagick}/bin/magick "$img" "$(echo "$img" | sed 's/\.[^.]*$//').webp" && rm "$img"
+          fi
+      done
+    ''
+  );
+
+  convert_all_to_woff2 = (
+    pkgs.writeShellScriptBin "convert_all_to_woff2" ''
+      for font in *.{otf,ttf,woff,eot}; do
+          if [ -e "$font" ]; then # Skip if no files are found
+              ${pkgs.woff2}/bin/woff2_compress "$font" && rm "$font"
           fi
       done
     ''

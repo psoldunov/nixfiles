@@ -1,7 +1,9 @@
 {
   config,
   libs,
+  inputs,
   pkgs,
+  pkgs-stable,
   ...
 }: let
   wallpaperPath = /home/psoldunov/Pictures/Wallpapers/porsche-uw.jpg;
@@ -46,6 +48,8 @@ in {
       enable = true;
       enableXdgAutostart = true;
     };
+    plugins = [
+    ];
     xwayland.enable = true;
     settings =
       {
@@ -115,7 +119,7 @@ in {
           disable_splash_rendering = true;
           allow_session_lock_restore = true;
           vrr = 2;
-          mouse_move_enables_dpms = true;
+          # mouse_move_enables_dpms = true;
           key_press_enables_dpms = true;
         };
         device = [
@@ -149,6 +153,14 @@ in {
       // keyBinds;
   };
 
+  xdg = {
+    portal = {
+      enable = true;
+      extraPortals = [pkgs.xdg-desktop-portal-gtk];
+      config.common.default = "*";
+    };
+  };
+
   home.sessionVariables = {
     HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
     HYPRCURSOR_SIZE = "24";
@@ -160,7 +172,7 @@ in {
     QT_QPA_PLATFORM = "wayland;xcb";
     GDK_BACKEND = "wayland,x11";
     CLUTTER_BACKEND = "wayland";
-    # SDL_VIDEODRIVER = "wayland";
+    SDL_VIDEODRIVER = "wayland";
     XCURSOR_SIZE = "24";
     GDK_SCALE = 1;
   };
@@ -169,8 +181,8 @@ in {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
-        # exec-once = start_static_wallpaper ${wallpaperPath}
-        exec-once = start_video_wallpaper
+        exec-once = start_static_wallpaper ${wallpaperPath}
+        # exec-once = start_video_wallpaper
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
       '';

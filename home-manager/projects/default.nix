@@ -29,5 +29,17 @@ in {
       name = "express";
       path = "${personal}/express";
     }
+    {
+      name = "viteflow";
+      path = "${personal}/viteflow";
+    }
+    {
+      name = "fanfuel";
+      path = "${boundary}/fanfuel-frontend";
+    }
+    {
+      name = "app.beltbase.io";
+      path = "${personal}/app.beltbase.io";
+    }
   ];
 }

@@ -7,6 +7,7 @@
   config,
   pkgs,
   pkgs-stable,
+  zen-specific,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -127,8 +128,10 @@ in {
   };
 
   home.packages = with pkgs; [
+    beets
     bruno
     hyprshade
+    rpi-imager
     pkgs-stable.mysql-workbench
     geekbench
     bambu-studio
@@ -138,18 +141,22 @@ in {
     obsidian
     pywal
     spotify
-    bitwarden-desktop
-    bitwarden-cli
     mattermost-desktop
     gnome-font-viewer
     rofi-bluetooth
     duckstation
+    plex-media-player
+    plexamp
     pcsx2
     heroic
+    chiaki
+    notion-app-enhanced
+    appflowy
     ferdium
     steam-rom-manager
     prismlauncher
     ryujinx
+    picard
     gimp
     newman
     telegram-desktop
@@ -159,7 +166,9 @@ in {
     vesktop
     ookla-speedtest
     catppuccin-cursors
+    varia
     zed-editor
+    zen-specific
     transmission-remote-gtk
     pantheon.elementary-iconbrowser
     scripts.restart_ags
@@ -172,6 +181,9 @@ in {
     scripts.start_static_wallpaper
     scripts.start_video_wallpaper
     scripts.convert_all_to_webp
+    scripts.convert_all_to_woff2
+    scripts.convert_all_to_mkv
+    scripts.update_system
   ];
 
   dconf.settings = {
@@ -241,18 +253,6 @@ in {
         Categories=Development;
       '';
     };
-    ".local/share/applications/postman.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Postman
-        GenericName=API Editor
-        Icon=postman
-        Exec=chromium --new-window --app=https://web.postman.co/workspaces %U
-        Terminal=false
-        Categories=Development;
-      '';
-    };
     ".local/share/applications/figma.desktop" = {
       text = ''
         [Desktop Entry]
@@ -260,7 +260,7 @@ in {
         Name=Figma
         GenericName=Design Tool
         Icon=figma
-        Exec=chromium --new-window --app=https://www.figma.com/files/ %U
+        Exec=${pkgs.appimage-run}/bin/appimage-run ${config.home.homeDirectory}/Applications/figma-linux_0.11.4_linux_x86_64.AppImage --ozone-platform=wayland
         Terminal=false
         Categories=Development;
       '';

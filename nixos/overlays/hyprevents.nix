@@ -7,7 +7,7 @@ self: super: {
       owner = "vilari-mickopf";
       repo = "hyprevents";
       rev = "master"; # Fetches the latest commit on the main branch
-      sha256 = "belWG6nlDUIxO2hLxg0kK9AuDRLZeJfpHNo5LXdujbY="; # Placeholder, update after first build attempt
+      sha256 = "W+wMBqNi7UfxFm5Dxl/wHXA36K9dVL5ocqllfyFWOM8="; # Placeholder, update after first build attempt
     };
 
     propagatedBuildInputs = with super; [

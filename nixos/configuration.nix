@@ -8,6 +8,7 @@
   config,
   pkgs,
   pkgs-stable,
+  appleFonts,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -86,11 +87,10 @@ in {
       };
       GTK = {
         application_prefer_dark_theme = true;
-        icon_theme_name = "Papirus";
-        theme_name = "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
-        font_name = "SF Pro Display 12";
+        icon_theme_name = lib.mkForce "Papirus";
+        theme_name = lib.mkForce "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
+        font_name = lib.mkForce "SF Pro Display 12";
       };
-
       commands = {
         reboot = ["systemctl" "reboot"];
         poweroff = ["systemctl" "poweroff"];
@@ -102,15 +102,8 @@ in {
     enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
-      rocmPackages.clr.icd
       rocmPackages.hipblas
-      rocmPackages.rocm-comgr
-      rocmPackages.rocblas
-      rocmPackages.rocminfo
-      rocmPackages.llvm.lld
-      rocmPackages.roctracer
       rocmPackages.clr
-      rocmPackages.rocm-cmake
       libva
       vaapiVdpau
       libvdpau-va-gl
@@ -126,10 +119,6 @@ in {
   boot.swraid.enable = true;
   boot.swraid.mdadmConf = "MAILADDR=philipp@theswisscheese.com";
 
-  programs.hyprland = {
-    enable = true;
-  };
-
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -137,8 +126,9 @@ in {
   };
 
   environment.sessionVariables = {
-    GPERFTOOLS32_PATH = "${i686pkgs.gperftools}";
-    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas";
+    HSA_OVERRIDE_GFX_VERSION = "11.0.0";
+    # GPERFTOOLS32_PATH = "${i686pkgs.gperftools}";
+    # GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas";
   };
 
   services.mpd = {
@@ -163,8 +153,8 @@ in {
     mime = {
       enable = true;
       defaultApplications = {
-        "application/pdf" = "firefox.desktop";
-        "text/html" = "firefox.desktop";
+        "application/pdf" = "zen.desktop";
+        "text/html" = "zen.desktop";
         "inode/directory" = "nemo.desktop";
         "TerminalEmulator" = "kitty.desktop";
       };
@@ -172,7 +162,12 @@ in {
     portal = {
       enable = true;
       extraPortals = [pkgs.xdg-desktop-portal-gtk];
+      config.common.default = "*";
     };
+  };
+
+  programs.hyprland = {
+    enable = true;
   };
 
   systemd.services.mpd.environment = {
@@ -271,10 +266,6 @@ in {
     };
   };
 
-  virtualisation.arion = {
-    backend = "docker";
-  };
-
   programs.direnv.enable = true;
   programs.seahorse.enable = true;
 
@@ -328,6 +319,7 @@ in {
         firefox
         brave
         chromium
+        .zen-wrapped
       '';
       mode = "0755";
     };
@@ -348,14 +340,6 @@ in {
           "joypixels"
         ];
       permittedInsecurePackages = ["python-2.7.18.6" "electron-24.8.6" "python3.12-youtube-dl-2021.12.17"];
-      # packageOverrides = pkgs: {
-      #   allowUnfreePredicate = pkg:
-      #     builtins.elem (lib.getName pkg) [
-      #       "steam"
-      #       "steam-original"
-      #       "steam-runtime"
-      #     ];
-      # };
     };
   };
 
@@ -373,7 +357,6 @@ in {
         ];
       };
     })
-    # (import ./overlays/globalprotect-openconnect_git.nix)
   ];
 
   programs.nano = {
@@ -422,7 +405,13 @@ in {
     comic-neue
     comic-mono
     ibm-plex
-    # (nerdfonts.override {fonts = ["JetBrainsMono"];})
+    appleFonts.sf-pro
+    appleFonts.sf-compact
+    appleFonts.sf-mono
+    appleFonts.sf-mono-nerd
+    appleFonts.sf-arabic
+    appleFonts.ny
+    (nerdfonts.override {fonts = ["JetBrainsMono"];})
   ];
 
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
@@ -458,10 +447,6 @@ in {
       rate = 48000;
     };
   };
-
-  systemd.tmpfiles.rules = [
-    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
-  ];
 
   # Udev for Apple Superdrive
   services.udev = {
@@ -549,10 +534,13 @@ in {
     solaar
     kitty-img
     kitty-themes
+    emojione
     sassc
     bat
     cloudflared
     hyprcursor
+    docker-compose
+    docker-compose-language-service
     linux-firmware
     libgcc
     fzf
@@ -580,7 +568,9 @@ in {
     # telegram-desktop_git
     gnome-icon-theme
     adwaita-icon-theme
+    p7zip
     gnome-themes-extra
+    zenity
     hyprevents
     joypixels
     radeontop
@@ -593,6 +583,7 @@ in {
     brave
     cliphist
     webp-pixbuf-loader
+    kdiskmark
     libwebp
     slurp
     wl-clipboard
@@ -619,7 +610,6 @@ in {
     mangohud
     vulkan-tools
     zoxide
-    jellyfin-media-player
     bottles
     libva-utils
     cargo
@@ -632,11 +622,11 @@ in {
     skate
     hyprprop
     gum
-    typst
-    typstfmt
-    typst-lsp
+    pkgs-stable.typst
+    pkgs-stable.typstfmt
+    pkgs-stable.typst-lsp
     translate-shell
-    typst-live
+    pkgs-stable.typst-live
     nss
     mkinitcpio-nfs-utils
     libnfs
@@ -667,7 +657,6 @@ in {
     nix-prefetch-scripts
     pamixer
     hyprpicker
-    hyprpaper
     swayidle
     corepack
     swaylock
@@ -732,30 +721,6 @@ in {
   # █▀▀ ▄▀█ █▀▄▀█ █ █▄░█ █▀▀
   # █▄█ █▀█ █░▀░█ █ █░▀█ █▄█
 
-  programs.gamescope = {
-    enable = false;
-    capSysNice = true;
-    # env = {
-    #   WLR_RENDERER = "vulkan";
-    #   ENABLE_GAMESCOPE_WSI = "1";
-    #   WINE_FULLSCREEN_FSR = "1";
-    #   # Games allegedly prefer X11
-    #   SDL_VIDEODRIVER = "x11";
-    # };
-    # args = [
-    #   "--xwayland-count 2"
-    #   "--expose-wayland"
-    #   "-e" # Enable steam integration
-    #   "--adaptive-sync"
-    #   "--prefer-output DP-1"
-    #   "--output-width 3840"
-    #   "--output-height 2160"
-    #   "-r 144"
-    #   "--prefer-vk-device"
-    #   "1002:744c" # lspci -nn | grep VGA
-    # ];
-  };
-
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -780,8 +745,8 @@ in {
   networking = {
     defaultGateway = "10.24.24.1";
     nameservers = [
-      #"1.1.1.1"
-      "10.24.24.9"
+      "10.24.24.2"
+      "1.1.1.1"
     ];
   };
 
@@ -812,7 +777,7 @@ in {
 
   # Networking firewall configuration.
   networking.firewall = {
-    allowedTCPPorts = [22 8384 3000 3333 22000 9001 5173 4567 11434 5201 53317 47984 27040 47989 47990 48010 27036 27037];
+    allowedTCPPorts = [22 59012 8384 3000 3333 22000 9001 5173 4567 4355 11434 5201 53317 47984 27040 47989 47990 48010 27036 27037];
     allowedUDPPorts = [27031 27032 27033 27034 27035 27036 3000 3333 22000 21027 53317 47998 47999 48000 27031 27036];
   };
 
@@ -838,9 +803,6 @@ in {
 
     secrets = {
       "wireless.env" = {};
-      # CFD_OLLAMA_TUNNEL = {
-      #   owner = "cloudflared";
-      # };
     };
   };
 
@@ -848,20 +810,6 @@ in {
   services.cloudflared = {
     enable = true;
     user = "cloudflared";
-    # tunnels = {
-    #   "ollama-tunnel" = {
-    #     credentialsFile = config.sops.secrets.CFD_OLLAMA_TUNNEL.path;
-    #     default = "http_status:404";
-    #     originRequest = {
-    #       httpHostHeader = "localhost:11434";
-    #     };
-    #     ingress = {
-    #       "ollama.theswisscheese.com" = {
-    #         service = "http://localhost:11434";
-    #       };
-    #     };
-    #   };
-    # };
   };
 
   # Syncthing
@@ -927,7 +875,6 @@ in {
     acceleration = "rocm";
     host = "0.0.0.0";
     rocmOverrideGfx = "11.0.0";
-    package = pkgs-stable.ollama;
     environmentVariables = {
       OLLAMA_ORIGINS = "app://obsidian.md*";
       HSA_OVERRIDE_GFX_VERSION = "11.0.0";
@@ -941,7 +888,7 @@ in {
   users.users.psoldunov = {
     isNormalUser = true;
     description = "Philipp Soldunov";
-    extraGroups = ["networkmanager" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "input"];
+    extraGroups = ["networkmanager" "docker" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "input"];
     shell = pkgs.fish;
   };
 

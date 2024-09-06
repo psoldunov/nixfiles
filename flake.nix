@@ -6,10 +6,19 @@
 
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
+
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # hyprland.url = "github:hyprwm/Hyprland";
+
+    # hyprland-plugins = {
+    #   url = "github:hyprwm/hyprland-plugins";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -39,16 +48,12 @@
     ags = {
       url = "github:Aylur/ags";
     };
-
-    arion = {
-      url = "github:hercules-ci/arion";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = {
     self,
     nixpkgs,
+    zen-browser,
     ags,
     chaotic,
     nixpkgs-stable,
@@ -57,50 +62,47 @@
     nix-gaming,
     sops-nix,
     home-manager,
-    arion,
     apple-fonts,
     catppuccin,
+    # hyprland,
+    # hyprland-plugins,
     ...
   } @ inputs: let
     inherit (self) outputs;
 
     system = "x86_64-linux";
 
+    zen-specific = zen-browser.packages."${system}".specific;
+
     pkgs-stable = import nixpkgs-stable {
       inherit system;
     };
+
+    appleFonts = apple-fonts.packages.${system};
   in {
     formatter = nixpkgs.pkgs.alejandra;
 
     nixosConfigurations.Whopper = nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {
-        inherit inputs outputs pkgs-stable;
+        inherit inputs outputs appleFonts pkgs-stable;
       };
       modules = [
         ./nixos/configuration.nix
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
+        # hyprland.nixosModules.default
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         chaotic.nixosModules.default
         catppuccin.nixosModules.catppuccin
         lix-module.nixosModules.default
-        arion.nixosModules.arion
-        {
-          fonts.packages = with apple-fonts.packages.${system}; [
-            sf-pro
-            sf-compact
-            sf-mono
-            sf-mono-nerd
-            sf-arabic
-            ny
-          ];
-        }
         {
           home-manager = {
-            extraSpecialArgs = {inherit inputs outputs pkgs-stable;};
+            extraSpecialArgs = {
+              inherit inputs outputs pkgs-stable zen-specific;
+            };
             useGlobalPkgs = true;
             useUserPackages = true;
             users = {
@@ -108,6 +110,7 @@
                 import ./home-manager/home.nix;
             };
             sharedModules = [
+              # hyprland.homeManagerModules.default
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default
