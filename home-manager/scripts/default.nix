@@ -118,6 +118,8 @@
   update_system = (
     pkgs.writeShellScriptBin "update_system" ''
       cd /etc/nixos
+      git add .
+      git commit -am "pre-update commit $(date '+%d/%m/%Y %H:%M:%S')"
       sudo nix flake update
       sudo nixos-rebuild switch --show-trace --upgrade-all
     ''
