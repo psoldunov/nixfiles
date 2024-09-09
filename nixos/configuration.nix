@@ -551,6 +551,7 @@ in {
     wget
     evince
     eog
+    bchunk
     simple-scan
     speedcrunch
     gparted
