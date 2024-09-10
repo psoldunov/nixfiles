@@ -575,6 +575,7 @@ in {
     zenity
     hyprevents
     joypixels
+    synergy
     radeontop
     pkg-config
     thunderbird
