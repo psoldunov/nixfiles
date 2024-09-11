@@ -35,7 +35,7 @@ in {
     }
     {
       name = "fanfuel";
-      path = "${boundary}/fanfuel-frontend";
+      path = "${boundary}/fanfuel";
     }
     {
       name = "app.beltbase.io";
