@@ -300,7 +300,6 @@ in {
   programs = {
     _1password.enable = true;
     _1password-gui = {
-      package = pkgs._1password-gui-beta;
       enable = true;
       # Certain features, including CLI integration and system authentication support,
       # require enabling PolKit integration on some desktop environments (e.g. Plasma).
@@ -883,6 +882,7 @@ in {
   services.ollama = {
     enable = true;
     acceleration = "rocm";
+    package = pkgs-stable.ollama;
     host = "0.0.0.0";
     rocmOverrideGfx = "11.0.0";
     environmentVariables = {

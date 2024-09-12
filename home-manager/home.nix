@@ -53,6 +53,7 @@ in {
       RESEND_API_KEY = {};
       OPENAI_API_KEY = {};
       GH_TOKEN = {};
+      ANTHROPIC_API_KEY = {};
     };
   };
 

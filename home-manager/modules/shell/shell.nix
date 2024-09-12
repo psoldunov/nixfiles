@@ -6,6 +6,7 @@
   setSecrets = ''
     export GH_TOKEN="$(cat ${config.sops.secrets.GH_TOKEN.path})"
     export NPM_TOKEN="$(cat ${config.sops.secrets.NPM_TOKEN.path})"
+    export ANTHROPIC_API_KEY="$(cat ${config.sops.secrets.ANTHROPIC_API_KEY.path})"
     export RESEND_API_KEY="$(cat ${config.sops.secrets.RESEND_API_KEY.path})"
     export OPENAI_API_KEY="$(cat ${config.sops.secrets.OPENAI_API_KEY.path})"
   '';
