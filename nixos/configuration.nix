@@ -28,10 +28,6 @@ in {
 
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
-  boot.kernelParams = [
-    "video=DP-1:3840x2160@144"
-  ];
-
   fileSystems."/NVMe" = {
     device = "/dev/disk/by-uuid/299c7edb-dbed-440b-9c49-16f344520558";
     fsType = "ext4";
