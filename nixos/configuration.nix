@@ -26,6 +26,62 @@ in {
     flavor = "mocha";
   };
 
+  boot.initrd.kernelModules = ["amdgpu" "nfs"];
+
+  boot.kernelParams = [
+    "video=DP-1:3840x2160@144"
+  ];
+
+  fileSystems."/NVMe" = {
+    device = "/dev/disk/by-uuid/299c7edb-dbed-440b-9c49-16f344520558";
+    fsType = "ext4";
+    label = "NVMe";
+    options = ["defaults" "x-gvfs-show"];
+  };
+
+  fileSystems."/SATA" = {
+    device = "/dev/disk/by-uuid/85f1737f-a523-4c18-b042-77e4a87404f6";
+    fsType = "ext4";
+    label = "SATA";
+    options = ["defaults" "x-gvfs-show"];
+  };
+
+  fileSystems."/mnt/Media" = {
+    device = "10.24.24.3:/volume1/Media/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=media-tape-symbolic"];
+  };
+
+  fileSystems."/mnt/Files" = {
+    device = "10.24.24.3:/volume1/Files/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=file-catalog-symbolic"];
+  };
+
+  fileSystems."/mnt/Documents" = {
+    device = "10.24.24.3:/volume1/Documents/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=x-office-document-symbolic"];
+  };
+
+  fileSystems."/mnt/Camera" = {
+    device = "10.24.24.3:/volume1/Camera/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=camera-symbolic"];
+  };
+
+  fileSystems."/mnt/Transmission" = {
+    device = "10.24.24.2:/export/transmission";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=folder-download-symbolic"];
+  };
+
+  fileSystems."/mnt/Games" = {
+    device = "10.24.24.3:/volume1/Games/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show"];
+  };
+
   console = {
     catppuccin.enable = false;
     earlySetup = true;
