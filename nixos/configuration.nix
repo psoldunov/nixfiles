@@ -227,8 +227,11 @@ in {
 
   programs.hyprland = {
     enable = true;
-    # package = inputs.hyprland.packages."x86_64-linux".hyprland;
+    xwayland.enable = true;
   };
+
+  services.hypridle.enable = true;
+  programs.hyprlock.enable = true;
 
   systemd.services.mpd.environment = {
     # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609

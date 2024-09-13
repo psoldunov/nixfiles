@@ -8,7 +8,6 @@
   hyprctlBin = "${pkgs.hyprland}/bin/hyprctl";
 in {
   programs.hyprlock = {
-    enable = true;
     settings = {
       source = "${config.xdg.configHome}/hypr/mocha.conf";
 
@@ -90,7 +89,6 @@ in {
   };
 
   services.hypridle = {
-    enable = true;
     settings = {
       general = {
         lock_cmd = "pgrep hyprlock || idle_check || ${hyprlockBin}";

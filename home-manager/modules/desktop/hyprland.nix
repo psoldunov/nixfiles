@@ -42,7 +42,6 @@ in {
   services.mpris-proxy.enable = true;
 
   wayland.windowManager.hyprland = {
-    enable = true;
     catppuccin.enable = false;
     # package = inputs.hyprland.packages."x86_64-linux".hyprland;
     systemd = {
@@ -51,7 +50,6 @@ in {
     };
     plugins = [
     ];
-    xwayland.enable = true;
     settings =
       {
         source = [
