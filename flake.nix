@@ -86,7 +86,7 @@
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
-        hyprland.nixosModules.default
+        # hyprland.nixosModules.default
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         chaotic.nixosModules.default
@@ -103,7 +103,7 @@
                 import ./home-manager/home.nix;
             };
             sharedModules = [
-              hyprland.homeManagerModules.default
+              # hyprland.homeManagerModules.default
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default
