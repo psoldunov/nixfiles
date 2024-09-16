@@ -212,8 +212,7 @@ in {
     mime = {
       enable = true;
       defaultApplications = {
-        "application/pdf" = "zen.desktop";
-        "text/html" = "zen.desktop";
+        "text/html" = "firefox.desktop";
         "inode/directory" = "nemo.desktop";
         "TerminalEmulator" = "kitty.desktop";
       };
@@ -591,7 +590,6 @@ in {
     kitty
     sg3_utils
     libsForQt5.kdenlive
-    libsForQt5.qt5ct
     glaxnimate
     solaar
     kitty-img
@@ -611,7 +609,7 @@ in {
       variant = "${config.catppuccin.flavor}";
     })
     wget
-    evince
+    papers
     eog
     bchunk
     simple-scan
@@ -624,7 +622,6 @@ in {
     qpaeq
     run
     iperf
-    kdePackages.qt6ct
     yubikey-manager-qt
     yubikey-manager
     virt-manager

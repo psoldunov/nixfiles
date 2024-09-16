@@ -9,6 +9,8 @@
     ./desktop/rofi.nix
     ./desktop/pywal.nix
     ./desktop/mako.nix
+    ./desktop/qt
+    ./desktop/gtk
     ./git/git.nix
     ./programs/ncmpcpp.nix
     ./programs/spotifyd.nix

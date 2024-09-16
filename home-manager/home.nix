@@ -16,11 +16,6 @@
     pkgs = pkgs;
     config = config;
   };
-
-  catppuccin-gtk-theme = pkgs.catppuccin-gtk.override {
-    variant = "mocha";
-    accents = ["peach"];
-  };
 in {
   imports = [
     ./modules
@@ -56,6 +51,48 @@ in {
       GH_TOKEN = {};
     };
   };
+
+  xdg = {
+    mime.enable = true;
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "inode/directory" = ["nemo.desktop" "yazi.desktop"];
+        "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
+        "text/html" = ["firefox.desktop"];
+        "TerminalEmulator" = "kitty.desktop";
+        "image/jpeg" = ["org.gnome.eog.desktop"];
+        "image/png" = ["org.gnome.eog.desktop"];
+        "image/svg+xml" = ["org.gnome.eog.desktop"];
+        "image/gif" = ["org.gnome.eog.desktop"];
+        "image/webp" = ["org.gnome.eog.desktop"];
+        "video/mp4" = ["mpv.desktop"];
+        "video/webm" = ["mpv.desktop"];
+        "video/x-matroska" = ["mpv.desktop"];
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
+        "x-scheme-handler/chrome" = "firefox.desktop";
+        "application/x-extension-htm" = "firefox.desktop";
+        "application/x-extension-html" = "firefox.desktop";
+        "application/x-extension-shtml" = "firefox.desktop";
+        "application/xhtml+xml" = "firefox.desktop";
+        "application/x-extension-xhtml" = "firefox.desktop";
+        "application/x-extension-xht" = "firefox.desktop";
+      };
+      associations = {
+        removed = {
+          "application/pdf" = ["chromium-browser.desktop"];
+        };
+      };
+    };
+  };
+
+  # xdg.desktopEntries = {
+  #   "qt5ct.desktop" = {
+  #     name = "Qt5 Settings";
+  #     noDisplay = true;
+  #   };
+  # };
 
   systemd.user.enable = true;
 
@@ -165,6 +202,8 @@ in {
     protonup-qt
     protonup-ng
     vesktop
+    lightly-boehs
+    # libsForQt5.lightly
     ookla-speedtest
     catppuccin-cursors
     varia
@@ -199,49 +238,7 @@ in {
     htop.enable = true;
   };
 
-  gtk = {
-    enable = true;
-    theme = {
-      name = "catppuccin-mocha-peach-standard";
-      package = catppuccin-gtk-theme;
-    };
-    catppuccin = {
-      enable = false;
-      icon = {
-        enable = true;
-        accent = "peach";
-        flavor = "mocha";
-      };
-    };
-
-    cursorTheme = {
-      name = "catppuccin-mocha-dark-cursors";
-      package = pkgs.catppuccin-cursors.mochaDark;
-      size = 24;
-    };
-
-    font = {
-      name = "SF Pro Display";
-      size = 12;
-    };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme.name = "qtct";
-    style = {
-      catppuccin.enable = false;
-    };
-  };
-
   home.file = {
-    ".config/gtk-4.0/gtk-dark.css" = {
-      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/gtk-dark.css";
-    };
-    ".config/gtk-4.0/assets" = {
-      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/assets";
-      recursive = true;
-    };
     ".local/share/applications/webflow.desktop" = {
       text = ''
         [Desktop Entry]
@@ -274,6 +271,17 @@ in {
         GenericName=This opens nixfiles in Zed
         Icon=nix-snowflake
         Exec=zed --new /home/psoldunov/.nixfiles
+        Terminal=false
+      '';
+    };
+    ".local/share/applications/nixfiles-code.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Open Nixfiles in VS Code
+        GenericName=This opens nixfiles in VS Code
+        Icon=nix-snowflake
+        Exec=code -n /home/psoldunov/.nixfiles
         Terminal=false
       '';
     };
