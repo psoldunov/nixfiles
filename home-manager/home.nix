@@ -60,6 +60,7 @@ in {
         "inode/directory" = ["nemo.desktop" "yazi.desktop"];
         "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
         "text/html" = ["firefox.desktop"];
+        "text/*" = ["code.desktop" "zed.desktop"];
         "TerminalEmulator" = "kitty.desktop";
         "image/jpeg" = ["org.gnome.eog.desktop"];
         "image/png" = ["org.gnome.eog.desktop"];
@@ -69,6 +70,8 @@ in {
         "video/mp4" = ["mpv.desktop"];
         "video/webm" = ["mpv.desktop"];
         "video/x-matroska" = ["mpv.desktop"];
+        "x-scheme-handler/magnet" = ["io.github.TransmissionRemoteGtk.desktop"];
+        "WebBrowser" = "firefox.desktop";
         "x-scheme-handler/http" = "firefox.desktop";
         "x-scheme-handler/https" = "firefox.desktop";
         "x-scheme-handler/chrome" = "firefox.desktop";
@@ -78,21 +81,35 @@ in {
         "application/xhtml+xml" = "firefox.desktop";
         "application/x-extension-xhtml" = "firefox.desktop";
         "application/x-extension-xht" = "firefox.desktop";
-      };
-      associations = {
-        removed = {
-          "application/pdf" = ["chromium-browser.desktop"];
-        };
+        "Email" = "thunderbird.desktop";
+        "message/rfc822" = "thunderbird.desktop";
+        "x-scheme-handler/mailto" = "thunderbird.desktop";
+        "x-scheme-handler/mid" = "thunderbird.desktop";
+        "x-scheme-handler/news" = "thunderbird.desktop";
+        "x-scheme-handler/snews" = "thunderbird.desktop";
+        "x-scheme-handler/nntp" = "thunderbird.desktop";
+        "x-scheme-handler/feed" = "thunderbird.desktop";
+        "application/rss+xml" = "thunderbird.desktop";
+        "application/x-extension-rss" = "thunderbird.desktop";
+        "x-scheme-handler/webcal" = "thunderbird.desktop";
+        "text/calendar" = "thunderbird.desktop";
+        "application/x-extension-ics" = "thunderbird.desktop";
+        "x-scheme-handler/webcals" = "thunderbird.desktop";
       };
     };
   };
 
-  # xdg.desktopEntries = {
-  #   "qt5ct.desktop" = {
-  #     name = "Qt5 Settings";
-  #     noDisplay = true;
-  #   };
-  # };
+  xdg.desktopEntries = {
+    spotify = {
+      name = "Spotify";
+      genericName = "Music Player";
+      icon = "spotify-client";
+      exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
+      terminal = false;
+      mimeType = ["x-scheme-handler/spotify"];
+      categories = ["Audio" "Music" "Player" "AudioVideo"];
+    };
+  };
 
   systemd.user.enable = true;
 
