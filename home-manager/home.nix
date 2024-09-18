@@ -16,6 +16,39 @@
     pkgs = pkgs;
     config = config;
   };
+
+  urlHandlerRedirect = pkgs.writeShellScriptBin "urlHandlerRedirect" ''
+    open_in_figma() {
+        echo "Opening $1 in Figma Desktop..."
+        ${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} "$1" &
+    }
+
+    # Function to open URL in Firefox
+    open_in_firefox() {
+        echo "Opening $1 in Firefox..."
+        ${pkgs.firefox}/bin/firefox "$1" &
+    }
+
+    # Check if a URL was provided
+    if [ -z "$1" ]; then
+        echo "Please provide a URL"
+        exit 1
+    fi
+
+    url=$1
+
+    # Check if the URL contains "figma.com"
+    if [[ $url == *"figma.com"* ]]; then
+        open_in_figma "$url"
+    else
+        open_in_firefox "$url"
+    fi
+  '';
+
+  figma-appimage = pkgs.fetchurl {
+    url = "https://github.com/Figma-Linux/figma-linux/releases/download/v0.11.4/figma-linux_0.11.4_linux_x86_64.AppImage";
+    sha256 = "1z9k3r6ggh8iy2v21siw0qvks4jch1al0bijf0v62jw6yb3k0r89";
+  };
 in {
   imports = [
     ./modules
@@ -54,49 +87,6 @@ in {
 
   xdg = {
     mime.enable = true;
-    mimeApps = {
-      enable = true;
-      defaultApplications = {
-        "inode/directory" = ["nemo.desktop" "yazi.desktop"];
-        "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
-        "text/html" = ["firefox.desktop"];
-        "text/*" = ["code.desktop" "zed.desktop"];
-        "TerminalEmulator" = "kitty.desktop";
-        "image/jpeg" = ["org.gnome.eog.desktop"];
-        "image/png" = ["org.gnome.eog.desktop"];
-        "image/svg+xml" = ["org.gnome.eog.desktop"];
-        "image/gif" = ["org.gnome.eog.desktop"];
-        "image/webp" = ["org.gnome.eog.desktop"];
-        "video/mp4" = ["mpv.desktop"];
-        "video/webm" = ["mpv.desktop"];
-        "video/x-matroska" = ["mpv.desktop"];
-        "x-scheme-handler/magnet" = ["io.github.TransmissionRemoteGtk.desktop"];
-        "WebBrowser" = "firefox.desktop";
-        "x-scheme-handler/http" = "firefox.desktop";
-        "x-scheme-handler/https" = "firefox.desktop";
-        "x-scheme-handler/chrome" = "firefox.desktop";
-        "application/x-extension-htm" = "firefox.desktop";
-        "application/x-extension-html" = "firefox.desktop";
-        "application/x-extension-shtml" = "firefox.desktop";
-        "application/xhtml+xml" = "firefox.desktop";
-        "application/x-extension-xhtml" = "firefox.desktop";
-        "application/x-extension-xht" = "firefox.desktop";
-        "Email" = "thunderbird.desktop";
-        "message/rfc822" = "thunderbird.desktop";
-        "x-scheme-handler/mailto" = "thunderbird.desktop";
-        "x-scheme-handler/mid" = "thunderbird.desktop";
-        "x-scheme-handler/news" = "thunderbird.desktop";
-        "x-scheme-handler/snews" = "thunderbird.desktop";
-        "x-scheme-handler/nntp" = "thunderbird.desktop";
-        "x-scheme-handler/feed" = "thunderbird.desktop";
-        "application/rss+xml" = "thunderbird.desktop";
-        "application/x-extension-rss" = "thunderbird.desktop";
-        "x-scheme-handler/webcal" = "thunderbird.desktop";
-        "text/calendar" = "thunderbird.desktop";
-        "application/x-extension-ics" = "thunderbird.desktop";
-        "x-scheme-handler/webcals" = "thunderbird.desktop";
-      };
-    };
   };
 
   xdg.desktopEntries = {
@@ -108,6 +98,33 @@ in {
       terminal = false;
       mimeType = ["x-scheme-handler/spotify"];
       categories = ["Audio" "Music" "Player" "AudioVideo"];
+    };
+    webflow = {
+      name = "Webflow";
+      genericName = "Web Editor";
+      icon = ./modules/desktop/assets/webflow.png;
+      exec = ''${pkgs.chromium}/bin/chromium --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
+      terminal = false;
+      mimeType = ["x-scheme-handler/webflow"];
+      categories = ["Development"];
+    };
+    figma = {
+      name = "Figma";
+      genericName = "Design Tool";
+      icon = "figma";
+      exec = ''${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland %U'';
+      terminal = false;
+      comment = "Unofficial desktop application for linux";
+      mimeType = ["x-scheme-handler/figma"];
+      categories = ["Graphics"];
+    };
+    url-handler-redirect = {
+      name = "URL Handler Redirect";
+      genericName = "Redirect URLs to a browser";
+      exec = "${urlHandlerRedirect}/bin/urlHandlerRedirect %U";
+      terminal = false;
+      mimeType = ["x-scheme-handler/http" "x-scheme-handler/https"];
+      noDisplay = true;
     };
   };
 
@@ -137,11 +154,14 @@ in {
         id = "aeblfdkhhhdcdjpifhhbdiojplfjncoa";
       }
       {
-        id = "dcpihecpambacapedldabdbpakmachpb";
-        updateUrl = "https://raw.githubusercontent.com/iamadamdev/bypass-paywalls-chrome/master/updates.xml";
+        id = "lkbebcjgcmobigpeffafkodonchffocl";
+        updateUrl = "https://raw.githubusercontent.com/bpc-clone/bypass-paywalls-chrome-clean/master/updates.xml";
       }
       {
         id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+      }
+      {
+        id = "bkkmolkhemgaeaeggcmfbghljjjoofoh";
       }
       {
         id = "fmkadmapgofadopljbjfkapdkoienihi";
@@ -256,30 +276,6 @@ in {
   };
 
   home.file = {
-    ".local/share/applications/webflow.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Webflow
-        GenericName=Web Editor
-        Icon=/home/psoldunov/.icons/webflow.png
-        Exec=chromium --new-window --app=https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc %U
-        Terminal=false
-        Categories=Development;
-      '';
-    };
-    ".local/share/applications/figma.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Figma
-        GenericName=Design Tool
-        Icon=figma
-        Exec=${pkgs.appimage-run}/bin/appimage-run ${config.home.homeDirectory}/Applications/figma-linux_0.11.4_linux_x86_64.AppImage --ozone-platform=wayland
-        Terminal=false
-        Categories=Development;
-      '';
-    };
     ".local/share/applications/nixfiles-zed.desktop" = {
       text = ''
         [Desktop Entry]
