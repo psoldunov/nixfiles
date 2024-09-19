@@ -85,10 +85,6 @@ in {
     };
   };
 
-  xdg = {
-    mime.enable = true;
-  };
-
   xdg.desktopEntries = {
     spotify = {
       name = "Spotify";

@@ -60,14 +60,20 @@ in {
   #   options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=x-office-document-symbolic"];
   # };
 
-  # fileSystems."/mnt/Camera" = {
-  #   device = "10.24.24.3:/volume1/Camera/";
-  #   fsType = "nfs";
-  #   options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=camera-symbolic"];
-  # };
+  fileSystems."/mnt/Camera" = {
+    device = "10.24.24.3:/volume1/Camera/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=camera-symbolic"];
+  };
 
   fileSystems."/mnt/Transmission" = {
     device = "10.24.24.2:/export/transmission";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=folder-download-symbolic"];
+  };
+
+  fileSystems."/mnt/SLSKD" = {
+    device = "10.24.24.2:/export/slskd";
     fsType = "nfs";
     options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=folder-download-symbolic"];
   };
@@ -254,11 +260,6 @@ in {
         "x-scheme-handler/webcals" = "thunderbird.desktop";
       };
     };
-    portal = {
-      enable = true;
-      extraPortals = [pkgs.xdg-desktop-portal-gtk];
-      config.common.default = "*";
-    };
   };
 
   programs.hyprland = {
@@ -337,6 +338,7 @@ in {
 
   services.gvfs = {
     enable = true;
+    package = pkgs.gvfs;
   };
 
   services.udisks2.enable = true;

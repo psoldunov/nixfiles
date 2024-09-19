@@ -13,7 +13,7 @@
       filename=$(basename -- "$file" .mp4)
 
       # Convert the file using Quick Sync
-     ffmpeg -vaapi_device /dev/dri/renderD128 -i "$file" -vf 'format=nv12,hwupload' -c:v h264_vaapi -c:a copy "$DIRECTORY/$filename.mkv"
+      ffmpeg -vaapi_device /dev/dri/renderD128 -i "$file" -vf 'format=nv12,hwupload' -c:v h264_vaapi -qp 18 -c:a copy "$DIRECTORY/$filename.mkv"
 
       # Check if the conversion was successful before deleting the original file
       if [ $? -eq 0 ]; then

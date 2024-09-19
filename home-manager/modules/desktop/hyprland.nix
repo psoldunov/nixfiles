@@ -48,6 +48,7 @@ in {
     systemd = {
       enable = true;
       enableXdgAutostart = true;
+      variables = ["--all"];
     };
     xwayland.enable = true;
     plugins = [
@@ -155,10 +156,20 @@ in {
   };
 
   xdg = {
+    mime.enable = true;
     portal = {
       enable = true;
-      extraPortals = [pkgs.xdg-desktop-portal-gtk];
-      config.common.default = "*";
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+      ];
+      config = {
+        common = {
+          default = ["hyprland" "gtk"];
+          "org.freedesktop.impl.portal.Secret" = [
+            "gnome-keyring"
+          ];
+        };
+      };
     };
   };
 
