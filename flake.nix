@@ -8,12 +8,7 @@
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
-    hyprland.url = "github:hyprwm/Hyprland";
-
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
+    # hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -59,7 +54,6 @@
     apple-fonts,
     catppuccin,
     # hyprland,
-    # hyprland-plugins,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -86,7 +80,6 @@
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
-        # hyprland.nixosModules.default
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         chaotic.nixosModules.default
@@ -103,7 +96,6 @@
                 import ./home-manager/home.nix;
             };
             sharedModules = [
-              # hyprland.homeManagerModules.default
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default

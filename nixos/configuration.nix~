@@ -226,8 +226,8 @@ in {
 
   programs.hyprland = {
     enable = true;
-    # package = pkgs-stable.hyprland;
-    # portalPackage = pkgs-stable.xdg-desktop-portal-hyprland;
+    package = pkgs-stable.hyprland;
+    portalPackage = pkgs-stable.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
   };
 

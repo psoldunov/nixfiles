@@ -44,6 +44,7 @@ in {
   wayland.windowManager.hyprland = {
     enable = true;
     catppuccin.enable = false;
+    package = pkgs-stable.hyprland;
     systemd = {
       enable = true;
       enableXdgAutostart = true;
