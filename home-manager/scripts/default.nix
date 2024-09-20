@@ -125,6 +125,13 @@
     ''
   );
 
+  make_timed_commit = (
+    pkgs.writeShellScriptBin "make_timed_commit" ''
+      git add .
+      git commit -am "commit $(date '+%d/%m/%Y %H:%M:%S')"
+    ''
+  );
+
   start_video_wallpaper = (
     pkgs.writeShellScriptBin "start_video_wallpaper" ''
       if pgrep -x "swww-daemon" > /dev/null

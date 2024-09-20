@@ -25,6 +25,10 @@ in {
     VSCODE_GALLERY_CONTROL_URL = "";
   };
 
+  programs.lazygit = {
+    enable = true;
+  };
+
   programs.fish = {
     enable = true;
     shellAliases = {
