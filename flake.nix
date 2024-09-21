@@ -8,7 +8,7 @@
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
-    # hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -53,7 +53,7 @@
     home-manager,
     apple-fonts,
     catppuccin,
-    # hyprland,
+    hyprland,
     ...
   } @ inputs: let
     inherit (self) outputs;
