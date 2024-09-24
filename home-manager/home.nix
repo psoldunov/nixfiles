@@ -258,6 +258,7 @@ in {
     scripts.convert_all_to_mkv
     scripts.update_system
     scripts.make_timed_commit
+    scripts.clean_system
   ];
 
   dconf.settings = {

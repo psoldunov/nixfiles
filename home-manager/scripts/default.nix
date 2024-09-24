@@ -79,17 +79,31 @@
   '';
 
   create_screenshot = pkgs.writeShellScriptBin "create_screenshot" ''
+    SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
+    if [ ! -d "$SCREENSHOTS_DIR" ]; then
+      mkdir -p "$SCREENSHOTS_DIR"
+      echo "Directory '$SCREENSHOTS_DIR' created."
+    else
+      echo "Directory '$SCREENSHOTS_DIR' already exists."
+    fi
     ${pkgs.grim}/bin/grim -l 0 "$(xdg-user-dir PICTURES)/Screenshots/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
     ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
   '';
 
   create_screenshot_area = pkgs.writeShellScriptBin "create_screenshot_area" ''
+    SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
     if pgrep -x "slurp" > /dev/null
     then
         echo "slurp is already running"
         exit 1
     fi
-    ${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -l 0 -g - "$(xdg-user-dir PICTURES)/Screenshots/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
+    if [ ! -d "$SCREENSHOTS_DIR" ]; then
+      mkdir -p "$SCREENSHOTS_DIR"
+      echo "Directory '$SCREENSHOTS_DIR' created."
+    else
+      echo "Directory '$SCREENSHOTS_DIR' already exists."
+    fi
+    ${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -l 0 -g - "$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
     if [ $? -eq 0 ]
     then
         ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
@@ -122,6 +136,13 @@
       git commit -am "pre-update commit $(date '+%d/%m/%Y %H:%M:%S')"
       sudo nix flake update
       sudo nixos-rebuild switch --show-trace --upgrade-all
+    ''
+  );
+
+  clean_system = (
+    pkgs.writeShellScriptBin "clean_system" ''
+      sudo nix-collect-garbage -d
+      nix-collect-garbage -d
     ''
   );
 
