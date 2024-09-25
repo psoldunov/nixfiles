@@ -214,6 +214,7 @@ in {
     spotify
     mattermost-desktop
     gnome-font-viewer
+    delfin
     rofi-bluetooth
     duckstation
     plex-media-player
