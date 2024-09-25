@@ -9,6 +9,7 @@
   pkgs,
   pkgs-stable,
   appleFonts,
+  pinnedOllamaPkgs,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -979,7 +980,7 @@ in {
   services.ollama = {
     enable = true;
     acceleration = "rocm";
-    # package = pkgs-stable.ollama;
+    package = pinnedOllamaPkgs.ollama;
     host = "0.0.0.0";
     rocmOverrideGfx = "11.0.0";
     environmentVariables = {

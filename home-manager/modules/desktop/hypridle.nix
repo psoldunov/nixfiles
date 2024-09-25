@@ -9,6 +9,11 @@
 in {
   programs.hyprlock = {
     enable = true;
+    catppuccin = {
+      enable = false;
+      accent = "peach";
+      flavor = "mocha";
+    };
     settings = {
       source = "${config.xdg.configHome}/hypr/mocha.conf";
 
@@ -86,6 +91,12 @@ in {
         halign = "center";
         valign = "center";
       };
+    };
+  };
+
+  home.file = {
+    ".face" = {
+      source = ./assets/face.jpg;
     };
   };
 
