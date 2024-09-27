@@ -139,6 +139,15 @@
     ''
   );
 
+  rebuild_system = (
+    pkgs.writeShellScriptBin "rebuild_system" ''
+      cd /etc/nixos
+      git add .
+      git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
+      sudo nixos-rebuild switch --show-trace
+    ''
+  );
+
   clean_system = (
     pkgs.writeShellScriptBin "clean_system" ''
       sudo nix-collect-garbage -d

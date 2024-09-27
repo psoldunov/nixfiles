@@ -8,8 +8,6 @@
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
-    pinnedOllama310Pkgs.url = "https://github.com/NixOS/nixpkgs/archive/79454ee9aacc9714653a4e7eb2a52b717728caff.tar.gz";
-
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,7 +53,6 @@
     chaotic,
     vscode-server,
     nixpkgs-stable,
-    pinnedOllama310Pkgs,
     nix-ld,
     nix-gaming,
     sops-nix,
@@ -75,10 +72,6 @@
       inherit system;
     };
 
-    pinnedOllamaPkgs = import pinnedOllama310Pkgs {
-      inherit system;
-    };
-
     appleFonts = apple-fonts.packages.${system};
   in {
     formatter = nixpkgs.pkgs.alejandra;
@@ -86,7 +79,7 @@
     nixosConfigurations.Whopper = nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {
-        inherit inputs outputs appleFonts pkgs-stable pinnedOllamaPkgs;
+        inherit inputs outputs appleFonts pkgs-stable;
       };
       modules = [
         ./nixos/configuration.nix

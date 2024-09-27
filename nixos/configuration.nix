@@ -9,7 +9,6 @@
   pkgs,
   pkgs-stable,
   appleFonts,
-  pinnedOllamaPkgs,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -696,6 +695,7 @@ in {
     openssl
     openssl.dev
     imagemagick
+    devenv
     libsecret
     (pkgs-stable.python3.withPackages (p:
       with p; [
@@ -983,7 +983,6 @@ in {
   services.ollama = {
     enable = true;
     acceleration = "rocm";
-    package = pinnedOllamaPkgs.ollama;
     host = "0.0.0.0";
     rocmOverrideGfx = "11.0.0";
     environmentVariables = {

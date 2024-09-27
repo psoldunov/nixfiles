@@ -258,6 +258,7 @@ in {
     scripts.convert_all_to_woff2
     scripts.convert_all_to_mkv
     scripts.update_system
+    scripts.rebuild_system
     scripts.make_timed_commit
     scripts.clean_system
   ];
