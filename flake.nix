@@ -10,6 +10,11 @@
 
     pinnedOllama310Pkgs.url = "https://github.com/NixOS/nixpkgs/archive/79454ee9aacc9714653a4e7eb2a52b717728caff.tar.gz";
 
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     sops-nix = {
@@ -48,6 +53,7 @@
     zen-browser,
     ags,
     chaotic,
+    vscode-server,
     nixpkgs-stable,
     pinnedOllama310Pkgs,
     nix-ld,
@@ -89,6 +95,7 @@
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
+        vscode-server.nixosModules.default
         chaotic.nixosModules.default
         catppuccin.nixosModules.catppuccin
         {

@@ -403,6 +403,8 @@ in {
     };
   };
 
+  services.vscode-server.enable = true;
+
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
@@ -610,6 +612,7 @@ in {
     pciutils
     nixd
     nixpkgs-fmt
+    lm_sensors
     bulky
     vscode
     sops
