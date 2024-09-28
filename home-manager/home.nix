@@ -283,7 +283,7 @@ in {
         Name=Open Nixfiles in Zed
         GenericName=This opens nixfiles in Zed
         Icon=nix-snowflake
-        Exec=zed --new /home/psoldunov/.nixfiles
+        Exec=zeditor --new /home/psoldunov/.nixfiles
         Terminal=false
       '';
     };
