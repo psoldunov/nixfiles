@@ -23,12 +23,10 @@
     language_models = {
       ollama = {
         api_url = "http://localhost:11434";
-        low_speed_timeout_in_seconds = 120;
         available_models = [
           {
             provider = "ollama";
             name = "codelstral:latest";
-            max_tokens = 32768;
           }
         ];
       };
