@@ -26,7 +26,13 @@
         available_models = [
           {
             provider = "ollama";
-            name = "codelstral:latest";
+            name = "codestral:latest";
+            max_tokens = 32768;
+          }
+          {
+            provider = "ollama";
+            name = "llama3.1:latest";
+            max_tokens = 32768;
           }
         ];
       };
@@ -54,9 +60,9 @@ in {
     recursive = true;
   };
 
-  #   home.file."${config.xdg.configHome}/zed/settings.json" = {
-  #     text = "${builtins.toJSON zedConfig}";
-  #   };
+  home.file."${config.xdg.configHome}/zed/settings.json" = {
+    text = "${builtins.toJSON zedConfig}";
+  };
 
   home.file."${config.xdg.configHome}/zed/themes/catppuccin-mocha-peach.json" = {
     text = ''
