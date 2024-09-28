@@ -20,6 +20,19 @@
     file_types = {
       "HTML" = ["html" "svg"];
     };
+    language_models = {
+      ollama = {
+        api_url = "http://localhost:11434";
+        low_speed_timeout_in_seconds = 120;
+        available_models = [
+          {
+            provider = "ollama";
+            name = "codelstral:latest";
+            max_tokens = 32768;
+          }
+        ];
+      };
+    };
     languages = {
       TypeScript = {
         language_servers = ["typescript-language-server"];
