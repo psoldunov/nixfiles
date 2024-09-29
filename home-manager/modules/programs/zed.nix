@@ -60,9 +60,9 @@ in {
     recursive = true;
   };
 
-  home.file."${config.xdg.configHome}/zed/settings.json" = {
-    text = "${builtins.toJSON zedConfig}";
-  };
+  #   home.file."${config.xdg.configHome}/zed/settings.json" = {
+  #     text = "${builtins.toJSON zedConfig}";
+  #   };
 
   home.file."${config.xdg.configHome}/zed/themes/catppuccin-mocha-peach.json" = {
     text = ''
