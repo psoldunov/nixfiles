@@ -11,7 +11,7 @@
     auto_update = false;
     font_family = "SFMono Nerd Font";
     buffer_font_family = "SFMono Nerd Font";
-    relative_line_numbers = false;
+    relative_line_numbers = true;
     soft_wrap = "editor_width";
     features = {
       inline_completion_provider = "supermaven";
