@@ -13,6 +13,9 @@
     buffer_font_family = "SFMono Nerd Font";
     relative_line_numbers = false;
     soft_wrap = "editor_width";
+    features = {
+      inline_completion_provider = "supermaven";
+    };
     terminal = {
       font_size = 18.5;
       copy_on_select = true;
@@ -60,9 +63,9 @@ in {
     recursive = true;
   };
 
-  #   home.file."${config.xdg.configHome}/zed/settings.json" = {
-  #     text = "${builtins.toJSON zedConfig}";
-  #   };
+  home.file."${config.xdg.configHome}/zed/settings.json" = {
+    text = "${builtins.toJSON zedConfig}";
+  };
 
   home.file."${config.xdg.configHome}/zed/themes/catppuccin-mocha-peach.json" = {
     text = ''
