@@ -5,7 +5,7 @@
 }: let
   zedConfig = {
     theme = "Catppuccin Mocha Peach";
-    vim_mode = false;
+    vim_mode = true;
     ui_font_size = 18.5;
     buffer_font_size = 18.5;
     auto_update = false;
