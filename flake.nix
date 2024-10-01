@@ -27,8 +27,6 @@
 
     nix-gaming.url = "github:fufexan/nix-gaming";
 
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-
     catppuccin = {
       url = "github:catppuccin/nix";
     };
@@ -50,7 +48,6 @@
     nixpkgs,
     zen-browser,
     ags,
-    chaotic,
     vscode-server,
     nixpkgs-stable,
     nix-ld,
@@ -90,7 +87,6 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
-        chaotic.nixosModules.default
         catppuccin.nixosModules.catppuccin
         {
           home-manager = {
