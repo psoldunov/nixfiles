@@ -33,6 +33,7 @@
     "noblur,class:(Xdg-desktop-portal-gtk)"
     "noshadow,class:(Xdg-desktop-portal-gtk)"
     "noanim,class:(Xdg-desktop-portal-gtk)"
+    "tile,class:(chat-simplex-desktop-MainKt)"
     "tile,class:(thunderbird),title:^(.*\ \-\ Mozilla Thunderbird)$"
     "suppressevent maximize fullscreen,class:(thunderbird),title:^(?!.*\ \-\ Mozilla Thunderbird)$"
     "center,class:(thunderbird),title:^(?!.*\ \-\ Mozilla Thunderbird)$"
