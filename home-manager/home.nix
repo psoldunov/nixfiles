@@ -208,6 +208,7 @@ in {
     nodejs_20
     obsidian
     pywal
+    simplex-chat-desktop
     spotify
     mattermost-desktop
     gnome-font-viewer
