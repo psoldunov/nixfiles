@@ -236,6 +236,7 @@ in {
     vesktop
     lightly-boehs
     # libsForQt5.lightly
+    rpcs3
     ookla-speedtest
     catppuccin-cursors
     varia
