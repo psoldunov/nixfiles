@@ -159,6 +159,7 @@ in {
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
       ];
+      xdgOpenUsePortal = true;
       config.common.default = [
         "hyprland"
       ];
