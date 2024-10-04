@@ -132,7 +132,7 @@ in {
     enableFishIntegration = true;
     enableBashIntegration = true;
     options = [
-      "--cmd j"
+      "--cmd cd"
     ];
   };
 
