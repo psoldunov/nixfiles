@@ -269,6 +269,16 @@ in {
     xwayland.enable = true;
   };
 
+  xdg = {
+    mime.enable = true;
+    portal = {
+      enable = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+      ];
+    };
+  };
+
   services.hypridle.enable = true;
   programs.hyprlock.enable = true;
 
