@@ -211,6 +211,13 @@ in {
   };
 
   xdg = {
+    portal = {
+      enable = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+      ];
+      config.common.default = "*";
+    };
     menus.enable = true;
     icons.enable = true;
     autostart.enable = true;
@@ -267,16 +274,6 @@ in {
     # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     # portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
-  };
-
-  xdg = {
-    portal = {
-      enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
-      ];
-      config.common.default = "*";
-    };
   };
 
   services.hypridle.enable = true;
