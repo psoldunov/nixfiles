@@ -13,7 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -56,7 +56,7 @@
     home-manager,
     apple-fonts,
     catppuccin,
-    # hyprland,
+    hyprland,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -82,7 +82,7 @@
         ./nixos/configuration.nix
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
-        # hyprland.nixosModules.default
+        hyprland.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
@@ -103,7 +103,7 @@
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default
-              # hyprland.homeManagerModules.default
+              hyprland.homeManagerModules.default
             ];
           };
         }
