@@ -213,13 +213,12 @@ in {
   xdg = {
     portal = {
       enable = true;
+      wlr.enable = true;
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
       ];
       xdgOpenUsePortal = true;
-      config.common.default = [
-        "hyprland"
-      ];
+      config.common.default = "*";
     };
     menus.enable = true;
     icons.enable = true;
