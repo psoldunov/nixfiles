@@ -270,7 +270,6 @@ in {
   };
 
   xdg = {
-    mime.enable = true;
     portal = {
       enable = true;
       extraPortals = [
