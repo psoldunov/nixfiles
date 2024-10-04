@@ -55,7 +55,7 @@ in {
         source = [
           "${config.xdg.configHome}/hypr/exec.conf"
         ];
-        monitor = "DP-1,preferred,auto,1.1";
+        monitor = "DP-1,preferred,auto,1.066667";
         input = {
           kb_layout = "us,ru";
           kb_variant = ",mac";
