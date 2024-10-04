@@ -9,7 +9,7 @@
     shellIntegration.enableFishIntegration = true;
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 10;
+      size = 10.5;
     };
     settings = {
       bold_font = "auto";
