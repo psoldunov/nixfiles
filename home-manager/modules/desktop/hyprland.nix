@@ -171,6 +171,7 @@ in {
     ASAN_OPTIONS = "log_path=~/asan.log";
     MOZ_ENABLE_WAYLAND = 1;
     XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     QT_QPA_PLATFORM = "wayland;xcb";
