@@ -919,9 +919,6 @@ in {
 
     secrets = {
       "wireless.env" = {};
-      ANTHROPIC_API_KEY = {
-        owner = "psoldunov";
-      };
     };
   };
 

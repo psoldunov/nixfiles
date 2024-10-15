@@ -2,15 +2,7 @@
   config,
   pkgs,
   ...
-}: let
-  setSecrets = ''
-    export GH_TOKEN="$(cat ${config.sops.secrets.GH_TOKEN.path})"
-    export NPM_TOKEN="$(cat ${config.sops.secrets.NPM_TOKEN.path})"
-    export ANTHROPIC_API_KEY="$(cat ${config.sops.secrets.ANTHROPIC_API_KEY.path})"
-    export RESEND_API_KEY="$(cat ${config.sops.secrets.RESEND_API_KEY.path})"
-    export OPENAI_API_KEY="$(cat ${config.sops.secrets.OPENAI_API_KEY.path})"
-  '';
-in {
+}: {
   home.sessionVariables = {
     GOPATH = "/home/psoldunov/.go";
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
@@ -65,7 +57,7 @@ in {
       set --export PATH $BUN_INSTALL/bin $PATH
       set fish_greeting
     '';
-    shellInitLast = setSecrets;
+    shellInitLast = "source ${config.sops.secrets.SHELL_SECRETS.path}";
   };
 
   home.shellAliases = {
@@ -81,7 +73,7 @@ in {
     enable = true;
     enableVteIntegration = true;
     enableCompletion = true;
-    bashrcExtra = setSecrets;
+    bashrcExtra = "source ${config.sops.secrets.SHELL_SECRETS.path}";
   };
 
   programs.keychain = {

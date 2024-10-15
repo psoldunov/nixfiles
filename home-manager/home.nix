@@ -74,11 +74,7 @@ in {
     age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 
     secrets = {
-      ANTHROPIC_API_KEY = {};
-      NPM_TOKEN = {};
-      RESEND_API_KEY = {};
-      OPENAI_API_KEY = {};
-      GH_TOKEN = {};
+      SHELL_SECRETS = {};
     };
   };
 
