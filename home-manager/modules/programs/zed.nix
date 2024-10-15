@@ -5,16 +5,23 @@
 }: let
   zedConfig = {
     theme = "Catppuccin Mocha Peach";
-    vim_mode = true;
+    vim_mode = false;
     ui_font_size = 18.5;
     buffer_font_size = 18.5;
     auto_update = false;
     font_family = "SFMono Nerd Font";
     buffer_font_family = "SFMono Nerd Font";
-    relative_line_numbers = true;
+    relative_line_numbers = false;
     soft_wrap = "editor_width";
     features = {
       inline_completion_provider = "supermaven";
+    };
+    assistant = {
+      default_model = {
+        provider = "openai";
+        model = "gpt-4o";
+      };
+      version = "2";
     };
     terminal = {
       font_size = 18.5;
@@ -23,30 +30,7 @@
     file_types = {
       "HTML" = ["html" "svg"];
     };
-    language_models = {
-      ollama = {
-        api_url = "http://localhost:11434";
-        available_models = [
-          {
-            provider = "ollama";
-            name = "codestral:latest";
-            max_tokens = 32768;
-          }
-          {
-            provider = "ollama";
-            name = "llama3.1:latest";
-            max_tokens = 32768;
-          }
-        ];
-      };
-    };
     languages = {
-      TypeScript = {
-        language_servers = ["typescript-language-server"];
-      };
-      TSX = {
-        language_servers = ["typescript-language-server"];
-      };
       Nix = {
         format_on_save = {
           external = {
