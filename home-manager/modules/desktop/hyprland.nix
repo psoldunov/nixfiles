@@ -48,7 +48,6 @@ in {
       enable = true;
       enableXdgAutostart = true;
     };
-    # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     xwayland.enable = true;
     settings =
       {
