@@ -105,7 +105,7 @@ in {
     "$MOD4, P, pin"
     "$MOD4, F, fullscreen"
     "$MOD4, B, togglefloating"
-    "$MOD4, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+    "$MOD4, V, exec, ${pkgs-stable.cliphist}/bin/cliphist list | rofi -dmenu | ${pkgs-stable.cliphist}/bin/cliphist decode | wl-copy"
     "$MOD4, J, togglesplit"
     "$MOD4, U, pseudo"
     "$MOD4, Z, exec, fish -c 'resetDE'"
@@ -147,7 +147,7 @@ in {
     "$cmd SHIFT, 4, exec, create_screenshot_area"
     "$cmd SHIFT, 5, exec, record_screen"
     "$cmd SHIFT, M, exec, hyprpicker -a"
-    # "$cmd SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+    # "$cmd SHIFT, V, exec, ${pkgs-stable.cliphist}/bin/cliphist list | rofi -dmenu | ${pkgs-stable.cliphist}/bin/cliphist decode | wl-copy"
 
     # Move focus with mainMod + arrow keys
     "$ctrl, left, movefocus, l"

@@ -19,8 +19,8 @@
     autostart_commands="
       ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1
       ${pkgs.ydotool}/bin/ydotoold
-      ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store
-      ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store
+      ${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs-stable.cliphist}/bin/cliphist store
+      ${pkgs.wl-clipboard}/bin/wl-paste --type image --watch ${pkgs-stable.cliphist}/bin/cliphist store
       ${pkgs.solaar}/bin/solaar -w hide
       ${pkgs.slack}/bin/slack -u
       ${pkgs.ferdium}/bin/ferdium

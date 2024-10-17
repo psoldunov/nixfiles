@@ -695,7 +695,7 @@ in {
     hwdata
     pciutils
     brave
-    cliphist
+    pkgs-stable.cliphist
     webp-pixbuf-loader
     kdiskmark
     libwebp
