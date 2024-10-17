@@ -129,6 +129,15 @@ in {
           }
 
           {
+            name = "dualsense-wireless-controller-touchpad";
+            input = {
+              touchdevice = {
+                enabled = false;
+              };
+            };
+          }
+
+          {
             name = "by-tech-air75-1";
             kb_options = "grp:ctrl_space_toggle, compose:rctrl";
           }
