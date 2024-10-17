@@ -779,9 +779,7 @@ in {
     evtest
     trigger-control
     hyprpicker
-    swayidle
     corepack
-    swaylock
     localsend
     pkgs-stable.calibre
     unzip

@@ -42,11 +42,9 @@
       };
       resetDE = {
         body = ''
-          pkill -9 waybar
-          pkill -9 swaync
+          ags -q
           hyprctl reload
-          waybar
-          swaync
+          ags &
         '';
       };
     };

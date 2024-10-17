@@ -134,7 +134,7 @@ in {
     "$ctrl SHIFT, V, togglefloating,"
     "$ctrl SHIFT, V, pin,"
     "$ctrl, K, pin,"
-    "$ctrl, T, exec, swaync-client -t -sw"
+    # "$ctrl, T, exec, swaync-client -t -sw"
     "$option, SPACE, exec, pkill rofi || rofi -show drun"
     "$ctrl, F, fullscreen,"
     "$ctrl SHIFT, P, exec, hyprpicker | wl-copy"

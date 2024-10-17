@@ -185,7 +185,6 @@ in {
   home.file = {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
-        exec-once = ${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
         exec-once = start_static_wallpaper ${wallpaperPath}
         # exec-once = start_video_wallpaper
