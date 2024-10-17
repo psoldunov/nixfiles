@@ -772,6 +772,7 @@ in {
     nix-prefetch-scripts
     pamixer
     dualsensectl
+    evtest
     trigger-control
     hyprpicker
     swayidle
