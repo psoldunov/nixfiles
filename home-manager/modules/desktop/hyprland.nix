@@ -186,7 +186,7 @@ in {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
-        exec-once = start_static_wallpaper ${wallpaperPath}
+        # exec-once = start_static_wallpaper ${wallpaperPath}
         # exec-once = start_video_wallpaper
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
