@@ -783,7 +783,7 @@ in {
     corepack
     swaylock
     localsend
-    calibre
+    # calibre
     unzip
     woff2
     grim
