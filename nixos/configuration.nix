@@ -855,6 +855,19 @@ in {
     autoStart = false;
   };
 
+  environment.etc = {
+    "X11/xorg.conf.d/30--dualsense-touchpad.conf" = {
+      text = ''
+        Section "InputClass"
+            Identifier "Sony Interactive Entertainment Wireless Controller Touchpad"
+            Driver "libinput"
+            MatchIsTouchpad "on"
+            Option "Ignore" "true"
+        EndSection
+      '';
+    };
+  };
+
   # █▄░█ █▀▀ ▀█▀ █░█░█ █▀█ █▀█ █▄▀ █ █▄░█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀ █▀▀ █▀▀ █░█ █▀█ █ ▀█▀ █▄█
   # █░▀█ ██▄ ░█░ ▀▄▀▄▀ █▄█ █▀▄ █░█ █ █░▀█ █▄█   █▀█ █░▀█ █▄▀   ▄█ ██▄ █▄▄ █▄█ █▀▄ █ ░█░ ░█░
 
