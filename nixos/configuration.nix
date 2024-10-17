@@ -452,7 +452,11 @@ in {
         builtins.elem (lib.getName pkg) [
           "joypixels"
         ];
-      permittedInsecurePackages = ["python-2.7.18.6" "electron-24.8.6" "python3.12-youtube-dl-2021.12.17"];
+      permittedInsecurePackages = [
+        # "python-2.7.18.6"
+        "electron-24.8.6"
+        # "python3.12-youtube-dl-2021.12.17"
+      ];
     };
   };
 
@@ -706,16 +710,16 @@ in {
     imagemagick
     devenv
     libsecret
-    (pkgs-stable.python3.withPackages (p:
-      with p; [
-        # torchWithRocm
-        discid
-        keyring
-        yt-dlp
-        musicbrainzngs
-        fontforge
-        openai-whisper
-      ]))
+    # (pkgs-stable.python3.withPackages (p:
+    #   with p; [
+    #     torchWithRocm
+    #     discid
+    #     keyring
+    #     yt-dlp
+    #     musicbrainzngs
+    #     fontforge
+    #     openai-whisper
+    #   ]))
     gcc
     libheif
     protontricks
