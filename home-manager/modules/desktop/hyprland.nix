@@ -6,7 +6,7 @@
   pkgs-stable,
   ...
 }: let
-  wallpaperPath = /home/psoldunov/Pictures/Wallpapers/porsche-uw.jpg;
+  wallpaperPath = "/home/psoldunov/Pictures/Wallpapers/porsche-uw.jpg";
   windowRules = import ./hypr-modules/windowrules.nix;
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
@@ -186,7 +186,7 @@ in {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
-        # exec-once = start_static_wallpaper ${wallpaperPath}
+        exec-once = start_static_wallpaper ${wallpaperPath}
         # exec-once = start_video_wallpaper
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
