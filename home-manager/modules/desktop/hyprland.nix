@@ -130,11 +130,7 @@ in {
 
           {
             name = "dualsense-wireless-controller-touchpad";
-            input = {
-              touchdevice = {
-                enabled = false;
-              };
-            };
+            enabled = 0;
           }
 
           {
