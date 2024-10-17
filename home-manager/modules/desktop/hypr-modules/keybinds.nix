@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-stable,
 }: let
   projects =
     import ../../../projects
