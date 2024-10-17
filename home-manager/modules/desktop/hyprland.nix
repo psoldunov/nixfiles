@@ -26,7 +26,6 @@
       ${pkgs.slack}/bin/slack -u
       ${pkgs.ferdium}/bin/ferdium
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
-      # ${pkgs.bitwarden-desktop}/bin/bitwarden
       ${pkgs.localsend}/bin/localsend_app --hidden
       1password --silent
       steam -silent
