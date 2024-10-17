@@ -771,6 +771,8 @@ in {
     wlr-randr
     nix-prefetch-scripts
     pamixer
+    dualsensectl
+    trigger-control
     hyprpicker
     swayidle
     corepack
