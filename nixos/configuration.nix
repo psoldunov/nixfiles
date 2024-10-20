@@ -765,14 +765,15 @@ in {
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
         obs-backgroundremoval
+        obs-vkcapture
         obs-pipewire-audio-capture
-        (obs-vkcapture.override {
-          extra-cmake-modules = pkgs.pkg-config;
-          obs-vkcapture32 = pkgs.pkgsi686Linux.obs-studio-plugins.obs-vkcapture.override {
-            extra-cmake-modules =
-              pkgs.pkgsi686Linux.pkg-config;
-          };
-        })
+        # (obs-vkcapture.override {
+        #   extra-cmake-modules = pkgs.pkg-config;
+        #   obs-vkcapture32 = pkgs.pkgsi686Linux.obs-studio-plugins.obs-vkcapture.override {
+        #     extra-cmake-modules =
+        #       pkgs.pkgsi686Linux.pkg-config;
+        #   };
+        # })
       ];
     })
     go
