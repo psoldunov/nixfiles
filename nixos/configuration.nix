@@ -712,7 +712,7 @@ in {
     libsecret
     (pkgs-stable.python3.withPackages (p:
       with p; [
-        torchWithRocm
+        # torchWithRocm
         discid
         keyring
         yt-dlp
