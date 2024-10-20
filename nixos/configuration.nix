@@ -710,16 +710,16 @@ in {
     imagemagick
     devenv
     libsecret
-    # (pkgs-stable.python3.withPackages (p:
-    #   with p; [
-    #     torchWithRocm
-    #     discid
-    #     keyring
-    #     yt-dlp
-    #     musicbrainzngs
-    #     fontforge
-    #     openai-whisper
-    #   ]))
+    (pkgs-stable.python3.withPackages (p:
+      with p; [
+        torchWithRocm
+        discid
+        keyring
+        yt-dlp
+        musicbrainzngs
+        fontforge
+        openai-whisper
+      ]))
     gcc
     libheif
     protontricks
@@ -767,13 +767,6 @@ in {
         obs-backgroundremoval
         obs-vkcapture
         obs-pipewire-audio-capture
-        # (obs-vkcapture.override {
-        #   extra-cmake-modules = pkgs.pkg-config;
-        #   obs-vkcapture32 = pkgs.pkgsi686Linux.obs-studio-plugins.obs-vkcapture.override {
-        #     extra-cmake-modules =
-        #       pkgs.pkgsi686Linux.pkg-config;
-        #   };
-        # })
       ];
     })
     go
