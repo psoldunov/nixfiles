@@ -43,8 +43,8 @@
   '';
 
   figma-appimage = pkgs.fetchurl {
-    url = "https://github.com/Figma-Linux/figma-linux/releases/download/v0.11.4/figma-linux_0.11.4_linux_x86_64.AppImage";
-    sha256 = "1z9k3r6ggh8iy2v21siw0qvks4jch1al0bijf0v62jw6yb3k0r89";
+    url = "https://github.com/Figma-Linux/figma-linux/releases/download/v0.11.5/figma-linux_0.11.5_linux_x86_64.AppImage";
+    sha256 = "19vkjc2f3h61zya757dnq4rij67q8a2yb0whchz27z7r0aqfa3pr";
   };
 in {
   imports = [
