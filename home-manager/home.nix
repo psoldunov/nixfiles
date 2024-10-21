@@ -14,34 +14,6 @@
     config = config;
   };
 
-  urlHandlerRedirect = pkgs.writeShellScriptBin "urlHandlerRedirect" ''
-    open_in_figma() {
-        echo "Opening $1 in Figma Desktop..."
-        ${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} "$1" &
-    }
-
-    # Function to open URL in Firefox
-    open_in_firefox() {
-        echo "Opening $1 in Firefox..."
-        ${pkgs.firefox}/bin/firefox "$1" &
-    }
-
-    # Check if a URL was provided
-    if [ -z "$1" ]; then
-        echo "Please provide a URL"
-        exit 1
-    fi
-
-    url=$1
-
-    # Check if the URL contains "figma.com"
-    if [[ $url == *"figma.com"* ]]; then
-        open_in_figma "$url"
-    else
-        open_in_firefox "$url"
-    fi
-  '';
-
   figma-appimage = pkgs.fetchurl {
     url = "https://github.com/Figma-Linux/figma-linux/releases/download/v0.11.5/figma-linux_0.11.5_linux_x86_64.AppImage";
     sha256 = "19vkjc2f3h61zya757dnq4rij67q8a2yb0whchz27z7r0aqfa3pr";
@@ -106,14 +78,6 @@ in {
       comment = "Unofficial desktop application for linux";
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
-    };
-    url-handler-redirect = {
-      name = "URL Handler Redirect";
-      genericName = "Redirect URLs to a browser";
-      exec = "${urlHandlerRedirect}/bin/urlHandlerRedirect %U";
-      terminal = false;
-      mimeType = ["x-scheme-handler/http" "x-scheme-handler/https"];
-      noDisplay = true;
     };
   };
 

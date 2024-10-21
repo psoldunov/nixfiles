@@ -242,8 +242,8 @@ in {
         "video/x-matroska" = ["mpv.desktop"];
         "x-scheme-handler/magnet" = ["io.github.TransmissionRemoteGtk.desktop"];
         "WebBrowser" = "firefox.desktop";
-        "x-scheme-handler/http" = "url-handler-redirect.desktop";
-        "x-scheme-handler/https" = "url-handler-redirect.desktop";
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
         "x-scheme-handler/chrome" = "firefox.desktop";
         "x-scheme-handler/vscode" = "code-url-handler.desktop";
         "x-scheme-handler/figma" = "figma.desktop";
