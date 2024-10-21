@@ -365,6 +365,20 @@ in {
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
+      ollama = {
+        image = "ollama/ollama:rocm";
+        ports = ["11434:11434"];
+        extraOptions = [
+          "--device=/dev/dri:/dev/dri"
+          "--device=/dev/kfd:/dev/kfd"
+        ];
+        environment = {
+          OLLAMA_ORIGINS = "app://obsidian.md*";
+        };
+        volumes = [
+          "ollama:/root/.ollama"
+        ];
+      };
       agent = {
         image = "portainer/agent:2.19.5";
         ports = [
@@ -957,16 +971,16 @@ in {
 
   security = {
     polkit.enable = true;
-    polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.freedesktop.systemd1.manage-units" &&
-            subject.user == "psoldunov" &&
-            action.lookup("unit") == "ollama.service" &&
-            (action.lookup("verb") == "start" || action.lookup("verb") == "stop")) {
-          return polkit.Result.YES;
-        }
-      });
-    '';
+    # polkit.extraConfig = ''
+    #   polkit.addRule(function(action, subject) {
+    #     if (action.id == "org.freedesktop.systemd1.manage-units" &&
+    #         subject.user == "psoldunov" &&
+    #         action.lookup("unit") == "ollama.service" &&
+    #         (action.lookup("verb") == "start" || action.lookup("verb") == "stop")) {
+    #       return polkit.Result.YES;
+    #     }
+    #   });
+    # '';
     rtkit.enable = true;
     pam = {
       yubico = {
@@ -991,16 +1005,16 @@ in {
 
   services.locate.enable = true;
 
-  services.ollama = {
-    enable = true;
-    acceleration = "rocm";
-    host = "0.0.0.0";
-    rocmOverrideGfx = "11.0.0";
-    environmentVariables = {
-      OLLAMA_ORIGINS = "app://obsidian.md*";
-      HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-    };
-  };
+  # services.ollama = {
+  #   enable = true;
+  #   acceleration = "rocm";
+  #   host = "0.0.0.0";
+  #   rocmOverrideGfx = "11.0.0";
+  #   environmentVariables = {
+  #     OLLAMA_ORIGINS = "app://obsidian.md*";
+  #     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
+  #   };
+  # };
 
   # █░█ █▀ █▀▀ █▀█ █▀
   # █▄█ ▄█ ██▄ █▀▄ ▄█
