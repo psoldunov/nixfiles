@@ -374,6 +374,7 @@ in {
         ];
         environment = {
           OLLAMA_ORIGINS = "app://obsidian.md*";
+          OLLAMA_NUM_PARALLEL = "1";
         };
         volumes = [
           "ollama:/root/.ollama"
