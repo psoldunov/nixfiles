@@ -389,6 +389,17 @@ in {
           "/var/lib/docker/volumes:/var/lib/docker/volumes"
         ];
       };
+      watchtower = {
+        image = "containrrr/watchtower:latest";
+        volumes = [
+          "/var/run/docker.sock:/var/run/docker.sock"
+        ];
+        environment = {
+          TZ = "Europe/Tallinn";
+          WATCHTOWER_SCHEDULE = "0 0 4 * * *";
+          WATCHTOWER_CLEANUP = "true";
+        };
+      };
     };
   };
 

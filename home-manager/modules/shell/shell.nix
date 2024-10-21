@@ -65,6 +65,7 @@
     cat = "bat";
     thunar = "nemo";
     ssh = "kitten ssh";
+    ollama = "docker exec -it ollama ollama";
   };
 
   programs.bash = {
