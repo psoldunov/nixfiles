@@ -106,8 +106,8 @@ in {
       general = {
         lock_cmd = "pgrep hyprlock || idle_check || ${hyprlockBin}";
         unlock_cmd = "pkill -USR1 ${hyprlockBin}";
-        before_sleep_cmd = "systemctl stop ollama.service && loginctl lock-session";
-        after_sleep_cmd = "${hyprctlBin} dispatch dpms on && systemctl start ollama.service";
+        before_sleep_cmd = "loginctl lock-session";
+        after_sleep_cmd = "${hyprctlBin} dispatch dpms on";
         ignore_dbus_inhibit = false;
         ignore_systemd_inhibit = false;
       };
