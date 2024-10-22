@@ -374,7 +374,7 @@ in {
         ];
         environment = {
           OLLAMA_ORIGINS = "app://obsidian.md*";
-          # OLLAMA_NUM_PARALLEL = "2";
+          OLLAMA_GPU_OVERHEAD = "2147483648";
         };
         volumes = [
           "ollama:/root/.ollama"
