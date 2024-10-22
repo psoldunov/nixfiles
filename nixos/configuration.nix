@@ -543,8 +543,8 @@ in {
   fonts.packages = with pkgs; [
     roboto
     noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
     comic-neue
     comic-mono
     ibm-plex
