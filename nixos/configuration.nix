@@ -101,7 +101,7 @@ in {
     theme = "pedro-raccoon";
     themePackages = with pkgs; [
       pedro-raccoon-plymouth
-    ];
+      ];
   };
   boot.loader.grub = {
     catppuccin.enable = false;
@@ -113,6 +113,7 @@ in {
   };
 
   nix = {
+    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
     settings = {
       warn-dirty = false;
       experimental-features = "nix-command flakes";
