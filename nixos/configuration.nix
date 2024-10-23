@@ -377,7 +377,7 @@ in {
           OLLAMA_GPU_OVERHEAD = "2147483648";
         };
         volumes = [
-          "/var/lib/ollama:/root/.ollama/_data"
+          "ollama:/root/.ollama"
         ];
       };
       agent = {
