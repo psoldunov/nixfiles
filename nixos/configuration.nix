@@ -379,6 +379,17 @@ in {
           "ollama:/root/.ollama"
         ];
       };
+      whisper-rocm = {
+        image = "psoldunov/openai-whisper-rocm";
+        extraOptions = [
+          "--device=/dev/dri:/dev/dri"
+          "--device=/dev/kfd:/dev/kfd"
+          "--group-add video"
+        ];
+        volumes = [
+          "/home/psoldunov/.whisper:/data"
+        ];
+      };
       agent = {
         image = "portainer/agent:2.19.5";
         ports = [
