@@ -384,7 +384,6 @@ in {
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
           "--device=/dev/kfd:/dev/kfd"
-          "--group-add video"
         ];
         volumes = [
           "/home/psoldunov/.whisper:/data"
