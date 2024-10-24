@@ -3,7 +3,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   inputs,
-  outputs,
   lib,
   config,
   pkgs,
@@ -12,7 +11,6 @@
   ...
 }: let
   systemStateVersion = "23.11";
-  i686pkgs = pkgs.pkgsi686Linux;
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -101,7 +99,7 @@ in {
     theme = "pedro-raccoon";
     themePackages = with pkgs; [
       pedro-raccoon-plymouth
-      ];
+    ];
   };
   boot.loader.grub = {
     catppuccin.enable = false;

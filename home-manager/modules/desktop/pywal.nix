@@ -1,9 +1,4 @@
-{
-  config,
-  libs,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   programs.pywal.enable = true;
 
   home.file = {
