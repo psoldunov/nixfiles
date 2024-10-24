@@ -754,7 +754,6 @@ in {
         yt-dlp
         musicbrainzngs
         fontforge
-        openai-whisper
       ]))
     gcc
     libheif
