@@ -16,5 +16,6 @@
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/zed.nix
+    ./programs/duckstation.nix
   ];
 }
