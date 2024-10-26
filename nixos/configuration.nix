@@ -352,31 +352,25 @@ in {
   services.flatpak = {
     enable = true;
     packages = [
-      "flathub:app/com.github.tchx84.Flatseal//stable"
-      "flathub:app/com.steamgriddb.SGDBoop//stable"
+      "com.github.tchx84.Flatseal"
+      "com.steamgriddb.SGDBoop"
     ];
-    remotes = {
-      "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-    };
     overrides = {
       global = {
-        filesystems = [
-          "${catpuccinPackage}/share/themes:ro"
-          "${pkgs.papirus-icon-theme}/share/icons:ro"
-          "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
-          "/run/current-system/sw/share/X11/fonts:ro"
-        ];
-        sockets = ["wayland" "!x11" "!fallback-x11"];
-
-        environment = {
-          # Fix un-themed cursor in some Wayland apps
+        Context = {
+          filesystems = [
+            "${catpuccinPackage}/share/themes:ro"
+            "${pkgs.papirus-icon-theme}/share/icons:ro"
+            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
+            "/run/current-system/sw/share/X11/fonts:ro"
+          ];
+          sockets = ["wayland" "!x11" "!fallback-x11"];
+        };
+        Environment = {
           XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
-
           XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-
           ICON_THEME = "Papirus-Dark";
-          # Force correct theme for some GTK apps
           GTK_THEME = "catppuccin-mocha-peach-standard";
         };
       };
