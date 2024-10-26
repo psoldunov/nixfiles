@@ -361,23 +361,21 @@ in {
       global = {
         Context = {
           filesystems = [
-            "${catpuccinPackage}/share/themes:ro"
-            "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
-            "/run/current-system/sw/share/X11/fonts:ro"
+            # "${catpuccinPackage}/share/themes:ro"
+            # "${pkgs.papirus-icon-theme}/share/icons:ro"
+            # "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
+            # "/run/current-system/sw/share/X11/fonts:ro"
           ];
           # sockets = ["wayland" "!x11" "!fallback-x11"];
         };
 
         Environment = {
-          XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
-          XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-          HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-          ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "catppuccin-mocha-peach-standard";
+          # XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
+          # XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          # HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          # ICON_THEME = "Papirus-Dark";
+          # GTK_THEME = "catppuccin-mocha-peach-standard";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-          QT_QPA_PLATFORMTHEME = "qt5ct";
-          QT_QPA_PLATFORM = "wayland;xcb";
         };
       };
     };
