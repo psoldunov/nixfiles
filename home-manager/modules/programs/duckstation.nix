@@ -317,6 +317,17 @@
             MaxFPS = 0;
           };
 
+          PostProcessing = {
+            Enabled = true;
+            StageCount = 1;
+          };
+
+          "PostProcessing/Stage1" = {
+            ShaderName = "crt-royale";
+            geom_mode_runtime = 3;
+            beam_shape_mode = 2;
+          };
+
           CDROM = {
             ReadaheadSectors = 8;
             MechaconVersion = "VC1A";
