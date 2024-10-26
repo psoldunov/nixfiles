@@ -366,6 +366,21 @@
         "type": "github"
       }
     },
+    "nix-flatpak": {
+      "locked": {
+        "lastModified": 1729453639,
+        "narHash": "sha256-L19R5CXCfTU9IFs9FAaYhDiteegfhJQMiAHLfls4Pdw=",
+        "owner": "gmodena",
+        "repo": "nix-flatpak",
+        "rev": "68bc646058386e2ffbd9d78d79d6558e684f6b8c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gmodena",
+        "repo": "nix-flatpak",
+        "type": "github"
+      }
+    },
     "nix-gaming": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -605,6 +620,7 @@
         "catppuccin": "catppuccin",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
+        "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
         "nix-ld": "nix-ld",
         "nixpkgs": "nixpkgs_5",

@@ -344,7 +344,12 @@ in {
 
   services.expressvpn.enable = true;
 
-  services.flatpak.enable = true;
+  services.flatpak = {
+    enable = true;
+    packages = [
+      "com.steamgriddb.SGDBoop"
+    ];
+  };
 
   services.gvfs = {
     enable = true;
