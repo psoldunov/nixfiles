@@ -99,18 +99,18 @@
             OutputMuted = false;
           };
 
+          PCDrv = {
+            Enabled = false;
+            EnableWrites = false;
+            Root = "";
+          };
+
           Hacks = {
             UseOldMDECRoutines = false;
             DMAMaxSliceTicks = 1000;
             DMAHaltTicks = 100;
             GPUFIFOSize = 16;
             GPUMaxRunAhead = 128;
-          };
-
-          PCDrv = {
-            Enabled = false;
-            EnableWrites = false;
-            Root = "";
           };
 
           BIOS = {
