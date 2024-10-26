@@ -204,4 +204,18 @@
       done
     ''
   );
+
+  activate_expressvpn = (
+    pkgs.writeShellScriptBin "activate_expressvpn" ''
+      #!${pkgs.expect}/bin/expect -f
+
+      set activation_code [lindex $argv 0]
+      spawn ${pkgs.expressvpn}/bin/expressvpn activate
+      expect "Enter activation code: "
+      send "$activation_code\r"
+      expect "Would you like to share anonymous analytics to help us improve our service? \[Y/n\]"
+      send "n\r"
+      expect eof
+    ''
+  );
 }
