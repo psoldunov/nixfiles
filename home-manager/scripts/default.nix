@@ -206,7 +206,7 @@
   );
 
   activate_expressvpn = (
-    pkgs.writeShellScriptBin "activate_expressvpn" ''
+    pkgs.writeScriptBin "activate_expressvpn" ''
       #!${pkgs.expect}/bin/expect -f
 
       set activation_code [lindex $argv 0]
