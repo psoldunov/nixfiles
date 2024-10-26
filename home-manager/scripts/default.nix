@@ -204,18 +204,4 @@
       done
     ''
   );
-
-  activate_expressvpn = (
-    pkgs.writeScriptBin "activate_expressvpn" ''
-      #!${pkgs.expect}/bin/expect -f
-
-      set activation_code "EQPSYUFGRFHTNC5SRQTPOGO"
-      spawn ${pkgs.expressvpn}/bin/expressvpn activate
-      expect "Enter activation code: "
-      send "$activation_code\r"
-      expect "Help improve ExpressVPN: Share crash reports, speed tests, usability diagnostics, and whether VPN connection attempts succeed. These reports never contain personally identifiable information. (Y/n)"
-      send "n\r"
-      expect eof
-    ''
-  );
 }

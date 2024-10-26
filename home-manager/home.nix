@@ -220,7 +220,6 @@ in {
     scripts.rebuild_system
     scripts.make_timed_commit
     scripts.clean_system
-    scripts.activate_expressvpn
   ];
 
   dconf.settings = {
