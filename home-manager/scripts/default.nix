@@ -213,7 +213,7 @@
       spawn ${pkgs.expressvpn}/bin/expressvpn activate
       expect "Enter activation code: "
       send "$activation_code\r"
-      expect "Would you like to share anonymous analytics to help us improve our service? \[Y/n\]"
+      expect "Help improve ExpressVPN: Share crash reports, speed tests, usability diagnostics, and whether VPN connection attempts succeed. These reports never contain personally identifiable information. (Y/n)"
       send "n\r"
       expect eof
     ''
