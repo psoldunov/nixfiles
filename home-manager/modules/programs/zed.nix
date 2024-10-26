@@ -14,12 +14,12 @@
     relative_line_numbers = false;
     soft_wrap = "editor_width";
     features = {
-      inline_completion_provider = "supermaven";
+      inline_completion_provider = "copilot";
     };
     assistant = {
       default_model = {
-        provider = "openai";
-        model = "gpt-4o";
+        provider = "anthropic";
+        model = "claude-3.5-sonnet";
       };
       version = "2";
     };
