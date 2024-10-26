@@ -11,6 +11,11 @@
   ...
 }: let
   systemStateVersion = "23.11";
+
+  catpuccinPackage = pkgs.catppuccin-gtk.override {
+    accents = ["peach"];
+    variant = "mocha";
+  };
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -356,6 +361,7 @@ in {
     overrides = {
       global = {
         filesystems = [
+          "${catpuccinPackage}/share/themes:ro"
           "/run/current-system/sw/share/themes:ro"
           "/run/current-system/sw/share/icons:ro"
           "/run/current-system/sw/share/X11/fonts:ro"
@@ -724,10 +730,7 @@ in {
     linux-firmware
     libgcc
     fzf
-    (catppuccin-gtk.override {
-      accents = ["${config.catppuccin.accent}"];
-      variant = "${config.catppuccin.flavor}";
-    })
+    catpuccinPackage
     wget
     papers
     eog
