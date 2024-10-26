@@ -351,6 +351,7 @@ in {
 
   services.flatpak = {
     enable = true;
+    update.onActivation = true;
     packages = [
       "com.github.tchx84.Flatseal"
       "com.steamgriddb.SGDBoop"
@@ -366,7 +367,7 @@ in {
           ];
           sockets = ["wayland" "!x11" "!fallback-x11"];
         };
-        update.onActivation = true;
+
         Environment = {
           XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
           XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
