@@ -347,8 +347,8 @@ in {
   services.flatpak = {
     enable = true;
     packages = [
-      "flathub:app/com.github.tchx84.Flatseal"
-      "flathub:app/com.steamgriddb.SGDBoop"
+      "flathub:app/com.github.tchx84.Flatseal//stable"
+      "flathub:app/com.steamgriddb.SGDBoop//stable"
     ];
     remotes = {
       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
