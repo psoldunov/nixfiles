@@ -354,11 +354,17 @@ in {
     overrides = {
       global = {
         # Force Wayland by default
-        Context.sockets = ["wayland" "!x11" "!fallback-x11"];
+        Context = {
+          sockets = ["wayland" "!x11" "!fallback-x11"];
+          filesystems = [
+            "/run/current-system/sw/share/themes:ro"
+            "/run/current-system/sw/share/icons:ro"
+          ];
+        };
 
         Environment = {
           # Fix un-themed cursor in some Wayland apps
-          XCURSOR_PATH = "/run/host/user-share/icons:/run/host/share/icons";
+          XCURSOR_PATH = "/run/current-system/sw/share/icons";
 
           # Force correct theme for some GTK apps
           GTK_THEME = "catppuccin-mocha-peach-standard";
