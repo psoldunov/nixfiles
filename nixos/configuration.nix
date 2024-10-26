@@ -217,7 +217,6 @@ in {
   xdg = {
     portal = {
       enable = true;
-      wlr.enable = false;
       extraPortals = [
         pkgs.xdg-desktop-portal-hyprland
         pkgs.xdg-desktop-portal-gtk
@@ -734,6 +733,7 @@ in {
     catpuccinPackage
     wget
     papers
+    evince
     eog
     bchunk
     simple-scan
