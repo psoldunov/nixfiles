@@ -366,6 +366,7 @@ in {
           # Fix un-themed cursor in some Wayland apps
           XCURSOR_PATH = "/run/current-system/sw/share/icons";
 
+          ICON_THEME = "Papirus-Dark";
           # Force correct theme for some GTK apps
           GTK_THEME = "catppuccin-mocha-peach-standard";
         };
