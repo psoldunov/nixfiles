@@ -354,6 +354,7 @@ in {
     packages = [
       "com.github.tchx84.Flatseal"
       "com.steamgriddb.SGDBoop"
+      "org.gnome.Boxes"
     ];
     overrides = {
       global = {
