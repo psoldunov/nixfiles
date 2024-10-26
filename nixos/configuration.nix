@@ -215,15 +215,15 @@ in {
   };
 
   xdg = {
-    portal = {
-      enable = true;
-      extraPortals = [
-        # pkgs.xdg-desktop-portal-hyprland
-        pkgs.xdg-desktop-portal-gtk
-      ];
-      xdgOpenUsePortal = true;
-      config.common.default = "*";
-    };
+    # portal = {
+    #   enable = true;
+    #   extraPortals = [
+    #     # pkgs.xdg-desktop-portal-hyprland
+    #     pkgs.xdg-desktop-portal-gtk
+    #   ];
+    #   xdgOpenUsePortal = true;
+    #   config.common.default = "*";
+    # };
     menus.enable = true;
     icons.enable = true;
     autostart.enable = true;
