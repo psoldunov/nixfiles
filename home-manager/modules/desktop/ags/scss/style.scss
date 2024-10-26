@@ -1,0 +1,183 @@
+$theme_bg_color: #181e28;
+$theme_fg_color: #f9fcff;
+$theme_selected_bg_color: #ed8173;
+
+$theme_module_bg_color: #1c212b;
+
+$global-spacing: 4px;
+$button-radius: $global-spacing * 0.75;
+
+* {
+  font-family: "SFMono Nerd Font", monospace;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+button {
+  border-radius: $button-radius;
+  padding: $global-spacing #{$global-spacing * 2};
+}
+
+button:hover {
+  background-color: inherit;
+  box-shadow: 0 0 0 2px #c1c2c5;
+}
+
+button.system-logo {
+  background-color: transparent;
+  padding: 0 $global-spacing;
+}
+
+button.workspace-button {
+  background-color: #2d3b53;
+}
+
+button.workspace-button.focused {
+  background-color: #fcfdfc;
+  color: $theme_module_bg_color;
+}
+
+.media-button-overlay {
+  border-radius: $button-radius;
+}
+
+button.media-button {
+  border-radius: $button-radius;
+  background-color: #ec8273;
+  color: $theme_module_bg_color;
+}
+
+button.media-button.spotify {
+  background-color: #1ed760;
+}
+
+button.media-button.Plexamp {
+  background-color: #ebaf00;
+}
+
+button.idle-inhibitor {
+  background-color: #a684c6;
+  color: $theme_module_bg_color;
+}
+
+button.idle-inhibitor.active {
+  background-color: $theme_fg_color;
+}
+
+button.vpn-button {
+  background-color: #da3940;
+  color: $theme_fg_color;
+}
+
+button.vpn-button.active {
+  background-color: #06815e;
+}
+
+button.weather-button {
+  background-color: #3c465c;
+  color: $theme_fg_color;
+}
+
+button.volume-button {
+  color: $theme_module_bg_color;
+  background-color: #7db1cb;
+}
+
+.audio-device.active {
+  background-color: #fcfdfc;
+  color: $theme_module_bg_color;
+}
+
+button.bluetooth-button {
+  color: $theme_module_bg_color;
+  background-color: #9fb0d6;
+}
+
+button.microphone-button {
+  color: $theme_module_bg_color;
+  background-color: #f4b67e;
+}
+
+.bar {
+  background-color: transparent;
+  color: $theme_fg_color;
+}
+
+.center-panel {
+  padding: $global-spacing;
+  padding-top: #{$global-spacing * 2};
+}
+
+.module-panel {
+  background-color: $theme_module_bg_color;
+  border-radius: $global-spacing;
+  padding: $global-spacing;
+}
+
+.module-box {
+  border-radius: $button-radius;
+  padding: $global-spacing #{$global-spacing * 2};
+}
+
+.client-title-module {
+  background-color: #7db1cb;
+  color: $theme_module_bg_color;
+}
+
+.cpu-module {
+  background-color: #fe9bee;
+  color: $theme_module_bg_color;
+}
+
+.ram-module {
+  background-color: #85e3ff;
+  color: $theme_module_bg_color;
+}
+
+.keyboard-module {
+  color: $theme_module_bg_color;
+  background-color: #9ba7c2;
+}
+
+.network-module {
+  color: $theme_module_bg_color;
+  background-color: #da8985;
+}
+
+.network-module.network-disconnected {
+  color: $theme_fg_color;
+  background-color: red;
+}
+
+.bluetooth-connected-module {
+  color: $theme_module_bg_color;
+  background-color: #9fb0d6;
+}
+
+.time-module {
+  color: $theme_module_bg_color;
+  background-color: #f8d68f;
+}
+
+.time-overlay {
+  border-radius: $button-radius;
+}
+
+.date-module {
+  color: $theme_module_bg_color;
+  background-color: #95dbdd;
+}
+
+.volume-slider {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.system-tray {
+  border-radius: $button-radius;
+  background-color: #3c465c;
+}
+
+button.system-tray-item {
+  background-color: transparent;
+}

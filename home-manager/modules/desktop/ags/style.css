@@ -1,0 +1,138 @@
+* {
+  font-family: "SFMono Nerd Font", monospace;
+  font-size: 14px;
+  font-weight: 500; }
+
+button {
+  border-radius: 3px;
+  padding: 4px 8px; }
+
+button:hover {
+  background-color: inherit;
+  box-shadow: 0 0 0 2px #c1c2c5; }
+
+button.system-logo {
+  background-color: transparent;
+  padding: 0 4px; }
+
+button.workspace-button {
+  background-color: #2d3b53; }
+
+button.workspace-button.focused {
+  background-color: #fcfdfc;
+  color: #1c212b; }
+
+.media-button-overlay {
+  border-radius: 3px; }
+
+button.media-button {
+  border-radius: 3px;
+  background-color: #ec8273;
+  color: #1c212b; }
+
+button.media-button.spotify {
+  background-color: #1ed760; }
+
+button.media-button.Plexamp {
+  background-color: #ebaf00; }
+
+button.idle-inhibitor {
+  background-color: #a684c6;
+  color: #1c212b; }
+
+button.idle-inhibitor.active {
+  background-color: #f9fcff; }
+
+button.vpn-button {
+  background-color: #da3940;
+  color: #f9fcff; }
+
+button.vpn-button.active {
+  background-color: #06815e; }
+
+button.weather-button {
+  background-color: #3c465c;
+  color: #f9fcff; }
+
+button.volume-button {
+  color: #1c212b;
+  background-color: #7db1cb; }
+
+.audio-device.active {
+  background-color: #fcfdfc;
+  color: #1c212b; }
+
+button.bluetooth-button {
+  color: #1c212b;
+  background-color: #9fb0d6; }
+
+button.microphone-button {
+  color: #1c212b;
+  background-color: #f4b67e; }
+
+.bar {
+  background-color: transparent;
+  color: #f9fcff; }
+
+.center-panel {
+  padding: 4px;
+  padding-top: 8px; }
+
+.module-panel {
+  background-color: #1c212b;
+  border-radius: 4px;
+  padding: 4px; }
+
+.module-box {
+  border-radius: 3px;
+  padding: 4px 8px; }
+
+.client-title-module {
+  background-color: #7db1cb;
+  color: #1c212b; }
+
+.cpu-module {
+  background-color: #fe9bee;
+  color: #1c212b; }
+
+.ram-module {
+  background-color: #85e3ff;
+  color: #1c212b; }
+
+.keyboard-module {
+  color: #1c212b;
+  background-color: #9ba7c2; }
+
+.network-module {
+  color: #1c212b;
+  background-color: #da8985; }
+
+.network-module.network-disconnected {
+  color: #f9fcff;
+  background-color: red; }
+
+.bluetooth-connected-module {
+  color: #1c212b;
+  background-color: #9fb0d6; }
+
+.time-module {
+  color: #1c212b;
+  background-color: #f8d68f; }
+
+.time-overlay {
+  border-radius: 3px; }
+
+.date-module {
+  color: #1c212b;
+  background-color: #95dbdd; }
+
+.volume-slider {
+  padding-top: 0;
+  padding-bottom: 0; }
+
+.system-tray {
+  border-radius: 3px;
+  background-color: #3c465c; }
+
+button.system-tray-item {
+  background-color: transparent; }
