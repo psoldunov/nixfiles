@@ -12,7 +12,7 @@
 }: let
   systemStateVersion = "23.11";
 
-  catpuccinPackage = pkgs.catppuccin-gtk.override {
+  catppuccinPackage = pkgs.catppuccin-gtk.override {
     accents = ["peach"];
     variant = "mocha";
   };
@@ -218,7 +218,7 @@ in {
     portal = {
       enable = true;
       extraPortals = [
-        pkgs.xdg-desktop-portal-hyprland
+        # pkgs.xdg-desktop-portal-hyprland
         pkgs.xdg-desktop-portal-gtk
       ];
       xdgOpenUsePortal = true;
@@ -360,7 +360,7 @@ in {
       global = {
         Context = {
           filesystems = [
-            "${catpuccinPackage}/share/themes:ro"
+            "${catppuccinPackage}/share/themes:ro"
             "${pkgs.papirus-icon-theme}/share/icons:ro"
             "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
             "/run/current-system/sw/share/X11/fonts:ro"
@@ -730,7 +730,7 @@ in {
     linux-firmware
     libgcc
     fzf
-    catpuccinPackage
+    catppuccinPackage
     wget
     papers
     evince
