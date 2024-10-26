@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   home.file = {
-    ".local/share/duckstation/settings1.ini" = {
+    ".local/share/duckstation/settings.ini" = {
       source =
         (pkgs.formats.ini {}).generate "settings.ini"
         {
