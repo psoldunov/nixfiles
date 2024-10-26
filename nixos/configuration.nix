@@ -366,7 +366,7 @@ in {
             "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
             "/run/current-system/sw/share/X11/fonts:ro"
           ];
-          sockets = ["wayland" "!x11" "!fallback-x11"];
+          # sockets = ["wayland" "!x11" "!fallback-x11"];
         };
 
         Environment = {
