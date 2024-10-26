@@ -350,7 +350,6 @@ in {
       "flathub:app/com.github.tchx84.Flatseal"
       "flathub:app/com.steamgriddb.SGDBoop"
     ];
-    update.onActivation = true;
     remotes = {
       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
     };
