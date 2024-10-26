@@ -347,23 +347,23 @@ in {
   services.flatpak = {
     enable = true;
     packages = [
-      "com.github.tchx84.Flatseal"
-      "com.steamgriddb.SGDBoop"
+      "flathub:app/com.github.tchx84.Flatseal"
+      "flathub:app/com.steamgriddb.SGDBoop"
     ];
     update.onActivation = true;
+    remotes = {
+      "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+    };
     overrides = {
       global = {
-        # Force Wayland by default
-        Context = {
-          sockets = ["wayland" "!x11" "!fallback-x11"];
-          filesystems = [
-            "/run/current-system/sw/share/themes:ro"
-            "/run/current-system/sw/share/icons:ro"
-            "/run/current-system/sw/share/X11/fonts:ro"
-          ];
-        };
+        filesystems = [
+          "/run/current-system/sw/share/themes:ro"
+          "/run/current-system/sw/share/icons:ro"
+          "/run/current-system/sw/share/X11/fonts:ro"
+        ];
+        sockets = ["wayland" "!x11" "!fallback-x11"];
 
-        Environment = {
+        environment = {
           # Fix un-themed cursor in some Wayland apps
           XCURSOR_PATH = "/run/current-system/sw/share/icons";
 
