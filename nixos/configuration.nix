@@ -363,15 +363,17 @@ in {
         filesystems = [
           "${catpuccinPackage}/share/themes:ro"
           "${pkgs.papirus-icon-theme}/share/icons:ro"
-          "/run/current-system/sw/share/themes:ro"
-          "/run/current-system/sw/share/icons:ro"
+          "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
           "/run/current-system/sw/share/X11/fonts:ro"
         ];
         sockets = ["wayland" "!x11" "!fallback-x11"];
 
         environment = {
           # Fix un-themed cursor in some Wayland apps
-          XCURSOR_PATH = "/run/current-system/sw/share/icons";
+          XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
+
+          XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
 
           ICON_THEME = "Papirus-Dark";
           # Force correct theme for some GTK apps
