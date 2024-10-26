@@ -71,6 +71,34 @@
             UserResources = "resources";
           };
 
+          Audio = {
+            Backend = "Cubeb";
+            Driver = "";
+            OutputDevice = "";
+            StretchMode = "TimeStretch";
+            ExpansionMode = "Disabled";
+            BufferMS = 50;
+            OutputLatencyMS = 20;
+            StretchSequenceLengthMS = 30;
+            StretchSeekWindowMS = 20;
+            StretchOverlapMS = 10;
+            StretchUseQuickSeek = false;
+            StretchUseAAFilter = false;
+            ExpandBlockSize = 2048;
+            ExpandCircularWrap = 90;
+            ExpandShift = 0;
+            ExpandDepth = 1;
+            ExpandFocus = 0;
+            ExpandCenterImage = 1;
+            ExpandFrontSeparation = 1;
+            ExpandRearSeparation = 1;
+            ExpandLowCutoff = 40;
+            ExpandHighCutoff = 90;
+            OutputVolume = 100;
+            FastForwardVolume = 100;
+            OutputMuted = false;
+          };
+
           BIOS = {
             TTYLogging = false;
             PatchFastBoot = false;
