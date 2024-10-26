@@ -375,6 +375,9 @@ in {
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           ICON_THEME = "Papirus-Dark";
           GTK_THEME = "catppuccin-mocha-peach-standard";
+          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+          QT_QPA_PLATFORMTHEME = "qt5ct";
+          QT_QPA_PLATFORM = "wayland;xcb";
         };
       };
     };
