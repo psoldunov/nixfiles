@@ -71,6 +71,19 @@
             UserResources = "resources";
           };
 
+          BIOS = {
+            TTYLogging = false;
+            PatchFastBoot = false;
+            SearchDirectory = "/SATA/Emulation/BIOS/PS1";
+          };
+
+          MemoryCards = {
+            Card1Type = "PerGameTitle";
+            Card2Type = "None";
+            UsePlaylistTitle = true;
+            Directory = "/SATA/Emulation/Saves/PS1/memcards";
+          };
+
           InputSources = {
             SDL = true;
             SDLControllerEnhancedMode = false;
