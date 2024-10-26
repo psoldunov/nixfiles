@@ -8,6 +8,8 @@
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,6 +54,7 @@
     nixpkgs-stable,
     nix-ld,
     nix-gaming,
+    nix-flatpak,
     sops-nix,
     home-manager,
     apple-fonts,
@@ -85,6 +88,7 @@
         hyprland.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
+        nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
         catppuccin.nixosModules.catppuccin
