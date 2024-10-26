@@ -174,7 +174,7 @@ in {
     gnome-font-viewer
     delfin
     rofi-bluetooth
-    # duckstation
+    duckstation
     plex-media-player
     plexamp
     pcsx2
