@@ -359,6 +359,7 @@ in {
           filesystems = [
             "/run/current-system/sw/share/themes:ro"
             "/run/current-system/sw/share/icons:ro"
+            "/run/current-system/sw/share/X11/fonts:ro"
           ];
         };
 
