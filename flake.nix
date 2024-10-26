@@ -85,7 +85,7 @@
         ./nixos/configuration.nix
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
-        hyprland.nixosModules.default
+        # hyprland.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
         nix-flatpak.nixosModules.nix-flatpak
@@ -107,7 +107,7 @@
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default
-              hyprland.homeManagerModules.default
+              # hyprland.homeManagerModules.default
             ];
           };
         }
