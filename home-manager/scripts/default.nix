@@ -209,7 +209,7 @@
     pkgs.writeScriptBin "activate_expressvpn" ''
       #!${pkgs.expect}/bin/expect -f
 
-      set activation_code [lindex $argv 0]
+      set activation_code "EQPSYUFGRFHTNC5SRQTPOGO"
       spawn ${pkgs.expressvpn}/bin/expressvpn activate
       expect "Enter activation code: "
       send "$activation_code\r"
