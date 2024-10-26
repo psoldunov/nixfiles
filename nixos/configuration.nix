@@ -362,6 +362,7 @@ in {
       global = {
         filesystems = [
           "${catpuccinPackage}/share/themes:ro"
+          "${pkgs.papirus-icon-theme}/share/icons:ro"
           "/run/current-system/sw/share/themes:ro"
           "/run/current-system/sw/share/icons:ro"
           "/run/current-system/sw/share/X11/fonts:ro"
