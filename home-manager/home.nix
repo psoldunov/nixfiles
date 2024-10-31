@@ -161,6 +161,7 @@ in {
     hyprshade
     rpi-imager
     pkgs-stable.mysql-workbench
+    postman
     geekbench
     deno
     neovim
