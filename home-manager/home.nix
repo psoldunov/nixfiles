@@ -192,7 +192,6 @@ in {
     zed-editor
     zen-specific
     transmission-remote-gtk
-    pantheon.elementary-iconbrowser
     scripts.restart_ags
     scripts.idle_check
     scripts.record_screen
