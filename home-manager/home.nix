@@ -162,40 +162,29 @@ in {
     rpi-imager
     pkgs-stable.mysql-workbench
     geekbench
-    bambu-studio
     deno
     neovim
     nodejs_20
     obsidian
     pywal
-    simplex-chat-desktop
     spotify
     mattermost-desktop
     gnome-font-viewer
-    delfin
     rofi-bluetooth
     duckstation
-    plex-media-player
     plexamp
     pcsx2
     heroic
-    chiaki
-    notion-app-enhanced
-    appflowy
     ferdium
     steam-rom-manager
     prismlauncher
     ryujinx
     picard
-    gimp
-    newman
     telegram-desktop
     slack
     protonup-qt
     protonup-ng
     vesktop
-    lightly-boehs
-    # libsForQt5.lightly
     rpcs3
     ookla-speedtest
     catppuccin-cursors

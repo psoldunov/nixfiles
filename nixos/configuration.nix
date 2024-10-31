@@ -715,8 +715,6 @@ in {
     grilo-plugins
     kitty
     sg3_utils
-    libsForQt5.kdenlive
-    glaxnimate
     solaar
     kitty-img
     kitty-themes
@@ -740,10 +738,6 @@ in {
     speedcrunch
     gparted
     zstd
-    audacity
-    distrobox
-    boxbuddy
-    qpaeq
     run
     iperf
     yubikey-manager-qt
@@ -757,7 +751,6 @@ in {
     zenity
     hyprevents
     joypixels
-    synergy
     radeontop
     pkg-config
     thunderbird
@@ -779,7 +772,6 @@ in {
     libsecret
     (pkgs-stable.python3.withPackages (p:
       with p; [
-        # torchWithRocm
         discid
         keyring
         yt-dlp
