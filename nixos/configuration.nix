@@ -15,6 +15,8 @@
     accents = ["peach"];
     variant = "mocha";
   };
+
+  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -168,6 +170,7 @@ in {
 
   hardware.graphics = {
     enable = true;
+    package = pkgs-hyprland.mesa.drivers;
     enable32Bit = true;
     extraPackages = with pkgs; [
       rocmPackages.hipblas
