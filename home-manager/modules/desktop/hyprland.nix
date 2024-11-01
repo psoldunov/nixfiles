@@ -2,7 +2,6 @@
   config,
   inputs,
   pkgs,
-  pkgs-stable,
   ...
 }: let
   wallpaperPath = "/home/psoldunov/Pictures/Wallpapers/porsche-uw.jpg";
@@ -10,7 +9,6 @@
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
     inherit pkgs;
-    inherit pkgs-stable;
   };
 
   startupSound = ./assets/startup.wav;
