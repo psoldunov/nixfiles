@@ -16,9 +16,6 @@ in {
         (rofi-top.override {
           rofi-unwrapped = rofi-wayland-unwrapped;
         })
-        (rofi-emoji.override {
-          rofi-unwrapped = rofi-wayland-unwrapped;
-        })
       ];
     };
     font = "JetBrainsMono Nerd Font 11";
