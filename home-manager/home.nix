@@ -3,7 +3,6 @@
 {
   config,
   pkgs,
-  pkgs-stable,
   zen-specific,
   ...
 }: let

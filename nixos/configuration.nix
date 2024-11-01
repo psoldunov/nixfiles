@@ -6,7 +6,6 @@
   lib,
   config,
   pkgs,
-  pkgs-stable,
   appleFonts,
   ...
 }: let
@@ -694,8 +693,6 @@ in {
     vscode
     sops
     alejandra
-    podman-tui
-    podman-compose
     dive
     gperftools
     swww
