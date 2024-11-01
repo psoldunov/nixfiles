@@ -835,7 +835,7 @@ in {
     hyprpicker
     corepack
     localsend
-    pkgs-stable.calibre
+    calibre
     unzip
     woff2
     grim
