@@ -37,7 +37,7 @@ in {
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
-    package = pkgs-stable.nextcloud-client;
+    # package = pkgs-stable.nextcloud-client;
   };
 
   sops = {
@@ -160,7 +160,7 @@ in {
     bruno
     hyprshade
     rpi-imager
-    pkgs-stable.mysql-workbench
+    mysql-workbench
     postman
     geekbench
     deno
