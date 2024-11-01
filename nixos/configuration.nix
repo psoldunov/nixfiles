@@ -522,9 +522,7 @@ in {
           "joypixels"
         ];
       permittedInsecurePackages = [
-        # "python-2.7.18.6"
         "electron-24.8.6"
-        # "python3.12-youtube-dl-2021.12.17"
       ];
     };
   };
@@ -536,7 +534,6 @@ in {
     (import ./overlays/hyprprop.nix)
     (import ./overlays/vscode.nix)
     (import ./overlays/plymouth-pedro.nix)
-    # (import ./overlays/cursor-editor.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
@@ -761,7 +758,7 @@ in {
     hwdata
     pciutils
     brave
-    pkgs-stable.cliphist
+    cliphist
     webp-pixbuf-loader
     kdiskmark
     libwebp
@@ -772,7 +769,7 @@ in {
     imagemagick
     devenv
     libsecret
-    (pkgs-stable.python3.withPackages (p:
+    (python3.withPackages (p:
       with p; [
         discid
         keyring
@@ -801,11 +798,11 @@ in {
     skate
     hyprprop
     gum
-    pkgs-stable.typst
-    pkgs-stable.typstfmt
-    pkgs-stable.typst-lsp
+    typst
+    typstfmt
+    typst-lsp
     translate-shell
-    pkgs-stable.typst-live
+    typst-live
     nss
     mkinitcpio-nfs-utils
     libnfs
