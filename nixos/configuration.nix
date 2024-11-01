@@ -680,10 +680,8 @@ in {
     cddiscid
     libmusicbrainz5
     libmusicbrainz
-    # isrcsubmit
     monkeysAudio
     libdiscid
-    # globalprotect-openconnect_git
     (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
     appimage-run
     wev
@@ -716,7 +714,7 @@ in {
     solaar
     kitty-img
     kitty-themes
-    pkgs-stable.emojione
+    emojione
     sassc
     code-cursor
     bat
@@ -742,7 +740,6 @@ in {
     yubikey-manager-qt
     yubikey-manager
     virt-manager
-    # telegram-desktop_git
     gnome-icon-theme
     adwaita-icon-theme
     p7zip
