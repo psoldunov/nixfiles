@@ -1,10 +1,10 @@
 final: prev: {
   cursor-editor = let
     pname = "cursor";
-    version = "0.35.0";
+    version = "0.42.0";
     src = final.fetchurl {
       url = "https://downloader.cursor.sh/linux/appImage/x64";
-      hash = "sha256-Fsy9OVP4vryLHNtcPJf0vQvCuu4NEPDTN2rgXO3Znwo=";
+      hash = "sha256-CD6bQ4T8DhJidiOxNRgRDL4obfEZx7hnO0VotVb6lDc=";
     };
     appimageContents = final.appimageTools.extract {inherit pname version src;};
   in
