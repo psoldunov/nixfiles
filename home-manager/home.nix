@@ -36,7 +36,6 @@ in {
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
-    # package = pkgs-stable.nextcloud-client;
   };
 
   sops = {
