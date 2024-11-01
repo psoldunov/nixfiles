@@ -536,6 +536,7 @@ in {
     (import ./overlays/hyprprop.nix)
     (import ./overlays/vscode.nix)
     (import ./overlays/plymouth-pedro.nix)
+    (import ./overlays/cursor-editor.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
@@ -720,6 +721,7 @@ in {
     kitty-themes
     pkgs-stable.emojione
     sassc
+    cursor-editor
     bat
     cloudflared
     hyprcursor
