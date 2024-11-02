@@ -88,7 +88,7 @@
 
   programs.nushell = {
     enable = true;
-    extraConfig = "source ${config.sops.secrets.SHELL_SECRETS.path}";
+    # extraConfig = "source ${config.sops.secrets.SHELL_SECRETS.path}";
   };
 
   programs.thefuck = {
