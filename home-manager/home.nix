@@ -156,6 +156,7 @@ in {
   home.packages = with pkgs; [
     beets
     bruno
+    shortwave
     hyprshade
     rpi-imager
     mysql-workbench
