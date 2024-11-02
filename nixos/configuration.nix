@@ -82,7 +82,7 @@ in {
   };
 
   fileSystems."/mnt/Games" = {
-    device = "10.24.24.2:/export/games";
+    device = "10.24.24.3:/volume1/Games";
     fsType = "nfs";
     options = ["defaults" "x-gvfs-show"];
   };
