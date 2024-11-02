@@ -81,11 +81,11 @@ in {
     options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=folder-download-symbolic"];
   };
 
-  # fileSystems."/mnt/Games" = {
-  #   device = "10.24.24.3:/volume1/Games/";
-  #   fsType = "nfs";
-  #   options = ["defaults" "x-gvfs-show"];
-  # };
+  fileSystems."/mnt/Games" = {
+    device = "10.24.24.2:/export/games";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show"];
+  };
 
   console = {
     catppuccin.enable = false;
