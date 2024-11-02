@@ -85,20 +85,28 @@
     ];
   };
 
+  programs.nushell = {
+    enable = true;
+    extraConfig = "source ${config.sops.secrets.SHELL_SECRETS.path}";
+  };
+
   programs.thefuck = {
     enable = true;
+    enableNushellIntegration = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
   };
 
   programs.fzf = {
     enable = true;
+    enableNushellIntegration = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
   };
 
   programs.starship = {
     enable = true;
+    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
     settings = {
@@ -121,6 +129,7 @@
 
   programs.zoxide = {
     enable = true;
+    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
     options = [
@@ -136,6 +145,7 @@
 
   programs.yazi = {
     enable = true;
+    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
   };
