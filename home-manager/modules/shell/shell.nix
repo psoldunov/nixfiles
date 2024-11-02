@@ -99,7 +99,6 @@
 
   programs.fzf = {
     enable = true;
-    enableNushellIntegration = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
   };
