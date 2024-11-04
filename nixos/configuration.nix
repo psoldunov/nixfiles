@@ -985,7 +985,7 @@ in {
   # networking.interfaces.wlp7s0.useDHCP = true;
 
   # Built-in card
-  networking.interfaces.enp6s0.useDHCP = true;
+  # networking.interfaces.enp6s0.useDHCP = true;
 
   # Networking firewall configuration.
   networking.firewall = {
