@@ -188,7 +188,7 @@ in {
     rpcs3
     ookla-speedtest
     catppuccin-cursors
-    varia
+    motrix
     zed-editor
     zen-specific
     transmission-remote-gtk
