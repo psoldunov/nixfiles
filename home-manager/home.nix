@@ -177,6 +177,7 @@ in {
     heroic
     ferdium
     steam-rom-manager
+    mediawriter
     prismlauncher
     ryujinx
     picard
