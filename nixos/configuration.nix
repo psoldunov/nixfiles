@@ -963,7 +963,7 @@ in {
   };
 
   # 10gbps card
-  networking.interfaces.enp7s0.ipv4.addresses = [
+  networking.interfaces.enp10s0.ipv4.addresses = [
     {
       address = "10.24.24.5";
       prefixLength = 24;
