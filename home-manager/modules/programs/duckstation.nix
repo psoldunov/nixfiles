@@ -347,7 +347,7 @@
   # };
 
   home.activation = let
-    settingsScript = pkgs.writeShellBin "duckstation-settings" ''
+    settingsScript = pkgs.writeShellScript "duckstation-settings" ''
       settings_file="$HOME/.local/share/duckstation/settings.ini"
 
       # Ensure the directory exists
