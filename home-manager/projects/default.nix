@@ -18,6 +18,10 @@ in {
       path = "${boundary}/promise";
     }
     {
+      name = "fullsteam";
+      path = "${boundary}/fullsteam-next";
+    }
+    {
       name = "weho-news";
       path = "${boundary}/weho-news";
     }
