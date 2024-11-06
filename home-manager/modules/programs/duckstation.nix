@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: {
   # home.file = {
@@ -347,7 +348,7 @@
   # };
 
   home.activation = {
-    settingsScript = pkgs.writeShellScript "duckstation-settings" ''
+    setUpDuckStation = lib.hm.dag.entryAfter ["writeBoundary"] ''
       settings_file="$HOME/.local/share/duckstation/settings.ini"
 
       # Ensure the directory exists
