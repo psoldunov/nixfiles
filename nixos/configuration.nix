@@ -216,6 +216,17 @@ in {
     '';
   };
 
+  systemd.services.append-settings-ini = {
+    script = ''
+      if ! grep -q 'extraKey1' /etc/myapp/settings.ini; then
+        echo "extraKey1=extraValue1" >> /etc/myapp/settings.ini
+      fi
+      if ! grep -q 'extraKey2' /etc/myapp/settings.ini; then
+        echo "extraKey2=extraValue2" >> /etc/myapp/settings.ini
+      fi
+    '';
+  };
+
   xdg = {
     # portal = {
     #   enable = true;
