@@ -348,7 +348,7 @@
   # };
 
   home.activation = {
-    setUpDuckStation = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    setUpDuckStation = lib.hm.dag ''
       settings_file="$HOME/.local/share/duckstation/settings.ini"
 
       # Ensure the directory exists
