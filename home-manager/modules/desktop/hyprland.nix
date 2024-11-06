@@ -76,9 +76,9 @@ in {
           "col.inactive_border" = "rgb(2d3b53)";
           layout = "dwindle";
         };
-        cursor = {
-          no_hardware_cursors = 1;
-        };
+        # cursor = {
+        #   no_hardware_cursors = 1;
+        # };
         xwayland = {
           force_zero_scaling = true;
         };
