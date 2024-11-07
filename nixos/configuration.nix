@@ -409,6 +409,7 @@ in {
 
   virtualisation = {
     docker.enable = true;
+    podman.enable = true;
     docker.enableOnBoot = true;
     libvirtd.enable = true;
     containerd.enable = true;
