@@ -63,7 +63,7 @@ in {
       image = {
         path = ''${pkgs.fetchurl {
             url = "https://avatars.githubusercontent.com/u/69530789";
-            hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+            hash = "sha256-0fa8lhs1sxg4ivjr9klc0nvmmjksl5i6ka7jqp0cdvv8z29xi5v8";
           }}'';
         size = 100;
         border_color = "$accent";
