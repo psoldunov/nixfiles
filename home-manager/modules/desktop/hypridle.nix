@@ -61,10 +61,10 @@ in {
       # USER AVATAR
 
       image = {
-        path = pkgs.fetchurl {
-          url = "https://avatars.githubusercontent.com/u/69530789";
-          hash = "sha256-aJfYk/ho78bAxfKoaWKhespatwWMzpTljuR1HTSkSDk=";
-        };
+        path = ''${pkgs.fetchurl {
+            url = "https://avatars.githubusercontent.com/u/69530789";
+            hash = "sha256-aJfYk/ho78bAxfKoaWKhespatwWMzpTljuR1HTSkSDk=";
+          }}'';
         size = 100;
         border_color = "$accent";
         position = "0, 75";
