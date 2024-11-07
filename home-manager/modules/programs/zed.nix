@@ -6,7 +6,7 @@
   zedConfig = {
     ssh_connections = [
       {
-        host = "192.168.1.10";
+        host = "10.24.24.2";
         projects = ["~/.nixfiles"];
         upload_binary_over_ssh = false;
         nickname = "BigTasty";
