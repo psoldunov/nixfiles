@@ -5,6 +5,11 @@
 }: let
   hyprlockBin = "${pkgs.hyprlock}/bin/hyprlock";
   hyprctlBin = "${pkgs.hyprland}/bin/hyprctl";
+
+  avatar = pkgs.fetchurl {
+    url = "https://avatars.githubusercontent.com/u/69530789";
+    hash = "sha256-0fa8lhs1sxg4ivjr9klc0nvmmjksl5i6ka7jqp0cdvv8z29xi5v8";
+  };
 in {
   programs.hyprlock = {
     enable = true;
@@ -61,10 +66,7 @@ in {
       # USER AVATAR
 
       image = {
-        path = ''${pkgs.fetchurl {
-            url = "https://avatars.githubusercontent.com/u/69530789";
-            hash = "sha256-0fa8lhs1sxg4ivjr9klc0nvmmjksl5i6ka7jqp0cdvv8z29xi5v8";
-          }}'';
+        path = "${avatar}";
         size = 100;
         border_color = "$accent";
         position = "0, 75";
