@@ -929,6 +929,12 @@ in {
     dedicatedServer.openFirewall = true;
     platformOptimizations.enable = true;
     localNetworkGameTransfers.openFirewall = true;
+    extraPackages = with pkgs; [
+      (writeScriptBin "steamos-session-select" ''
+        #!/bin/bash
+        steam -shutdown
+      '')
+    ];
   };
 
   programs.gamemode.enable = true;
