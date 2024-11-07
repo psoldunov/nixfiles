@@ -7,7 +7,7 @@
     ssh_connections = [
       {
         host = "10.24.24.2";
-        projects = ["~/.nixfiles"];
+        projects = {};
         username = "psoldunov";
         upload_binary_over_ssh = false;
         nickname = "BigTasty";
