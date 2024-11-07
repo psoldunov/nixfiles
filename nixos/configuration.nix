@@ -173,8 +173,6 @@ in {
     package = pkgs-hyprland.mesa.drivers;
     enable32Bit = true;
     extraPackages = with pkgs; [
-      rocmPackages.hipblas
-      rocmPackages.clr
       libva
       vaapiVdpau
       libvdpau-va-gl
@@ -198,8 +196,6 @@ in {
 
   environment.sessionVariables = {
     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-    # GPERFTOOLS32_PATH = "${i686pkgs.gperftools}";
-    # GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas";
   };
 
   services.mpd = {
@@ -216,27 +212,7 @@ in {
     '';
   };
 
-  systemd.services.append-settings-ini = {
-    script = ''
-      if ! grep -q 'extraKey1' /etc/myapp/settings.ini; then
-        echo "extraKey1=extraValue1" >> /etc/myapp/settings.ini
-      fi
-      if ! grep -q 'extraKey2' /etc/myapp/settings.ini; then
-        echo "extraKey2=extraValue2" >> /etc/myapp/settings.ini
-      fi
-    '';
-  };
-
   xdg = {
-    # portal = {
-    #   enable = true;
-    #   extraPortals = [
-    #     # pkgs.xdg-desktop-portal-hyprland
-    #     pkgs.xdg-desktop-portal-gtk
-    #   ];
-    #   xdgOpenUsePortal = true;
-    #   config.common.default = "*";
-    # };
     menus.enable = true;
     icons.enable = true;
     autostart.enable = true;
@@ -421,6 +397,7 @@ in {
         environment = {
           OLLAMA_ORIGINS = "app://obsidian.md*";
           OLLAMA_GPU_OVERHEAD = "2147483648";
+          HSA_OVERRIDE_GFX_VERSION = "11.0.0";
         };
         volumes = [
           "ollama:/root/.ollama"
@@ -476,9 +453,6 @@ in {
     enableSSHSupport = true;
   };
 
-  # █▀█ █▀█ █▀█ █▀▀ █▀█ ▄▀█ █▀▄▀█ █▀
-  # █▀▀ █▀▄ █▄█ █▄█ █▀▄ █▀█ █░▀░█ ▄█
-
   # Fish shell
   programs.fish.enable = true;
 
@@ -520,15 +494,11 @@ in {
     };
   };
 
-  # █▄░█ █ ▀▄▀ █▀█ █▄▀ █▀▀ █▀   ▄▀█ █▄░█ █▀▄   █▀█ █░█ █▀▀ █▀█ █░░ ▄▀█ █▄█ █▀
-  # █░▀█ █ █░█ █▀▀ █░█ █▄█ ▄█   █▀█ █░▀█ █▄▀   █▄█ ▀▄▀ ██▄ █▀▄ █▄▄ █▀█ ░█░ ▄█
-
   nixpkgs = {
     config = {
       joypixels.acceptLicense = true;
       allowUnfree = true;
       allowInsecure = true;
-      rocmSupport = true;
       allowBroken = true;
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
@@ -631,17 +601,9 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
     jack.enable = true;
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
     lowLatency = {
-      # enable this module
       enable = true;
-      # defaults (no need to be set unless modified)
-      quantum = 64;
-      rate = 48000;
     };
   };
 
@@ -680,9 +642,6 @@ in {
     ];
     ensureDefaultPrinter = "HP_LaserJet_MFP_M28w_9B18D8";
   };
-
-  # █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█   █▀█ ▄▀█ █▀▀ █▄▀ ▄▀█ █▀▀ █▀▀ █▀
-  # ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█   █▀▀ █▀█ █▄▄ █░█ █▀█ █▄█ ██▄ ▄█
 
   programs.nix-ld.dev.enable = true;
 
@@ -941,26 +900,16 @@ in {
     );
   };
 
-  # █▀▀ ▄▀█ █▀▄▀█ █ █▄░█ █▀▀
-  # █▄█ █▀█ █░▀░█ █ █░▀█ █▄█
-
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    extest.enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
     platformOptimizations.enable = true;
+    localNetworkGameTransfers.openFirewall = true;
   };
 
   programs.gamemode.enable = true;
-
-  services.sunshine = {
-    enable = true;
-    openFirewall = true;
-    autoStart = false;
-  };
-
-  # █▄░█ █▀▀ ▀█▀ █░█░█ █▀█ █▀█ █▄▀ █ █▄░█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀ █▀▀ █▀▀ █░█ █▀█ █ ▀█▀ █▄█
-  # █░▀█ ██▄ ░█░ ▀▄▀▄▀ █▄█ █▀▄ █░█ █ █░▀█ █▄█   █▀█ █░▀█ █▄▀   ▄█ ██▄ █▄▄ █▄█ █▀▄ █ ░█░ ░█░
 
   networking.hostName = "Whopper";
 
@@ -980,23 +929,6 @@ in {
       prefixLength = 24;
     }
   ];
-
-  # Wifi Card
-
-  # networking.wireless = {
-  #   enable = false;
-  #   environmentFile = config.sops.secrets."wireless.env".path;
-  #   networks = {
-  #     "@home_uuid@" = {
-  #       psk = "@home_psk@";
-  #     };
-  #   };
-  # };
-
-  # networking.interfaces.wlp7s0.useDHCP = true;
-
-  # Built-in card
-  # networking.interfaces.enp6s0.useDHCP = true;
 
   # Networking firewall configuration.
   networking.firewall = {
@@ -1025,7 +957,6 @@ in {
     age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 
     secrets = {
-      "wireless.env" = {};
       EXPRESSVPN_KEY = {
         owner = "psoldunov";
       };
@@ -1034,7 +965,7 @@ in {
 
   # Cloudflare Tunnels
   services.cloudflared = {
-    enable = true;
+    enable = false;
     user = "cloudflared";
   };
 
@@ -1081,13 +1012,7 @@ in {
   # Certificates
   security.pki.certificateFiles = ["${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"];
 
-  # █▀ █▀▀ █▀█ █░█ █ █▀▀ █▀▀ █▀
-  # ▄█ ██▄ █▀▄ ▀▄▀ █ █▄▄ ██▄ ▄█
-
   services.locate.enable = true;
-
-  # █░█ █▀ █▀▀ █▀█ █▀
-  # █▄█ ▄█ ██▄ █▀▄ ▄█
 
   # My user
   users.users.psoldunov = {
@@ -1096,9 +1021,6 @@ in {
     extraGroups = ["networkmanager" "docker" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "input"];
     shell = pkgs.fish;
   };
-
-  # █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█   █▀ ▀█▀ ▄▀█ ▀█▀ █▀▀   █░█ █▀▀ █▀█ █▀ █ █▀█ █▄░█
-  # ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█   ▄█ ░█░ █▀█ ░█░ ██▄   ▀▄▀ ██▄ █▀▄ ▄█ █ █▄█ █░▀█
 
   system.stateVersion = systemStateVersion;
 }
