@@ -4,6 +4,14 @@
   ...
 }: let
   zedConfig = {
+    ssh_connections = [
+      {
+        host = "192.168.1.10";
+        projects = ["~/.nixfiles"];
+        upload_binary_over_ssh = false;
+        nickname = "BigTasty";
+      }
+    ];
     theme = "Catppuccin Mocha Peach";
     vim_mode = false;
     ui_font_size = 18.5;
