@@ -65,7 +65,6 @@
     cat = "bat";
     thunar = "nemo";
     ssh = "kitten ssh";
-    # ollama = "docker exec -it ollama ollama";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
   };
 

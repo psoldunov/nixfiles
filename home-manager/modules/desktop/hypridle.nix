@@ -61,7 +61,10 @@ in {
       # USER AVATAR
 
       image = {
-        path = "~/.face";
+        path = pkgs.fetchurl {
+          url = "https://avatars.githubusercontent.com/u/69530789";
+          hash = "0fa8lhs1sxg4ivjr9klc0nvmmjksl5i6ka7jqp0cdvv8z29xi5v8";
+        };
         size = 100;
         border_color = "$accent";
         position = "0, 75";
@@ -90,12 +93,6 @@ in {
         halign = "center";
         valign = "center";
       };
-    };
-  };
-
-  home.file = {
-    ".face" = {
-      source = ./assets/face.jpg;
     };
   };
 

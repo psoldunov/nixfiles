@@ -4,7 +4,6 @@
   pkgs,
   ...
 }: let
-  wallpaperPath = "/home/psoldunov/Pictures/Wallpapers/porsche-uw.jpg";
   windowRules = import ./hypr-modules/windowrules.nix;
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
@@ -12,6 +11,8 @@
   };
 
   startupSound = ./assets/startup.wav;
+
+  wallpaperPath = ./assets/wallpaper.jpg;
 
   autoStart = pkgs.writeShellScript "autostart_applications" ''
     autostart_commands="
@@ -61,7 +62,6 @@ in {
           mouse_refocus = false;
           scroll_factor = "0.75";
           natural_scroll = "yes";
-          # mouse_refocus = false;
           sensitivity = 0;
           accel_profile = "adaptive";
           touchpad = {
@@ -76,9 +76,7 @@ in {
           "col.inactive_border" = "rgb(2d3b53)";
           layout = "dwindle";
         };
-        # cursor = {
-        #   no_hardware_cursors = 1;
-        # };
+
         xwayland = {
           force_zero_scaling = true;
         };
@@ -103,8 +101,8 @@ in {
           ];
         };
         dwindle = {
-          pseudotile = "yes"; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds
-          # preserve_split = "yes"; # you probably want this
+          pseudotile = "yes";
+          # preserve_split = "yes";
         };
         # master = {
         #   new_is_master = true;
@@ -118,8 +116,6 @@ in {
           disable_splash_rendering = true;
           allow_session_lock_restore = true;
           vrr = 2;
-          # vrr = 0;
-          # mouse_move_enables_dpms = true;
           key_press_enables_dpms = true;
         };
         device = [
@@ -160,15 +156,6 @@ in {
 
   xdg = {
     mime.enable = true;
-    # portal = {
-    #   enable = true;
-    #   extraPortals = [
-    #     pkgs.xdg-desktop-portal-hyprland
-    #     pkgs.xdg-desktop-portal-gtk
-    #   ];
-    #   xdgOpenUsePortal = true;
-    #   config.common.default = "*";
-    # };
   };
 
   home.sessionVariables = {

@@ -681,7 +681,6 @@ in {
     dive
     gperftools
     swww
-    via
     rhythmbox
     polkit_gnome
     libsecret
@@ -706,7 +705,6 @@ in {
     docker-compose-language-service
     linux-firmware
     libgcc
-    fzf
     catppuccinPackage
     wget
     papers
@@ -764,7 +762,6 @@ in {
     socat
     mangohud
     vulkan-tools
-    zoxide
     bottles
     libva-utils
     cargo
