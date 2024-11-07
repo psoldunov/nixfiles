@@ -417,22 +417,6 @@ in {
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
-      # ollama = {
-      #   image = "ollama/ollama:rocm";
-      #   ports = ["11434:11434"];
-      #   extraOptions = [
-      #     "--device=/dev/dri:/dev/dri"
-      #     "--device=/dev/kfd:/dev/kfd"
-      #   ];
-      #   environment = {
-      #     OLLAMA_ORIGINS = "app://obsidian.md*";
-      #     OLLAMA_GPU_OVERHEAD = "2147483648";
-      #     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-      #   };
-      #   volumes = [
-      #     "ollama:/root/.ollama"
-      #   ];
-      # };
       whisper-rocm = {
         image = "psoldunov/openai-whisper-rocm";
         extraOptions = [
@@ -558,7 +542,6 @@ in {
     (import ./overlays/hyprevents.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/vscode.nix)
-    # (import ./overlays/plymouth-pedro.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
