@@ -82,10 +82,6 @@ in {
         };
         decoration = {
           rounding = 4;
-          # drop_shadow = "yes";
-          # shadow_range = 4;
-          # shadow_render_power = 4;
-          # "col.shadow" = "rgba(1a1a1aee)";
           # screen_shader = "${config.xdg.configHome}/hypr/shaders/screenShader.frag";
         };
         animations = {
