@@ -103,8 +103,38 @@ in {
     enable = true;
     catppuccin.enable = false;
     theme = "pedro-raccoon";
-    themePackages = with pkgs; [
-      pedro-raccoon-plymouth
+    themePackages = [
+      (pkgs.stdenvNoCC.mkDerivation {
+        pname = "pedro-raccoon-plymouth";
+        version = "1.1";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "FilaCo";
+          repo = "pedro-raccoon-plymouth";
+          rev = "01ff1f4";
+          hash = "sha256-L+jfH2edHN6kqqjpAesRr317ih3r4peGklRwvziksHE=";
+        };
+
+        dontBuild = true;
+
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out/share/plymouth/themes/pedro-raccoon
+          cp pedro-raccoon/* $out/share/plymouth/themes/pedro-raccoon
+          substituteInPlace $out/share/plymouth/themes/pedro-raccoon/pedro-raccoon.plymouth \
+            --replace-fail "/usr/" "$out/"
+          runHook postInstall
+        '';
+
+        passthru.updateScript = pkgs.unstableGitUpdater {};
+
+        meta = {
+          description = "This is a simple Plymouth theme with Pedro racoon meme.";
+          homepage = "https://github.com/FilaCo/pedro-raccoon-plymouth";
+          license = pkgs.lib.licenses.mit;
+          platforms = pkgs.lib.platforms.linux;
+        };
+      })
     ];
   };
   boot.loader.grub = {
@@ -528,7 +558,7 @@ in {
     (import ./overlays/hyprevents.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/vscode.nix)
-    (import ./overlays/plymouth-pedro.nix)
+    # (import ./overlays/plymouth-pedro.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
