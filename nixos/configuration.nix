@@ -953,8 +953,7 @@ in {
   networking = {
     defaultGateway = "10.24.24.1";
     nameservers = [
-      "10.24.24.2"
-      "1.1.1.1"
+      "10.24.24.9"
     ];
   };
 
