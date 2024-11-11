@@ -268,6 +268,8 @@ in {
         "x-scheme-handler/http" = "firefox.desktop";
         "x-scheme-handler/https" = "firefox.desktop";
         "x-scheme-handler/chrome" = "firefox.desktop";
+        "x-scheme-handler/about" = "firefox.desktop";
+        "x-scheme-handler/unknown" = "firefox.desktop";
         "x-scheme-handler/vscode" = "code-url-handler.desktop";
         "x-scheme-handler/figma" = "figma.desktop";
         "application/x-extension-htm" = "firefox.desktop";
@@ -276,6 +278,7 @@ in {
         "application/xhtml+xml" = "firefox.desktop";
         "application/x-extension-xhtml" = "firefox.desktop";
         "application/x-extension-xht" = "firefox.desktop";
+
         "Email" = "thunderbird.desktop";
         "message/rfc822" = "thunderbird.desktop";
         "x-scheme-handler/mailto" = "thunderbird.desktop";
