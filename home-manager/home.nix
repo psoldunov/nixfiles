@@ -176,6 +176,7 @@ in {
     pcsx2
     heroic
     ferdium
+    lollypop
     steam-rom-manager
     mediawriter
     prismlauncher
