@@ -89,6 +89,9 @@ export default function Speaker() {
     on_primary_click: () => {
       audio.speaker.is_muted = !audio.speaker.is_muted;
     },
+    on_middle_click: () => {
+      Utils.execAsync(["bash", "-c", "pavucontrol"]);
+    },
     on_secondary_click: (_, event) => {
       speakerMenu.popup_at_pointer(event);
     },
