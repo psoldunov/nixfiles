@@ -932,7 +932,7 @@ in {
 
   programs.steam = {
     enable = true;
-    extest.enable = true;
+    extest.enable = false;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     platformOptimizations.enable = true;
