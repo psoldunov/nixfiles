@@ -177,6 +177,7 @@ in {
     heroic
     ferdium
     lollypop
+    finamp
     steam-rom-manager
     mediawriter
     prismlauncher
