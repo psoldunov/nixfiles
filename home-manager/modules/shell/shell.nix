@@ -62,7 +62,7 @@
     ls = "lsd -laFh";
     rm = "gio trash";
     fucking = "sudo";
-    cat = "bat";
+    cat = "bat -p";
     thunar = "nemo";
     ssh = "kitten ssh";
     # ollama = "docker exec -it ollama ollama";
