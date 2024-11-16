@@ -81,7 +81,7 @@ in {
       name = "YouTube";
       genericName = "Video Player";
       icon = "youtube";
-      exec = "${pkgs.firefox}/bin/firefox -kiosk https://www.youtube.com %U";
+      exec = "${pkgs.firefox}/bin/firefox --new-window -kiosk https://www.youtube.com %U";
       terminal = false;
       mimeType = ["x-scheme-handler/youtube"];
       categories = ["Video" "Player" "AudioVideo"];
