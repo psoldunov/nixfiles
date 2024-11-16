@@ -49,7 +49,7 @@
       };
     };
     shellInit = ''
-      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+      # ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       set -Ua fish_user_paths $HOME/.cargo/bin
       set --export BUN_INSTALL "$HOME/.bun"
       set --export PATH $BUN_INSTALL/bin $PATH
