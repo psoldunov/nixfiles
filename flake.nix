@@ -41,7 +41,7 @@
     };
 
     ags = {
-      url = "github:Aylur/ags";
+      url = "github:Aylur/ags/60180a184cfb32b61a1d871c058b31a3b9b0743d";
     };
   };
 
