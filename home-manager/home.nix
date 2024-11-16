@@ -62,7 +62,7 @@ in {
       name = "Webflow";
       genericName = "Web Editor";
       icon = ./modules/desktop/assets/webflow.png;
-      exec = ''${pkgs.chromium}/bin/chromium --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
+      exec = ''${pkgs.chromium}/bin/chromium --profile-directory=Work --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
@@ -81,7 +81,7 @@ in {
       name = "YouTube";
       genericName = "Video Player";
       icon = "youtube";
-      exec = "${pkgs.chromium}/bin/chromium --new-window --app=https://www.youtube.com %U";
+      exec = "${pkgs.chromium}/bin/chromium --profile-directory=Personal --new-window --app=https://www.youtube.com %U";
       terminal = false;
       mimeType = ["x-scheme-handler/youtube"];
       categories = ["Video" "Player" "AudioVideo"];
