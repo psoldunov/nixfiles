@@ -164,6 +164,7 @@ in {
     geekbench
     deno
     neovim
+    retroarchFull
     nodejs_20
     obsidian
     pywal
