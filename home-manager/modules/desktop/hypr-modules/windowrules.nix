@@ -80,6 +80,7 @@
     "workspace special:music,class:(Plexamp)"
     "float,class:(Plexamp)"
     "workspace 5,class:(tidal-hifi)"
+    "workspace 5,class:(chrome-www.youtube.com__-YouTube)"
     "workspace 6,class:^(steam)$,title:(Steam)"
     "workspace 6,class:^(heroic)$"
     "workspace 10,class:^steam_app_.*$"
