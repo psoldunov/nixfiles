@@ -81,7 +81,7 @@ in {
       name = "YouTube";
       genericName = "Video Player";
       icon = "youtube";
-      exec = ''${pkgs.chromium}/bin/chromium --profile-directory="Profile 1" --new-window --app=https://www.youtube.com %U'';
+      exec = ''${pkgs.chromium}/bin/chromium --profile-directory="YouTube" --new-window --app=https://www.youtube.com %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/youtube"];
       categories = ["Video" "Player" "AudioVideo"];
