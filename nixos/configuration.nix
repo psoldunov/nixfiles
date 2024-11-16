@@ -387,6 +387,7 @@ in {
             "${pkgs.papirus-icon-theme}/share/icons:ro"
             "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
             "/run/current-system/sw/share/X11/fonts:ro"
+            "/mnt/Games/Emulation:rw"
           ];
           sockets = ["wayland" "!x11" "!fallback-x11"];
         };
