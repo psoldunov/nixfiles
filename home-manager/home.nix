@@ -84,6 +84,7 @@ in {
       exec = "${pkgs.firefox}/bin/firefox -kiosk https://www.youtube.com %U";
       terminal = false;
       mimeType = ["x-scheme-handler/youtube"];
+      categories = ["Video" "Player" "AudioVideo"];
     };
   };
 
