@@ -77,6 +77,14 @@ in {
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
+    youtube = {
+      name = "YouTube";
+      genericName = "Video Player";
+      icon = "youtube";
+      exec = "${pkgs.firefox}/bin/firefox -kiosk https://www.youtube.com %U";
+      terminal = false;
+      mimeType = ["x-scheme-handler/youtube"];
+    };
   };
 
   systemd.user.enable = true;
@@ -164,7 +172,6 @@ in {
     geekbench
     deno
     neovim
-    retroarchFull
     nodejs_20
     obsidian
     pywal
