@@ -2,7 +2,7 @@ const city = "Tallinn";
 
 const weather = Variable([], {
   poll: [
-    120000,
+    1200000,
     () =>
       Utils.fetch(`http://wttr.in/${city}?format=j1`)
         .then((res) => res.text())
