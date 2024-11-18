@@ -7,6 +7,7 @@
   config,
   pkgs,
   appleFonts,
+  pkgs-stale,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -861,7 +862,7 @@ in {
     hyprpicker
     corepack
     localsend
-    calibre
+    pkgs-stale.calibre
     unzip
     woff2
     grim

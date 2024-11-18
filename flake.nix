@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
+    nixpkgs-stale.url = "github:nixos/nixpkgs/nixos-24.05";
+
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
@@ -52,6 +54,7 @@
     ags,
     vscode-server,
     nixpkgs-unstable,
+    nixpkgs-stale,
     nix-ld,
     nix-gaming,
     nix-flatpak,
@@ -72,6 +75,10 @@
       inherit system;
     };
 
+    pkgs-stale = import nixpkgs-stale {
+      inherit system;
+    };
+
     appleFonts = apple-fonts.packages.${system};
   in {
     formatter = nixpkgs.pkgs.alejandra;
@@ -79,7 +86,7 @@
     nixosConfigurations.Whopper = nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {
-        inherit inputs outputs appleFonts pkgs-unstable;
+        inherit inputs outputs appleFonts pkgs-unstable pkgs-stale;
       };
       modules = [
         ./nixos/configuration.nix
@@ -95,7 +102,7 @@
         {
           home-manager = {
             extraSpecialArgs = {
-              inherit inputs outputs pkgs-unstable zen-specific;
+              inherit inputs outputs pkgs-unstable pkgs-stale zen-specific;
             };
             useGlobalPkgs = true;
             useUserPackages = true;
