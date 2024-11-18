@@ -2,9 +2,9 @@
   description = "Whopper Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
@@ -51,7 +51,7 @@
     zen-browser,
     ags,
     vscode-server,
-    nixpkgs-stable,
+    nixpkgs-unstable,
     nix-ld,
     nix-gaming,
     nix-flatpak,
@@ -68,7 +68,7 @@
 
     zen-specific = zen-browser.packages."${system}".specific;
 
-    pkgs-stable = import nixpkgs-stable {
+    pkgs-unstable = import nixpkgs-unstable {
       inherit system;
     };
 
@@ -79,7 +79,7 @@
     nixosConfigurations.Whopper = nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {
-        inherit inputs outputs appleFonts pkgs-stable;
+        inherit inputs outputs appleFonts pkgs-unstable;
       };
       modules = [
         ./nixos/configuration.nix
@@ -95,7 +95,7 @@
         {
           home-manager = {
             extraSpecialArgs = {
-              inherit inputs outputs pkgs-stable zen-specific;
+              inherit inputs outputs pkgs-unstable zen-specific;
             };
             useGlobalPkgs = true;
             useUserPackages = true;
