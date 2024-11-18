@@ -539,6 +539,7 @@ in {
   services.shairport-sync = {
     enable = true;
     openFirewall = true;
+    arguments = "-v -o pw";
   };
 
   environment.etc = {
