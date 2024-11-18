@@ -166,7 +166,7 @@ in {
     QT_QPA_PLATFORM = "wayland;xcb";
     GDK_BACKEND = "wayland,x11";
     CLUTTER_BACKEND = "wayland";
-    SDL_VIDEODRIVER = "wayland";
+    SDL_VIDEODRIVER = "wayland,x11,windows";
     XCURSOR_SIZE = "24";
     GDK_SCALE = 1;
   };
