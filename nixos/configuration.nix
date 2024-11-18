@@ -537,8 +537,8 @@ in {
   };
 
   services.shairport-sync = {
-    enable = true;
-    openFirewall = true;
+    enable = false;
+    openFirewall = false;
     arguments = "-v -o pipe";
   };
 
@@ -993,7 +993,7 @@ in {
 
   # Networking firewall configuration.
   networking.firewall = {
-    allowedTCPPorts = [22 59012 8384 3000 3333 22000 9001 5173 5174 4567 4355 11434 5201 53317 47984 27040 47989 47990 48010 27036 27037];
+    allowedTCPPorts = [22 59012 32500 8384 3000 3333 22000 9001 5173 5174 4567 4355 11434 5201 53317 47984 27040 47989 47990 48010 27036 27037];
     allowedUDPPorts = [27031 27032 27033 27034 27035 27036 3000 3333 22000 21027 53317 47998 47999 48000 27031 27036];
   };
 
