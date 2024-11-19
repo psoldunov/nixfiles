@@ -161,6 +161,10 @@ in {
     allowInsecure = true;
   };
 
+  nixpkgs.overlays = [
+    (import ../nixos/overlays/supabase-cli.nix)
+  ];
+
   programs.firefox = {
     enable = true;
   };
@@ -201,6 +205,7 @@ in {
     protonup-qt
     protonup-ng
     vesktop
+    supabase-cli
     rpcs3
     ookla-speedtest
     catppuccin-cursors
