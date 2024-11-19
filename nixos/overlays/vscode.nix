@@ -1,5 +1,5 @@
 self: super: {
-  vscode = super.vscode.overrideAttrs (oldAttrs: rec {
+  vscode = super.vscode.overrideAttrs (oldAttrs: {
     nativeBuildInputs = oldAttrs.nativeBuildInputs or [] ++ [self.makeWrapper];
     postInstall =
       oldAttrs.postInstall
