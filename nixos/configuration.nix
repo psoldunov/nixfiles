@@ -810,6 +810,7 @@ in {
     socat
     mangohud
     vulkan-tools
+    devenv
     bottles
     libva-utils
     cargo
