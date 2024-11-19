@@ -199,7 +199,6 @@ in {
     telegram-desktop
     slack
     protonup-qt
-    supabase-cli
     protonup-ng
     vesktop
     rpcs3

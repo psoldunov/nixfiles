@@ -773,6 +773,7 @@ in {
     papers
     evince
     eog
+    supabase-cli
     bchunk
     simple-scan
     speedcrunch
