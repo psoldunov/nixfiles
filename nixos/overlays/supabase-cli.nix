@@ -9,5 +9,11 @@ self: super: {
       rev = "v${version}";
       hash = "sha256-78ocFXDui6843FP4msY/UtiDGlHxd4fr3mTHkUsPOF4=";
     };
+
+    ldflags = [
+      "-s"
+      "-w"
+      "-X=github.com/supabase/cli/internal/utils.Version=${version}"
+    ];
   });
 }
