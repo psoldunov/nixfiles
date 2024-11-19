@@ -40,6 +40,8 @@
   '';
 
   record_screen = pkgs.writeShellScriptBin "record_screen" ''
+    VIDEOS_DIR="$(xdg-user-dir VIDEOS)/Capture"
+
     if pgrep -x "wf-recorder" > /dev/null
     then
         echo "wf-recorder is running. Stopping it now..."
@@ -47,6 +49,14 @@
         ${pkgs.libnotify}/bin/notify-send "Recording stopped"
         exit 0
     fi
+
+    if [ ! -d "$VIDEOS_DIR" ]; then
+      mkdir -p "$VIDEOS_DIR"
+      echo "Directory '$VIDEOS_DIR' created."
+    else
+      echo "Directory '$VIDEOS_DIR' already exists."
+    fi
+
     CHOICE=$(echo -e "Microphone audio\nSystem audio" | rofi -location 2 -yoffset 30 -no-fixed-num-lines -dmenu -p "Select audio source")
     case $CHOICE in
       "Microphone audio")
@@ -60,9 +70,13 @@
             exit 1
             ;;
     esac
-    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f ~/Videos/Capture/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4 -c hevc_vaapi -d /dev/dri/renderD128 & disown
+
+    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f ~/Videos/Capture/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4 & disown
+
     exit 0
   '';
+
+  # -c hevc_vaapi -d /dev/dri/renderD128 - flags for vaapi
 
   grab_screen_text = pkgs.writeShellScriptBin "grab_screen_text" ''
     if pgrep -x "slurp" > /dev/null
