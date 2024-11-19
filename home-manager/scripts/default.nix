@@ -166,6 +166,7 @@
     pkgs.writeShellScriptBin "clean_system" ''
       sudo nix-collect-garbage -d
       nix-collect-garbage -d
+      docker image prune -a -f
     ''
   );
 
