@@ -786,6 +786,7 @@ in {
     brave
     cliphist
     webp-pixbuf-loader
+    supabase-cli
     kdiskmark
     libwebp
     slurp
