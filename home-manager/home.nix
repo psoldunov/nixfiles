@@ -8,7 +8,7 @@
 }: let
   systemStateVersion = "23.11";
 
-  scripts = import ./scripts/default.nix {
+  scripts = import ./scripts {
     pkgs = pkgs;
     config = config;
   };

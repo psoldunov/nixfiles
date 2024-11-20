@@ -3,7 +3,12 @@
   pkgs,
   ...
 }: let
-  scripts = import ../../../scripts;
+  scripts =
+    import ../../../scripts
+    {
+      pkgs = pkgs;
+      config = config;
+    };
 
   projects =
     import ../../../projects
