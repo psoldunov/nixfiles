@@ -41,6 +41,7 @@
 
   record_screen = pkgs.writeShellScriptBin "record_screen" ''
     VIDEOS_DIR="$(xdg-user-dir VIDEOS)/Capture"
+    VIDEO_FILE=$VIDEOS_DIR/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4
 
     if pgrep -x "wf-recorder" > /dev/null
     then
@@ -71,7 +72,7 @@
             ;;
     esac
 
-    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f ~/Videos/Capture/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4 & disown
+    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f $VIDEO_FILE & disown
 
     exit 0
   '';
@@ -94,19 +95,23 @@
 
   create_screenshot = pkgs.writeShellScriptBin "create_screenshot" ''
     SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
+    SCREENSHOT_FILE="$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
+
     if [ ! -d "$SCREENSHOTS_DIR" ]; then
       mkdir -p "$SCREENSHOTS_DIR"
       echo "Directory '$SCREENSHOTS_DIR' created."
     else
       echo "Directory '$SCREENSHOTS_DIR' already exists."
     fi
-    ${pkgs.grim}/bin/grim -l 0 "$(xdg-user-dir PICTURES)/Screenshots/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
+    ${pkgs.grim}/bin/grim -l 0 "$SCREENSHOT_FILE"
     ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
+    ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$SCREENSHOT_FILE https://zipline.theswisscheese.com/api/upload | ${pkgs.jq}/bin/jq -r '.files[0]' | ${pkgs.wl-clipboard}/bin/wl-copy
   '';
 
   create_screenshot_area = pkgs.writeShellScriptBin "create_screenshot_area" ''
     SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
     SCREENSHOT_FILE="$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
+
     if pgrep -x "slurp" > /dev/null
     then
         echo "slurp is already running"
@@ -118,7 +123,7 @@
     else
       echo "Directory '$SCREENSHOTS_DIR' already exists."
     fi
-    ${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -l 0 -g - "$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
+    ${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -l 0 -g - "$SCREENSHOT_FILE"
     if [ $? -eq 0 ]
     then
         ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
