@@ -3,6 +3,8 @@
   pkgs,
   ...
 }: let
+  scripts = import ../../../scripts;
+
   projects =
     import ../../../projects
     {
@@ -144,9 +146,9 @@ in {
     "$ctrl SHIFT, r, exec, fish -c 'resetDE'"
     "$ctrl, code:51, exec, 1password --quick-access & disown"
     "$cmd SHIFT, 2, exec, grab_screen_text"
-    "$cmd SHIFT, 3, exec, create_screenshot"
-    "$cmd SHIFT, 4, exec, create_screenshot_area"
-    "$cmd SHIFT, 5, exec, record_screen"
+    "$cmd SHIFT, 3, exec, ${scripts.create_screenshot}/bin/create_screenshot"
+    "$cmd SHIFT, 4, exec, ${scripts.create_screenshot_area}/bin/create_screenshot_area"
+    "$cmd SHIFT, 5, exec, ${scripts.record_screen}/bin/record_screen"
     "$cmd SHIFT, M, exec, hyprpicker -a"
     # "$cmd SHIFT, V, exec, ${pkgs.cliphist}/bin/cliphist list | rofi -dmenu | ${pkgs.cliphist}/bin/cliphist decode | wl-copy"
 
