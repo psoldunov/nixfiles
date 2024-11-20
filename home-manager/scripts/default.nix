@@ -122,8 +122,8 @@
     if [ $? -eq 0 ]
     then
         ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
-        ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$SCREENSHOT_FILE https://zipline.theswisscheese.com/api/upload | ${pkgs.jq}/bin/jq -r '.url'
-        # | ${pkgs.wl-clipboard}/bin/wl-copy
+        ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$SCREENSHOT_FILE https://zipline.theswisscheese.com/api/upload
+        # | ${pkgs.jq}/bin/jq -r '.url' | ${pkgs.wl-clipboard}/bin/wl-copy
     fi
   '';
 
