@@ -39,14 +39,27 @@
     exit 1
   '';
 
-  record_screen = pkgs.writeShellScriptBin "record_screen" ''
+record_screen = pkgs.writeShellScriptBin "record_screen" ''
     VIDEOS_DIR="$(xdg-user-dir VIDEOS)/Capture"
     VIDEO_FILE=$VIDEOS_DIR/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4
 
+    handle_interrupt() {
+      echo "Interrupt received, stopping recording..."
+      pkill -SIGINT wf-recorder
+      ${pkgs.libnotify}/bin/notify-send "Recording stopped by user"
+      handle_upload
+      exit 0
+    }
+
+    handle_upload() {
+      ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$VIDEO_FILE https://zipline.theswisscheese.com/api/upload | ${pkgs.jq}/bin/jq -r '.files[0]' | ${pkgs.wl-clipboard}/bin/wl-copy
+      exit 0
+    }
+
     if pgrep -x "wf-recorder" > /dev/null
     then
-        echo "wf-recorder is running. Stopping it now..."
-        pkill -2 wf-recorder
+        echo "wf-recorder is already running. Stopping it now..."
+        pkill -SIGINT wf-recorder
         ${pkgs.libnotify}/bin/notify-send "Recording stopped"
         exit 0
     fi
@@ -72,9 +85,13 @@
             ;;
     esac
 
-    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f $VIDEO_FILE & disown
+    # Set trap to handle SIGINT
+    trap handle_interrupt SIGINT
 
-    exit 0
+    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f $VIDEO_FILE
+
+    # Cleanup trap
+    trap - SIGINT
   '';
 
   # -c hevc_vaapi -d /dev/dri/renderD128 - flags for vaapi
