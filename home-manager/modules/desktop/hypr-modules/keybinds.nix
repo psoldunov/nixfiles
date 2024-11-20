@@ -145,7 +145,7 @@ in {
     # "$ctrl, X, exec, hyprprop | wl-copy "
     "$ctrl SHIFT, r, exec, fish -c 'resetDE'"
     "$ctrl, code:51, exec, 1password --quick-access & disown"
-    "$cmd SHIFT, 2, exec, grab_screen_text"
+    "$cmd SHIFT, 2, exec, ${scripts.grab_screen_text}/bin/grab_screen_text"
     "$cmd SHIFT, 3, exec, ${scripts.create_screenshot}/bin/create_screenshot"
     "$cmd SHIFT, 4, exec, ${scripts.create_screenshot_area}/bin/create_screenshot_area"
     "$cmd SHIFT, 5, exec, ${scripts.record_screen}/bin/record_screen"
