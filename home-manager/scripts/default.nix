@@ -39,7 +39,9 @@
     exit 1
   '';
 
-record_screen = pkgs.writeShellScriptBin "record_screen" ''
+  record_screen = pkgs.writeShellScriptBin "record_screen" ''
+    source ${config.sops.secrets.SHELL_SECRETS.path}
+
     VIDEOS_DIR="$(xdg-user-dir VIDEOS)/Capture"
     VIDEO_FILE=$VIDEOS_DIR/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4
 
@@ -111,6 +113,8 @@ record_screen = pkgs.writeShellScriptBin "record_screen" ''
   '';
 
   create_screenshot = pkgs.writeShellScriptBin "create_screenshot" ''
+    source ${config.sops.secrets.SHELL_SECRETS.path}
+
     SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
     SCREENSHOT_FILE="$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
 
@@ -126,6 +130,8 @@ record_screen = pkgs.writeShellScriptBin "record_screen" ''
   '';
 
   create_screenshot_area = pkgs.writeShellScriptBin "create_screenshot_area" ''
+    source ${config.sops.secrets.SHELL_SECRETS.path}
+
     SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
     SCREENSHOT_FILE="$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
 
