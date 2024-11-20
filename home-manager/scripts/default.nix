@@ -106,6 +106,7 @@
 
   create_screenshot_area = pkgs.writeShellScriptBin "create_screenshot_area" ''
     SCREENSHOTS_DIR="$(xdg-user-dir PICTURES)/Screenshots"
+    SCREENSHOT_FILE="$SCREENSHOTS_DIR/$(date +'screenshot_%Y-%m-%d-%H%M%S.png')"
     if pgrep -x "slurp" > /dev/null
     then
         echo "slurp is already running"
@@ -121,6 +122,7 @@
     if [ $? -eq 0 ]
     then
         ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
+        ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$SCREENSHOT_FILE https://zipline.theswisscheese.com/api/upload | ${pkgs.jq}/bin/jq -r '.url' | ${pkgs.wl-clipboard}/bin/wl-copy
     fi
   '';
 
