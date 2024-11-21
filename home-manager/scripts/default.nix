@@ -40,28 +40,13 @@
   '';
 
   record_screen = pkgs.writeShellScriptBin "record_screen" ''
-    source ${config.sops.secrets.SHELL_SECRETS.path}
-
     VIDEOS_DIR="$(xdg-user-dir VIDEOS)/Capture"
     VIDEO_FILE=$VIDEOS_DIR/screencapture-$(date +"%Y-%m-%d-%H%M%S").mp4
 
-    handle_interrupt() {
-      echo "Interrupt received, stopping recording..."
-      pkill -SIGINT wf-recorder
-      ${pkgs.libnotify}/bin/notify-send "Recording stopped by user"
-      handle_upload
-      exit 0
-    }
-
-    handle_upload() {
-      ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$VIDEO_FILE https://zipline.theswisscheese.com/api/upload | ${pkgs.jq}/bin/jq -r '.files[0]' | ${pkgs.wl-clipboard}/bin/wl-copy
-      exit 0
-    }
-
     if pgrep -x "wf-recorder" > /dev/null
     then
-        echo "wf-recorder is already running. Stopping it now..."
-        pkill -SIGINT wf-recorder
+        echo "wf-recorder is running. Stopping it now..."
+        pkill -2 wf-recorder
         ${pkgs.libnotify}/bin/notify-send "Recording stopped"
         exit 0
     fi
@@ -87,13 +72,10 @@
             ;;
     esac
 
-    # Set trap to handle SIGINT
-    trap handle_interrupt SIGINT
+    echo "$VIDEO_FILE" > /tmp/wf-recorder-file
+    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f $VIDEO_FILE & disown
 
-    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f $VIDEO_FILE
-
-    # Cleanup trap
-    trap - SIGINT
+    exit 0
   '';
 
   # -c hevc_vaapi -d /dev/dri/renderD128 - flags for vaapi
@@ -127,8 +109,7 @@
     ${pkgs.grim}/bin/grim -l 0 "$SCREENSHOT_FILE"
     ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
     ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$SCREENSHOT_FILE https://zipline.theswisscheese.com/api/upload
-    #| ${pkgs.jq}/bin/jq -r '.files[0]' | ${pkgs.wl-clipboard}/bin/wl-copy
-    wl-copy < $SCREENSHOT_FILE
+    ${pkgs.wl-clipboard}/bin/wl-copy < $SCREENSHOT_FILE
   '';
 
   create_screenshot_area = pkgs.writeShellScriptBin "create_screenshot_area" ''
@@ -153,8 +134,7 @@
     then
         ${pkgs.libnotify}/bin/notify-send "Screenshot taken"
         ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$SCREENSHOT_FILE https://zipline.theswisscheese.com/api/upload
-        #| ${pkgs.jq}/bin/jq -r '.files[0]' | ${pkgs.wl-clipboard}/bin/wl-copy
-        wl-copy < $SCREENSHOT_FILE
+        ${pkgs.wl-clipboard}/bin/wl-copy < $SCREENSHOT_FILE
     fi
   '';
 
