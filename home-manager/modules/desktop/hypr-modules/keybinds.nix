@@ -83,7 +83,7 @@ in {
     "$MOD3, 0, workspace, 10"
 
     # MOD3 Applications Launcher
-    "$MOD3, F, exec, firefox"
+    "$MOD3, F, exec, zen"
     "$MOD3, E, exec, nemo"
     "$MOD3, T, exec, kitty -e tmux"
     "$MOD3, V, exec, code --new-window"

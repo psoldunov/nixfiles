@@ -4,7 +4,7 @@ const hyprland = await Service.import("hyprland");
 /** @param {import('types/service/mpris').MprisPlayer} player */
 
 export default function Media() {
-  const exclude = ["spotifyd", "firefox", "chromium"];
+  const exclude = ["spotifyd", "firefox", "zen", "chromium"];
 
   const Player = (player) => {
     if (exclude.includes(player.name)) return null;

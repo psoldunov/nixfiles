@@ -162,7 +162,7 @@ in {
   };
 
   programs.firefox = {
-    enable = true;
+    enable = false;
   };
 
   home.packages = with pkgs; [
