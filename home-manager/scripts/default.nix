@@ -51,7 +51,7 @@
         pkill -2 wf-recorder
         ${pkgs.libnotify}/bin/notify-send "Recording stopped"
 
-        $TMP_VIDEO_PATH=$(${pkgs.coreutils-full}/bin/cat /tmp/wf-recorder-file)
+        TMP_VIDEO_PATH=$(${pkgs.coreutils-full}/bin/cat /tmp/wf-recorder-file)
 
         echo "$TMP_VIDEO_PATH"
 
@@ -84,6 +84,7 @@
     esac
 
     echo "$VIDEO_FILE" > /tmp/wf-recorder-file
+
     ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" --audio="$active_output.monitor" -f $VIDEO_FILE & disown
 
     exit 0
