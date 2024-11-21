@@ -47,11 +47,13 @@
 
     if pgrep -x "wf-recorder" > /dev/null
     then
-        $TMP_VIDEO_PATH=$(${pkgs.coreutils-full}/bin/cat /tmp/wf-recorder-file)
-
         echo "wf-recorder is running. Stopping it now..."
         pkill -2 wf-recorder
-        ${pkgs.libnotify}/bin/notify-send "Recording stopped $TMP_VIDEO_PATH"
+        ${pkgs.libnotify}/bin/notify-send "Recording stopped"
+
+        $TMP_VIDEO_PATH=$(${pkgs.coreutils-full}/bin/cat /tmp/wf-recorder-file)
+
+        echo "$TMP_VIDEO_PATH"
 
         ${pkgs.curl}/bin/curl -H "Content-Type: multipart/form-data" -H "authorization: $ZIPLINE_TOKEN" -F file=@$TMP_VIDEO_PATH https://zipline.theswisscheese.com/api/upload | ${pkgs.jq}/bin/jq -r '.files[0]' | ${pkgs.wl-clipboard}/bin/wl-copy
 
