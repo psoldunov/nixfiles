@@ -47,7 +47,7 @@
 
     if pgrep -x "wf-recorder" > /dev/null
     then
-        $TMP_VIDEO_PATH = ${pkgs.coreutils-full}/bin/cat /tmp/wf-recorder-file
+        $TMP_VIDEO_PATH=$(${pkgs.coreutils-full}/bin/cat /tmp/wf-recorder-file)
 
         echo "wf-recorder is running. Stopping it now..."
         pkill -2 wf-recorder
