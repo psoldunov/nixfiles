@@ -85,7 +85,7 @@
 
     echo "$VIDEO_FILE" > /tmp/wf-recorder-file
 
-    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" -c h264_vaapi -d /dev/dri/renderD128 --audio="$active_output.monitor" -f $VIDEO_FILE & disown
+    ${pkgs.wf-recorder}/bin/wf-recorder -g "$(${pkgs.slurp}/bin/slurp)" -c h264_amf -d /dev/dri/renderD128 --audio="$active_output.monitor" -f $VIDEO_FILE & disown
 
     exit 0
   '';
