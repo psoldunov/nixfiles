@@ -162,7 +162,7 @@ in {
   };
 
   programs.firefox = {
-    enable = false;
+    enable = true;
   };
 
   home.packages = with pkgs; [
@@ -206,7 +206,7 @@ in {
     catppuccin-cursors
     motrix
     zed-editor
-    zen-specific
+    # zen-specific
     transmission-remote-gtk
     scripts.restart_ags
     scripts.idle_check
