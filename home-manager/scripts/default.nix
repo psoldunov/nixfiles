@@ -238,11 +238,11 @@
     pkgs.writeShellScriptBin "restart_steam" ''
       if pgrep -x "steam" > /dev/null; then
            echo "Steam is running. Killing it now..."
-           pkill -x "steam"
+           pkill -9 "steam"
            sleep 1
        fi
        echo "Starting Steam..."
-       steam &
+       steam & disown
        exit 0
     ''
   );
