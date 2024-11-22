@@ -224,6 +224,7 @@ in {
     scripts.rebuild_system
     scripts.make_timed_commit
     scripts.clean_system
+    scripts.restart_steam
   ];
 
   dconf.settings = {
