@@ -234,6 +234,19 @@
     ''
   );
 
+  restart_steam = (
+    pkgs.writeShellScriptBin "restart_steam" ''
+      if pgrep -x "steam" > /dev/null; then
+           echo "Steam is running. Killing it now..."
+           pkill -x "steam"
+           sleep 1
+       fi
+       echo "Starting Steam..."
+       steam &
+       exit 0
+    ''
+  );
+
   convert_all_to_woff2 = (
     pkgs.writeShellScriptBin "convert_all_to_woff2" ''
       for font in *.{otf,ttf,woff,eot}; do
