@@ -72,8 +72,8 @@
 
     appleFonts = apple-fonts.packages.${system};
 
-    hello-world = {
-      hello-there = true;
+    globalSettings = {
+      enableHyprland = true;
     };
   in {
     formatter = nixpkgs.pkgs.alejandra;
@@ -85,7 +85,7 @@
           inputs
           outputs
           appleFonts
-          hello-world
+          globalSettings
           pkgs-stable
           ;
       };
@@ -107,7 +107,7 @@
                 inputs
                 outputs
                 pkgs-stable
-                hello-world
+                globalSettings
                 ;
             };
             useGlobalPkgs = true;

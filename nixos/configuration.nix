@@ -7,6 +7,7 @@
   config,
   pkgs,
   appleFonts,
+  globalSettings,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -142,7 +143,7 @@ in {
     ];
   };
   boot.loader.grub = {
-    catppuccin.enable = false;
+    catppuccin.enable = globalSettings.enableHyprland;
     enable = true;
     device = "nodev";
     efiSupport = true;
