@@ -30,7 +30,6 @@ in {
     flavor = "mocha";
   };
 
-
   services.displayManager.sddm.enable = !globalSettings.enableHyprland;
   services.desktopManager.plasma6.enable = !globalSettings.enableHyprland;
 
@@ -184,7 +183,7 @@ in {
   services.rpcbind.enable = true;
 
   programs.regreet = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     settings = {
       background = {
         path = "/usr/share/backgrounds/user/lock_background.png";
@@ -303,7 +302,7 @@ in {
   };
 
   programs.hyprland = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;

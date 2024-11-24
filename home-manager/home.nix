@@ -4,6 +4,7 @@
   config,
   pkgs,
   zen-specific,
+  globalSettings,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -148,7 +149,7 @@ in {
     };
   };
 
-  programs.hyprlock.enable = true;
+ 
 
   programs.password-store.enable = true;
 

@@ -2,6 +2,7 @@
   config,
   inputs,
   pkgs,
+  globalSettings,
   ...
 }: let
   windowRules = import ./hypr-modules/windowrules.nix;
@@ -41,7 +42,7 @@ in {
   services.mpris-proxy.enable = true;
 
   wayland.windowManager.hyprland = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     catppuccin.enable = false;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     systemd = {

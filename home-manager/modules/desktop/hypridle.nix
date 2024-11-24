@@ -1,13 +1,14 @@
 {
   config,
   pkgs,
+  globalSettings,
   ...
 }: let
   hyprlockBin = "${pkgs.hyprlock}/bin/hyprlock";
   hyprctlBin = "${pkgs.hyprland}/bin/hyprctl";
 in {
   programs.hyprlock = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     catppuccin = {
       enable = false;
       accent = "peach";
@@ -97,7 +98,7 @@ in {
   };
 
   services.hypridle = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     settings = {
       general = {
         lock_cmd = "pgrep hyprlock || idle_check || ${hyprlockBin}";
