@@ -3,7 +3,7 @@
 {
   config,
   pkgs,
-  zen-specific,
+  lib,
   globalSettings,
   ...
 }: let
@@ -169,7 +169,7 @@ in {
       beets
       bruno
       shortwave
-      hyprshade
+
       rpi-imager
       mysql-workbench
       postman
@@ -209,15 +209,7 @@ in {
       transmission-remote-gtk
     ])
     ++ (with scripts; [
-      restart_ags
-      idle_check
-      record_screen
-      grab_screen_text
-      create_screenshot
-      create_screenshot_area
       kill_gamescope
-      start_static_wallpaper
-      start_video_wallpaper
       convert_all_to_webp
       convert_all_to_woff2
       convert_all_to_mkv
@@ -226,7 +218,18 @@ in {
       make_timed_commit
       clean_system
       restart_steam
-    ]);
+    ])
+    ++ (lib.mkIf globalSettings.enableHyprland (with scripts pkgs; [
+      hyprshade
+      grab_screen_text
+      record_screen
+      restart_ags
+      idle_check
+      start_static_wallpaper
+      start_video_wallpaper
+      create_screenshot
+      create_screenshot_area
+    ]));
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
