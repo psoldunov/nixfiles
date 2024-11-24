@@ -219,16 +219,21 @@ in {
       clean_system
       restart_steam
     ])
-    ++ (lib.mkIf globalSettings.enableHyprland (with scripts; [
-      grab_screen_text
-      record_screen
-      restart_ags
-      idle_check
-      start_static_wallpaper
-      start_video_wallpaper
-      create_screenshot
-      create_screenshot_area
-    ]));
+    ++ (
+      if globalSettings.enableHyprland
+      then
+        (with scripts; [
+          grab_screen_text
+          record_screen
+          restart_ags
+          idle_check
+          start_static_wallpaper
+          start_video_wallpaper
+          create_screenshot
+          create_screenshot_area
+        ])
+      else []
+    );
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {
