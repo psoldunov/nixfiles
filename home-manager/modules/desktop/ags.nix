@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{pkgs, globalSettings, ...}: {
   programs.ags = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
 
     configDir = ./ags;
 
