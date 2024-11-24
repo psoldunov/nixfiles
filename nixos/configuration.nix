@@ -30,9 +30,9 @@ in {
     flavor = "mocha";
   };
 
-  # services.xserver.enable = true;
-  # services.displayManager.sddm.enable = true;
-  # services.desktopManager.plasma6.enable = true;
+  services.xserver.enable = !globalSettings.enableHyprland;
+  services.displayManager.sddm.enable = !globalSettings.enableHyprland;
+  services.desktopManager.plasma6.enable = !globalSettings.enableHyprland;
 
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
