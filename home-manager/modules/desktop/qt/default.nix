@@ -69,9 +69,9 @@
         };
       });
 in {
-  qt = {
+  qt = lib.mkIf globalSettings.enableHyprland {
     enable = true;
-    platformTheme.name = lib.mkIf globalSettings.enableHyprland "qtct";
+    platformTheme.name = "qtct";
     style = {
       catppuccin.enable = false;
     };
