@@ -46,7 +46,6 @@
   outputs = {
     self,
     nixpkgs,
-    zen-browser,
     ags,
     vscode-server,
     nixpkgs-stable,
