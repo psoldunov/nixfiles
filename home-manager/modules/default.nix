@@ -5,7 +5,6 @@
     ./dev/dev.nix
     ./desktop/hyprland.nix
     ./desktop/hypridle.nix
-    ./desktop/river.nix
     ./desktop/ags.nix
     ./desktop/rofi.nix
     ./desktop/pywal.nix
