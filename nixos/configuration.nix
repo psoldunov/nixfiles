@@ -979,6 +979,16 @@ in {
     ];
   };
 
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true;
+    args = [
+      "-W 3840"
+      "-H 2160"
+      "--hdr-enabled"
+    ];
+  };
+
   programs.gamemode.enable = true;
 
   networking.hostName = "Whopper";
