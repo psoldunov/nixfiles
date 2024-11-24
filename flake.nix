@@ -44,10 +44,6 @@
     ags = {
       url = "github:Aylur/ags/60180a184cfb32b61a1d871c058b31a3b9b0743d";
     };
-
-    hello-world = {
-      hello-there = true;
-    };
   };
 
   outputs = {
@@ -60,7 +56,6 @@
     nix-gaming,
     nix-flatpak,
     sops-nix,
-    hello-world,
     home-manager,
     apple-fonts,
     catppuccin,
@@ -76,6 +71,10 @@
     };
 
     appleFonts = apple-fonts.packages.${system};
+
+    hello-world = {
+      hello-there = true;
+    };
   in {
     formatter = nixpkgs.pkgs.alejandra;
 
