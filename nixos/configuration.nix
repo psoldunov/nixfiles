@@ -25,7 +25,7 @@ in {
   ];
 
   catppuccin = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     accent = "peach";
     flavor = "mocha";
   };
@@ -143,7 +143,7 @@ in {
     ];
   };
   boot.loader.grub = {
-    catppuccin.enable = globalSettings.enableHyprland;
+    catppuccin.enable = false;
     enable = true;
     device = "nodev";
     efiSupport = true;
@@ -309,8 +309,8 @@ in {
     xwayland.enable = true;
   };
 
-  services.hypridle.enable = true;
-  programs.hyprlock.enable = true;
+  services.hypridle.enable = globalSettings.enableHyprland;
+  programs.hyprlock.enable = globalSettings.enableHyprland;
 
   systemd.services.mpd.environment = {
     # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
@@ -415,7 +415,7 @@ in {
   };
 
   services.udisks2.enable = true;
-  services.blueman.enable = true;
+  services.blueman.enable = globalSettings.enableHyprland;
 
   virtualisation = {
     docker.enable = true;

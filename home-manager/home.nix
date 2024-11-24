@@ -223,7 +223,7 @@ in {
     ++ (
       if globalSettings.enableHyprland
       then
-        (with scripts; [
+        (with scripts pkgs; [
           grab_screen_text
           record_screen
           restart_ags
