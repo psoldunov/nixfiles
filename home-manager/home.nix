@@ -12,6 +12,7 @@
   scripts = import ./scripts {
     pkgs = pkgs;
     config = config;
+    globalSettings = globalSettings;
   };
 
   figma-appimage = pkgs.fetchurl {
