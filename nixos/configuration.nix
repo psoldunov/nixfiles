@@ -29,8 +29,6 @@ in {
     flavor = "mocha";
   };
 
-  services.desktopManager.plasma6.enable = true;
-
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
   fileSystems."/NVMe" = {
