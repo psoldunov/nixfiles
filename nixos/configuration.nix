@@ -7,7 +7,7 @@
   config,
   pkgs,
   appleFonts,
-  pkgs-stale,
+  pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";

@@ -446,7 +446,7 @@
         "type": "github"
       }
     },
-    "nixpkgs-stale": {
+    "nixpkgs-stable": {
       "locked": {
         "lastModified": 1731755305,
         "narHash": "sha256-v5P3dk5JdiT+4x69ZaB18B8+Rcu3TIOrcdG4uEX7WZ8=",
@@ -589,7 +589,7 @@
         "nix-gaming": "nix-gaming",
         "nix-ld": "nix-ld",
         "nixpkgs": "nixpkgs_5",
-        "nixpkgs-stale": "nixpkgs-stale",
+        "nixpkgs-stable": "nixpkgs-stable",
         "sops-nix": "sops-nix",
         "vscode-server": "vscode-server",
         "zen-browser": "zen-browser"

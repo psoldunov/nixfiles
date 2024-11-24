@@ -2,15 +2,9 @@
   description = "Whopper Configuration";
 
   inputs = {
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # nixpkgs-stale.url = "github:nixos/nixpkgs/nixos-24.05";
-
-    nixpkgs-stale.url = "github:nixos/nixpkgs/nixos-24.11";
-
-    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
 
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
@@ -42,7 +36,6 @@
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
     home-manager = {
-      # url = "github:nix-community/home-manager/release-24.11";
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -58,8 +51,7 @@
     zen-browser,
     ags,
     vscode-server,
-    # nixpkgs-unstable,
-    nixpkgs-stale,
+    nixpkgs-stable,
     nix-ld,
     nix-gaming,
     nix-flatpak,
@@ -76,11 +68,7 @@
 
     zen-specific = zen-browser.packages."${system}".specific;
 
-    # pkgs-unstable = import nixpkgs-unstable {
-    #   inherit system;
-    # };
-
-    pkgs-stale = import nixpkgs-stale {
+    pkgs-stable = import nixpkgs-stable {
       inherit system;
     };
 
@@ -95,8 +83,7 @@
           inputs
           outputs
           appleFonts
-          # pkgs-unstable
-          pkgs-stale
+          pkgs-stable
           ;
       };
       modules = [
@@ -116,8 +103,7 @@
               inherit
                 inputs
                 outputs
-                # pkgs-unstable
-                pkgs-stale
+                pkgs-stable
                 zen-specific
                 ;
             };
