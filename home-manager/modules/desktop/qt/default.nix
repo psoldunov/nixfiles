@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  globalSettings,
   pkgs,
   ...
 }: let
@@ -70,7 +71,7 @@
 in {
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
+    platformTheme.name = lib.mkIf globalSettings.enableHyprland "qtct";
     style = {
       catppuccin.enable = false;
     };
