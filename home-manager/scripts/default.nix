@@ -1,8 +1,6 @@
 {
   pkgs,
   config,
-  lib,
-  globalSettings,
   ...
 }: {
   convert_all_to_mkv = pkgs.writeShellScriptBin "convert_all_to_mkv" ''
@@ -29,9 +27,9 @@
     done
   '';
 
-  restart_ags = lib.mkIf globalSettings.enableHyprland (pkgs.writeShellScriptBin "restart_ags" ''
+  restart_ags = pkgs.writeShellScriptBin "restart_ags" ''
     ${config.programs.ags.finalPackage}/bin/ags -q && ${config.programs.ags.finalPackage}/bin/ags & disown
-  '');
+  '';
 
   idle_check = pkgs.writeShellScriptBin "idle_check" ''
     player_status=$(${pkgs.playerctl}/bin/playerctl status 2>/dev/null)
