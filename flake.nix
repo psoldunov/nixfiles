@@ -73,7 +73,7 @@
     appleFonts = apple-fonts.packages.${system};
 
     globalSettings = {
-      enableHyprland = false;
+      enableHyprland = true;
     };
   in {
     formatter = nixpkgs.pkgs.alejandra;
