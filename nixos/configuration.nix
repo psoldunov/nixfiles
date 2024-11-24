@@ -30,7 +30,7 @@ in {
     flavor = "mocha";
   };
 
-  services.xserver.enable = !globalSettings.enableHyprland;
+
   services.displayManager.sddm.enable = !globalSettings.enableHyprland;
   services.desktopManager.plasma6.enable = !globalSettings.enableHyprland;
 
