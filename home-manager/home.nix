@@ -169,7 +169,7 @@ in {
       beets
       bruno
       shortwave
-
+      hyprshade
       rpi-imager
       mysql-workbench
       postman
@@ -219,8 +219,7 @@ in {
       clean_system
       restart_steam
     ])
-    ++ (lib.mkIf globalSettings.enableHyprland (with scripts pkgs; [
-      hyprshade
+    ++ (lib.mkIf globalSettings.enableHyprland (with scripts; [
       grab_screen_text
       record_screen
       restart_ags
