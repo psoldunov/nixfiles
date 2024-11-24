@@ -886,7 +886,7 @@ in {
     fastfetch
     papirus-icon-theme
     papirus-folders
-    libreoffice-fresh
+    pkgs-stale.libreoffice
     hunspell
     hunspellDicts.ru_RU
     hunspellDicts.en_US
