@@ -1,6 +1,6 @@
-{...}: {
+{globalSettings, ...}: {
   services.mako = {
-    enable = true;
+    enable = globalSettings.enableHyprland;
     defaultTimeout = 5000;
   };
 }

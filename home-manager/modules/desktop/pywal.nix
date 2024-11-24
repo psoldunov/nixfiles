@@ -1,7 +1,12 @@
-{config, ...}: {
-  programs.pywal.enable = true;
+{
+  config,
+  lib,
+  globalSettings,
+  ...
+}: {
+  programs.pywal.enable = globalSettings.enableHyprland;
 
-  home.file = {
+  home.file = lib.mkIf globalSettings.enableHyprland {
     "${config.xdg.configHome}/wal/templates/colors-hyprland.conf" = {
       text = ''
         $background = rgb({background.strip})

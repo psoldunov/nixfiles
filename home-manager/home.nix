@@ -205,9 +205,8 @@ in {
     catppuccin-cursors
     motrix
     zed-editor
-    # zen-specific
     transmission-remote-gtk
-    # scripts.restart_ags
+    scripts.restart_ags
     scripts.idle_check
     scripts.record_screen
     scripts.grab_screen_text

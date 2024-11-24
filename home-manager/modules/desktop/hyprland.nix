@@ -2,6 +2,7 @@
   config,
   inputs,
   pkgs,
+  lib,
   globalSettings,
   ...
 }: let
@@ -172,16 +173,14 @@ in {
     GDK_SCALE = 1;
   };
 
-  home.file = {
+  home.file = lib.mkIf globalSettings.enableHyprland {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
-
+        exec-once = ${config.programs.ags.finalPackage}/bin/ags
         exec-once = start_static_wallpaper ${wallpaperPath}
-        # exec-once = start_video_wallpaper
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
       '';
     };
-            # exec-once = ${config.programs.ags.finalPackage}/bin/ags
   };
 }

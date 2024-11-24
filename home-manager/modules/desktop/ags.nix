@@ -1,4 +1,8 @@
-{pkgs, globalSettings, ...}: {
+{
+  pkgs,
+  globalSettings,
+  ...
+}: {
   programs.ags = {
     enable = globalSettings.enableHyprland;
 
