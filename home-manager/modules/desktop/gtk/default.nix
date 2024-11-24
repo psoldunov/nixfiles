@@ -9,13 +9,13 @@
     accents = ["peach"];
   };
 in {
-  gtk = {
+  gtk = lib.mkIf globalSettings.enableHyprland {
     enable = true;
-    theme = lib.mkIf globalSettings.enableHyprland {
+    theme = {
       name = "catppuccin-mocha-peach-standard";
       package = catppuccin-gtk-theme;
     };
-    catppuccin = lib.mkIf globalSettings.enableHyprland {
+    catppuccin = {
       enable = false;
       icon = {
         enable = true;
