@@ -6,8 +6,6 @@
 
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
 
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
-
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     vscode-server = {
@@ -66,8 +64,6 @@
 
     system = "x86_64-linux";
 
-    zen-specific = zen-browser.packages."${system}".specific;
-
     pkgs-stable = import nixpkgs-stable {
       inherit system;
     };
@@ -104,7 +100,6 @@
                 inputs
                 outputs
                 pkgs-stable
-                zen-specific
                 ;
             };
             useGlobalPkgs = true;
