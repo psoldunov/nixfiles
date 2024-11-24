@@ -77,7 +77,7 @@ in {
     };
   };
 
-  home.file = {
+  home.file = lib.mkIf globalSettings.enableHyprland {
     ".config/qt5ct/qt5ct.conf" = {
       source = qt5config;
     };
