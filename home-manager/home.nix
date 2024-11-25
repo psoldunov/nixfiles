@@ -168,6 +168,7 @@ in {
   home.packages =
     (with pkgs; [
       electrum
+      ledger-live-desktop
       beets
       bruno
       shortwave
