@@ -167,6 +167,7 @@ in {
 
   home.packages =
     (with pkgs; [
+      electrum
       beets
       bruno
       shortwave
