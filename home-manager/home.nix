@@ -180,6 +180,7 @@ in {
       deno
       neovim
       nodejs_20
+      amberol
       obsidian
       pywal
       spotify
