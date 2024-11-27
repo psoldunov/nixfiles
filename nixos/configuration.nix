@@ -463,7 +463,7 @@ in {
       #   ];
       # };
       whisper-rocm = {
-        image = "psoldunov/openai-whisper-rocm";
+        image = "psoldunov/openai-whisper-rocm:latest";
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
           "--device=/dev/kfd:/dev/kfd"
