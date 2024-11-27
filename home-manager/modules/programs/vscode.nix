@@ -4,7 +4,7 @@
   ...
 }: {
   programs.vscode = {
-    enable = false;
+    enable = true;
     enableUpdateCheck = false;
     # extensions = with pkgs; [
     #   vscode-extensions.continue.continue
