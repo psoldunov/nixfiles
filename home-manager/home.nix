@@ -189,7 +189,6 @@ in {
       duckstation
       plexamp
       pcsx2
-      lutris
       heroic
       ferdium
       lollypop
