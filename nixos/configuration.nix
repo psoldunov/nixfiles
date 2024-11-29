@@ -56,17 +56,17 @@ in {
     options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=media-tape-symbolic"];
   };
 
-  # fileSystems."/mnt/Files" = {
-  #   device = "10.24.24.3:/volume1/Files/";
-  #   fsType = "nfs";
-  #   options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=file-catalog-symbolic"];
-  # };
+  fileSystems."/mnt/Files" = {
+    device = "10.24.24.2:/export/Files/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=file-catalog-symbolic"];
+  };
 
-  # fileSystems."/mnt/Documents" = {
-  #   device = "10.24.24.3:/volume1/Documents/";
-  #   fsType = "nfs";
-  #   options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=x-office-document-symbolic"];
-  # };
+  fileSystems."/mnt/Documents" = {
+    device = "10.24.24.2:/export/Documents/";
+    fsType = "nfs";
+    options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=x-office-document-symbolic"];
+  };
 
   fileSystems."/mnt/Camera" = {
     device = "10.24.24.3:/volume1/Camera/";
