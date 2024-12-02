@@ -119,7 +119,7 @@
         format = "via [🥟 $version](bold green) ";
       };
       nodejs = {
-        detect_files = ["package.json" ".node-version" "!bunfig.toml" "!bun.lockb" "!deno.json"];
+        detect_files = ["package.json" ".node-version" "!bunfig.toml" "!deno.lock" "!bun.lockb" "!deno.json"];
       };
       deno = {
         format = "via [🦕 $version](green bold) ";
