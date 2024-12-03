@@ -192,13 +192,13 @@
           keyColor = "green";
         }
         {
-          type = "memory";
-          key = "│ ├󰍛";
+          type = "disk";
+          key = "│ ├";
           keyColor = "green";
         }
         {
-          type = "disk";
-          key = "└ └";
+          type = "memory";
+          key = "└ └󰍛";
           keyColor = "green";
         }
         {
@@ -212,7 +212,7 @@
         }
         {
           type = "os";
-          key = " OS";
+          key = "󱄅 OS";
           keyColor = "yellow";
         }
         {
