@@ -209,6 +209,12 @@ in {
       motrix
       zed-editor
       transmission-remote-gtk
+      (
+        pkgs.writeScriptBin "hello-world" ''
+          #!${pkgs.bun}
+          console.log("hello world!");
+        ''
+      )
     ])
     ++ (with scripts; [
       kill_gamescope
