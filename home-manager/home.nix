@@ -211,7 +211,7 @@ in {
       transmission-remote-gtk
       (
         pkgs.writeScriptBin "hello-world" ''
-          #!${pkgs.bun}
+          #!${pkgs.bun}/bin/bun
           console.log("hello world!");
         ''
       )
