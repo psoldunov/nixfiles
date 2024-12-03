@@ -743,6 +743,7 @@ in {
     file-roller
     grilo
     grilo-plugins
+    kando
     kitty
     sg3_utils
     solaar
