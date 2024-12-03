@@ -159,16 +159,16 @@
     enable = true;
     settings = {
       "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
-      # logo = {
-      #     # source = "~/.config/fastfetch/xero.png";
-      #     type = "kitty";
-      #     height = 15;
-      #     width = 30;
-      #     padding = {
-      #         top = 5;
-      #         left = 3;
-      #     };
-      # };
+      logo = {
+        source = ../desktop/assets/logo.png;
+        type = "kitty";
+        height = 15;
+        width = 30;
+        padding = {
+          top = 5;
+          left = 3;
+        };
+      };
       modules = [
         "break"
         {
@@ -198,7 +198,7 @@
         }
         {
           type = "memory";
-          key = "└ └󰍛";
+          key = "└─└󰍛";
           keyColor = "green";
         }
         {
@@ -268,13 +268,13 @@
         }
         {
           type = "command";
-          key = "  OS Age ";
+          key = "  OS Age";
           keyColor = "magenta";
           text = "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days";
         }
         {
           type = "uptime";
-          key = "  Uptime ";
+          key = "  Uptime";
           keyColor = "magenta";
         }
         {
