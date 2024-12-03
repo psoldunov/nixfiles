@@ -5,7 +5,15 @@
     "noborder,class:(steam_app_)(.*)$"
     "noshadow,class:(steam_app_)(.*)$"
     "noblur,class:(steam_app_)(.*)$"
+    "noblur, kando"
+    "opaque, kando"
+    "size 100% 100%, kando"
+    "noborder, kando"
+    "noanim, kando"
+    "float, kando"
+    "pin, kando"
   ];
+
   windowrulev2 = [
     "rounding 4,title:^(Firefox — Sharing Indicator)$"
     "noborder,title:^(Firefox — Sharing Indicator)$"
