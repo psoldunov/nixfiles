@@ -124,6 +124,11 @@
       deno = {
         format = "via [🦕 $version](green bold) ";
       };
+      supabase = {
+        command = "${pkgs.supabase-cli}/bin/supabase -v";
+        format = "via [⚡ $output](green bold) ";
+        detect_folders = ["supabase"];
+      };
     };
   };
 
