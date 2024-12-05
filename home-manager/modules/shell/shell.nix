@@ -110,7 +110,7 @@
     enableFishIntegration = true;
     enableBashIntegration = true;
     settings = {
-      format = "$nix_shell $env_var $all";
+      format = "$nix_shell$env_var $all";
       hostname = {
         ssh_only = true;
         disabled = false;
@@ -133,6 +133,7 @@
         };
       };
       nix_shell = {
+        format = "[$symbol] ";
         impure_msg = "";
         pure_msg = "";
       };
