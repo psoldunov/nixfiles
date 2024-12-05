@@ -110,7 +110,7 @@
     enableFishIntegration = true;
     enableBashIntegration = true;
     settings = {
-      format = "$env_var $all";
+      format = "$nix_shell $env_var $all";
       hostname = {
         ssh_only = true;
         disabled = false;
@@ -124,13 +124,17 @@
       deno = {
         format = "via [🦕 $version](green bold) ";
       };
-      "custom" = {
+      custom = {
         supabase = {
           command = "${pkgs.supabase-cli}/bin/supabase -v";
           format = "via [⚡ $output](green bold) ";
           detect_folders = ["supabase"];
           ignore_timeout = true;
         };
+      };
+      nix_shell = {
+        impure_msg = "";
+        pure_msg = "";
       };
     };
   };
