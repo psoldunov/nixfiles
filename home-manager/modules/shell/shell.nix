@@ -125,9 +125,11 @@
         format = "via [🦕 $version](green bold) ";
       };
       "custom" = {
-        command = "${pkgs.supabase-cli}/bin/supabase -v";
-        format = "via [⚡ $output](green bold) ";
-        detect_folders = ["supabase"];
+        supabase = {
+          command = "${pkgs.supabase-cli}/bin/supabase -v";
+          format = "via [⚡ $output](green bold) ";
+          detect_folders = ["supabase"];
+        };
       };
     };
   };
