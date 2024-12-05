@@ -124,6 +124,11 @@
       deno = {
         format = "via [🦕 $version](green bold) ";
       };
+      nix_shell = {
+        format = "[$symbol$state( \($name\))]($style) ";
+        impure_msg = "";
+        pure_msg = "";
+      };
       custom = {
         supabase = {
           command = "${pkgs.supabase-cli}/bin/supabase -v";
@@ -131,11 +136,6 @@
           detect_folders = ["supabase"];
           ignore_timeout = true;
         };
-      };
-      nix_shell = {
-        format = "[❄️] ";
-        impure_msg = "";
-        pure_msg = "";
       };
     };
   };
