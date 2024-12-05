@@ -133,7 +133,7 @@
         };
       };
       nix_shell = {
-        format = "[$symbol] ";
+        format = "[❄️] ";
         impure_msg = "";
         pure_msg = "";
       };
