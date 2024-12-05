@@ -129,6 +129,7 @@
           command = "${pkgs.supabase-cli}/bin/supabase -v";
           format = "via [⚡ $output](green bold) ";
           detect_folders = ["supabase"];
+          ignore_timeout = true;
         };
       };
     };
