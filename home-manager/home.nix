@@ -191,6 +191,7 @@ in {
       pcsx2
       freetube
       heroic
+      shipments
       ferdium
       lollypop
       finamp
