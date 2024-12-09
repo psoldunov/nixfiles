@@ -1,5 +1,5 @@
 {
-  description = "Whopper Configuration";
+  description = "Whopper Configuration ST";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
