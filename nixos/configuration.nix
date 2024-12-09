@@ -44,7 +44,7 @@ in {
   };
 
   fileSystems."/SATA" = {
-    device = "/dev/disk/by-uuid/85f1737f-a523-4c18-b042-77e4a87404f6";
+    device = "/dev/disk/by-label/SATA";
     fsType = "ext4";
     label = "SATA";
     options = ["defaults" "x-gvfs-show"];
@@ -643,7 +643,8 @@ in {
     appleFonts.sf-mono-nerd
     appleFonts.sf-arabic
     appleFonts.ny
-    (nerdfonts.override {fonts = ["JetBrainsMono"];})
+    # (nerdfonts.override {fonts = ["JetBrainsMono"];})
+    nerd-fonts.jetbrains-mono
   ];
 
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
