@@ -37,7 +37,7 @@ in {
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
   fileSystems."/NVMe" = {
-    device = "/dev/disk/by-uuid/299c7edb-dbed-440b-9c49-16f344520558";
+    device = "/dev/disk/by-label/NVMe";
     fsType = "ext4";
     label = "NVMe";
     options = ["defaults" "x-gvfs-show"];
