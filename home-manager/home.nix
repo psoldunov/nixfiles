@@ -189,6 +189,7 @@ in {
       duckstation
       plexamp
       pcsx2
+      freetube
       heroic
       ferdium
       lollypop
