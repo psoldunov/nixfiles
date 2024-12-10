@@ -238,9 +238,9 @@
 
   fix_xdph = (
     pkgs.writeShellScriptBin "fix_xdph" ''
-      ${pkgs.systemd}/bin/systemctl --user disable xdg-desktop-portal-hyprland.service
-      ${pkgs.systemd}/bin/systemctl --user enable xdg-desktop-portal-hyprland.service
-      ${pkgs.systemd}/bin/systemctl --user start xdg-desktop-portal-hyprland.service
+      ${pkgs.systemd}/bin/systemctl --user disable xdg-desktop-portal-hyprland.service 2>&1 >/dev/null
+      ${pkgs.systemd}/bin/systemctl --user enable xdg-desktop-portal-hyprland.service 2>&1 >/dev/null
+      ${pkgs.systemd}/bin/systemctl --user start xdg-desktop-portal-hyprland.service 2>&1 >/dev/null
       ${pkgs.systemd}/bin/systemctl --user status xdg-desktop-portal-hyprland.service
     ''
   );
