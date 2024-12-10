@@ -207,6 +207,7 @@ in {
       vesktop
       rpcs3
       ookla-speedtest
+      discord-canary
       catppuccin-cursors
       motrix
       zed-editor
@@ -236,6 +237,7 @@ in {
           grab_screen_text
           record_screen
           restart_ags
+          fix_xdph
           idle_check
           start_static_wallpaper
           start_video_wallpaper
