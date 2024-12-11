@@ -189,7 +189,7 @@ in {
       duckstation
       plexamp
       pcsx2
-      freetube
+      # freetube
       heroic
       shipments
       ferdium
