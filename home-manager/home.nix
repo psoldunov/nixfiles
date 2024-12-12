@@ -193,6 +193,7 @@ in {
       slack
       protonup-qt
       protonup-ng
+      via
       vesktop
       rpcs3
       ookla-speedtest
