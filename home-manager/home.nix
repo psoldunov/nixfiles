@@ -79,15 +79,6 @@ in {
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
-    youtube = {
-      name = "YouTube";
-      genericName = "Video Player";
-      icon = "youtube";
-      exec = ''${pkgs.chromium}/bin/chromium --profile-directory="YouTube" --new-window --app=https://www.youtube.com %U'';
-      terminal = false;
-      mimeType = ["x-scheme-handler/youtube"];
-      categories = ["Video" "Player" "AudioVideo"];
-    };
   };
 
   systemd.user.enable = true;
@@ -189,12 +180,10 @@ in {
       duckstation
       plexamp
       pcsx2
-      # freetube
       heroic
       shipments
       ferdium
       lollypop
-      finamp
       steam-rom-manager
       mediawriter
       prismlauncher
