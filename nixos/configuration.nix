@@ -382,7 +382,6 @@ in {
     packages = [
       "com.github.tchx84.Flatseal"
       "com.steamgriddb.SGDBoop"
-      "org.libretro.RetroArch"
       "io.freetubeapp.FreeTube"
     ];
     overrides = {
