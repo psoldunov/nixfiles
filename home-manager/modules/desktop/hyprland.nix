@@ -12,6 +12,10 @@
     inherit pkgs;
   };
 
+  discordVencord = pkgs.discord-canary.override {
+    withVencord = true;
+  };
+
   startupSound = ./assets/startup.wav;
 
   wallpaperPath = ./assets/wallpaper.jpg;
@@ -29,7 +33,7 @@
       ${pkgs.localsend}/bin/localsend_app --hidden
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
       ${pkgs._1password}/bin/1password --silent
-      ${pkgs.discord-canary}/bin/discordcanary --start-minimized
+      ${discordVencord}/bin/discordcanary --start-minimized
       steam -silent
     "
 

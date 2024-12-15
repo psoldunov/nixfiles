@@ -196,7 +196,9 @@ in {
       via
       rpcs3
       ookla-speedtest
-      discord-canary
+      (discord-canary.override {
+        withVencord = true;
+      })
       catppuccin-cursors
       motrix
       zed-editor
