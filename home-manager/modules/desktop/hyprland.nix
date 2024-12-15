@@ -14,6 +14,7 @@
 
   discordVencord = pkgs.discord-canary.override {
     withVencord = true;
+    withOpenASAR = true;
   };
 
   startupSound = ./assets/startup.wav;

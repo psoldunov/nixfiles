@@ -211,6 +211,7 @@ in {
       rpcs3
       ookla-speedtest
       (discord-canary.override {
+        withOpenASAR = true;
         withVencord = true;
       })
       catppuccin-cursors
