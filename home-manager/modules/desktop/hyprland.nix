@@ -1,6 +1,6 @@
 {
   config,
-  inputs,
+  # inputs,
   pkgs,
   lib,
   globalSettings,
@@ -45,7 +45,7 @@ in {
   wayland.windowManager.hyprland = {
     enable = globalSettings.enableHyprland;
     catppuccin.enable = false;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     systemd = {
       enable = true;
       enableXdgAutostart = true;

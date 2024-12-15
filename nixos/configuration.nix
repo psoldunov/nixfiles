@@ -16,8 +16,7 @@
     accents = ["peach"];
     variant = "mocha";
   };
-
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  # pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -160,11 +159,11 @@ in {
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-gaming.cachix.org"
-        "https://hyprland.cachix.org"
+        # "https://hyprland.cachix.org"
       ];
       trusted-public-keys = [
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        # "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
   };
@@ -205,7 +204,7 @@ in {
 
   hardware.graphics = {
     enable = true;
-    package = pkgs-hyprland.mesa.drivers;
+    # package = pkgs-hyprland.mesa.drivers;
     enable32Bit = true;
     extraPackages = with pkgs; [
       libva
@@ -304,8 +303,8 @@ in {
 
   programs.hyprland = {
     enable = globalSettings.enableHyprland;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    # portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
   };
 
