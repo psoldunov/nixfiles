@@ -184,7 +184,6 @@ in {
         exec-once = start_static_wallpaper ${wallpaperPath}
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
-        ${config.programs.spicetify.spicedSpotify}
       '';
     };
   };
