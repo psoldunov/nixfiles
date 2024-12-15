@@ -30,7 +30,7 @@
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
       1password --silent
       steam -silent
-      vesktop --start-minimized
+      ${pkgs.discord-canary}/bin/discordcanary --start-minimized
     "
 
     sleep 10

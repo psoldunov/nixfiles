@@ -194,7 +194,6 @@ in {
       protonup-qt
       protonup-ng
       via
-      vesktop
       rpcs3
       ookla-speedtest
       discord-canary
