@@ -4,6 +4,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   globalSettings,
   ...
 }: let
@@ -156,6 +157,19 @@ in {
     enable = true;
   };
 
+  programs.spicetify = let
+    spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  in {
+    enable = true;
+    #  enabledExtensions = with spicePkgs.extensions; [
+    #    adblock
+    #    hidePodcasts
+    #    shuffle # shuffle+ (special characters are sanitized out of extension names)
+    #  ];
+    theme = spicePkgs.themes.catppuccin;
+    colorScheme = "mocha";
+  };
+
   home.packages =
     (with pkgs; [
       electrum
@@ -173,7 +187,7 @@ in {
       nodejs_20
       obsidian
       pywal
-      spotify
+      # spotify
       mattermost-desktop
       gnome-font-viewer
       rofi-bluetooth

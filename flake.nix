@@ -41,6 +41,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ags = {
       url = "github:Aylur/ags/60180a184cfb32b61a1d871c058b31a3b9b0743d";
     };
@@ -53,6 +58,7 @@
     vscode-server,
     nixpkgs-stable,
     nix-ld,
+    spicetify-nix,
     nix-gaming,
     nix-flatpak,
     sops-nix,
@@ -93,6 +99,7 @@
         ./nixos/configuration.nix
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
+        spicetify-nix.nixosModules.default
         # hyprland.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
@@ -120,6 +127,7 @@
               sops-nix.homeManagerModules.sops
               catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default
+              spicetify-nix.homeManagerModules.default
               # hyprland.homeManagerModules.default
             ];
           };
