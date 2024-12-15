@@ -28,9 +28,9 @@
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
       ${pkgs.localsend}/bin/localsend_app --hidden
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
-      1password --silent
-      steam -silent
+      ${pkgs._1password}/bin/1password --silent
       ${pkgs.discord-canary}/bin/discordcanary --start-minimized
+      steam -silent
     "
 
     sleep 10
