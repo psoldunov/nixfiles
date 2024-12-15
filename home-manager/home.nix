@@ -52,15 +52,15 @@ in {
   };
 
   xdg.desktopEntries = {
-    spotify = {
-      name = "Spotify";
-      genericName = "Music Player";
-      icon = "spotify-client";
-      exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
-      terminal = false;
-      mimeType = ["x-scheme-handler/spotify"];
-      categories = ["Audio" "Music" "Player" "AudioVideo"];
-    };
+    # spotify = {
+    #   name = "Spotify";
+    #   genericName = "Music Player";
+    #   icon = "spotify-client";
+    #   exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
+    #   terminal = false;
+    #   mimeType = ["x-scheme-handler/spotify"];
+    #   categories = ["Audio" "Music" "Player" "AudioVideo"];
+    # };
     webflow = {
       name = "Webflow";
       genericName = "Web Editor";
