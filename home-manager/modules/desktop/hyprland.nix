@@ -32,7 +32,7 @@
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
       ${pkgs.localsend}/bin/localsend_app --hidden
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
-      ${pkgs._1password}/bin/1password --silent
+      ${pkgs._1password-gui}/bin/1password --silent
       ${discordVencord}/bin/discordcanary --start-minimized
       steam -silent
     "
