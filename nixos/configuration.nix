@@ -275,7 +275,7 @@ in {
         "x-scheme-handler/about" = "firefox.desktop";
         "x-scheme-handler/unknown" = "firefox.desktop";
         "x-scheme-handler/vscode" = "code-url-handler.desktop";
-        "x-scheme-handler/figma" = "figma.desktop";
+        "x-scheme-handler/figma" = "firfox.desktop";
         "application/x-extension-htm" = "firefox.desktop";
         "application/x-extension-html" = "firefox.desktop";
         "application/x-extension-shtml" = "firefox.desktop";
