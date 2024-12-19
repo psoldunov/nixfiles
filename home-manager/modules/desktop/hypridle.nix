@@ -8,13 +8,15 @@
   hyprlockBin = "${pkgs.hyprlock}/bin/hyprlock";
   hyprctlBin = "${pkgs.hyprland}/bin/hyprctl";
 in {
+  catppuccin.hyprlock = {
+    enable = false;
+    accent = "peach";
+    flavor = "mocha";
+  };
+
   programs.hyprlock = {
     enable = globalSettings.enableHyprland;
-    catppuccin = {
-      enable = false;
-      accent = "peach";
-      flavor = "mocha";
-    };
+
     settings = {
       source = "${config.xdg.configHome}/hypr/mocha.conf";
 
