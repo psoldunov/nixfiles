@@ -373,7 +373,7 @@ in {
 
   # Enable CUPS to print documents.
 
-  services.expressvpn.enable = true;
+  services.expressvpn.enable = false;
 
   services.flatpak = {
     enable = true;
