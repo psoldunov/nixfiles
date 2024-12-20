@@ -8,6 +8,7 @@
   pkgs,
   appleFonts,
   globalSettings,
+  pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -373,7 +374,10 @@ in {
 
   # Enable CUPS to print documents.
 
-  services.expressvpn.enable = true;
+  services.expressvpn = {
+    enable = true;
+    package = pkgs-stable.expressvpn;
+  };
 
   services.flatpak = {
     enable = true;
