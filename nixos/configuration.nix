@@ -36,6 +36,8 @@ in {
 
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
+  boot.kernelModules = ["tun"];
+
   fileSystems."/NVMe" = {
     device = "/dev/disk/by-label/NVMe";
     fsType = "ext4";
@@ -370,13 +372,6 @@ in {
   services.xserver = {
     xkb.layout = "us";
     xkb.variant = "";
-  };
-
-  # Enable CUPS to print documents.
-
-  services.expressvpn = {
-    enable = true;
-    package = pkgs-stable.expressvpn;
   };
 
   services.flatpak = {
@@ -967,6 +962,21 @@ in {
         expect eof
       ''
     );
+  };
+
+  systemd.services.expressvpn = {
+    description = "ExpressVPN Daemon";
+    serviceConfig = {
+      ExecStart = "${pkgs.expressvpn}/bin/expressvpnd";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    wantedBy = ["multi-user.target"];
+    wants = ["network-online.target"];
+    after = [
+      "network.target"
+      "network-online.target"
+    ];
   };
 
   programs.steam = {
