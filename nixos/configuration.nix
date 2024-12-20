@@ -36,8 +36,6 @@ in {
 
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
-  boot.kernelModules = ["tun"];
-
   fileSystems."/NVMe" = {
     device = "/dev/disk/by-label/NVMe";
     fsType = "ext4";
@@ -171,7 +169,7 @@ in {
     };
   };
 
-  boot.kernelModules = ["uinput" "uhid"];
+  boot.kernelModules = ["uinput" "uhid" "tun"];
 
   boot.extraModulePackages = with config.boot.kernelPackages; [
     gasket
