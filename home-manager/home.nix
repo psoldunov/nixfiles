@@ -300,6 +300,17 @@ in {
         Terminal=false
       '';
     };
+    ".local/share/applications/nixfiles-nugget.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Open NUGGET Nixfiles in VS Code
+        GenericName=This opens NUGGET nixfiles in VS Code
+        Icon=nix-snowflake
+        Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles
+        Terminal=false
+      '';
+    };
   };
 
   home.stateVersion = systemStateVersion;
