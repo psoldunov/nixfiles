@@ -963,20 +963,20 @@ in {
     );
   };
 
-  systemd.services.expressvpn = {
-    description = "ExpressVPN Daemon";
-    serviceConfig = {
-      ExecStart = "${pkgs.expressvpn}/bin/expressvpnd";
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-    wantedBy = ["multi-user.target"];
-    wants = ["network-online.target"];
-    after = [
-      "network.target"
-      "network-online.target"
-    ];
-  };
+  # systemd.services.expressvpn = {
+  #   description = "ExpressVPN Daemon";
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.expressvpn}/bin/expressvpnd";
+  #     Restart = "on-failure";
+  #     RestartSec = 5;
+  #   };
+  #   wantedBy = ["multi-user.target"];
+  #   wants = ["network-online.target"];
+  #   after = [
+  #     "network.target"
+  #     "network-online.target"
+  #   ];
+  # };
 
   programs.steam = {
     enable = true;
