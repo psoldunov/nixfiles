@@ -831,6 +831,7 @@ in {
     typstfmt
     typst-lsp
     translate-shell
+    ccd2iso
     typst-live
     nss
     mkinitcpio-nfs-utils
