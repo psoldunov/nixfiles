@@ -95,6 +95,7 @@
         inherit
           inputs
           outputs
+          ghostty
           appleFonts
           globalSettings
           pkgs-stable
@@ -102,11 +103,6 @@
       };
       modules = [
         ./nixos/configuration.nix
-        {
-          environment.systemPackages = [
-            ghostty.packages.x86_64-linux.default
-          ];
-        }
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         spicetify-nix.nixosModules.default
