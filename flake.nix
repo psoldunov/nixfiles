@@ -15,6 +15,10 @@
 
     # hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,6 +65,7 @@
     spicetify-nix,
     nix-gaming,
     nix-flatpak,
+    ghostty,
     sops-nix,
     home-manager,
     apple-fonts,
@@ -97,6 +102,11 @@
       };
       modules = [
         ./nixos/configuration.nix
+        {
+          environment.systemPackages = [
+            ghostty.packages.x86_64-linux.default
+          ];
+        }
         nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         spicetify-nix.nixosModules.default
