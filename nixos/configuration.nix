@@ -834,7 +834,7 @@ in {
     typstfmt
     typst-lsp
     translate-shell
-    ghostty.packages.x86_64-linux.default
+    # ghostty.packages.x86_64-linux.default
     ccd2iso
     typst-live
     nss
@@ -1015,6 +1015,7 @@ in {
   networking = {
     defaultGateway = "10.24.24.1";
     nameservers = [
+      "1.1.1.1"
       "10.24.24.9"
     ];
   };
