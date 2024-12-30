@@ -161,7 +161,7 @@ in {
   };
 
   home.sessionVariables = {
-    HYPRCURSOR_THEME = "WhiteSur";
+    HYPRCURSOR_THEME = "Vimix Cursors";
     HYPRCURSOR_SIZE = "24";
     ASAN_OPTIONS = "log_path=~/asan.log";
     MOZ_ENABLE_WAYLAND = 1;

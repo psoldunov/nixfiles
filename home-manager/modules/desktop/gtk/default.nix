@@ -17,8 +17,8 @@
     };
 
     cursorTheme = lib.mkIf globalSettings.enableHyprland {
-      name = "WhiteSur";
-      package = pkgs.whitesur-cursors;
+      name = "Vimix Cursors";
+      package = pkgs.vimix-cursor-theme;
       size = 24;
     };
 

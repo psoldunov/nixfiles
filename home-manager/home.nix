@@ -245,7 +245,7 @@ in {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      cursor-theme = "WhiteSur";
+      cursor-theme = "Vimix Cursors";
       cursor-size = 24;
       text-scaling-factor = "1";
     };
