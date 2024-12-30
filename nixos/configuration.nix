@@ -518,11 +518,11 @@ in {
   programs = {
     _1password = {
       enable = true;
-      # package = pkgs-unstable._1password-cli;
+      package = pkgs-unstable._1password-cli;
     };
     _1password-gui = {
       enable = true;
-      # package = pkgs-unstable._1password-gui;
+      package = pkgs-unstable._1password-gui;
       # Certain features, including CLI integration and system authentication support,
       # require enabling PolKit integration on some desktop environments (e.g. Plasma).
       polkitPolicyOwners = ["psoldunov"];
@@ -566,17 +566,11 @@ in {
     config = {
       joypixels.acceptLicense = true;
       allowUnfree = true;
-      allowAliases = true;
       allowInsecure = true;
       allowBroken = true;
-      packageOverrides = {
-        "_1password-gui" = pkgs-unstable._1password-gui;
-        "_1password-cli" = pkgs-unstable._1password-cli;
-      };
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
           "joypixels"
-          "1password"
         ];
       permittedInsecurePackages = [
         "electron-24.8.6"
@@ -761,21 +755,7 @@ in {
     sassc
     bat
     cloudflared
-    hyprcursor
-    docker-compose
-    docker-compose-language-service
-    linux-firmware
-    libgcc
-    catppuccinPackage
-    wget
-    papers
-    evince
-    eog
-    bchunk
-    simple-scan
-    speedcrunch
-    gparted
-    zstd
+    hyprcursorunstable
     run
     iperf
     yubikey-manager-qt

@@ -78,6 +78,9 @@
 
     pkgs-unstable = import nixpkgs-unstable {
       inherit system;
+      config = {
+        allowUnfree = true;
+      };
     };
 
     appleFonts = apple-fonts.packages.${system};
