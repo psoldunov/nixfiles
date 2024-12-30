@@ -566,6 +566,7 @@ in {
     config = {
       joypixels.acceptLicense = true;
       allowUnfree = true;
+      allowAliases = true;
       allowInsecure = true;
       allowBroken = true;
       packageOverrides = pkgs-unstable: {
