@@ -384,6 +384,7 @@ in {
           XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
           XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          HYPRCURSOR_SIZE = 32;
           ICON_THEME = "Papirus-Dark";
           GTK_THEME = "Tokyonight-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
