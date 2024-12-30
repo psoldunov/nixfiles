@@ -12,8 +12,10 @@ in {
   gtk = lib.mkIf globalSettings.enableHyprland {
     enable = true;
     theme = {
-      name = "catppuccin-mocha-peach-standard";
-      package = catppuccin-gtk-theme;
+      # name = "catppuccin-mocha-peach-standard";
+      # package = catppuccin-gtk-theme;
+      name = "Tokyonight-Dark";
+      package = pkgs.tokyonight-gtk-theme;
     };
     catppuccin = {
       enable = false;
