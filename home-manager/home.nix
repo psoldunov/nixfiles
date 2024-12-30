@@ -25,17 +25,6 @@ in {
     ./modules
   ];
 
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
-    accent = "peach";
-    cursors = {
-      enable = true;
-      accent = "dark";
-      flavor = "mocha";
-    };
-  };
-
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
