@@ -246,6 +246,7 @@ in {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       cursor-theme = "WhiteSur Cursors";
+      cursor-size = 24;
       text-scaling-factor = "1";
     };
   };
