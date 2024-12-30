@@ -708,8 +708,6 @@ in {
     ensureDefaultPrinter = "HP_LaserJet_MFP_M28w_9B18D8";
   };
 
-  programs.nix-ld.dev.enable = true;
-
   services.fwupd.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -967,20 +965,7 @@ in {
     );
   };
 
-  # systemd.services.expressvpn = {
-  #   description = "ExpressVPN Daemon";
-  #   serviceConfig = {
-  #     ExecStart = "${pkgs.expressvpn}/bin/expressvpnd";
-  #     Restart = "on-failure";
-  #     RestartSec = 5;
-  #   };
-  #   wantedBy = ["multi-user.target"];
-  #   wants = ["network-online.target"];
-  #   after = [
-  #     "network.target"
-  #     "network-online.target"
-  #   ];
-  # };
+  services.expressvpn.enable = true;
 
   programs.steam = {
     enable = true;

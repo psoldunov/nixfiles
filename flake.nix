@@ -24,11 +24,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-ld = {
-      url = "github:Mic92/nix-ld";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     catppuccin = {
@@ -66,7 +61,6 @@
     ags,
     vscode-server,
     nixpkgs-unstable,
-    nix-ld,
     spicetify-nix,
     nix-gaming,
     nix-flatpak,
@@ -108,7 +102,6 @@
       };
       modules = [
         ./nixos/configuration.nix
-        nix-ld.nixosModules.nix-ld
         nix-gaming.nixosModules.pipewireLowLatency
         spicetify-nix.nixosModules.default
         # hyprland.nixosModules.default
