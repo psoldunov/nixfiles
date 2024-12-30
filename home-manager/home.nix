@@ -256,7 +256,7 @@ in {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      cursor-theme = "catppuccin-mocha-dark-cursors";
+      cursor-theme = "WhiteSur-cursors";
       text-scaling-factor = "1";
     };
   };

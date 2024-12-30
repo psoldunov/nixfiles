@@ -13,8 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
@@ -25,10 +23,6 @@
     };
 
     nix-gaming.url = "github:fufexan/nix-gaming";
-
-    catppuccin = {
-      url = "github:catppuccin/nix";
-    };
 
     apple-fonts = {
       url = "github:Lyndeno/apple-fonts.nix";
@@ -68,8 +62,6 @@
     sops-nix,
     home-manager,
     apple-fonts,
-    catppuccin,
-    # hyprland,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -107,13 +99,11 @@
         ./nixos/configuration.nix
         nix-gaming.nixosModules.pipewireLowLatency
         spicetify-nix.nixosModules.default
-        # hyprland.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
         nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
-        catppuccin.nixosModules.catppuccin
         {
           home-manager = {
             extraSpecialArgs = {
@@ -132,10 +122,8 @@
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
-              catppuccin.homeManagerModules.catppuccin
               ags.homeManagerModules.default
               spicetify-nix.homeManagerModules.default
-              # hyprland.homeManagerModules.default
             ];
           };
         }

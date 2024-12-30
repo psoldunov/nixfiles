@@ -13,23 +13,12 @@
   ...
 }: let
   systemStateVersion = "23.11";
-
-  catppuccinPackage = pkgs.catppuccin-gtk.override {
-    accents = ["peach"];
-    variant = "mocha";
-  };
   # pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
-
-  catppuccin = {
-    enable = globalSettings.enableHyprland;
-    accent = "peach";
-    flavor = "mocha";
-  };
 
   services.displayManager.sddm.wayland.enable = !globalSettings.enableHyprland;
   services.displayManager.sddm.enable = !globalSettings.enableHyprland;
@@ -94,7 +83,6 @@ in {
   };
 
   console = {
-    catppuccin.enable = false;
     earlySetup = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
     packages = with pkgs; [terminus_font];
@@ -107,7 +95,6 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.plymouth = {
     enable = true;
-    catppuccin.enable = false;
     theme = "pedro-raccoon";
     themePackages = [
       (pkgs.stdenvNoCC.mkDerivation {
@@ -144,7 +131,6 @@ in {
     ];
   };
   boot.loader.grub = {
-    catppuccin.enable = false;
     enable = true;
     device = "nodev";
     efiSupport = true;
@@ -196,7 +182,7 @@ in {
       GTK = {
         application_prefer_dark_theme = true;
         icon_theme_name = lib.mkForce "Papirus";
-        theme_name = lib.mkForce "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
+        theme_name = lib.mkForce "Tokyonight-Dark";
         font_name = lib.mkForce "SF Pro Display 12";
       };
       commands = {
@@ -387,9 +373,9 @@ in {
       global = {
         Context = {
           filesystems = [
-            "${catppuccinPackage}/share/themes:ro"
+            "${pkgs.tokyo-night-gtk}/share/themes:ro"
             "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
+            "${pkgs.whitesur-cursors}/share/icons:ro"
             "/run/current-system/sw/share/X11/fonts:ro"
             "/mnt/Games/Emulation:rw"
           ];
@@ -397,11 +383,11 @@ in {
         };
 
         Environment = {
-          XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
-          XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-          HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          XCURSOR_PATH = "${pkgs.whitesur-cursors}/share/icons";
+          XCURSOR_THEME = "WhiteSur-cursors";
+          HYPRCURSOR_THEME = "WhiteSur-cursors";
           ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "catppuccin-mocha-peach-standard";
+          GTK_THEME = "Tokyonight-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         };
       };

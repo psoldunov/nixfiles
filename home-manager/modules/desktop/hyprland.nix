@@ -50,8 +50,6 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = globalSettings.enableHyprland;
-    catppuccin.enable = false;
-    # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     systemd = {
       enable = true;
       enableXdgAutostart = true;
@@ -163,7 +161,7 @@ in {
   };
 
   home.sessionVariables = {
-    HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+    HYPRCURSOR_THEME = "WhiteSur-cursors";
     HYPRCURSOR_SIZE = "24";
     ASAN_OPTIONS = "log_path=~/asan.log";
     MOZ_ENABLE_WAYLAND = 1;

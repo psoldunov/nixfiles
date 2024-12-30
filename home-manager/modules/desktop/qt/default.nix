@@ -72,9 +72,7 @@ in {
   qt = lib.mkIf globalSettings.enableHyprland {
     enable = true;
     platformTheme.name = "qtct";
-    style = {
-      catppuccin.enable = false;
-    };
+    style = {};
   };
 
   home.file = lib.mkIf globalSettings.enableHyprland {
