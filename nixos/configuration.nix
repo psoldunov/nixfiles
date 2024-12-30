@@ -568,7 +568,7 @@ in {
       allowUnfree = true;
       allowInsecure = true;
       allowBroken = true;
-      packageOverrides = pkgs: {
+      packageOverrides = pkgs-unstable: {
         pkgs-unstable = {
           # pass the nixpkgs config to the unstable alias
           # to ensure `allowUnfree = true;` is propagated:
