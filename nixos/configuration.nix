@@ -749,7 +749,6 @@ in {
     kitty-themes
     emojione
     sassc
-    code-cursor
     bat
     cloudflared
     hyprcursor
