@@ -642,8 +642,8 @@ in {
     appleFonts.sf-mono-nerd
     appleFonts.sf-arabic
     appleFonts.ny
-    # (nerdfonts.override {fonts = ["JetBrainsMono"];})
-    nerd-fonts.jetbrains-mono
+    (nerdfonts.override {fonts = ["JetBrainsMono"];})
+    # nerd-fonts.jetbrains-mono
   ];
 
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
