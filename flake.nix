@@ -2,9 +2,9 @@
   description = "Whopper Configuration ST";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -60,7 +60,7 @@
     nixpkgs,
     ags,
     vscode-server,
-    nixpkgs-stable,
+    nixpkgs-unstable,
     nix-ld,
     spicetify-nix,
     nix-gaming,
@@ -77,7 +77,7 @@
 
     system = "x86_64-linux";
 
-    pkgs-stable = import nixpkgs-stable {
+    pkgs-unstable = import nixpkgs-unstable {
       inherit system;
     };
 
@@ -98,7 +98,7 @@
           ghostty
           appleFonts
           globalSettings
-          pkgs-stable
+          pkgs-unstable
           ;
       };
       modules = [
@@ -119,7 +119,7 @@
               inherit
                 inputs
                 outputs
-                pkgs-stable
+                pkgs-unstable
                 globalSettings
                 ;
             };

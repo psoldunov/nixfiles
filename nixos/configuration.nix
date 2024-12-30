@@ -9,7 +9,7 @@
   appleFonts,
   ghostty,
   globalSettings,
-  pkgs-stable,
+  pkgs-unstable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -428,7 +428,6 @@ in {
     enable = true;
     acceleration = "rocm";
     rocmOverrideGfx = "11.0.0";
-    package = pkgs-stable.ollama;
     openFirewall = true;
     environmentVariables = {
       OLLAMA_ORIGINS = "app://obsidian.md*";
@@ -652,7 +651,7 @@ in {
 
   hardware.keyboard.qmk.enable = true;
 
-  services.ddccontrol.enable = false;
+  services.ddccontrol.enable = true;
 
   programs.dconf.enable = true;
 
@@ -819,7 +818,7 @@ in {
     mangohud
     vulkan-tools
     devenv
-    pkgs-stable.bottles
+    bottles
     libva-utils
     cargo
     pop
