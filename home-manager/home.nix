@@ -214,7 +214,6 @@ in {
         withOpenASAR = true;
         withVencord = true;
       })
-      catppuccin-cursors
       motrix
       zed-editor
       transmission-remote-gtk
