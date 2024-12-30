@@ -389,7 +389,7 @@ in {
           filesystems = [
             "${catppuccinPackage}/share/themes:ro"
             "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
+            # "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
             "/run/current-system/sw/share/X11/fonts:ro"
             "/mnt/Games/Emulation:rw"
           ];
@@ -397,7 +397,7 @@ in {
         };
 
         Environment = {
-          XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
+          # XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
           XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           ICON_THEME = "Papirus-Dark";
