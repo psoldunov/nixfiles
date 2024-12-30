@@ -652,7 +652,7 @@ in {
 
   hardware.keyboard.qmk.enable = true;
 
-  services.ddccontrol.enable = true;
+  services.ddccontrol.enable = false;
 
   programs.dconf.enable = true;
 
