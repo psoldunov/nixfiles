@@ -29,11 +29,11 @@ in {
     enable = true;
     flavor = "mocha";
     accent = "peach";
-    # cursors = {
-    #   enable = true;
-    #   accent = "dark";
-    #   flavor = "mocha";
-    # };
+    cursors = {
+      enable = true;
+      accent = "dark";
+      flavor = "mocha";
+    };
   };
 
   services.nextcloud-client = {
