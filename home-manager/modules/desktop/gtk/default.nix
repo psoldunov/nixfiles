@@ -17,8 +17,8 @@
     };
 
     cursorTheme = lib.mkIf globalSettings.enableHyprland {
-      name = "Vimix Cursors";
-      package = pkgs.vimix-cursor-theme;
+      name = "catppuccin-mocha-dark-cursors";
+      package = pkgs.catppuccin-cursors.mochaDark;
       size = 24;
     };
 

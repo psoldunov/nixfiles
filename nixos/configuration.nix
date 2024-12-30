@@ -373,7 +373,7 @@ in {
           filesystems = [
             "${pkgs.tokyo-night-gtk}/share/themes:ro"
             "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.vimix-cursor-theme}/share/icons:ro"
+            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
             "/run/current-system/sw/share/X11/fonts:ro"
             "/mnt/Games/Emulation:rw"
           ];
@@ -381,9 +381,9 @@ in {
         };
 
         Environment = {
-          XCURSOR_PATH = "${pkgs.vimix-cursor-theme}/share/icons";
-          XCURSOR_THEME = "Vimix Cursors";
-          HYPRCURSOR_THEME = "Vimix Cursors";
+          XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
+          XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           ICON_THEME = "Papirus-Dark";
           GTK_THEME = "Tokyonight-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
@@ -702,7 +702,7 @@ in {
   environment.systemPackages = with pkgs; [
     papirus-icon-theme
     tokyonight-gtk-theme
-    whitesur-cursors
+    catppuccin-cursors.mochaDark
     abcde
     cddiscid
     libmusicbrainz5
