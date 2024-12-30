@@ -55,7 +55,10 @@
       set --export PATH $BUN_INSTALL/bin $PATH
       set fish_greeting
     '';
-    shellInitLast = "source ${config.sops.secrets.SHELL_SECRETS.path}";
+    shellInitLast = ''
+      source ${config.sops.secrets.SHELL_SECRETS.path}
+      fish_config theme choose Nord
+    '';
   };
 
   home.shellAliases = {
