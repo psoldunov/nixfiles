@@ -518,11 +518,11 @@ in {
   programs = {
     _1password = {
       enable = true;
-      package = pkgs-unstable._1password-cli;
+      # package = pkgs-unstable._1password-cli;
     };
     _1password-gui = {
       enable = true;
-      package = pkgs-unstable._1password-gui;
+      # package = pkgs-unstable._1password-gui;
       # Certain features, including CLI integration and system authentication support,
       # require enabling PolKit integration on some desktop environments (e.g. Plasma).
       polkitPolicyOwners = ["psoldunov"];
@@ -569,12 +569,9 @@ in {
       allowAliases = true;
       allowInsecure = true;
       allowBroken = true;
-      packageOverrides = pkgs-unstable: {
-        # pass the nixpkgs config to the unstable alias
-        # to ensure `allowUnfree = true;` is propagated:
-        config = {
-          allowUnfree = true;
-        };
+      packageOverrides = {
+        "_1password-gui" = pkgs-unstable._1password-gui;
+        "_1password-cli" = pkgs-unstable._1password-cli;
       };
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
