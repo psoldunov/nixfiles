@@ -755,7 +755,7 @@ in {
     sassc
     bat
     cloudflared
-    hyprcursorunstable
+    hyprcursor
     run
     iperf
     yubikey-manager-qt
