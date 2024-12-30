@@ -428,6 +428,7 @@ in {
     enable = true;
     acceleration = "rocm";
     rocmOverrideGfx = "11.0.0";
+    package = pkgs-stable.ollama;
     openFirewall = true;
     environmentVariables = {
       OLLAMA_ORIGINS = "app://obsidian.md*";
