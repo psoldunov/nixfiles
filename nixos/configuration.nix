@@ -572,7 +572,9 @@ in {
       packageOverrides = pkgs-unstable: {
         # pass the nixpkgs config to the unstable alias
         # to ensure `allowUnfree = true;` is propagated:
-        config = config.nixpkgs.config;
+        config = {
+          allowUnfree = true;
+        };
       };
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
