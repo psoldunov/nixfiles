@@ -383,10 +383,11 @@ in {
         Environment = {
           XCURSOR_PATH = "${pkgs.catppuccin-cursors.mochaDark}/share/icons";
           XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
+          XDG_DATA_DIRS = "${pkgs.tokyo-night-gtk}/share/themes:${pkgs.papirus-icon-theme}/share/icons:$XDG_DATA_DIRS";
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           HYPRCURSOR_SIZE = "32";
           ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "${pkgs.tokyo-night-gtk}/share/themes/Tokyonight-Dark";
+          GTK_THEME = "Tokyonight-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         };
       };
