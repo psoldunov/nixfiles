@@ -17,7 +17,7 @@
     };
 
     cursorTheme = lib.mkIf globalSettings.enableHyprland {
-      name = "WhiteSur-cursors";
+      name = "WhiteSur Cursors";
       package = pkgs.whitesur-cursors;
       size = 24;
     };

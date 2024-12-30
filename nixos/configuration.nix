@@ -382,8 +382,8 @@ in {
 
         Environment = {
           XCURSOR_PATH = "${pkgs.whitesur-cursors}/share/icons";
-          XCURSOR_THEME = "WhiteSur-cursors";
-          HYPRCURSOR_THEME = "WhiteSur-cursors";
+          XCURSOR_THEME = "WhiteSur Cursors";
+          HYPRCURSOR_THEME = "WhiteSur Cursors";
           ICON_THEME = "Papirus-Dark";
           GTK_THEME = "Tokyonight-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
