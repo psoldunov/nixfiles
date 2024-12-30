@@ -374,7 +374,7 @@ in {
             "${pkgs.tokyo-night-gtk}/share/themes:ro"
             "${pkgs.papirus-icon-theme}/share/icons:ro"
             "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
-            "/run/current-system/sw/share/X11/fonts:ro"
+            "/run/current-system/sw/share:ro"
             "/mnt/Games/Emulation:rw"
           ];
           sockets = ["wayland" "!x11" "!fallback-x11"];
