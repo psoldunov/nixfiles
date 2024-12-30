@@ -818,7 +818,7 @@ in {
     mangohud
     vulkan-tools
     devenv
-    bottles
+    pkgs-stable.bottles
     libva-utils
     cargo
     pop
