@@ -38,13 +38,13 @@ in {
     };
   };
 
-  home.file = lib.mkIf globalSettings.enableHyprland {
-    ".config/gtk-4.0/gtk-dark.css" = {
-      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/gtk-dark.css";
-    };
-    ".config/gtk-4.0/assets" = {
-      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/assets";
-      recursive = true;
-    };
-  };
+  # home.file = lib.mkIf globalSettings.enableHyprland {
+  #   ".config/gtk-4.0/gtk-dark.css" = {
+  #     source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/gtk-dark.css";
+  #   };
+  #   ".config/gtk-4.0/assets" = {
+  #     source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/assets";
+  #     recursive = true;
+  #   };
+  # };
 }
