@@ -737,6 +737,9 @@ in {
     kitty
     sg3_utils
     solaar
+    evince
+    eog
+    simple-scan
     kitty-img
     kitty-themes
     emojione
