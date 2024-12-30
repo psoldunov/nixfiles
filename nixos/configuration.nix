@@ -576,6 +576,7 @@ in {
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
           "joypixels"
+          "1password"
         ];
       permittedInsecurePackages = [
         "electron-24.8.6"
