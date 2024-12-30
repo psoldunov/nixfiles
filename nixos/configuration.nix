@@ -569,13 +569,11 @@ in {
       allowInsecure = true;
       allowBroken = true;
       packageOverrides = pkgs: {
-        unstable =
-          import pkgs-unstable
-          {
-            # pass the nixpkgs config to the unstable alias
-            # to ensure `allowUnfree = true;` is propagated:
-            config = config.nixpkgs.config;
-          };
+        pkgs-unstable = {
+          # pass the nixpkgs config to the unstable alias
+          # to ensure `allowUnfree = true;` is propagated:
+          config = config.nixpkgs.config;
+        };
       };
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
