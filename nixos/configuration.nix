@@ -776,6 +776,7 @@ in {
     libwebp
     slurp
     wl-clipboard
+    speedcrunch
     openssl
     openssl.dev
     imagemagick
