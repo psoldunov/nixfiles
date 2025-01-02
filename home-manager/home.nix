@@ -143,7 +143,7 @@ in {
   };
 
   programs.firefox = {
-    enable = true;
+    enable = false;
   };
 
   programs.spicetify = let
