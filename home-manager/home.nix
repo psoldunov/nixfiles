@@ -100,6 +100,10 @@ in {
         id = "bnomihfieiccainjcjblhegjgglakjdd";
       }
       {
+        id = "oladmjdebphlnjjcnomfhhbfdldiimaf";
+        updateUrl = "https://raw.githubusercontent.com/libredirect/browser_extension/refs/heads/master/src/updates/updates.xml";
+      }
+      {
         id = "lkbebcjgcmobigpeffafkodonchffocl";
         updateUrl = "https://raw.githubusercontent.com/bpc-clone/bypass-paywalls-chrome-clean/master/updates.xml";
       }
