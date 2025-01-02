@@ -539,10 +539,7 @@ in {
   environment.etc = {
     "1password/custom_allowed_browsers" = {
       text = ''
-        firefox
         brave
-        chromium
-        .zen-wrapped
       '';
       mode = "0755";
     };
@@ -768,7 +765,6 @@ in {
     tesseract
     hwdata
     pciutils
-    brave
     cliphist
     webp-pixbuf-loader
     supabase-cli

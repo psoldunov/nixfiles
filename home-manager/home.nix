@@ -92,6 +92,7 @@ in {
     dictionaries = with pkgs; [
       hunspellDictsChromium.en_US
       hunspellDictsChromium.fr_FR
+      hunspellDictsChromium.de_DE
     ];
     extensions = [
       {
@@ -125,6 +126,18 @@ in {
       }
       {
         id = "jbbplnpkjmmeebjpijfedlgcdilocofh";
+      }
+      {
+        id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
+      }
+      {
+        id = "eljapbgkmlngdpckoiiibecpemleclhh";
+      }
+      {
+        id = "djlkbfdlljbachafjmfomhaciglnmkgj";
+      }
+      {
+        id = "gebbhagfogifgggkldgodflihgfeippi";
       }
     ];
   };
