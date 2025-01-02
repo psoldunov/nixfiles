@@ -88,6 +88,7 @@ in {
 
   programs.chromium = {
     enable = true;
+    package = pkgs.brave;
     dictionaries = with pkgs; [
       hunspellDictsChromium.en_US
       hunspellDictsChromium.fr_FR
