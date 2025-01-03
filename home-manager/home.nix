@@ -6,6 +6,7 @@
   lib,
   inputs,
   globalSettings,
+  pkgs-unstable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -54,7 +55,7 @@ in {
       name = "Webflow";
       genericName = "Web Editor";
       icon = ./modules/desktop/assets/webflow.png;
-      exec = ''${pkgs.brave}/bin/chromium --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
+      exec = ''${pkgs-unstable.brave}/bin/chromium --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
@@ -88,7 +89,7 @@ in {
 
   programs.chromium = {
     enable = true;
-    package = pkgs.brave;
+    package = pkgs-unstable.brave;
     dictionaries = with pkgs; [
       hunspellDictsChromium.en_US
       hunspellDictsChromium.fr_FR
