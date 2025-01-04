@@ -180,7 +180,7 @@ in {
 
   home.packages =
     (with pkgs; [
-      pkgs-unstable.lug-helper
+      lug-helper
       lutris
       electrum
       ledger-live-desktop
