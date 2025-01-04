@@ -827,6 +827,8 @@ in {
     nss
     mkinitcpio-nfs-utils
     libnfs
+    libgccjit
+    gcc
     mkcert
     libadwaita
     winetricks
