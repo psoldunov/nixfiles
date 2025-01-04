@@ -816,6 +816,7 @@ in {
     typstfmt
     typst-lsp
     translate-shell
+    clang
     ghostty.packages.x86_64-linux.default
     ccd2iso
     typst-live
