@@ -828,6 +828,8 @@ in {
     mkinitcpio-nfs-utils
     libnfs
     libgccjit
+    libclang
+    clang-tools
     gcc
     mkcert
     libadwaita
