@@ -817,6 +817,10 @@ in {
     typst-lsp
     translate-shell
     clang
+    cmake
+    cmake-language-server
+    cmake-format
+    cmake-lint
     ghostty.packages.x86_64-linux.default
     ccd2iso
     typst-live
