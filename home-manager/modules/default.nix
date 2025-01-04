@@ -14,7 +14,7 @@
     ./git/git.nix
     ./programs/ncmpcpp.nix
     ./programs/spotifyd.nix
-    ./programs/kitty.nix
+    ./programs/ghostty.nix
     ./programs/zed.nix
   ];
 }

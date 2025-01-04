@@ -55,7 +55,7 @@ in {
     "$MOD1, J, movefocus, d"
 
     # MOD1 Terminal + Rofi
-    "$MOD1, RETURN, exec, kitty"
+    "$MOD1, RETURN, exec, ghostty"
     "$MOD1, SPACE, exec, pkill rofi || rofi -show drun"
 
     # kando
@@ -88,7 +88,7 @@ in {
     # MOD3 Applications Launcher
     "$MOD3, F, exec, zen"
     "$MOD3, E, exec, nemo"
-    "$MOD3, T, exec, kitty -e tmux"
+    "$MOD3, T, exec, ghostty -e tmux"
     "$MOD3, V, exec, code --new-window"
     "$MOD3, C, exec, google-chrome"
     "$MOD3, S, exec, slack"
@@ -133,7 +133,7 @@ in {
     "$ctrl, K, workspace, e+1"
 
     # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-    "$option, RETURN, exec, kitty -c ~/.config/kitty/kitty-nuphy.conf"
+    "$option, RETURN, exec, ghostty"
     "$cmd, Q, killactive,"
     "$cmd $ctrl, Q, exec, lock_screen"
     "$ctrl, M, exit, "

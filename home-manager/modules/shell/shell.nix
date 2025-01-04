@@ -8,7 +8,7 @@
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     DENO_INSTALL = "/home/psoldunov/.deno";
     PATH = "HOME/.local/bin:/usr/sbin:$HOME/.local/podman/bin:$HOME/.cargo/bin:$DENO_INSTALL/bin:$PATH";
-    TERMINAL = "kitty";
+    TERMINAL = "ghostty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
     VSCODE_GALLERY_SERVICE_URL = "https://marketplace.visualstudio.com/_apis/public/gallery";
@@ -96,7 +96,7 @@
     fucking = "sudo";
     cat = "bat -p";
     thunar = "nemo";
-    ssh = "kitten ssh";
+    # ssh = "kitten ssh";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
   };
 

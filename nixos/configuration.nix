@@ -246,7 +246,7 @@ in {
         "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
         "text/html" = ["brave-browser.desktop"];
         "text/*" = ["code.desktop" "zed.desktop"];
-        "TerminalEmulator" = "kitty.desktop";
+        "TerminalEmulator" = "ghostty.desktop";
         "image/jpeg" = ["org.gnome.eog.desktop"];
         "image/png" = ["org.gnome.eog.desktop"];
         "image/svg+xml" = ["org.gnome.eog.desktop"];
@@ -708,7 +708,7 @@ in {
     libmusicbrainz
     monkeysAudio
     libdiscid
-    (writeShellScriptBin "gnome-terminal" "exec -a $0 kitty $@")
+    (writeShellScriptBin "gnome-terminal" "exec -a $0 ghostty $@")
     appimage-run
     wev
     usbutils
@@ -733,14 +733,11 @@ in {
     grilo
     grilo-plugins
     kando
-    kitty
     sg3_utils
     solaar
     evince
     eog
     simple-scan
-    kitty-img
-    kitty-themes
     emojione
     sassc
     bat
