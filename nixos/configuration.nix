@@ -829,6 +829,7 @@ in {
     libnfs
     libgccjit
     libclang
+    gdb
     clang-tools
     gcc
     mkcert
