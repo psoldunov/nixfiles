@@ -51,7 +51,11 @@ export default function SystemLogo() {
       Utils.execAsync(["bash", "-c", "rofi -show drun"]);
     },
     on_middle_click: () => {
-      Utils.execAsync(["bash", "-c", "ghostty -e --hold fastfetch"]);
+      Utils.execAsync([
+        "bash",
+        "-c",
+        "ghostty --wait-after-command=true -e fastfetch",
+      ]);
     },
     on_secondary_click: (_, event) => {
       powerMenu.popup_at_pointer(event);

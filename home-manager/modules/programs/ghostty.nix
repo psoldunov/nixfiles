@@ -6,6 +6,7 @@
       font-family = "JetBrainsMono Nerd Font"
       font-size = 12.5
       font-style = bold
+      confirm-close-surface = false
 
       window-padding-x = 8,4
       window-padding-y = 8

@@ -64,7 +64,7 @@ export default function Weather() {
       Utils.execAsync([
         "bash",
         "-c",
-        `ghostty -e --hold curl "wttr.in/${city}"`,
+        `ghostty --wait-after-command=true -e curl "wttr.in/${city}"`,
       ]),
     child: Widget.Box({
       spacing: 8,
