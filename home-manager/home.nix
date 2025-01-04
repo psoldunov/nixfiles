@@ -181,6 +181,7 @@ in {
   home.packages =
     (with pkgs; [
       lug-helper
+      lutris
       electrum
       ledger-live-desktop
       beets
