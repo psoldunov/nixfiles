@@ -11,6 +11,7 @@
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
     inherit pkgs;
+    inherit pkgs-unstable;
   };
 
   discordVencord = pkgs.discord-canary.override {
