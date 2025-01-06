@@ -55,7 +55,7 @@ in {
       name = "Webflow";
       genericName = "Web Editor";
       icon = ./modules/desktop/assets/webflow.png;
-      exec = ''${pkgs-unstable.brave}/bin/chromium --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
+      exec = ''${pkgs-unstable.brave}/bin/brave --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
