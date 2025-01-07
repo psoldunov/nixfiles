@@ -1,14 +1,14 @@
 self: super: {
   # sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
   supabase-cli = super.supabase-cli.overrideAttrs (oldAttrs: rec {
-    version = "2.1.1";
-    vendorHash = "sha256-WygbrpE+FIWBs2Q34EAFlOm458vqnuIy+seZb+4Wf+I=";
+    version = "2.2.1";
+    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
     src = super.fetchFromGitHub {
       owner = "supabase";
       repo = "cli";
       rev = "v${version}";
-      hash = "sha256-jTAYdAJTaQhDKVwor1rj3ZhyAZ88ElvznFv5nncf4m8=";
+      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1=";
     };
 
     ldflags = [
