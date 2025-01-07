@@ -8,7 +8,7 @@ self: super: {
       owner = "supabase";
       repo = "cli";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1=";
+      hash = "sha256-m7v31fG3ASbOFGv+IsV5IwnKyr+31i4yAAVpawvFHpo=";
     };
 
     ldflags = [
