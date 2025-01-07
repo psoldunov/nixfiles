@@ -64,12 +64,21 @@ in {
       name = "Figma";
       genericName = "Design Tool";
       icon = "figma";
-      exec = ''${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland %U'';
+      exec = ''${pkgs-unstable.brave}/bin/brave --profile-directory=Default --new-window --app="https://www.figma.com/files" %U'';
       terminal = false;
-      comment = "Unofficial desktop application for linux";
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
+    # figma = {
+    #   name = "Figma";
+    #   genericName = "Design Tool";
+    #   icon = "figma";
+    #   exec = ''${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland %U'';
+    #   terminal = false;
+    #   comment = "Unofficial desktop application for linux";
+    #   mimeType = ["x-scheme-handler/figma"];
+    #   categories = ["Graphics"];
+    # };
   };
 
   systemd.user.enable = true;
