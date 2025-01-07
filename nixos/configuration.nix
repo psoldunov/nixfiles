@@ -717,7 +717,7 @@ in {
     nixpkgs-fmt
     lm_sensors
     bulky
-    pkgs-unstable.vscode
+    vscode
     sops
     alejandra
     dive
