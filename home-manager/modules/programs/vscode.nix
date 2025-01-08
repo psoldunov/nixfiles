@@ -9,9 +9,11 @@
     enableUpdateCheck = false;
     enableExtensionUpdateCheck = false;
     userSettings = {
+      "projectManager.tags" = ["Personal" "Boundary" "System"];
+      "projectManager.sortList" = "Saved";
       "workbench.iconTheme" = "vscode-icons";
       "workbench.colorTheme" = "Catppuccin Mocha";
-      # "catppuccin.accentColor" = "peach";
+      "catppuccin.accentColor" = "blue";
       "window.titleBarStyle" = "custom";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
@@ -40,7 +42,7 @@
       };
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nixd";
-      "nix.formatterPath" = "alejandra";
+      "nix.formatterPath" = "${pkgs.alejandra}/bin/alejandra";
       "nix.serverSettings" = {
         "nixd" = {
           "formatting" = {
@@ -64,6 +66,7 @@
         formulahendry.auto-rename-tag
         github.vscode-github-actions
         gruntfuggly.todo-tree
+        golang.Go
         kamadorueda.alejandra
         leonardssh.vscord
         mikestead.dotenv
