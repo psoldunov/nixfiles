@@ -189,6 +189,7 @@ in {
 
   home.packages =
     (with pkgs; [
+      pkgs-unstable.whatsie
       electrum
       ledger-live-desktop
       beets
