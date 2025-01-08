@@ -81,6 +81,8 @@
       "typescript.format.semicolons" = "insert";
       "diffEditor.codeLens" = true;
       "remote.SSH.useLocalServer" = false;
+      "editor.formatOnPaste" = true;
+      "editor.formatOnSave" = true;
     };
     extensions = with pkgs.vscode-extensions;
       [
