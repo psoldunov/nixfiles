@@ -17,7 +17,7 @@
 
     ghostty = {
       url = "github:ghostty-org/ghostty";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs-unstable.follows = "nixpkgs";
     };
 
     sops-nix = {
