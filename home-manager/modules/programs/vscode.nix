@@ -77,6 +77,7 @@
         ms-vscode.cmake-tools
         ms-vscode.cpptools
         ms-vscode.cpptools-extension-pack
+        ms-vscode.remote-explorer
         ms-vscode-remote.remote-ssh
         prisma.prisma
         tamasfe.even-better-toml
