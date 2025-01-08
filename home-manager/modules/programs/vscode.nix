@@ -52,6 +52,8 @@
         ".env*" = "dotenv";
         "*.css" = "tailwindcss";
       };
+      "window.menuBarVisibility" = "toggle";
+      "window.customTitleBarVisibility" = "auto";
     };
     extensions = with pkgs.vscode-extensions;
       [
