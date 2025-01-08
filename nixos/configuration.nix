@@ -285,7 +285,7 @@ in {
         "text/calendar" = "thunderbird.desktop";
         "application/x-extension-ics" = "thunderbird.desktop";
         "x-scheme-handler/webcals" = "thunderbird.desktop";
-        "x-scheme-handler/whatsapp" = "whatsie.desktop"
+        "x-scheme-handler/whatsapp" = "whatsie.desktop";
       };
     };
   };
