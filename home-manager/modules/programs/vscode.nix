@@ -17,6 +17,7 @@
       "window.titleBarStyle" = "custom";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
+      "C_Cpp.default.compilerPath" = "/run/current-system/sw/bin/gcc";
       "editor.tabSize" = 2;
       "remote.SSH.remotePlatform" = {
         "10.24.24.9" = "linux";
