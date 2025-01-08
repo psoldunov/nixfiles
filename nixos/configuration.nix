@@ -569,7 +569,6 @@ in {
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
     (import ./overlays/hyprprop.nix)
-    # (import ./overlays/vscode.nix)
     (import ./overlays/supabase-cli.nix)
     (self: super: {
       mpv = super.mpv.override {
