@@ -83,6 +83,7 @@
       "remote.SSH.useLocalServer" = false;
       "editor.formatOnPaste" = true;
       "editor.formatOnSave" = true;
+      "chat.commandCenter.enabled" = false;
     };
     extensions = with pkgs.vscode-extensions;
       [
