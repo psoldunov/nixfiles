@@ -123,8 +123,9 @@ in {
           key_press_enables_dpms = true;
         };
         experimental = {
-          wide_color_gamut = false;
-          hdr = true;
+          wide_color_gamut = true;
+          # hdr = true;
+          xx_color_management_v4 = true;
         };
         device = [
           {
