@@ -81,7 +81,6 @@
         prisma.prisma
         tamasfe.even-better-toml
         vincaslt.highlight-matching-tag
-        vscode-icons-team.vscode-icons
         # vscodevim.vim
         wix.vscode-import-cost
         yoavbls.pretty-ts-errors
