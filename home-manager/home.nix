@@ -281,10 +281,15 @@ in {
   };
 
   systemd.user.services.mpris-proxy = {
-    description = "Mpris proxy";
-    after = ["network.target" "sound.target"];
-    wantedBy = ["default.target"];
-    serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+    Unit = {
+      Description = "Mpris proxy";
+    };
+
+    Service = {
+      After = ["network.target" "sound.target"];
+      WantedBy = ["default.target"];
+      ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+    };
   };
 
   programs = {
