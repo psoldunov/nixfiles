@@ -31,10 +31,22 @@
       "[typescriptreact]" = {
         "editor.defaultFormatter" = "esbenp.prettier-vscode";
       };
+      "editor.fontFamily" = "JetBrainsMono Nerd Font";
+      "editor.fontSize" = 16;
       "editor.semanticHighlighting.enabled" = true;
       "terminal.integrated.minimumContrastRatio" = 1;
       "gopls" = {
         "ui.semanticTokens" = true;
+      };
+      "nix.enableLanguageServer" = true;
+      "nix.serverPath" = "nixd";
+      "nix.formatterPath" = "alejandra";
+      "nix.serverSettings" = {
+        "nixd" = {
+          "formatting" = {
+            "command" = ["${pkgs.alejandra}/bin/alejandra"];
+          };
+        };
       };
     };
     extensions = with pkgs.vscode-extensions;
