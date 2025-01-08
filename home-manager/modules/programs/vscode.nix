@@ -10,6 +10,8 @@
     enableExtensionUpdateCheck = false;
     userSettings = {
       "workbench.iconTheme" = "vscode-icons";
+      "workbench.colorTheme" = "Catppuccin Mocha";
+      "catppuccin.accentColor" = "pink";
     };
     extensions = with pkgs.vscode-extensions;
       [
