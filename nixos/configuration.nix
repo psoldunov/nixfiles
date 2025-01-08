@@ -719,7 +719,6 @@ in {
     nixpkgs-fmt
     lm_sensors
     bulky
-    vscode
     sops
     alejandra
     dive

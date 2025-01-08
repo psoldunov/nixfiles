@@ -198,6 +198,7 @@ in {
       hyprshade
       rpi-imager
       mysql-workbench
+      vscode
       postman
       geekbench
       deno
