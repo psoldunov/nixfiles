@@ -13,6 +13,7 @@
       "projectManager.sortList" = "Saved";
       "workbench.iconTheme" = "catppuccin-mocha";
       "workbench.colorTheme" = "Catppuccin Mocha";
+      "workbench.startupEditor" = "none";
       "catppuccin.accentColor" = "blue";
       "window.titleBarStyle" = "native";
       "editor.formatOnType" = true;
@@ -54,6 +55,25 @@
       };
       "window.menuBarVisibility" = "toggle";
       "window.customTitleBarVisibility" = "auto";
+      "emmet.syntaxProfiles" = {
+        "html" = {
+          "attr_quotes" = "single";
+        };
+        "js" = {
+          "attr_quotes" = "single";
+          "self_closing_tag" = true;
+        };
+        "jsx" = {
+          "attr_quotes" = "single";
+          "self_closing_tag" = true;
+        };
+        "xml" = {
+          "attr_quotes" = "single";
+        };
+      };
+      "editor.quickSuggestions" = {
+        "strings" = "on";
+      };
     };
     extensions = with pkgs.vscode-extensions;
       [
