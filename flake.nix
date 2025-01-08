@@ -2,9 +2,9 @@
   description = "Whopper Configuration ST";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
 
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -31,15 +31,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # home-manager = {
-    #   url = "github:nix-community/home-manager";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # home-manager = {
+    #   url = "github:nix-community/home-manager/release-24.11";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
@@ -56,7 +56,7 @@
     nixpkgs,
     ags,
     vscode-server,
-    nixpkgs-unstable,
+    nixpkgs-stable,
     spicetify-nix,
     nix-gaming,
     nix-flatpak,
@@ -64,13 +64,14 @@
     sops-nix,
     home-manager,
     apple-fonts,
+    hyprland,
     ...
   } @ inputs: let
     inherit (self) outputs;
 
     system = "x86_64-linux";
 
-    pkgs-unstable = import nixpkgs-unstable {
+    pkgs-stable = import nixpkgs-stable {
       inherit system;
       config = {
         allowUnfree = true;
@@ -94,7 +95,7 @@
           ghostty
           appleFonts
           globalSettings
-          pkgs-unstable
+          pkgs-stable
           ;
       };
       modules = [
@@ -103,6 +104,7 @@
         spicetify-nix.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
+        hyprland.nixosModules.default
         nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
@@ -112,7 +114,7 @@
               inherit
                 inputs
                 outputs
-                pkgs-unstable
+                pkgs-stable
                 globalSettings
                 ;
             };
@@ -126,6 +128,7 @@
               sops-nix.homeManagerModules.sops
               ags.homeManagerModules.default
               spicetify-nix.homeManagerModules.default
+              hyprland.homeManagerModules.default
             ];
           };
         }

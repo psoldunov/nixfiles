@@ -6,7 +6,7 @@
   lib,
   inputs,
   globalSettings,
-  pkgs-unstable,
+  pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -55,7 +55,7 @@ in {
       name = "Webflow";
       genericName = "Web Editor";
       icon = ./modules/desktop/assets/webflow.png;
-      exec = ''${pkgs-unstable.brave}/bin/brave --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
+      exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
@@ -64,7 +64,7 @@ in {
       name = "Figma";
       genericName = "Design Tool";
       icon = "figma";
-      exec = ''${pkgs-unstable.brave}/bin/brave --profile-directory=Default --new-window --app="https://www.figma.com/files" %U'';
+      exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://www.figma.com/files" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
@@ -98,7 +98,7 @@ in {
 
   programs.chromium = {
     enable = true;
-    package = pkgs-unstable.brave;
+    package = pkgs.brave;
     dictionaries = with pkgs; [
       hunspellDictsChromium.en_US
       hunspellDictsChromium.fr_FR
@@ -189,7 +189,7 @@ in {
 
   home.packages =
     (with pkgs; [
-      pkgs-unstable.whatsie
+      whatsie
       electrum
       ledger-live-desktop
       beets

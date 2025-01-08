@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  pkgs-unstable,
+  pkgs-stable,
   ...
 }: {
   programs.vscode = {

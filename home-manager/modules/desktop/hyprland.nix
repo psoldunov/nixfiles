@@ -4,14 +4,14 @@
   pkgs,
   lib,
   globalSettings,
-  pkgs-unstable,
+  pkgs-stable,
   ...
 }: let
   windowRules = import ./hypr-modules/windowrules.nix;
   keyBinds = import ./hypr-modules/keybinds.nix {
     inherit config;
     inherit pkgs;
-    inherit pkgs-unstable;
+    inherit pkgs-stable;
   };
 
   discordVencord = pkgs.discord-canary.override {
@@ -35,7 +35,7 @@
       ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
       ${pkgs.localsend}/bin/localsend_app --hidden
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
-      ${pkgs-unstable._1password-gui}/bin/1password --silent
+      ${pkgs._1password-gui}/bin/1password --silent
       ${discordVencord}/bin/discordcanary --start-minimized
       steam -silent
     "

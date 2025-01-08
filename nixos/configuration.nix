@@ -9,7 +9,7 @@
   appleFonts,
   ghostty,
   globalSettings,
-  pkgs-unstable,
+  # pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -194,7 +194,7 @@ in {
 
   hardware.graphics = {
     enable = true;
-    package = pkgs-hyprland.mesa.drivers;
+    # package = pkgs-hyprland.mesa.drivers;
     enable32Bit = true;
     # package32 = pkgs-hyprland.pkgsi686Linux.mesa.drivers;
     extraPackages = with pkgs; [
@@ -208,7 +208,7 @@ in {
     ];
   };
 
-  services.xserver.videoDrivers = ["amdgpu"];
+  # services.xserver.videoDrivers = ["amdgpu"];
 
   boot.swraid.enable = true;
   boot.swraid.mdadmConf = "MAILADDR=philipp@theswisscheese.com";
@@ -508,11 +508,9 @@ in {
   programs = {
     _1password = {
       enable = true;
-      package = pkgs-unstable._1password-cli;
     };
     _1password-gui = {
       enable = true;
-      package = pkgs-unstable._1password-gui;
       # Certain features, including CLI integration and system authentication support,
       # require enabling PolKit integration on some desktop environments (e.g. Plasma).
       polkitPolicyOwners = ["psoldunov"];
