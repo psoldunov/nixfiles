@@ -30,6 +30,10 @@ in {
       path = "${boundary}/casa-madera";
     }
     {
+      name = "El Jugo";
+      path = "${boundary}/eljugo";
+    }
+    {
       name = "ESAW";
       path = "${boundary}/esaw";
     }
