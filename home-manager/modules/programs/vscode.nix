@@ -5,7 +5,7 @@
   ...
 }: {
   programs.vscode = {
-    enable = false;
+    enable = true;
     enableUpdateCheck = false;
     enableExtensionUpdateCheck = false;
     extensions = with pkgs;
