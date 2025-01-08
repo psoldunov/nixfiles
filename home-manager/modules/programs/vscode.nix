@@ -8,6 +8,9 @@
     enable = true;
     enableUpdateCheck = false;
     enableExtensionUpdateCheck = false;
+    userSettings = {
+      "workbench.iconTheme" = "vscode-icons";
+    };
     extensions = with pkgs.vscode-extensions;
       [
         alefragnani.project-manager
