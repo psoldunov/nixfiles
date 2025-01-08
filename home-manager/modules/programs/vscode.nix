@@ -73,7 +73,7 @@
         formulahendry.auto-rename-tag
         github.vscode-github-actions
         gruntfuggly.todo-tree
-        golang.Go
+        golang.go
         kamadorueda.alejandra
         leonardssh.vscord
         mikestead.dotenv
