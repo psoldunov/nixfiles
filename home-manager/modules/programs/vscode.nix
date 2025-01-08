@@ -11,7 +11,7 @@
     userSettings = {
       "workbench.iconTheme" = "vscode-icons";
       "workbench.colorTheme" = "Catppuccin Mocha";
-      "catppuccin.accentColor" = "pink";
+      "catppuccin.accentColor" = "peach";
     };
     extensions = with pkgs.vscode-extensions;
       [
