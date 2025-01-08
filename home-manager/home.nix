@@ -280,18 +280,6 @@ in {
     };
   };
 
-  systemd.user.services.mpris-proxy = {
-    Unit = {
-      Description = "Mpris proxy";
-    };
-
-    Service = {
-      After = ["network.target" "sound.target"];
-      WantedBy = ["default.target"];
-      ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
-    };
-  };
-
   programs = {
     btop.enable = true;
     htop.enable = true;
