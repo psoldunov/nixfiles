@@ -12,7 +12,7 @@
       "workbench.iconTheme" = "vscode-icons";
       "workbench.colorTheme" = "Catppuccin Mocha";
       # "catppuccin.accentColor" = "peach";
-      "window.titleBarStyle" = "native";
+      "window.titleBarStyle" = "custom";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
       "editor.tabSize" = 2;
@@ -30,6 +30,11 @@
       };
       "[typescriptreact]" = {
         "editor.defaultFormatter" = "esbenp.prettier-vscode";
+      };
+      "editor.semanticHighlighting.enabled" = true;
+      "terminal.integrated.minimumContrastRatio" = 1;
+      "gopls" = {
+        "ui.semanticTokens" = true;
       };
     };
     extensions = with pkgs.vscode-extensions;
