@@ -16,5 +16,6 @@
     ./programs/spotifyd.nix
     ./programs/ghostty.nix
     ./programs/zed.nix
+    ./programs/vscode.nix
   ];
 }
