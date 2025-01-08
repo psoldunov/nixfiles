@@ -14,7 +14,7 @@
       "workbench.iconTheme" = "catppuccin-mocha";
       "workbench.colorTheme" = "Catppuccin Mocha";
       "catppuccin.accentColor" = "blue";
-      "window.titleBarStyle" = "custom";
+      "window.titleBarStyle" = "native";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
       "C_Cpp.default.compilerPath" = "/run/current-system/sw/bin/gcc";
