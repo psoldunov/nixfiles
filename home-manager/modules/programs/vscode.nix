@@ -11,7 +11,7 @@
     userSettings = {
       "projectManager.tags" = ["Personal" "Boundary" "System"];
       "projectManager.sortList" = "Saved";
-      "workbench.iconTheme" = "vscode-icons";
+      "workbench.iconTheme" = "catppuccin-mocha";
       "workbench.colorTheme" = "Catppuccin Mocha";
       "catppuccin.accentColor" = "blue";
       "window.titleBarStyle" = "custom";
