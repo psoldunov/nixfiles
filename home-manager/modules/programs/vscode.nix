@@ -74,6 +74,10 @@
       "editor.quickSuggestions" = {
         "strings" = "on";
       };
+      "javascript.format.enable" = true;
+      "javascript.format.semicolons" = "insert";
+      "typescript.format.enable" = true;
+      "typescript.format.semicolons" = "insert";
     };
     extensions = with pkgs.vscode-extensions;
       [
