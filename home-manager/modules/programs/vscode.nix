@@ -18,6 +18,13 @@
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
       "editor.tabSize" = 2;
+      "remote.SSH.remotePlatform" = {
+        "10.24.24.9" = "linux";
+        "10.24.24.2" = "linux";
+        "10.24.24.6" = "macOS";
+        "10.24.24.5" = "linux";
+        "10.24.24.7" = "linux";
+      };
       "[javascript]" = {
         "editor.defaultFormatter" = "esbenp.prettier-vscode";
       };
