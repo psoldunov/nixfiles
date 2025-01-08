@@ -565,9 +565,20 @@ in {
 
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  # nixpkgs.overlays = [
-
-  # ];
+  nixpkgs.overlays = [
+    inputs.catppuccin-vsc.overlays.default
+    (import ./overlays/hyprevents.nix)
+    (import ./overlays/hyprprop.nix)
+    # (import ./overlays/vscode.nix)
+    (import ./overlays/supabase-cli.nix)
+    (self: super: {
+      mpv = super.mpv.override {
+        scripts = [
+          self.mpvScripts.mpris
+        ];
+      };
+    })
+  ];
 
   programs.nano = {
     enable = true;

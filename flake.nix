@@ -73,21 +73,6 @@
 
     system = "x86_64-linux";
 
-    nixpkgs.overlays = [
-      inputs.catppuccin-vsc.overlays.default
-      (import ./overlays/hyprevents.nix)
-      (import ./overlays/hyprprop.nix)
-      # (import ./overlays/vscode.nix)
-      (import ./overlays/supabase-cli.nix)
-      (self: super: {
-        mpv = super.mpv.override {
-          scripts = [
-            self.mpvScripts.mpris
-          ];
-        };
-      })
-    ];
-
     pkgs-stable = import nixpkgs-stable {
       inherit system;
       config = {
