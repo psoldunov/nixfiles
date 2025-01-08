@@ -27,6 +27,7 @@
         "10.24.24.5" = "linux";
         "10.24.24.7" = "linux";
       };
+      "editor.defaultFormatter" = "esbenp.prettier-vscode";
       "[javascript]" = {
         "editor.defaultFormatter" = "esbenp.prettier-vscode";
       };
@@ -78,6 +79,8 @@
       "javascript.format.semicolons" = "insert";
       "typescript.format.enable" = true;
       "typescript.format.semicolons" = "insert";
+      "diffEditor.codeLens" = true;
+      "remote.SSH.useLocalServer" = false;
     };
     extensions = with pkgs.vscode-extensions;
       [
