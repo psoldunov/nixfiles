@@ -50,7 +50,7 @@
           name = "vscode-sanity";
           publisher = "sanity-io";
           version = "0.2.1";
-          sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          sha256 = "krIalO1/APMvCUXkSptnYWddUY1vjdXBkgfLVKwgiHA=";
         }
       ];
   };
