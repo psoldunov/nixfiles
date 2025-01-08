@@ -13,7 +13,6 @@
       "projectManager.sortList" = "Saved";
       "workbench.iconTheme" = "vscode-icons";
       "workbench.colorTheme" = "Catppuccin Mocha";
-      "catppuccin.accentColor" = "blue";
       "window.titleBarStyle" = "custom";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
