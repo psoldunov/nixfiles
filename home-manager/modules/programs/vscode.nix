@@ -12,6 +12,7 @@
       "workbench.iconTheme" = "vscode-icons";
       "workbench.colorTheme" = "Catppuccin Mocha";
       "catppuccin.accentColor" = "peach";
+      "window.titleBarStyle" = "native";
     };
     extensions = with pkgs.vscode-extensions;
       [
