@@ -19,7 +19,7 @@
           name = "figma-vscode-extension";
           publisher = "figma";
           version = "0.4.0";
-          sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          sha256 = "3D9z/eHoIAhySLabnhtQCNqSDh7b30XXaBrGeL0zZwA=";
         }
       ];
   };
