@@ -56,7 +56,9 @@
         alefragnani.project-manager
         bbenoist.nix
         bradlc.vscode-tailwindcss
-        catppuccin.catppuccin-vsc
+        (catppuccin.catppuccin-vsc.override {
+          accent = "blue";
+        })
         catppuccin.catppuccin-vsc-icons
         continue.continue
         denoland.vscode-deno
