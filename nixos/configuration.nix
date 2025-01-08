@@ -9,11 +9,11 @@
   appleFonts,
   ghostty,
   globalSettings,
-  # pkgs-stable,
+  pkgs-stable,
   ...
 }: let
   systemStateVersion = "23.11";
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  # pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -632,8 +632,8 @@ in {
     appleFonts.sf-mono-nerd
     appleFonts.sf-arabic
     appleFonts.ny
-    (nerdfonts.override {fonts = ["JetBrainsMono"];})
-    # nerd-fonts.jetbrains-mono
+    # (nerdfonts.override {fonts = ["JetBrainsMono"];})
+    nerd-fonts.jetbrains-mono
   ];
 
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
