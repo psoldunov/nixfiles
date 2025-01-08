@@ -26,6 +26,10 @@ in {
       path = "${boundary}/weho-news";
     }
     {
+      name = "Casa Madera";
+      path = "${boundary}/casa-madera";
+    }
+    {
       name = "ESAW";
       path = "${boundary}/esaw";
     }
