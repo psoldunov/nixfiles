@@ -122,6 +122,9 @@ in {
           vrr = 2;
           key_press_enables_dpms = true;
         };
+        experimental = {
+          wide_color_gamut = true;
+        };
         device = [
           {
             name = "by-tech-air75";
