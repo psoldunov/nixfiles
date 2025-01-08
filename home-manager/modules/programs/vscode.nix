@@ -77,7 +77,6 @@
         ms-vscode.cmake-tools
         ms-vscode.cpptools
         ms-vscode.cpptools-extension-pack
-
         ms-vscode-remote.remote-ssh
         prisma.prisma
         tamasfe.even-better-toml
@@ -104,7 +103,7 @@
           name = "remote-explorer";
           publisher = "ms-vscode";
           version = "0.4.3";
-          sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          sha256 = "772l0EnAWXLg53TxPZf93js/W49uozwdslmzNwD1vIk=";
         }
       ];
   };
