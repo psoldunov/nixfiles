@@ -647,7 +647,7 @@ in {
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # Enable the pipewire service.
   services.pipewire = {
