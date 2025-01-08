@@ -47,15 +47,9 @@
       "gopls" = {
         "ui.semanticTokens" = true;
       };
-      "nix.enableLanguageServer" = true;
-      "nix.serverPath" = "nixd";
-      "nix.formatterPath" = "${pkgs.alejandra}/bin/alejandra";
-      "nix.serverSettings" = {
-        "nixd" = {
-          "formatting" = {
-            "command" = ["${pkgs.alejandra}/bin/alejandra"];
-          };
-        };
+      "files.associations" = {
+        ".env*" = "dotenv";
+        "*.css" = "tailwindcss";
       };
     };
     extensions = with pkgs.vscode-extensions;
