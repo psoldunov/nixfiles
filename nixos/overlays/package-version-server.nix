@@ -8,29 +8,41 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    nativeBuildInputs = [super.patchelf]; # For patching the binary
-    buildInputs = [super.glibc super.zlib]; # Add likely shared library dependencies
+    nativeBuildInputs = [super.patchelf]; # For patching dynamic linker
+    buildInputs = [super.glibc super.zlib]; # Shared libraries
 
-    # Explicit unpackPhase since tarball doesn't create directories
+    # Unpack the tarball (include debug output for clarity)
     unpackPhase = ''
       mkdir source
       cd source
       tar -xzf "$src"
+
+      # Debug: Check tarball contents
+      echo "Unpacked tarball contents:"
+      ls -al
     '';
 
-    # installPhase wraps the binary
+    # Install binary with runtime dependencies
     installPhase = ''
       mkdir -p $out/bin
 
-      # Move the binary into $out/bin
-      mv source/* $out/bin/package-version-server
+      # Find the binary dynamically
+      binary=$(find . -type f -name "package-version-server")
+      if [ -z "$binary" ]; then
+        echo "Error: 'package-version-server' binary not found! Listing contents:"
+        ls -al
+        exit 1
+      fi
 
-      # Use patchelf to set the runtime dynamic linker and rpath
+      # Move the binary into $out/bin
+      mv "$binary" $out/bin/package-version-server
+
+      # Set dynamic linker and runtime paths
       patchelf --set-interpreter "$(cat ${super.glibc}/nix-support/dynamic-linker)" \
                --set-rpath "${super.glibc}/lib:${super.zlib}/lib" \
                $out/bin/package-version-server
 
-      # Optionally wrap the binary to ensure necessary environment variables
+      # Wrap binary to ensure runtime environment
       wrapProgram $out/bin/package-version-server \
         --set LD_LIBRARY_PATH "${super.glibc}/lib:${super.zlib}/lib"
     '';
