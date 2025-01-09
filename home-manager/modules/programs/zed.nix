@@ -62,10 +62,10 @@ in {
     recursive = true;
   };
 
-  home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
-    source = "${pkgs.package-version-server}/bin/package-version-server";
-    executable = true;
-  };
+  #   home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
+  #     source = "${pkgs.package-version-server}/bin/package-version-server";
+  #     executable = true;
+  #   };
 
   #   home.file."${config.xdg.configHome}/zed/settings.json" = {
   #     text = "${builtins.toJSON zedConfig}";
