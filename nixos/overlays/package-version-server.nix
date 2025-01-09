@@ -8,17 +8,30 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    # Explicit unpackPhase since the tarball doesn't unpack into a directory.
+    # Explicit unpackPhase to handle tarball with no directory
     unpackPhase = ''
       mkdir source
       cd source
       tar -xzf "$src"
     '';
 
-    # Adjust installPhase to handle unpacked contents.
+    # Updated installPhase to handle both single-file and multiple-file tarballs
     installPhase = ''
       mkdir -p $out/bin
-      mv source/* $out/bin/
+
+      # Move files if there's one or more
+      if [ -f * ]; then
+        # Single binary directly in the tarball
+        mv * $out/bin/
+      elif [ "$(ls -A | wc -l)" -eq 0 ]; then
+        echo "Error: No files found after unpacking tarball!"
+        exit 1
+      else
+        # Handle other cases if needed
+        echo "Unknown file structure! Listing unpacked contents:"
+        ls -l
+        exit 1
+      fi
     '';
 
     meta = {
