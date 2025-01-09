@@ -202,7 +202,7 @@ in {
       geekbench
       deno
       neovim
-      nodejs_20
+      nodejs_23
       obsidian
       pywal
       # spotify
