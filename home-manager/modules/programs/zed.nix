@@ -63,7 +63,7 @@ in {
   };
 
   home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
-    source = "${pkgs.nodejs_22}/bin/package-version-server";
+    source = "${pkgs.package-version-server}/bin/package-version-server";
     executable = true;
   };
 
