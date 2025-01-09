@@ -19,12 +19,10 @@ self: super: {
     '';
 
     installPhase = ''
-      ls -al .
-
       mkdir -p $out/bin
 
       # Move the binary to $out/bin
-      mv source/* $out/bin/
+      mv * $out/bin/
 
       # Patch the binary with NixOS's dynamic linker
       patchelf --set-interpreter "$(cat ${super.glibc}/nix-support/dynamic-linker)" \
