@@ -9,7 +9,7 @@ self: super: {
     };
 
     nativeBuildInputs = [
-      autoPatchelfHook
+      super.autoPatchelfHook
     ];
 
     sourceRoot = ".";
