@@ -69,6 +69,13 @@ in {
     executable = true;
   };
 
+  home.file."${config.xdg.dataHome}/zed/languages/languages/rust-analyzer/rust-analyzer-2025-01-08" = {
+    source = pkgs.writeShellScript "rust-analyzer-2025-01-08" ''
+      ${pkgs.rust-analyzer}/bin/rust-analyzer
+    '';
+    executable = true;
+  };
+
   #   home.file."${config.xdg.configHome}/zed/settings.json" = {
   #     text = "${builtins.toJSON zedConfig}";
   #   };
