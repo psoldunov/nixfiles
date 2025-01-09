@@ -12,6 +12,11 @@ self: super: {
       super.autoPatchelfHook
     ];
 
+    buildInputs = [
+      super.openssl # Provides libssl.so.3 and libcrypto.so.3
+      super.gcc.lib # Provides libgcc_s.so.1
+    ];
+
     sourceRoot = ".";
 
     installPhase = ''
