@@ -570,6 +570,7 @@ in {
     (import ./overlays/hyprevents.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/supabase-cli.nix)
+    (import ./overlays/package-version-server.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
@@ -743,6 +744,7 @@ in {
     sassc
     bat
     cloudflared
+    package-version-server
     hyprcursor
     run
     iperf
