@@ -1,5 +1,5 @@
 self: super: {
-  hyprevents = super.stdenv.mkDerivation rec {
+  package-version-server = super.stdenv.mkDerivation rec {
     pname = "package-version-server";
     version = "0.0.7";
 
