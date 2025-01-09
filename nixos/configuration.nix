@@ -744,7 +744,6 @@ in {
     sassc
     bat
     cloudflared
-    package-version-server
     hyprcursor
     run
     iperf
