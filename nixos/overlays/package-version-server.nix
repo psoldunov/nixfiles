@@ -8,13 +8,13 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    nativeBuildInputs = [
-      super.autoPatchelfHook
+    nativeBuildInputs = with super; [
+      autoPatchelfHook
     ];
 
-    buildInputs = [
-      super.openssl
-      super.libgcc
+    buildInputs = with super; [
+      openssl
+      libgcc
     ];
 
     sourceRoot = ".";
