@@ -11,8 +11,9 @@ self: super: {
     dontBuild = true;
 
     installPhase = ''
-      mkdir -p $out
-      tar -xzf $src -C $out
+      mkdir -p $out/bin
+      tar -xzf $src
+      mv package-version-server $out/bin/
     '';
 
     meta = {
