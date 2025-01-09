@@ -8,30 +8,31 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    # Explicit unpackPhase to handle tarball with no directory
+    nativeBuildInputs = [super.patchelf]; # For patching the binary
+    buildInputs = [super.glibc super.zlib]; # Add likely shared library dependencies
+
+    # Explicit unpackPhase since tarball doesn't create directories
     unpackPhase = ''
       mkdir source
       cd source
       tar -xzf "$src"
     '';
 
-    # Updated installPhase to handle both single-file and multiple-file tarballs
+    # installPhase wraps the binary
     installPhase = ''
       mkdir -p $out/bin
 
-      # Move files if there's one or more
-      if [ -f * ]; then
-        # Single binary directly in the tarball
-        mv * $out/bin/
-      elif [ "$(ls -A | wc -l)" -eq 0 ]; then
-        echo "Error: No files found after unpacking tarball!"
-        exit 1
-      else
-        # Handle other cases if needed
-        echo "Unknown file structure! Listing unpacked contents:"
-        ls -l
-        exit 1
-      fi
+      # Move the binary into $out/bin
+      mv source/* $out/bin/package-version-server
+
+      # Use patchelf to set the runtime dynamic linker and rpath
+      patchelf --set-interpreter "$(cat ${super.glibc}/nix-support/dynamic-linker)" \
+               --set-rpath "${super.glibc}/lib:${super.zlib}/lib" \
+               $out/bin/package-version-server
+
+      # Optionally wrap the binary to ensure necessary environment variables
+      wrapProgram $out/bin/package-version-server \
+        --set LD_LIBRARY_PATH "${super.glibc}/lib:${super.zlib}/lib"
     '';
 
     meta = {
