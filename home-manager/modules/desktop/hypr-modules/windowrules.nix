@@ -1,10 +1,5 @@
 {
   windowrule = [
-    "fullscreen,class:(steam_app_)(.*)$"
-    "noanim,class:(steam_app_)(.*)$"
-    "noborder,class:(steam_app_)(.*)$"
-    "noshadow,class:(steam_app_)(.*)$"
-    "noblur,class:(steam_app_)(.*)$"
     "noblur, kando"
     "opaque, kando"
     "size 100% 100%, kando"
@@ -15,6 +10,11 @@
   ];
 
   windowrulev2 = [
+    ''fullscreen,class:^steam_app\d+$''
+    ''noanim,class:^steam_app\d+$''
+    ''noborder,class:^steam_app\d+$''
+    ''noshadow,class:^steam_app\d+$''
+    ''noblur,class:^steam_app\d+$''
     "rounding 4,title:^(Firefox — Sharing Indicator)$"
     "noborder,title:^(Firefox — Sharing Indicator)$"
     "move 3760 2,title:^(Firefox — Sharing Indicator)$"
