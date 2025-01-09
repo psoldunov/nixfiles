@@ -16,7 +16,7 @@ self: super: {
       mkdir source
       cd source
       tar -xzf "$src" # Extract the tarball into the "source" directory
-      ls -al source
+      ls -al .
     '';
 
     installPhase = ''
