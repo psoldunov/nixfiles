@@ -22,7 +22,7 @@ self: super: {
       mkdir -p $out/bin
 
       # Move the binary to $out/bin
-      mv source/package-version-server $out/bin/package-version-server
+      mv source/* $out/bin/
 
       # Patch the binary with NixOS's dynamic linker
       patchelf --set-interpreter "$(cat ${super.glibc}/nix-support/dynamic-linker)" \
