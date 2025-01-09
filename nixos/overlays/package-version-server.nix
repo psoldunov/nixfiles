@@ -8,8 +8,6 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    dontBuild = true;
-
     # Explicit unpackPhase since the tarball doesn't unpack into a directory.
     unpackPhase = ''
       mkdir source
