@@ -10,10 +10,17 @@ self: super: {
 
     dontBuild = true;
 
+    # Explicit unpackPhase since the tarball doesn't unpack into a directory.
+    unpackPhase = ''
+      mkdir source
+      cd source
+      tar -xzf "$src"
+    '';
+
+    # Adjust installPhase to handle unpacked contents.
     installPhase = ''
       mkdir -p $out/bin
-      tar -xzf $src
-      mv package-version-server $out/bin/
+      mv source/* $out/bin/
     '';
 
     meta = {
