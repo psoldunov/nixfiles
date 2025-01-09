@@ -19,11 +19,11 @@ self: super: {
       url = "https://github.com/zed-industries/package-version-server/releases/download/v${version}/package-version-server-${arch}.tar.gz";
       # Update `sha256` based on architecture-specific tarballs.
       sha256 =
-        if stdenv.system == "x86_64-linux"
+        if super.stdenv.system == "x86_64-linux"
         then "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU="
-        else if stdenv.system == "x86_64-darwin"
+        else if super.stdenv.system == "x86_64-darwin"
         then "03p6h2ls3687f73533yx7mc8imnb2bjdxg50006ycn9i9a6b76p6"
-        else if stdenv.system == "aarch64-darwin"
+        else if super.stdenv.system == "aarch64-darwin"
         then "0ig15kbavjlxa9777yxa4kcbmp0akh8fjkfd7crdc2pjdf2zy5gp"
         else throw "Unsupported platform: ${super.stdenv.system}";
     };
