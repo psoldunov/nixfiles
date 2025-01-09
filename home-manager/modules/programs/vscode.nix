@@ -84,6 +84,7 @@
       "editor.formatOnPaste" = true;
       "editor.formatOnSave" = true;
       "chat.commandCenter.enabled" = false;
+      "explorer.confirmDragAndDrop" = false;
     };
     extensions = with pkgs.vscode-extensions;
       [
