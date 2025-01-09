@@ -16,10 +16,11 @@ self: super: {
       mkdir source
       cd source
       tar -xzf "$src" # Extract the tarball into the "source" directory
-      ls -al .
     '';
 
     installPhase = ''
+      ls -al .
+
       mkdir -p $out/bin
 
       # Move the binary to $out/bin
