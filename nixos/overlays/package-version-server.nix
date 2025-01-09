@@ -8,26 +8,16 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    nativeBuildInputs = [super.patchelf]; # For patching the binary
-    buildInputs = [super.glibc super.zlib]; # Dependencies for runtime (adjust as needed)
+    nativeBuildInputs = [
+      autoPatchelfHook
+    ];
 
-    # Explicit unpackPhase since the tarball contains only a single binary
-    unpackPhase = ''
-      mkdir source
-      cd source
-      tar -xzf "$src" # Extract the tarball into the "source" directory
-    '';
+    sourceRoot = ".";
 
     installPhase = ''
-      mkdir -p $out/bin
-
-      # Move the binary to $out/bin
-      mv * $out/bin/
-
-      # Patch the binary with NixOS's dynamic linker
-      patchelf --set-interpreter "$(cat ${super.glibc}/nix-support/dynamic-linker)" \
-               --set-rpath "${super.glibc}/lib:${super.zlib}/lib" \
-               $out/bin/package-version-server
+      runHook preInstall
+      install -m755 -D package-version-server $out/bin/package-version-server
+      runHook postInstall
     '';
 
     meta = {
