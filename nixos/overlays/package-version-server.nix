@@ -8,43 +8,26 @@ self: super: {
       sha256 = "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU=";
     };
 
-    nativeBuildInputs = [super.patchelf]; # For patching dynamic linker
-    buildInputs = [super.glibc super.zlib]; # Shared libraries
+    nativeBuildInputs = [super.patchelf]; # For patching the binary
+    buildInputs = [super.glibc super.zlib]; # Dependencies for runtime (adjust as needed)
 
-    # Unpack the tarball (include debug output for clarity)
+    # Explicit unpackPhase since the tarball contains only a single binary
     unpackPhase = ''
       mkdir source
       cd source
-      tar -xzf "$src"
-
-      # Debug: Check tarball contents
-      echo "Unpacked tarball contents:"
-      ls -al
+      tar -xzf "$src" # Extract the tarball into the "source" directory
     '';
 
-    # Install binary with runtime dependencies
     installPhase = ''
       mkdir -p $out/bin
 
-      # Find the binary dynamically
-      binary=$(find . -type f -name "package-version-server")
-      if [ -z "$binary" ]; then
-        echo "Error: 'package-version-server' binary not found! Listing contents:"
-        ls -al
-        exit 1
-      fi
+      # Move the binary to $out/bin
+      mv source/package-version-server $out/bin/package-version-server
 
-      # Move the binary into $out/bin
-      mv "$binary" $out/bin/package-version-server
-
-      # Set dynamic linker and runtime paths
+      # Patch the binary with NixOS's dynamic linker
       patchelf --set-interpreter "$(cat ${super.glibc}/nix-support/dynamic-linker)" \
                --set-rpath "${super.glibc}/lib:${super.zlib}/lib" \
                $out/bin/package-version-server
-
-      # Wrap binary to ensure runtime environment
-      wrapProgram $out/bin/package-version-server \
-        --set LD_LIBRARY_PATH "${super.glibc}/lib:${super.zlib}/lib"
     '';
 
     meta = {
