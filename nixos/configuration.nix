@@ -369,7 +369,7 @@ in {
     packages = [
       "com.github.tchx84.Flatseal"
       "com.steamgriddb.SGDBoop"
-      "io.freetubeapp.FreeTube"
+      # "io.freetubeapp.FreeTube"
     ];
     overrides = {
       global = {
@@ -862,6 +862,7 @@ in {
     calibre
     unzip
     woff2
+    freetube
     grim
     xdg-utils
     pass
