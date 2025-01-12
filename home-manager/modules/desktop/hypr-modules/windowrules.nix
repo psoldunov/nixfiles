@@ -59,6 +59,7 @@
     "float,class:polkit-gnome-authentication-agent-1"
     "pin,class:polkit-gnome-authentication-agent-1"
     "dimaround,class:polkit-gnome-authentication-agent-1"
+    "float,initialClass:(mpv)"
     "pin,initialClass:(mpv)"
     "rounding 0,initialClass:(mpv)"
     "pin,class:(firefox),title:(Picture-in-Picture)$"
