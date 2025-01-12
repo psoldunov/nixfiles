@@ -380,6 +380,7 @@ in {
             "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
             "/run/current-system/sw/share:ro"
             "/mnt/Games/Emulation:rw"
+            "/run/current-system/sw/bin/:ro"
           ];
           sockets = ["wayland" "!x11" "!fallback-x11"];
         };
