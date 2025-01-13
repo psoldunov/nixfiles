@@ -202,6 +202,7 @@ in {
       geekbench
       deno
       neovim
+      zoom-us
       nodejs_23
       obsidian
       pywal
