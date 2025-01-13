@@ -112,6 +112,7 @@
         ms-vscode.cpptools
         ms-vscode.cpptools-extension-pack
         ms-vscode-remote.remote-ssh
+        christian-kohler.npm-intellisense
         prisma.prisma
         tamasfe.even-better-toml
         vincaslt.highlight-matching-tag
