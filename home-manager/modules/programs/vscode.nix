@@ -86,6 +86,7 @@
       "chat.commandCenter.enabled" = false;
       "explorer.confirmDragAndDrop" = false;
       "explorer.confirmDelete" = false;
+      "editor.wordWrap" = "on";
     };
     extensions = with pkgs.vscode-extensions;
       [
