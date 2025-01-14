@@ -39,8 +39,6 @@ const focusWindow = (name) => {
     (c) => c.class === (name === "spotify" ? "Spotify" : name)
   )?.address;
 
-  console.log(address);
-
   if (address) {
     hyprland.sendMessage(`dispatch focuswindow address:${address}`);
   }
@@ -51,8 +49,6 @@ export default function Media() {
 
   const Player = (player) => {
     if (exclude.includes(player.name)) return null;
-
-    // console.log(player);
 
     const progress = Variable(0, {
       poll: [
@@ -90,9 +86,6 @@ export default function Media() {
         button.on_scroll_up = () => previous();
         button.onClicked = () => playPause();
         button.on_secondary_click = () => {
-          // hyprland.sendMessage(
-          //   `dispatch focuswindow ${name === "spotify" ? "Spotify" : name}`
-          // );
           focusWindow(name);
         };
         button.class_names = ["media-button", name];
