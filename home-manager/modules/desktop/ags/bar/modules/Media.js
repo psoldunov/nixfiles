@@ -3,6 +3,47 @@ const hyprland = await Service.import("hyprland");
 
 /** @param {import('types/service/mpris').MprisPlayer} player */
 
+/*
+[{
+    "address": "0x26c048d0",
+    "mapped": true,
+    "hidden": false,
+    "at": [3840, 2160],
+    "size": [100, 100],
+    "workspace": {
+        "id": 1,
+        "name": "1"
+    },
+    "floating": true,
+    "pseudo": false,
+    "monitor": 0,
+    "class": "xwaylandvideobridge",
+    "title": "Wayland to X Recording bridge — Xwayland Video Bridge",
+    "initialClass": "xwaylandvideobridge",
+    "initialTitle": "Wayland to X Recording bridge — Xwayland Video Bridge",
+    "pid": 15541,
+    "xwayland": true,
+    "pinned": false,
+    "fullscreen": 0,
+    "fullscreenClient": 0,
+    "grouped": [],
+    "tags": [],
+    "swallowing": "0x0",
+    "focusHistoryID": 7,
+    "inhibitingIdle": false
+}]
+    */
+
+const focusWindow = (name) => {
+  const address = JSON.parse(hyprland.sendMessage("clients -j")).find(
+    (c) => c.title === (name === "spotify" ? "Spotify" : name)
+  )?.address;
+
+  if (address) {
+    hyprland.sendMessage(`dispatch focuswindow address:${address}`);
+  }
+};
+
 export default function Media() {
   const exclude = ["spotifyd", "firefox", "zen", "chromium"];
 
@@ -47,9 +88,10 @@ export default function Media() {
         button.on_scroll_up = () => previous();
         button.onClicked = () => playPause();
         button.on_secondary_click = () => {
-          hyprland.sendMessage(
-            `dispatch focuswindow ${name === "spotify" ? "Spotify" : name}`
-          );
+          // hyprland.sendMessage(
+          //   `dispatch focuswindow ${name === "spotify" ? "Spotify" : name}`
+          // );
+          focusWindow(name);
         };
         button.class_names = ["media-button", name];
         button.child = Widget.Box({
