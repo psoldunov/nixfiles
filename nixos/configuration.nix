@@ -948,7 +948,7 @@ in {
     );
   };
 
-  services.expressvpn.enable = true;
+  services.expressvpn.enable = false;
 
   programs.steam = {
     enable = true;
