@@ -97,13 +97,15 @@
           accent = "blue";
         })
         catppuccin.catppuccin-vsc-icons
-        continue.continue
+        # continue.continue
         denoland.vscode-deno
         eamodio.gitlens
         esbenp.prettier-vscode
         formulahendry.auto-close-tag
         formulahendry.auto-rename-tag
         github.vscode-github-actions
+        github.copilot
+        github.copilot-chat
         gruntfuggly.todo-tree
         golang.go
         kamadorueda.alejandra
