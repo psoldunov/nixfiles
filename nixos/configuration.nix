@@ -415,43 +415,43 @@ in {
     containerd.enable = true;
   };
 
-  # services.ollama = {
-  #   enable = true;
-  #   acceleration = "rocm";
-  #   rocmOverrideGfx = "11.0.0";
-  #   openFirewall = true;
-  #   environmentVariables = {
-  #     OLLAMA_ORIGINS = "app://obsidian.md*";
-  #     OLLAMA_GPU_OVERHEAD = "2147483648";
-  #   };
-  #   loadModels = [
-  #     "deepseek-coder-v2:16b-lite-base-q4_K_M"
-  #     "mxbai-embed-large:latest"
-  #     "codestral:latest"
-  #     "llama3.2:latest"
-  #     "nomic-embed-text:latest"
-  #   ];
-  # };
+  services.ollama = {
+    enable = true;
+    acceleration = "rocm";
+    rocmOverrideGfx = "11.0.0";
+    openFirewall = true;
+    environmentVariables = {
+      OLLAMA_ORIGINS = "app://obsidian.md*";
+      OLLAMA_GPU_OVERHEAD = "2147483648";
+    };
+    loadModels = [
+      "deepseek-coder-v2:16b-lite-base-q4_K_M"
+      "mxbai-embed-large:latest"
+      "codestral:latest"
+      "llama3.2:latest"
+      "nomic-embed-text:latest"
+    ];
+  };
 
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
-      ollama = {
-        image = "ollama/ollama:rocm";
-        ports = ["11434:11434"];
-        extraOptions = [
-          "--device=/dev/dri:/dev/dri"
-          "--device=/dev/kfd:/dev/kfd"
-        ];
-        environment = {
-          HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-          OLLAMA_ORIGINS = "app://obsidian.md*";
-          OLLAMA_GPU_OVERHEAD = "2147483648";
-        };
-        volumes = [
-          "ollama:/root/.ollama"
-        ];
-      };
+      # ollama = {
+      #   image = "ollama/ollama:rocm";
+      #   ports = ["11434:11434"];
+      #   extraOptions = [
+      #     "--device=/dev/dri:/dev/dri"
+      #     "--device=/dev/kfd:/dev/kfd"
+      #   ];
+      #   environment = {
+      #     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
+      #     OLLAMA_ORIGINS = "app://obsidian.md*";
+      #     OLLAMA_GPU_OVERHEAD = "2147483648";
+      #   };
+      #   volumes = [
+      #     "ollama:/root/.ollama"
+      #   ];
+      # };
       whisper-rocm = {
         image = "psoldunov/openai-whisper-rocm:latest";
         extraOptions = [

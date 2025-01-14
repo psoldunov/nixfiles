@@ -98,7 +98,7 @@
     thunar = "nemo";
     # ssh = "kitten ssh";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
-    ollama = "docker exec -it ollama ollama";
+    # ollama = "docker exec -it ollama ollama";
   };
 
   programs.bash = {
