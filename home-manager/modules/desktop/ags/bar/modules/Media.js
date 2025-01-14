@@ -36,7 +36,7 @@ const hyprland = await Service.import("hyprland");
 
 const focusWindow = (name) => {
   const address = hyprland.clients.find(
-    (c) => c.title === (name === "spotify" ? "Spotify" : name)
+    (c) => c.class === (name === "spotify" ? "Spotify" : name)
   )?.address;
 
   console.log(address);
