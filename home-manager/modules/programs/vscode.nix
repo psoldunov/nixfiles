@@ -83,7 +83,7 @@
       "remote.SSH.useLocalServer" = false;
       "editor.formatOnPaste" = true;
       "editor.formatOnSave" = true;
-      "chat.commandCenter.enabled" = false;
+      # "chat.commandCenter.enabled" = false;
       "explorer.confirmDragAndDrop" = false;
       "explorer.confirmDelete" = false;
       "editor.wordWrap" = "on";
