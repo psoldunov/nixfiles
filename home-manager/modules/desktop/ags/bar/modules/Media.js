@@ -35,15 +35,15 @@ const hyprland = await Service.import("hyprland");
     */
 
 const focusWindow = (name) => {
-  const address = JSON.parse(hyprland.sendMessage("clients -j")).find(
-    (c) => c.title === (name === "spotify" ? "Spotify" : name)
-  )?.address;
+  console.log(JSON.parse(hyprland.sendMessage("clients -j")));
 
-  console.log(address);
-
-  if (address) {
-    hyprland.sendMessage(`dispatch focuswindow address:${address}`);
-  }
+  // const address = JSON.parse(hyprland.sendMessage("clients -j")).find(
+  //   (c) => c.title === (name === "spotify" ? "Spotify" : name)
+  // )?.address;
+  // console.log(address);
+  // if (address) {
+  //   hyprland.sendMessage(`dispatch focuswindow address:${address}`);
+  // }
 };
 
 export default function Media() {
