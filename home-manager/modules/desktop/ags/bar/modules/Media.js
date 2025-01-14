@@ -39,6 +39,8 @@ const focusWindow = (name) => {
     (c) => c.title === (name === "spotify" ? "Spotify" : name)
   )?.address;
 
+  console.log(address);
+
   if (address) {
     hyprland.sendMessage(`dispatch focuswindow address:${address}`);
   }
