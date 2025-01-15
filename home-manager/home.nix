@@ -193,6 +193,7 @@ in {
   home.packages =
     (with pkgs; [
       whatsapp-for-linux
+      zapzap
       electrum
       ledger-live-desktop
       beets
