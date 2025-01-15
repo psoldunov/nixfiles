@@ -45,7 +45,7 @@ const focusWindow = (name) => {
 };
 
 export default function Media() {
-  const exclude = ["spotifyd", "firefox", "zen", "chromium"];
+  const exclude = [/spotifyd/, /firefox/, /zen/, /chromium/, /brave.instance/];
 
   const Player = (player) => {
     if (exclude.includes(player.name)) return null;
