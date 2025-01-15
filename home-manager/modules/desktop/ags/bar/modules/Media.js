@@ -45,10 +45,10 @@ const focusWindow = (name) => {
 };
 
 export default function Media() {
-  const exclude = ["spotifyd", "firefox", "zen", "chromium", "brave.instance"];
+  const excludePatterns = [/spotifyd/, /firefox/, /zen/, /chromium/, /brave/];
 
   const Player = (player) => {
-    if (exclude.some((name) => new RegExp(name, "i").test(player.name)))
+    if (excludePatterns.some((pattern) => pattern.test(player.name)))
       return null;
 
     const progress = Variable(0, {
