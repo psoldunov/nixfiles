@@ -192,7 +192,7 @@ in {
 
   home.packages =
     (with pkgs; [
-      whatsie
+      whatsapp-for-linux
       electrum
       ledger-live-desktop
       beets
