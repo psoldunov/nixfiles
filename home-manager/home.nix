@@ -229,6 +229,7 @@ in {
       telegram-desktop
       slack
       protonup-qt
+      teams
       protonup-ng
       via
       rpcs3
