@@ -202,6 +202,7 @@ in {
       vaapiVdpau
       libvdpau-va-gl
       libGL
+      vulkan-hdr-layer-kwin6
     ];
     extraPackages32 = with pkgs; [
       driversi686Linux.libvdpau-va-gl
