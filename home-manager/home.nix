@@ -69,6 +69,18 @@ in {
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
+    memos = {
+      name = "Memos";
+      genericName = "Notes Manager";
+      icon = pkgs.fetchurl {
+        url = "https://memos.theswisscheese.com/logo.webp";
+        sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      };
+      exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://memos.theswisscheese.com" %U'';
+      terminal = false;
+      mimeType = ["x-scheme-handler/memos"];
+      categories = ["Productivity"];
+    };
     # figma = {
     #   name = "Figma";
     #   genericName = "Design Tool";
