@@ -767,6 +767,7 @@ in {
     hwdata
     pciutils
     cliphist
+    vulkan-hdr-layer-kwin6
     webp-pixbuf-loader
     supabase-cli
     kdiskmark
