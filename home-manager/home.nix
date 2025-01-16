@@ -79,7 +79,7 @@ in {
       exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://memos.theswisscheese.com" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/memos"];
-      categories = ["Productivity"];
+      categories = ["Office"];
     };
     # figma = {
     #   name = "Figma";
