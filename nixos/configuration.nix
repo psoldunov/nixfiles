@@ -950,7 +950,7 @@ in {
     );
   };
 
-  services.expressvpn.enable = false;
+  services.expressvpn.enable = true;
 
   programs.steam = {
     enable = true;
