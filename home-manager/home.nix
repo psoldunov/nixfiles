@@ -251,6 +251,7 @@ in {
       shipments
       ferdium
       lollypop
+      jamesdsp
       steam-rom-manager
       mediawriter
       prismlauncher
