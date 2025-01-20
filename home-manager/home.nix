@@ -81,6 +81,23 @@ in {
       mimeType = ["x-scheme-handler/memos"];
       categories = ["Office"];
     };
+    motrix = {
+      name = "Motrix";
+      exec = "${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto --no-sandbox %U";
+      terminal = false;
+      icon = "motrix";
+      comment = "A full-featured download manager";
+      mimeType = [
+        "application/x-bittorrent"
+        "x-scheme-handler/magnet"
+        "application/x-bittorrent"
+        "x-scheme-handler/mo"
+        "x-scheme-handler/motrix"
+        "x-scheme-handler/magnet"
+        "x-scheme-handler/thunder"
+      ];
+      categories = ["Network"];
+    };
     # figma = {
     #   name = "Figma";
     #   genericName = "Design Tool";
