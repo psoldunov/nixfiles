@@ -200,12 +200,17 @@ in {
     extraPackages = with pkgs; [
       libva
       vaapiVdpau
+      libva-vdpau-driver
+      vdpauinfo
+      libvdpau
       libvpx
       libvdpau-va-gl
       libGL
       vulkan-hdr-layer-kwin6
     ];
     extraPackages32 = with pkgs; [
+      driversi686Linux.libva-vdpau-driver
+      driversi686Linux.vdpauinfo
       driversi686Linux.libvdpau-va-gl
     ];
   };
