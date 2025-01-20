@@ -200,6 +200,7 @@ in {
     extraPackages = with pkgs; [
       libva
       vaapiVdpau
+      libvpx
       libvdpau-va-gl
       libGL
       vulkan-hdr-layer-kwin6
