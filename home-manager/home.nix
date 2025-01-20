@@ -83,6 +83,7 @@ in {
     };
     motrix = {
       name = "Motrix";
+      genericName = "Download Manager";
       exec = "${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto --no-sandbox %U";
       terminal = false;
       icon = "motrix";
