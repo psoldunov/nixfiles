@@ -259,6 +259,7 @@ in {
       picard
       telegram-desktop
       slack
+      code-cursor
       protonup-qt
       teams-for-linux
       protonup-ng
