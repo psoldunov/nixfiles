@@ -5,6 +5,7 @@
   ...
 }: let
   enableContinue = false;
+  enableVimMode = false;
 in {
   programs.vscode = {
     enable = true;
@@ -121,10 +122,18 @@ in {
         tamasfe.even-better-toml
         vincaslt.highlight-matching-tag
         dbaeumer.vscode-eslint
-        # vscodevim.vim
+
         wix.vscode-import-cost
         yoavbls.pretty-ts-errors
       ]
+      ++ (
+        if enableVimMode
+        then
+          with pkgs.vscode-extensions; [
+            vscodevim.vim
+          ]
+        else []
+      )
       ++ (
         if enableContinue
         then
