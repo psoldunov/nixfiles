@@ -6,6 +6,7 @@
 }: let
   enableContinue = false;
   enableVimMode = false;
+  catppuccinAccent = "blue";
 in {
   programs.vscode = {
     enable = true;
@@ -17,7 +18,7 @@ in {
       "workbench.iconTheme" = "catppuccin-mocha";
       "workbench.colorTheme" = "Catppuccin Mocha";
       "workbench.startupEditor" = "none";
-      "catppuccin.accentColor" = "blue";
+      "catppuccin.accentColor" = catppuccinAccent;
       "window.titleBarStyle" = "native";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
@@ -98,7 +99,7 @@ in {
         bbenoist.nix
         bradlc.vscode-tailwindcss
         (catppuccin.catppuccin-vsc.override {
-          accent = "blue";
+          accent = catppuccinAccent;
         })
         catppuccin.catppuccin-vsc-icons
         denoland.vscode-deno
@@ -122,7 +123,6 @@ in {
         tamasfe.even-better-toml
         vincaslt.highlight-matching-tag
         dbaeumer.vscode-eslint
-
         wix.vscode-import-cost
         yoavbls.pretty-ts-errors
       ]
