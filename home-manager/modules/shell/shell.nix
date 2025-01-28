@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   home.sessionVariables = {
@@ -98,7 +99,7 @@
     thunar = "nemo";
     # ssh = "kitten ssh";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
-    # ollama = "docker exec -it ollama ollama";
+    ollama = lib.mkIf globalSettings.ollamaDocker "docker exec -it ollama ollama";
   };
 
   programs.bash = {
