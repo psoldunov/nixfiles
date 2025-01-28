@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  globalSettings,
   lib,
   ...
 }: {
@@ -99,7 +100,6 @@
     thunar = "nemo";
     # ssh = "kitten ssh";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
-    ollama = lib.mkIf globalSettings.ollamaDocker "docker exec -it ollama ollama";
   };
 
   programs.bash = {
