@@ -3,7 +3,9 @@
   pkgs,
   pkgs-stable,
   ...
-}: {
+}: let
+  enableContinue = true;
+in {
   programs.vscode = {
     enable = true;
     enableUpdateCheck = false;
@@ -83,7 +85,8 @@
       "remote.SSH.useLocalServer" = false;
       "editor.formatOnPaste" = true;
       "editor.formatOnSave" = true;
-      "chat.commandCenter.enabled" = false;
+      "chat.commandCenter.enabled" =
+        !enableContinue;
       "explorer.confirmDragAndDrop" = false;
       "explorer.confirmDelete" = false;
       "editor.wordWrap" = "on";
@@ -97,15 +100,12 @@
           accent = "blue";
         })
         catppuccin.catppuccin-vsc-icons
-        continue.continue
         denoland.vscode-deno
         eamodio.gitlens
         esbenp.prettier-vscode
         formulahendry.auto-close-tag
         formulahendry.auto-rename-tag
         github.vscode-github-actions
-        # github.copilot
-        # github.copilot-chat
         gruntfuggly.todo-tree
         golang.go
         kamadorueda.alejandra
@@ -125,6 +125,18 @@
         wix.vscode-import-cost
         yoavbls.pretty-ts-errors
       ]
+      ++ (
+        if enableContinue
+        then
+          with pkgs.vscode-extensions; [
+            continue.continue
+          ]
+        else
+          with pkgs.vscode-extensions; [
+            github.copilot
+            github.copilot-chat
+          ]
+      )
       ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
           name = "figma-vscode-extension";
