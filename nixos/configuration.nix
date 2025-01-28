@@ -924,7 +924,7 @@ in {
     ++ (
       if globalSettings.ollamaDocker
       then [
-        (writeShellScriptBin "ollama" "docker exec -it ollama ollama")
+        (pkgs.writeShellScriptBin "ollama" "docker exec -it ollama ollama")
       ]
       else []
     );
