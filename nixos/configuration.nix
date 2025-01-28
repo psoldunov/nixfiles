@@ -423,7 +423,7 @@ in {
   };
 
   services.ollama = {
-    enable = true;
+    enable = !globalSettings.ollamaDocker;
     acceleration = "rocm";
     rocmOverrideGfx = "11.0.0";
     openFirewall = true;
@@ -443,22 +443,23 @@ in {
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
-      # ollama = {
-      #   image = "ollama/ollama:rocm";
-      #   ports = ["11434:11434"];
-      #   extraOptions = [
-      #     "--device=/dev/dri:/dev/dri"
-      #     "--device=/dev/kfd:/dev/kfd"
-      #   ];
-      #   environment = {
-      #     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-      #     OLLAMA_ORIGINS = "app://obsidian.md*";
-      #     OLLAMA_GPU_OVERHEAD = "2147483648";
-      #   };
-      #   volumes = [
-      #     "ollama:/root/.ollama"
-      #   ];
-      # };
+      ollama = lib.mkIf globalSettings.ollamaDocker {
+        image = "ollama/ollama:rocm";
+        ports = ["11434:11434"];
+        extraOptions = [
+          "--device=/dev/dri:/dev/dri"
+          "--device=/dev/kfd:/dev/kfd"
+        ];
+        environment = {
+          HSA_OVERRIDE_GFX_VERSION = "11.0.0";
+          OLLAMA_ORIGINS = "app://obsidian.md*";
+          OLLAMA_GPU_OVERHEAD = "2147483648";
+          OLLAMA_KEEP_ALIVE = "1m";
+        };
+        volumes = [
+          "/var/lib/private/ollama:/root/.ollama"
+        ];
+      };
       whisper-rocm = {
         image = "psoldunov/openai-whisper-rocm:latest";
         extraOptions = [
@@ -577,6 +578,7 @@ in {
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
     (import ./overlays/hyprprop.nix)
+    (import ./overlays/bun.nix)
     (import ./overlays/supabase-cli.nix)
     (import ./overlays/package-version-server.nix)
     (self: super: {

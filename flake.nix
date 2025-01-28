@@ -84,6 +84,7 @@
 
     globalSettings = {
       enableHyprland = true;
+      ollamaDocker = true;
     };
   in {
     formatter = nixpkgs.pkgs.alejandra;
