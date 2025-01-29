@@ -19,22 +19,26 @@ in {
     }
     {
       name = "fullsteam";
-      path = "${boundary}/fullsteam-next";
+      path = "${boundary}/fullsteam-onboarding";
+    }
+    {
+      name = "angrymob-next";
+      path = "${boundary}/angrymob-next";
     }
     {
       name = "weho-news";
       path = "${boundary}/weho-news";
     }
     {
-      name = "Casa Madera";
+      name = "casa-madera";
       path = "${boundary}/casa-madera";
     }
     {
-      name = "El Jugo";
+      name = "eljugo";
       path = "${boundary}/eljugo";
     }
     {
-      name = "ESAW";
+      name = "esaw";
       path = "${boundary}/esaw";
     }
     {
