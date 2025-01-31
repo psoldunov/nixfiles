@@ -670,7 +670,6 @@ in {
     (with pkgs; [
       catppuccinPackage
       papirus-icon-theme
-      catppuccin-cursors.mochaDark
       abcde
       cddiscid
       libmusicbrainz5

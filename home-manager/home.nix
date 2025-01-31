@@ -264,7 +264,6 @@ in {
       protonup-ng
       via
       rpcs3
-      catppuccin-cursors.mochaDark
       ookla-speedtest
       (discord-canary.override {
         withOpenASAR = true;
