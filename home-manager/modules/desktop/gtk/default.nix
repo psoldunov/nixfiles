@@ -23,7 +23,7 @@ in {
 
     cursorTheme = lib.mkIf globalSettings.enableHyprland {
       name = "catppuccin-mocha-dark-cursors";
-      package = pkgs.catppuccin-cursors.mochaDark;
+      # package = pkgs.catppuccin-cursors.mochaDark;
       size = 24;
     };
 
