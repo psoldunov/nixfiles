@@ -6,6 +6,8 @@
 }: let
   inherit (config.lib.formats.rasi) mkLiteral;
 in {
+  catppuccin.rofi.enable = false;
+
   programs.rofi = {
     enable = globalSettings.enableHyprland;
     package = pkgs.rofi-wayland.override {
