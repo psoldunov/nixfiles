@@ -13,13 +13,23 @@
   ...
 }: let
   systemStateVersion = "23.11";
-  # pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+
+  catppuccinPackage = pkgs.catppuccin-gtk.override {
+    accents = ["peach"];
+    variant = "mocha";
+  };
 in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./modules/mounts.nix
   ];
+
+  catppuccin = {
+    enable = false;
+    accent = "peach";
+    flavor = "mocha";
+  };
 
   services.displayManager.sddm.wayland.enable = !globalSettings.enableHyprland;
   services.displayManager.sddm.enable = !globalSettings.enableHyprland;
@@ -127,7 +137,7 @@ in {
       GTK = {
         application_prefer_dark_theme = true;
         icon_theme_name = lib.mkForce "Papirus-Dark";
-        theme_name = lib.mkForce "Tokyonight-Dark";
+        theme_name = lib.mkForce "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
         font_name = lib.mkForce "SF Pro Display 12";
       };
       commands = {
@@ -327,9 +337,9 @@ in {
       global = {
         Context = {
           filesystems = [
-            "${pkgs.tokyo-night-gtk}/share/themes:ro"
             "${pkgs.papirus-icon-theme}/share/icons:ro"
             "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
+            "${catppuccinPackage}/share/themes:ro"
             "/run/current-system/sw/share:ro"
             "/mnt/Games/Emulation:rw"
             "/run/current-system/sw/bin/:ro"
@@ -344,7 +354,7 @@ in {
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           HYPRCURSOR_SIZE = "32";
           ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "Tokyonight-Dark";
+          GTK_THEME = "catppuccin-mocha-peach-standard";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         };
       };
@@ -658,8 +668,8 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
+      catppuccinPackage
       papirus-icon-theme
-      tokyonight-gtk-theme
       catppuccin-cursors.mochaDark
       abcde
       cddiscid

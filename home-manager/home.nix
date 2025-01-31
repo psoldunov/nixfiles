@@ -26,6 +26,17 @@ in {
     ./modules
   ];
 
+  catppuccin = {
+    enable = true;
+    flavor = "mocha";
+    accent = "peach";
+    pointerCursor = {
+      enable = true;
+      accent = "dark";
+      flavor = "mocha";
+    };
+  };
+
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
@@ -253,7 +264,7 @@ in {
       protonup-ng
       via
       rpcs3
-      catppuccin-cursors
+      catppuccin-cursors.mochaDark
       ookla-speedtest
       (discord-canary.override {
         withOpenASAR = true;

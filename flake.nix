@@ -10,6 +10,10 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    catppuccin = {
+      url = "github:catppuccin/nix";
+    };
+
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,6 +53,7 @@
     ags,
     vscode-server,
     nixpkgs-stable,
+    catppuccin,
     nix-gaming,
     nix-flatpak,
     ghostty,
@@ -99,6 +104,7 @@
         nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
+        catppuccin.nixosModules.catppuccin
         {
           home-manager = {
             extraSpecialArgs = {
@@ -119,6 +125,7 @@
               sops-nix.homeManagerModules.sops
               ags.homeManagerModules.default
               hyprland.homeManagerModules.default
+              catppuccin.homeManagerModules.catppuccin
             ];
           };
         }
