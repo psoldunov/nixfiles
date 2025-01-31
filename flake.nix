@@ -38,16 +38,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # home-manager = {
-    #   url = "github:nix-community/home-manager/release-24.11";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     ags = {
       url = "github:Aylur/ags/60180a184cfb32b61a1d871c058b31a3b9b0743d";
     };
@@ -59,7 +49,6 @@
     ags,
     vscode-server,
     nixpkgs-stable,
-    spicetify-nix,
     nix-gaming,
     nix-flatpak,
     ghostty,
@@ -104,7 +93,6 @@
       modules = [
         ./nixos/configuration.nix
         nix-gaming.nixosModules.pipewireLowLatency
-        spicetify-nix.nixosModules.default
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
         hyprland.nixosModules.default
@@ -130,7 +118,6 @@
             sharedModules = [
               sops-nix.homeManagerModules.sops
               ags.homeManagerModules.default
-              spicetify-nix.homeManagerModules.default
               hyprland.homeManagerModules.default
             ];
           };

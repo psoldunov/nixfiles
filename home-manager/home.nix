@@ -46,7 +46,7 @@ in {
       name = "Spotify";
       genericName = "Music Player";
       icon = "spotify-client";
-      exec = "${config.programs.spicetify.spicedSpotify}/bin/spotify --ozone-platform=x11 %U";
+      exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
       terminal = false;
       mimeType = ["x-scheme-handler/spotify"];
       categories = ["Audio" "Music" "Player" "AudioVideo"];
@@ -207,22 +207,10 @@ in {
     enable = false;
   };
 
-  programs.spicetify = let
-    spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-  in {
-    enable = true;
-    #  enabledExtensions = with spicePkgs.extensions; [
-    #    adblock
-    #    hidePodcasts
-    #    shuffle # shuffle+ (special characters are sanitized out of extension names)
-    #  ];
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
-  };
-
   home.packages =
     (with pkgs; [
       # whatsapp-for-linux
+      spotify
       zapzap
       electrum
       ledger-live-desktop

@@ -818,9 +818,6 @@ in {
       skate
       hyprprop
       gum
-      typst
-      typstfmt
-      typst-lsp
       translate-shell
       clang
       cmake
@@ -829,7 +826,6 @@ in {
       cmake-lint
       ghostty.packages.x86_64-linux.default
       ccd2iso
-      typst-live
       nss
       mkinitcpio-nfs-utils
       libnfs
