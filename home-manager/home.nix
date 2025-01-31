@@ -30,7 +30,7 @@ in {
     enable = true;
     flavor = "mocha";
     accent = "peach";
-    pointerCursor = {
+    cursors = {
       enable = true;
       accent = "dark";
       flavor = "mocha";
