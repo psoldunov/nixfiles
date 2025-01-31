@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  globalSettings,
   pkgs,
   ...
 }: let
@@ -69,13 +68,15 @@
         };
       });
 in {
-  qt = lib.mkIf globalSettings.enableHyprland {
+  qt = {
     enable = true;
     platformTheme.name = "qtct";
-    style = {};
+    style = {
+      catppuccin.enable = false;
+    };
   };
 
-  home.file = lib.mkIf globalSettings.enableHyprland {
+  home.file = {
     ".config/qt5ct/qt5ct.conf" = {
       source = qt5config;
     };
