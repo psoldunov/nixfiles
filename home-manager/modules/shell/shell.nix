@@ -10,13 +10,9 @@
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     DENO_INSTALL = "/home/psoldunov/.deno";
     PATH = "HOME/.local/bin:/usr/sbin:$HOME/.local/podman/bin:$HOME/.cargo/bin:$DENO_INSTALL/bin:$PATH";
-    TERMINAL = "ghostty";
+    TERMINAL = "${pkgs.ghostty}/bin/ghostty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
-    # VSCODE_GALLERY_SERVICE_URL = "https://marketplace.visualstudio.com/_apis/public/gallery";
-    # VSCODE_GALLERY_ITEM_URL = "https://marketplace.visualstudio.com/items";
-    # VSCODE_GALLERY_CACHE_URL = "https://vscode.blob.core.windows.net/gallery/index";
-    # VSCODE_GALLERY_CONTROL_URL = "";
   };
 
   programs.lazygit = {
@@ -52,9 +48,6 @@
     };
     shellInit = ''
       # ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
-      # set -Ua fish_user_paths $HOME/.cargo/bin
-      # set --export BUN_INSTALL "$HOME/.bun"
-      # set --export PATH $BUN_INSTALL/bin $PATH
       # set fish_greeting
       # set fish_color_normal normal
       # set fish_color_command 88c0d0
