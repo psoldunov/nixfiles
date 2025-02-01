@@ -120,6 +120,30 @@ in {
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
+    "nixfiles-zed" = {
+      name = "Open Nixfiles in Zed";
+      genericName = "This opens nixfiles in Zed";
+      icon = "nix-snowflake";
+      exec = "${pkgs.zed-editor}/bin/zeditor --new /home/psoldunov/.nixfiles";
+    };
+    "nixfiles-code" = {
+      name = "Open Nixfiles in VS Code";
+      genericName = "This opens nixfiles in VS Code";
+      icon = "nix-snowflake";
+      exec = "${pkgs.vscode}/bin/code -n /home/psoldunov/.nixfiles";
+    };
+    "nixfiles-bigtasty" = {
+      name = "Open SERVER Nixfiles in VS Code";
+      genericName = "This opens SERVER nixfiles in VS Code";
+      icon = "nix-snowflake";
+      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles";
+    };
+    "nixfiles-nugget" = {
+      name = "Open NUGGET Nixfiles in VS Code";
+      genericName = "This opens NUGGET nixfiles in VS Code";
+      icon = "nix-snowflake";
+      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
+    };
   };
 
   systemd.user.enable = true;
@@ -321,52 +345,52 @@ in {
     htop.enable = true;
   };
 
-  home.file = {
-    ".local/share/applications/nixfiles-zed.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Open Nixfiles in Zed
-        GenericName=This opens nixfiles in Zed
-        Icon=nix-snowflake
-        Exec=zeditor --new /home/psoldunov/.nixfiles
-        Terminal=false
-      '';
-    };
-    ".local/share/applications/nixfiles-code.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Open Nixfiles in VS Code
-        GenericName=This opens nixfiles in VS Code
-        Icon=nix-snowflake
-        Exec=code -n /home/psoldunov/.nixfiles
-        Terminal=false
-      '';
-    };
-    ".local/share/applications/nixfiles-bigtasty.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Open SERVER Nixfiles in VS Code
-        GenericName=This opens SERVER nixfiles in VS Code
-        Icon=nix-snowflake
-        Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles
-        Terminal=false
-      '';
-    };
-    ".local/share/applications/nixfiles-nugget.desktop" = {
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Open NUGGET Nixfiles in VS Code
-        GenericName=This opens NUGGET nixfiles in VS Code
-        Icon=nix-snowflake
-        Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles
-        Terminal=false
-      '';
-    };
-  };
+  # home.file = {
+  #   ".local/share/applications/nixfiles-zed.desktop" = {
+  #     text = ''
+  #       [Desktop Entry]
+  #       Type=Application
+  #       Name=Open Nixfiles in Zed
+  #       GenericName=This opens nixfiles in Zed
+  #       Icon=nix-snowflake
+  #       Exec=zeditor --new /home/psoldunov/.nixfiles
+  #       Terminal=false
+  #     '';
+  #   };
+  #   ".local/share/applications/nixfiles-code.desktop" = {
+  #     text = ''
+  #       [Desktop Entry]
+  #       Type=Application
+  #       Name=Open Nixfiles in VS Code
+  #       GenericName=This opens nixfiles in VS Code
+  #       Icon=nix-snowflake
+  #       Exec=code -n /home/psoldunov/.nixfiles
+  #       Terminal=false
+  #     '';
+  #   };
+  #   ".local/share/applications/nixfiles-bigtasty.desktop" = {
+  #     text = ''
+  #       [Desktop Entry]
+  #       Type=Application
+  #       Name=Open SERVER Nixfiles in VS Code
+  #       GenericName=This opens SERVER nixfiles in VS Code
+  #       Icon=nix-snowflake
+  #       Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles
+  #       Terminal=false
+  #     '';
+  #   };
+  #   ".local/share/applications/nixfiles-nugget.desktop" = {
+  #     text = ''
+  #       [Desktop Entry]
+  #       Type=Application
+  #       Name=Open NUGGET Nixfiles in VS Code
+  #       GenericName=This opens NUGGET nixfiles in VS Code
+  #       Icon=nix-snowflake
+  #       Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles
+  #       Terminal=false
+  #     '';
+  #   };
+  # };
 
   home.stateVersion = systemStateVersion;
 }
