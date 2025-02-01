@@ -71,15 +71,6 @@ in {
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
     };
-    # figma = {
-    #   name = "Figma";
-    #   genericName = "Design Tool";
-    #   icon = "figma";
-    #   exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://www.figma.com/files" %U'';
-    #   terminal = false;
-    #   mimeType = ["x-scheme-handler/figma"];
-    #   categories = ["Graphics"];
-    # };
     memos = {
       name = "Memos";
       genericName = "Notes Manager";
@@ -109,16 +100,6 @@ in {
         "x-scheme-handler/thunder"
       ];
       categories = ["Network"];
-    };
-    figma = {
-      name = "Figma";
-      genericName = "Design Tool";
-      icon = "figma";
-      exec = ''${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland %U'';
-      terminal = false;
-      comment = "Unofficial desktop application for linux";
-      mimeType = ["x-scheme-handler/figma"];
-      categories = ["Graphics"];
     };
     "nixfiles-zed" = {
       name = "Open Nixfiles in Zed";
@@ -245,6 +226,7 @@ in {
   home.packages =
     (with pkgs; [
       # whatsapp-for-linux
+      figma-linux
       spotify
       zapzap
       electrum
@@ -344,53 +326,6 @@ in {
     btop.enable = true;
     htop.enable = true;
   };
-
-  # home.file = {
-  #   ".local/share/applications/nixfiles-zed.desktop" = {
-  #     text = ''
-  #       [Desktop Entry]
-  #       Type=Application
-  #       Name=Open Nixfiles in Zed
-  #       GenericName=This opens nixfiles in Zed
-  #       Icon=nix-snowflake
-  #       Exec=zeditor --new /home/psoldunov/.nixfiles
-  #       Terminal=false
-  #     '';
-  #   };
-  #   ".local/share/applications/nixfiles-code.desktop" = {
-  #     text = ''
-  #       [Desktop Entry]
-  #       Type=Application
-  #       Name=Open Nixfiles in VS Code
-  #       GenericName=This opens nixfiles in VS Code
-  #       Icon=nix-snowflake
-  #       Exec=code -n /home/psoldunov/.nixfiles
-  #       Terminal=false
-  #     '';
-  #   };
-  #   ".local/share/applications/nixfiles-bigtasty.desktop" = {
-  #     text = ''
-  #       [Desktop Entry]
-  #       Type=Application
-  #       Name=Open SERVER Nixfiles in VS Code
-  #       GenericName=This opens SERVER nixfiles in VS Code
-  #       Icon=nix-snowflake
-  #       Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles
-  #       Terminal=false
-  #     '';
-  #   };
-  #   ".local/share/applications/nixfiles-nugget.desktop" = {
-  #     text = ''
-  #       [Desktop Entry]
-  #       Type=Application
-  #       Name=Open NUGGET Nixfiles in VS Code
-  #       GenericName=This opens NUGGET nixfiles in VS Code
-  #       Icon=nix-snowflake
-  #       Exec=code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles
-  #       Terminal=false
-  #     '';
-  #   };
-  # };
 
   home.stateVersion = systemStateVersion;
 }
