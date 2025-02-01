@@ -47,38 +47,7 @@
       };
     };
     shellInit = ''
-      # ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
-      # set fish_greeting
-      # set fish_color_normal normal
-      # set fish_color_command 88c0d0
-      # set fish_color_keyword 81a1c1
-      # set fish_color_quote a3be8c
-      # set fish_color_redirection b48ead --bold
-      # set fish_color_end 81a1c1
-      # set fish_color_error bf616a
-      # set fish_color_param d8dee9
-      # set fish_color_valid_path --underline
-      # set fish_color_option 8fbcbb
-      # set fish_color_comment 4c566a --italics
-      # set fish_color_selection d8dee9 --bold --background=434c5e
-      # set fish_color_operator 81a1c1
-      # set fish_color_escape ebcb8b
-      # set fish_color_autosuggestion 4c566a
-      # set fish_color_cwd 5e81ac
-      # set fish_color_cwd_root bf616a
-      # set fish_color_user a3be8c
-      # set fish_color_host a3be8c
-      # set fish_color_host_remote ebcb8b
-      # set fish_color_status bf616a
-      # set fish_color_cancel --reverse
-      # set fish_color_match --background=brblue
-      # set fish_color_search_match --bold --background=434c5e
-      # set fish_color_history_current e5e9f0 --bold
-      # set fish_pager_color_progress 3b4252 --background=d08770
-      # set fish_pager_color_completion e5e9f0
-      # set fish_pager_color_prefix normal --bold --underline
-      # set fish_pager_color_description ebcb8b --italics
-      # set fish_pager_color_selected_background --background=434c5e
+      set fish_greeting
     '';
     shellInitLast = ''
       source ${config.sops.secrets.SHELL_SECRETS.path}
@@ -90,8 +59,7 @@
     rm = "gio trash";
     fucking = "sudo";
     cat = "bat -p";
-    thunar = "nemo";
-    # ssh = "kitten ssh";
+    thunar = "${pkgs.nemo}/bin/nemo";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
   };
 
@@ -104,7 +72,6 @@
 
   programs.keychain = {
     enable = true;
-    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
     keys = [
@@ -112,14 +79,8 @@
     ];
   };
 
-  programs.nushell = {
-    enable = true;
-    # extraConfig = "source ${config.sops.secrets.SHELL_SECRETS.path}";
-  };
-
   programs.thefuck = {
     enable = true;
-    enableNushellIntegration = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
   };
@@ -132,7 +93,6 @@
 
   programs.starship = {
     enable = true;
-    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
     settings = {
@@ -168,7 +128,6 @@
 
   programs.zoxide = {
     enable = true;
-    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
     options = [
@@ -184,7 +143,6 @@
 
   programs.yazi = {
     enable = true;
-    enableNushellIntegration = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
   };
