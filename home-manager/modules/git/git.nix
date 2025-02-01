@@ -48,13 +48,18 @@
       "ehthumbs.db"
       "Thumbs.db"
     ];
+    extraConfig = {
+      core = {
+        sshCommand = "ssh -i ${config.home.homeDirectory}/.ssh/git";
+      };
+    };
   };
 
   programs.gh = {
     enable = true;
-    # extensions = with pkgs; [
-    #   gh-copilot
-    # ];
+    extensions = with pkgs; [
+      gh-copilot
+    ];
     settings.editor = "code";
     gitCredentialHelper = {
       enable = true;
