@@ -26,6 +26,10 @@ in {
     ./modules
   ];
 
+  programs = {
+    home-manager.enable = true;
+  };
+
   catppuccin = {
     enable = true;
     flavor = "mocha";
@@ -209,10 +213,6 @@ in {
   };
 
   programs.password-store.enable = true;
-
-  programs = {
-    home-manager.enable = true;
-  };
 
   nixpkgs.config = {
     allowUnfree = true;

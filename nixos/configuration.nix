@@ -7,7 +7,6 @@
   config,
   pkgs,
   appleFonts,
-  ghostty,
   globalSettings,
   pkgs-stable,
   ...
@@ -102,12 +101,10 @@ in {
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-gaming.cachix.org"
-        "https://ghostty.cachix.org"
         "https://hyprland.cachix.org"
       ];
       trusted-public-keys = [
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
@@ -668,6 +665,7 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
+      ghostty
       catppuccinPackage
       papirus-icon-theme
       abcde
@@ -676,7 +674,7 @@ in {
       libmusicbrainz
       monkeysAudio
       libdiscid
-      (writeShellScriptBin "gnome-terminal" "exec -a $0 ghostty $@")
+      (writeShellScriptBin "gnome-terminal" "exec -a $0 ${pkgs.ghostty}/bin/ghostty $@")
       appimage-run
       wev
       usbutils
@@ -778,7 +776,6 @@ in {
       cmake-language-server
       cmake-format
       cmake-lint
-      ghostty.packages.x86_64-linux.default
       ccd2iso
       nss
       mkinitcpio-nfs-utils

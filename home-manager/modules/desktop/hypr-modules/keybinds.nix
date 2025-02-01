@@ -56,7 +56,7 @@ in {
     "$MOD1, J, movefocus, d"
 
     # MOD1 Terminal + Rofi
-    "$MOD1, RETURN, exec, ghostty"
+    "$MOD1, RETURN, exec, ${pkgs.ghostty}/bin/ghostty"
     "$MOD1, SPACE, exec, pkill rofi || rofi -show drun"
 
     # kando
@@ -87,9 +87,9 @@ in {
     "$MOD3, 0, workspace, 10"
 
     # MOD3 Applications Launcher
-    "$MOD3, F, exec, zen"
+    "$MOD3, F, exec, brave"
     "$MOD3, E, exec, nemo"
-    "$MOD3, T, exec, ghostty -e tmux"
+    "$MOD3, T, exec, ${pkgs.ghostty}/bin/ghostty -e tmux"
     "$MOD3, V, exec, code --new-window"
     "$MOD3, C, exec, google-chrome"
     "$MOD3, S, exec, slack"
@@ -134,7 +134,7 @@ in {
     "$ctrl, K, workspace, e+1"
 
     # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-    "$option, RETURN, exec, ghostty"
+    "$option, RETURN, exec, ${pkgs.ghostty}/bin/ghostty"
     "$cmd, Q, killactive,"
     "$cmd $ctrl, Q, exec, lock_screen"
     "$ctrl, M, exit, "

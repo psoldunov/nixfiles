@@ -21,10 +21,6 @@
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-    };
-
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,7 +52,6 @@
     catppuccin,
     nix-gaming,
     nix-flatpak,
-    ghostty,
     sops-nix,
     home-manager,
     apple-fonts,
@@ -89,7 +84,6 @@
         inherit
           inputs
           outputs
-          ghostty
           appleFonts
           globalSettings
           pkgs-stable
