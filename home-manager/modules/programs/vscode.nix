@@ -91,6 +91,7 @@ in {
       "explorer.confirmDragAndDrop" = false;
       "explorer.confirmDelete" = false;
       "editor.wordWrap" = "on";
+      "extensions.autoUpdate" = false;
     };
     extensions = with pkgs.vscode-extensions;
       [
