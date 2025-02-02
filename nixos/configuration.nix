@@ -36,14 +36,7 @@ in {
   services.displayManager.sddm.enable = !globalSettings.enableHyprland;
   services.desktopManager.plasma6.enable = !globalSettings.enableHyprland;
 
-  boot.initrd.kernelModules = ["amdgpu" "nfs"];
-
-  console = {
-    earlySetup = true;
-    font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
-    packages = with pkgs; [terminus_font];
-    keyMap = "us";
-  };
+  boot.initrd.kernelModules = ["nfs"];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = false;
@@ -52,39 +45,7 @@ in {
   boot.plymouth = {
     enable = true;
     theme = "pedro-raccoon";
-    themePackages = [
-      (pkgs.stdenvNoCC.mkDerivation {
-        pname = "pedro-raccoon-plymouth";
-        version = "1.1";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "FilaCo";
-          repo = "pedro-raccoon-plymouth";
-          rev = "01ff1f4";
-          hash = "sha256-L+jfH2edHN6kqqjpAesRr317ih3r4peGklRwvziksHE=";
-        };
-
-        dontBuild = true;
-
-        installPhase = ''
-          runHook preInstall
-          mkdir -p $out/share/plymouth/themes/pedro-raccoon
-          cp pedro-raccoon/* $out/share/plymouth/themes/pedro-raccoon
-          substituteInPlace $out/share/plymouth/themes/pedro-raccoon/pedro-raccoon.plymouth \
-            --replace-fail "/usr/" "$out/"
-          runHook postInstall
-        '';
-
-        passthru.updateScript = pkgs.unstableGitUpdater {};
-
-        meta = {
-          description = "This is a simple Plymouth theme with Pedro racoon meme.";
-          homepage = "https://github.com/FilaCo/pedro-raccoon-plymouth";
-          license = pkgs.lib.licenses.mit;
-          platforms = pkgs.lib.platforms.linux;
-        };
-      })
-    ];
+    themePackages = [pkgs.pedro-raccoon-plymouth];
   };
   boot.loader.grub = {
     enable = true;
@@ -122,8 +83,6 @@ in {
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
 
-  boot.kernelParams = ["quiet" "video=DP-1:3840x2160@144"];
-
   services.rpcbind.enable = true;
 
   programs.regreet = {
@@ -160,7 +119,6 @@ in {
       libvpx
       libvdpau-va-gl
       libGL
-      vulkan-hdr-layer-kwin6
     ];
     extraPackages32 = with pkgs; [
       driversi686Linux.libva-vdpau-driver
@@ -168,8 +126,6 @@ in {
       driversi686Linux.libvdpau-va-gl
     ];
   };
-
-  # services.xserver.videoDrivers = ["amdgpu"];
 
   boot.swraid.enable = true;
   boot.swraid.mdadmConf = "MAILADDR=philipp@theswisscheese.com";
@@ -330,7 +286,6 @@ in {
     packages = [
       "com.github.tchx84.Flatseal"
       "com.steamgriddb.SGDBoop"
-      # "io.freetubeapp.FreeTube"
     ];
     overrides = {
       global = {
@@ -370,7 +325,6 @@ in {
 
   virtualisation = {
     docker.enable = true;
-    podman.enable = true;
     docker.enableOnBoot = true;
     libvirtd.enable = true;
     containerd.enable = true;
@@ -474,8 +428,6 @@ in {
     };
     _1password-gui = {
       enable = true;
-      # Certain features, including CLI integration and system authentication support,
-      # require enabling PolKit integration on some desktop environments (e.g. Plasma).
       polkitPolicyOwners = ["psoldunov"];
     };
   };
@@ -493,12 +445,6 @@ in {
     ensureDatabases = [
       "psoldunov"
     ];
-  };
-
-  services.shairport-sync = {
-    enable = false;
-    openFirewall = false;
-    arguments = "-v -o pipe";
   };
 
   environment.etc = {
@@ -531,6 +477,7 @@ in {
   nixpkgs.overlays = [
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
+    (import ./overlays/redro-raccoon.plymouth.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/bun.nix)
     (import ./overlays/supabase-cli.nix)
@@ -597,7 +544,6 @@ in {
     appleFonts.sf-mono-nerd
     appleFonts.sf-arabic
     appleFonts.ny
-    # (nerdfonts.override {fonts = ["JetBrainsMono"];})
     nerd-fonts.jetbrains-mono
   ];
 
@@ -610,8 +556,6 @@ in {
 
   programs.dconf.enable = true;
 
-  # Enable sound with pipewire.
-  # sound.enable = true;
   services.pulseaudio.enable = false;
 
   # Enable the pipewire service.
@@ -634,7 +578,6 @@ in {
     ];
     extraRules = ''
       ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="${pkgs.sg3_utils}/bin/sg_raw %r/sr%n EA 00 00 00 00 00 01"
-
       # ACTION=="remove", ENV{ID_BUS}=="usb", ENV{ID_MODEL_ID}=="0407", ENV{ID_VENDOR_ID}=="1050", ENV{ID_VENDOR}=="Yubico", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
     '';
   };
@@ -924,12 +867,6 @@ in {
     dedicatedServer.openFirewall = true;
     platformOptimizations.enable = true;
     localNetworkGameTransfers.openFirewall = true;
-    extraPackages = with pkgs; [
-      (writeScriptBin "steamos-session-select" ''
-        #!/bin/bash
-        steam -shutdown
-      '')
-    ];
   };
 
   programs.gamescope = {
