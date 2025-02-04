@@ -17,8 +17,7 @@
     accents = ["peach"];
     variant = "mocha";
   };
-
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  # pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     # Include the results of the hardware scan.
@@ -107,9 +106,9 @@ in {
 
   hardware.graphics = {
     enable = true;
-    package = pkgs-hyprland.mesa.drivers;
+    # package = pkgs-hyprland.mesa.drivers;
     enable32Bit = true;
-    package32 = pkgs-hyprland.pkgsi686Linux.mesa.drivers;
+    # package32 = pkgs-hyprland.pkgsi686Linux.mesa.drivers;
     extraPackages = with pkgs; [
       libva
       vaapiVdpau
@@ -212,8 +211,8 @@ in {
 
   programs.hyprland = {
     enable = globalSettings.enableHyprland;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    # portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     xwayland.enable = true;
   };
 
