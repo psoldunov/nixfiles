@@ -53,6 +53,7 @@ in {
   wayland.windowManager.hyprland = {
     enable = globalSettings.enableHyprland;
     # package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    package = pkgs-stable.hyprland;
     systemd = {
       enable = true;
       enableXdgAutostart = true;
