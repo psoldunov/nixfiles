@@ -107,7 +107,7 @@ in {
     };
     figma-linux = {
       name = "figma-linux";
-      exec = "${pkgs.figma-linux}/bin/figma-linux --ozone-platform=x11 %U";
+      exec = "${pkgs.figma-linux}/bin/figma-linux --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-vulkan --enable-gpu-rasterization --enable-oop-rasterization --enable-gpu-compositing --enable-accelerated-2d-canvas --enable-zero-copy --canvas-oop-rasterization --disable-features=UseChromeOSDirectVideoDecoder --enable-accelerated-video-decode --enable-accelerated-video-encode --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiIgnoreDriverChecks,RawDraw,Vulkan --enable-hardware-overlays --enable-unsafe-webgpu %U";
       terminal = false;
       icon = "figma-linux";
       comment = "Unofficial desktop application for linux";
