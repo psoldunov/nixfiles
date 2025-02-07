@@ -107,7 +107,7 @@ in {
     };
     figma-linux = {
       name = "figma-linux";
-      exec = "${pkgs.figma-linux}/bin/figma-linux --enable-features=UseOzonePlatform --ozone-platform=wayland --enable-vulkan --enable-gpu-rasterization --enable-oop-rasterization --enable-gpu-compositing --enable-accelerated-2d-canvas --enable-zero-copy --canvas-oop-rasterization --disable-features=UseChromeOSDirectVideoDecoder --enable-accelerated-video-decode --enable-accelerated-video-encode --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,VaapiIgnoreDriverChecks,RawDraw,Vulkan --enable-hardware-overlays --enable-unsafe-webgpu %U";
+      exec = "${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U";
       terminal = false;
       icon = "figma-linux";
       comment = "Unofficial desktop application for linux";
@@ -235,7 +235,6 @@ in {
   home.packages =
     (with pkgs; [
       # whatsapp-for-linux
-      figma-linux
       spotify
       zapzap
       electrum
