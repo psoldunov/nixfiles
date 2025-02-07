@@ -105,6 +105,15 @@ in {
       ];
       categories = ["Network"];
     };
+    figma-linux = {
+      name = "figma-linux";
+      exec = "${pkgs.figma-linux}/bin/figma-linux --ozone-platform=x11 %U";
+      terminal = false;
+      icon = "figma-linux";
+      comment = "Unofficial desktop application for linux";
+      mimeType = ["x-scheme-handler/figma"];
+      categories = ["Graphics"];
+    };
     "nixfiles-zed" = {
       name = "Open Nixfiles in Zed";
       genericName = "This opens nixfiles in Zed";
