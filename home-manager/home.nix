@@ -254,7 +254,7 @@ in {
       shortwave
       hyprshade
       rpi-imager
-      mysql-workbench
+      # mysql-workbench
       postman
       geekbench
       deno
