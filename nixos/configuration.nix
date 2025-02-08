@@ -197,7 +197,7 @@ in {
         "x-scheme-handler/snews" = "thunderbird.desktop";
         "x-scheme-handler/nntp" = "thunderbird.desktop";
         "x-scheme-handler/feed" = "thunderbird.desktop";
-        "x-scheme-handler/figma" = "figma.desktop";
+        "x-scheme-handler/figma" = "figma-linux.desktop";
         "application/rss+xml" = "thunderbird.desktop";
         "application/x-extension-rss" = "thunderbird.desktop";
         "x-scheme-handler/webcal" = "thunderbird.desktop";
