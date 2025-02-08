@@ -810,7 +810,7 @@ in {
       nemo-with-extensions
       keychain
       yubioath-flutter
-      expressvpn
+      # expressvpn
     ])
     ++ (
       if globalSettings.ollamaDocker
@@ -820,44 +820,44 @@ in {
       else []
     );
 
-  systemd.user.services.activate_expressvpn = {
-    description = "Activates ExpressVPN";
-    after = ["network.target"];
-    wantedBy = ["default.target"];
-    serviceConfig.ExecStart = (
-      pkgs.writeScript "activate_expressvpn" ''
-        #!${pkgs.expect}/bin/expect -f
+  # systemd.user.services.activate_expressvpn = {
+  #   description = "Activates ExpressVPN";
+  #   after = ["network.target"];
+  #   wantedBy = ["default.target"];
+  #   serviceConfig.ExecStart = (
+  #     pkgs.writeScript "activate_expressvpn" ''
+  #       #!${pkgs.expect}/bin/expect -f
 
-        set filepath ${config.sops.secrets.EXPRESSVPN_KEY.path}
-        set fp [open $filepath r]
-        set activation_code [string trim [read $fp]]
-        close $fp
+  #       set filepath ${config.sops.secrets.EXPRESSVPN_KEY.path}
+  #       set fp [open $filepath r]
+  #       set activation_code [string trim [read $fp]]
+  #       close $fp
 
-        spawn ${pkgs.expressvpn}/bin/expressvpn activate
+  #       spawn ${pkgs.expressvpn}/bin/expressvpn activate
 
-        set timeout 10
-        expect {
-          "Enter activation code: " {
-            send "$activation_code\r"
-          }
-          timeout {
-            puts "Error: Activation prompt not found"
-            exit 1
-          }
-          eof {
-            puts "Error: Program terminated unexpectedly"
-            exit 1
-          }
-        }
+  #       set timeout 10
+  #       expect {
+  #         "Enter activation code: " {
+  #           send "$activation_code\r"
+  #         }
+  #         timeout {
+  #           puts "Error: Activation prompt not found"
+  #           exit 1
+  #         }
+  #         eof {
+  #           puts "Error: Program terminated unexpectedly"
+  #           exit 1
+  #         }
+  #       }
 
-        expect "Help improve ExpressVPN: Share crash reports, speed tests, usability diagnostics, and whether VPN connection attempts succeed. These reports never contain personally identifiable information. (Y/n)"
-        send "n\r"
-        expect eof
-      ''
-    );
-  };
+  #       expect "Help improve ExpressVPN: Share crash reports, speed tests, usability diagnostics, and whether VPN connection attempts succeed. These reports never contain personally identifiable information. (Y/n)"
+  #       send "n\r"
+  #       expect eof
+  #     ''
+  #   );
+  # };
 
-  services.expressvpn.enable = false;
+  # services.expressvpn.enable = false;
 
   programs.steam = {
     enable = true;
