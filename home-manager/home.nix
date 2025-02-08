@@ -247,14 +247,13 @@ in {
       figma-linux
       spotify
       zapzap
-      electrum
       ledger-live-desktop
       beets
       bruno
       shortwave
       hyprshade
       rpi-imager
-      # mysql-workbench
+      # mysql-workbenchu
       postman
       geekbench
       deno
