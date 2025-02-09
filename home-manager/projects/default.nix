@@ -7,7 +7,7 @@
 in {
   items = [
     {
-      name = "naviel";
+      name = "navier";
       path = "${amalgam}/navier";
     }
     {
