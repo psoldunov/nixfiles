@@ -8,7 +8,7 @@
   enableVimMode = false;
 in {
   programs.vscode = {
-    enable = false;
+    enable = true;
     enableUpdateCheck = false;
     enableExtensionUpdateCheck = false;
     userSettings = {

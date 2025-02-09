@@ -124,19 +124,19 @@ in {
       name = "Open Nixfiles in VS Code";
       genericName = "This opens nixfiles in VS Code";
       icon = "nix-snowflake";
-      exec = "${pkgs.code-cursor}/bin/cursor -n /home/psoldunov/.nixfiles";
+      exec = "${pkgs.vscode}/bin/code -n /home/psoldunov/.nixfiles";
     };
     "nixfiles-bigtasty" = {
       name = "Open SERVER Nixfiles in VS Code";
       genericName = "This opens SERVER nixfiles in VS Code";
       icon = "nix-snowflake";
-      exec = "${pkgs.code-cursor}/bin/cursor -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles";
+      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles";
     };
     "nixfiles-nugget" = {
       name = "Open NUGGET Nixfiles in VS Code";
       genericName = "This opens NUGGET nixfiles in VS Code";
       icon = "nix-snowflake";
-      exec = "${pkgs.code-cursor}/bin/cursor -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
+      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
     };
   };
 
@@ -237,7 +237,7 @@ in {
       # whatsapp-for-linux
       figma-linux
       spotify
-      (writeShellScriptBin "code" "exec -a $0 ${pkgs.code-cursor}/bin/cursor $@ & disown")
+      # (writeShellScriptBin "code" "exec -a $0 ${pkgs.code-cursor}/bin/cursor $@ & disown")
       zapzap
       ledger-live-desktop
       beets
@@ -273,7 +273,7 @@ in {
       picard
       telegram-desktop
       slack
-      code-cursor
+      # code-cursor
       protonup-qt
       teams-for-linux
       protonup-ng
