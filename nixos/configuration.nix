@@ -171,6 +171,7 @@ in {
         "image/svg+xml" = ["org.gnome.eog.desktop"];
         "image/gif" = ["org.gnome.eog.desktop"];
         "image/webp" = ["org.gnome.eog.desktop"];
+        "image/avif" = ["org.gnome.eog.desktop"];
         "video/mp4" = ["mpv.desktop"];
         "video/webm" = ["mpv.desktop"];
         "video/x-matroska" = ["mpv.desktop"];
