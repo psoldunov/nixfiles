@@ -181,7 +181,7 @@ in {
         "x-scheme-handler/chrome" = "brave-browser.desktop";
         "x-scheme-handler/about" = "brave-browser.desktop";
         "x-scheme-handler/unknown" = "brave-browser.desktop";
-        "x-scheme-handler/vscode" = "code-url-handler.desktop";
+        # "x-scheme-handler/vscode" = "code-url-handler.desktop";
         "application/x-extension-htm" = "brave-browser.desktop";
         "application/x-extension-html" = "brave-browser.desktop";
         "application/x-extension-shtml" = "brave-browser.desktop";

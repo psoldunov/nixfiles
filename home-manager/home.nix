@@ -114,15 +114,6 @@ in {
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
-    # figma-linux = {
-    #   name = "Figma";
-    #   exec = "${pkgs.figma-linux}/bin/figma-linux --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U";
-    #   terminal = false;
-    #   icon = "figma";
-    #   comment = "Unofficial desktop application for linux";
-    #   mimeType = ["x-scheme-handler/figma"];
-    #   categories = ["Graphics"];
-    # };
     "nixfiles-zed" = {
       name = "Open Nixfiles in Zed";
       genericName = "This opens nixfiles in Zed";
@@ -133,19 +124,19 @@ in {
       name = "Open Nixfiles in VS Code";
       genericName = "This opens nixfiles in VS Code";
       icon = "nix-snowflake";
-      exec = "${pkgs.vscode}/bin/code -n /home/psoldunov/.nixfiles";
+      exec = "${pkgs.code-cursor}/bin/cursor -n /home/psoldunov/.nixfiles";
     };
     "nixfiles-bigtasty" = {
       name = "Open SERVER Nixfiles in VS Code";
       genericName = "This opens SERVER nixfiles in VS Code";
       icon = "nix-snowflake";
-      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles";
+      exec = "${pkgs.code-cursor}/bin/cursor -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles";
     };
     "nixfiles-nugget" = {
       name = "Open NUGGET Nixfiles in VS Code";
       genericName = "This opens NUGGET nixfiles in VS Code";
       icon = "nix-snowflake";
-      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
+      exec = "${pkgs.code-cursor}/bin/cursor -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
     };
   };
 
