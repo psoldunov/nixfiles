@@ -3,8 +3,13 @@
   projects = "${home}/Projects";
   personal = "${projects}/Personal";
   boundary = "${projects}/Boundary";
+  amalgam = "${projects}/Amalgam";
 in {
   items = [
+    {
+      name = "naviel";
+      path = "${amalgam}/navier";
+    }
     {
       name = "ags";
       path = "${personal}/ags";
