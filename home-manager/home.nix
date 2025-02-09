@@ -237,6 +237,7 @@ in {
       # whatsapp-for-linux
       figma-linux
       spotify
+      (writeShellScriptBin "code" "exec -a $0 ${pkgs.code-cursor}/bin/cursor $@")
       zapzap
       ledger-live-desktop
       beets
