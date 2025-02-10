@@ -127,7 +127,7 @@ in {
         experimental = {
           # wide_color_gamut = true;
           # hdr = true;
-          xx_color_management_v4 = true;
+          xx_color_management_v4 = false;
         };
         device = [
           {
