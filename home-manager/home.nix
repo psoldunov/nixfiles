@@ -138,8 +138,8 @@ in {
       icon = "nix-snowflake";
       exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
     };
-    "clockify" = {
-      name = "Clockify";
+    "open-clockify" = {
+      name = "Open Clockify";
       genericName = "Time Tracker";
       icon = pkgs.fetchurl {
         url = "https://app.clockify.me/assets/favicons/apple-touch-icon.webp";
