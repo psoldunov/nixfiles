@@ -138,6 +138,12 @@ in {
       icon = "nix-snowflake";
       exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
     };
+    "clockify" = {
+      name = "Clockify";
+      genericName = "Time Tracker";
+      icon = "nix-snowflake";
+      exec = "${pkgs.brave}/bin/brave --new-window https://app.clockify.me/timesheet";
+    };
   };
 
   systemd.user.enable = true;
