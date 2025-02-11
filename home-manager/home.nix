@@ -139,7 +139,7 @@ in {
       exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
     };
     "open-clockify" = {
-      name = "Open Clockify";
+      name = "Open Clockify in Browser";
       genericName = "Time Tracker";
       icon = "${pkgs.clockify}/share/pixmaps/clockify.png";
       exec = "${pkgs.brave}/bin/brave --new-window https://app.clockify.me/timesheet";
