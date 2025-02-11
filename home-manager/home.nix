@@ -244,6 +244,7 @@ in {
   home.packages =
     (with pkgs; [
       # whatsapp-for-linux
+      clockify
       figma-linux
       spotify
       # (writeShellScriptBin "code" "exec -a $0 ${pkgs.code-cursor}/bin/cursor $@ & disown")
