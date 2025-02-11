@@ -144,6 +144,15 @@ in {
       icon = "${pkgs.clockify}/share/pixmaps/clockify.png";
       exec = "${pkgs.brave}/bin/brave --new-window https://app.clockify.me/timesheet";
     };
+    "clockify" = {
+      name = "Clockify";
+      genericName = "Time Tracker";
+      icon = "${pkgs.clockify}/share/pixmaps/clockify.png";
+      exec = "${pkgs.clockify}/bin/clockify -ozone-platform=wayland --no-sandbox %U";
+      terminal = false;
+      mimeType = ["x-scheme-handler/clockify"];
+      categories = ["Development"];
+    };
   };
 
   systemd.user.enable = true;
