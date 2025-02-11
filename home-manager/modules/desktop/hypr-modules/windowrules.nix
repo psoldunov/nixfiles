@@ -10,8 +10,8 @@
   ];
 
   windowrulev2 = [
-    "float,class:clockify"
-    "pin,class:clockify"
+    "float,class:Clockify"
+    "pin,class:Clockify"
     "fullscreen,class:^steam_app_.*$"
     "noanim,class:^steam_app_.*$"
     "noborder,class:^steam_app_.*$"
