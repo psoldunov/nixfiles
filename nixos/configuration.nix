@@ -480,7 +480,7 @@ in {
     (import ./overlays/pedro-raccoon-plymouth.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/bun.nix)
-    (import ./overlays/supabase-cli.nix)
+    # (import ./overlays/supabase-cli.nix)
     (import ./overlays/package-version-server.nix)
     (self: super: {
       mpv = super.mpv.override {
