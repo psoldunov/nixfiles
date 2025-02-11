@@ -141,7 +141,10 @@ in {
     "clockify" = {
       name = "Clockify";
       genericName = "Time Tracker";
-      icon = "nix-snowflake";
+      icon = pkgs.fetchurl {
+        url = "https://app.clockify.me/assets/favicons/apple-touch-icon.webp";
+        sha256 = "17zn8rhjbi8b40kmg55k50hwchinb519wmkw0hn62bvbfz08idwv";
+      };
       exec = "${pkgs.brave}/bin/brave --new-window https://app.clockify.me/timesheet";
     };
   };
