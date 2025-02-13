@@ -451,6 +451,7 @@ in {
     "1password/custom_allowed_browsers" = {
       text = ''
         brave
+        .zen-wrapped
       '';
       mode = "0755";
     };
