@@ -21,7 +21,10 @@
 
   startupSound = ./assets/startup.wav;
 
-  wallpaperPath = ./assets/wallpaper.jpg;
+  wallpaperPath = pkgs.fetchurl {
+    url = "https://i.imgur.com/iahzUAJ.jpeg";
+    sha256 = "1baa1nrgrs1cz9yf7jiag6w1jznxdj5g18c9i9wjmqc927kb1jy6";
+  };
 
   autoStart = pkgs.writeShellScript "autostart_applications" ''
     autostart_commands="
