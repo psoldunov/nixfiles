@@ -238,10 +238,10 @@ in {
 
   programs.password-store.enable = true;
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowInsecure = true;
-  };
+  # nixpkgs.config = {
+  #   allowUnfree = true;
+  #   allowInsecure = true;
+  # };
 
   programs.firefox = {
     enable = false;
@@ -249,11 +249,9 @@ in {
 
   home.packages =
     (with pkgs; [
-      # whatsapp-for-linux
       clockify
       figma-linux
       spotify
-      # (writeShellScriptBin "code" "exec -a $0 ${pkgs.code-cursor}/bin/cursor $@ & disown")
       zapzap
       ledger-live-desktop
       beets
@@ -261,7 +259,7 @@ in {
       shortwave
       hyprshade
       rpi-imager
-      # mysql-workbenchu
+      # mysql-workbench
       postman
       geekbench
       deno
@@ -270,7 +268,6 @@ in {
       nodejs_23
       obsidian
       pywal
-      # spotify
       mattermost-desktop
       gnome-font-viewer
       rofi-bluetooth
@@ -289,7 +286,6 @@ in {
       picard
       telegram-desktop
       slack
-      # code-cursor
       protonup-qt
       teams-for-linux
       protonup-ng
