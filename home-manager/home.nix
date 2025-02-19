@@ -258,6 +258,7 @@ in {
       bruno
       shortwave
       hyprshade
+      qflipper
       rpi-imager
       # mysql-workbench
       postman
