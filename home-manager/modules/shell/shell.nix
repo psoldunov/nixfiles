@@ -147,11 +147,6 @@
     enableBashIntegration = true;
   };
 
-  programs.zellij = {
-    enable = true;
-    enableFishIntegration = false;
-  };
-
   programs.fastfetch = {
     enable = true;
     # settings = {
