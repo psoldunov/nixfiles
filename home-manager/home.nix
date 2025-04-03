@@ -259,7 +259,7 @@ in {
       shortwave
       hyprshade
       qflipper
-      rpi-imager
+      # rpi-imager
       # mysql-workbench
       postman
       geekbench
