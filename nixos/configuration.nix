@@ -469,6 +469,7 @@ in {
         ];
       permittedInsecurePackages = [
         "electron-24.8.6"
+        "yubikey-manager-qt-1.2.5"
       ];
     };
   };
