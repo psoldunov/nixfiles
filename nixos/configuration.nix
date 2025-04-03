@@ -394,7 +394,7 @@ in {
           "/var/run/docker.sock:/var/run/docker.sock"
         ];
         environment = {
-          TZ = "Europe/Tallinn";
+          TZ = "Asia/Nicosia";
           WATCHTOWER_SCHEDULE = "0 0 4 * * *";
           WATCHTOWER_CLEANUP = "true";
         };
