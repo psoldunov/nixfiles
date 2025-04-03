@@ -17,7 +17,7 @@ in {
       "workbench.iconTheme" = "catppuccin-mocha";
       "workbench.colorTheme" = "Catppuccin Mocha";
       "workbench.startupEditor" = "none";
-      "catppuccin.accentColor" = "blue";
+      "catppuccin.accentColor" = "peach";
       "window.titleBarStyle" = "native";
       "editor.formatOnType" = true;
       "window.zoomLevel" = 1;
