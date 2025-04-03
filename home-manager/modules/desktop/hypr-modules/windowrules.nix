@@ -1,13 +1,13 @@
 {
-  windowrule = [
-    "noblur, kando"
-    "opaque, kando"
-    "size 100% 100%, kando"
-    "noborder, kando"
-    "noanim, kando"
-    "float, kando"
-    "pin, kando"
-  ];
+  # windowrule = [
+  #   "noblur, kando"
+  #   "opaque, kando"
+  #   "size 100% 100%, kando"
+  #   "noborder, kando"
+  #   "noanim, kando"
+  #   "float, kando"
+  #   "pin, kando"
+  # ];
 
   windowrulev2 = [
     "float,class:Clockify"
