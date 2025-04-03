@@ -937,7 +937,7 @@ in {
   # Cloudflare Tunnels
   services.cloudflared = {
     enable = false;
-    user = "cloudflared";
+    # user = "cloudflared";
   };
 
   # Syncthing
