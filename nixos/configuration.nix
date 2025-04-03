@@ -889,7 +889,7 @@ in {
   networking = {
     defaultGateway = "10.24.24.1";
     nameservers = [
-      "1.1.1.1"
+      # "1.1.1.1"
       "10.24.24.9"
     ];
   };
