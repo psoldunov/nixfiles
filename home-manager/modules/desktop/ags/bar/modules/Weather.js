@@ -1,4 +1,4 @@
-const city = "Limassol";
+const city = "Pareklisia%20Limassol";
 
 const weather = Variable([], {
   poll: [
