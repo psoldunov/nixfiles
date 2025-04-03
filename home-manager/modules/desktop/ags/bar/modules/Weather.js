@@ -1,4 +1,4 @@
-const city = "Tallinn";
+const city = "Limassol";
 
 const weather = Variable([], {
   poll: [
