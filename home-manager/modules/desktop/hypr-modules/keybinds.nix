@@ -59,9 +59,6 @@ in {
     "$MOD1, RETURN, exec, ${pkgs.ghostty}/bin/ghostty"
     "$MOD1, SPACE, exec, pkill rofi || rofi -show drun"
 
-    # kando
-    "$ctrl, SPACE, global, kando:example-menu"
-
     # MOD2 Hyprland move windows VIM style
     "$MOD2, H, movewindow, l"
     "$MOD2, L, movewindow, r"

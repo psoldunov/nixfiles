@@ -69,7 +69,6 @@ in {
         monitor = "DP-1,preferred,auto,1";
         ecosystem = {
           no_update_news = true;
-          no_update_check = true;
         };
         input = {
           kb_layout = "us,ru";

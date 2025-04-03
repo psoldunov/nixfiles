@@ -644,7 +644,7 @@ in {
       file-roller
       grilo
       grilo-plugins
-      kando
+
       sg3_utils
       solaar
       evince
