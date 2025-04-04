@@ -23,8 +23,16 @@ in {
       path = "${boundary}/promise";
     }
     {
-      name = "fullsteam";
+      name = "fullsteam-onboarding";
       path = "${boundary}/fullsteam-onboarding";
+    }
+    {
+      name = "fullsteam-portal";
+      path = "${boundary}/fullsteam-portal";
+    }
+    {
+      name = "fullsteam-sanity";
+      path = "${boundary}/fullsteam-sanity";
     }
     {
       name = "angrymob-next";
