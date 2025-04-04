@@ -165,7 +165,7 @@ in {
             name = "remote-explorer";
             publisher = "ms-vscode";
             version = "0.5.2025021709";
-            sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            sha256 = "tCNkC7qa59oL9TXA+OKN0Tq5wl0TOLJhHpiKRLmMlgo=";
           }
         ];
     };
