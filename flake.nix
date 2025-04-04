@@ -125,7 +125,7 @@
               sops-nix.homeManagerModules.sops
               ags.homeManagerModules.default
               # hyprland.homeManagerModules.default
-              catppuccin.homeManagerModules.catppuccin
+              catppuccin.homeModules.catppuccin
               {
                 home.packages = [
                   zen-browser.packages."${system}".default
