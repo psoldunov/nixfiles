@@ -1,7 +1,7 @@
 {config, ...}: let
   home = config.home.homeDirectory;
   projects = "${home}/Projects";
-  tsc = "${projects}/tsc";
+  tsc = "${projects}/TSC";
   personal = "${projects}/Personal";
   boundary = "${projects}/Boundary";
   amalgam = "${projects}/Amalgam";
