@@ -18,6 +18,7 @@
     "size 76 32,title:^(Firefox — Sharing Indicator)$"
     "float,class:(xfce-polkit)"
     "noborder,class:(xfce-polkit)"
+    "float,class:figma-linux,title:Choose directory for export file"
     "float,class:(polkit-gnome-authentication-agent-1)"
     "noborder,class:(polkit-gnome-authentication-agent-1)"
     "noborder,class:(steam)"
