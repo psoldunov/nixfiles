@@ -7,6 +7,10 @@
 in {
   items = [
     {
+      name = "snippets";
+      path = "${projects}/Snippets";
+    }
+    {
       name = "navier";
       path = "${amalgam}/navier";
     }
