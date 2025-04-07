@@ -86,6 +86,10 @@ in {
             natural_scroll = "yes";
           };
         };
+        render = {
+          cm_fs_passthrough = 2;
+          cm_enabled = true;
+        };
         general = {
           gaps_in = 4;
           gaps_out = 4;
