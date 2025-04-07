@@ -24,7 +24,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -61,7 +61,7 @@
     sops-nix,
     home-manager,
     apple-fonts,
-    # hyprland,
+    hyprland,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -100,7 +100,7 @@
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
-        # hyprland.nixosModules.default
+        hyprland.nixosModules.default
         nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
@@ -124,7 +124,7 @@
             sharedModules = [
               sops-nix.homeManagerModules.sops
               ags.homeManagerModules.default
-              # hyprland.homeManagerModules.default
+              hyprland.homeManagerModules.default
               catppuccin.homeModules.catppuccin
               {
                 home.packages = [
