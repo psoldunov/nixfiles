@@ -87,8 +87,7 @@ in {
           };
         };
         render = {
-          cm_fs_passthrough = 2;
-          cm_enabled = true;
+          xp_mode = true;
         };
         general = {
           gaps_in = 4;
