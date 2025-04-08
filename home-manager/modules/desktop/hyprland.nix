@@ -87,7 +87,7 @@ in {
           };
         };
         render = {
-          explicit_sync = 0;
+          # explicit_sync = 0;
         };
         general = {
           gaps_in = 4;
@@ -127,20 +127,26 @@ in {
         debug = {
           overlay = "off";
         };
+        cursor = {
+          no_hardware_cursors = 0;
+        };
+        opengl = {
+          nvidia_anti_flicker = false;
+        };
         misc = {
           focus_on_activate = true;
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
           allow_session_lock_restore = true;
           anr_missed_pings = 4;
-          # vrr = 2;
-          vrr = 1;
+          vrr = 2;
+          # vrr = 1;
           key_press_enables_dpms = true;
         };
         experimental = {
           # wide_color_gamut = true;
           # hdr = true;
-          xx_color_management_v4 = true;
+          # xx_color_management_v4 = true;
         };
         device = [
           {
