@@ -87,7 +87,7 @@ in {
           };
         };
         render = {
-          explicit_sync_kms = 0;
+          explicit_sync = 0;
         };
         general = {
           gaps_in = 4;
