@@ -125,7 +125,7 @@ in {
         #   new_is_master = true;
         # };
         debug = {
-          overlay = "on";
+          overlay = "off";
         };
         misc = {
           focus_on_activate = true;
