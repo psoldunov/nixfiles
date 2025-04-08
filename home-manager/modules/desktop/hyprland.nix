@@ -135,7 +135,7 @@ in {
           allow_session_lock_restore = true;
           anr_missed_pings = 4;
           # vrr = 2;
-          vrr = 0;
+          vrr = 1;
           key_press_enables_dpms = true;
         };
         experimental = {
