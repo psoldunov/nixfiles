@@ -40,6 +40,10 @@ in {
       path = "${boundary}/fullsteam-portal";
     }
     {
+      name = "toca-madera-2025";
+      path = "${boundary}/toca-madera-2025";
+    }
+    {
       name = "fullsteam-sanity";
       path = "${boundary}/fullsteam-sanity";
     }
