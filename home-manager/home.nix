@@ -75,6 +75,14 @@ in {
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
     };
+    postman = {
+      name = "Postman";
+      genericName = "API Development Environment";
+      icon = "postman";
+      exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://web.postman.co/workspaces" %U'';
+      terminal = false;
+      categories = ["Development"];
+    };
     memos = {
       name = "Memos";
       genericName = "Notes Manager";
@@ -261,7 +269,6 @@ in {
       qflipper
       # rpi-imager
       # mysql-workbench
-      postman
       geekbench
       deno
       neovim
