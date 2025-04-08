@@ -87,7 +87,7 @@ in {
           };
         };
         render = {
-          xp_mode = true;
+          direct_scanout = 1;
         };
         general = {
           gaps_in = 4;
