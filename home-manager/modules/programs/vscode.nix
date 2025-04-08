@@ -124,7 +124,8 @@ in {
           tamasfe.even-better-toml
           vincaslt.highlight-matching-tag
           dbaeumer.vscode-eslint
-
+          graphql.vscode-graphql
+          graphql.vscode-graphql-syntax
           wix.vscode-import-cost
           yoavbls.pretty-ts-errors
         ]
