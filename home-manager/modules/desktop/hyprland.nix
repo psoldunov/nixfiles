@@ -125,10 +125,7 @@ in {
         #   new_is_master = true;
         # };
         debug = {
-          overlay = "on";
-        };
-        opengl = {
-          nvidia_anti_flicker = false;
+          overlay = "off";
         };
         misc = {
           focus_on_activate = true;
