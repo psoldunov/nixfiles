@@ -89,6 +89,9 @@ in {
         render = {
           # explicit_sync = 0;
         };
+        cursor = {
+          enable_hyprcursor = false;
+        };
         general = {
           gaps_in = 4;
           gaps_out = 4;
