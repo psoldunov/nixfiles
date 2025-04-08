@@ -125,7 +125,7 @@ in {
         #   new_is_master = true;
         # };
         debug = {
-          overlay = "off";
+          overlay = "on";
         };
         misc = {
           focus_on_activate = true;
@@ -134,8 +134,6 @@ in {
           allow_session_lock_restore = true;
           anr_missed_pings = 4;
           vrr = 2;
-          vfr = false;
-          # vrr = 1;
           key_press_enables_dpms = true;
         };
         experimental = {
