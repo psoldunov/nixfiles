@@ -125,10 +125,7 @@ in {
         #   new_is_master = true;
         # };
         debug = {
-          overlay = "off";
-        };
-        cursor = {
-          no_hardware_cursors = 0;
+          overlay = "on";
         };
         opengl = {
           nvidia_anti_flicker = false;
@@ -140,6 +137,7 @@ in {
           allow_session_lock_restore = true;
           anr_missed_pings = 4;
           vrr = 2;
+          vfr = false;
           # vrr = 1;
           key_press_enables_dpms = true;
         };
