@@ -67,7 +67,7 @@ in {
           "${config.xdg.configHome}/hypr/exec.conf"
         ];
         monitor = [
-          "DP-1,3840x2160@144,0x0,1"
+          "DP-1,3840x2160@144,0x0,1,,,cm,auto"
           # "DP-2,preferred,auto,1"
         ];
         ecosystem = {
