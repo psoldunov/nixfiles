@@ -780,7 +780,7 @@ in {
       playerctl
       qdigidoc
       libdigidocpp
-      kdePackages.xwaylandvideobridge
+      # kdePackages.xwaylandvideobridge
       logitech-udev-rules
       tmux
       fastfetch
