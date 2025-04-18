@@ -4,7 +4,7 @@
   pkgs-stable,
   ...
 }: let
-  enableContinue = true;
+  enableContinue = false;
   enableVimMode = false;
 in {
   programs.vscode = {
