@@ -179,7 +179,7 @@ in {
             name = "copilot-chat";
             publisher = "github";
             version = "0.27.2025041801";
-            sha256 = "tCNkC7qa59oL9TXA+OKN0Tq5wl0TOLJhHpiKRLmMlgo=";
+            sha256 = "Ihn7V2bLrXp/g5C/Uf2ZLJb1RBT6MjjS+aYjtMlAVJo=";
           }
         ];
     };
