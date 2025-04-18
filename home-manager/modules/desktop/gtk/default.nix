@@ -23,7 +23,7 @@ in {
 
     cursorTheme = lib.mkIf globalSettings.enableHyprland {
       name = "catppuccin-mocha-dark-cursors";
-      size = 16;
+      size = lib.mkForce 16;
     };
 
     font = lib.mkIf globalSettings.enableHyprland {
