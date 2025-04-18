@@ -68,8 +68,7 @@ in {
         ];
         monitor = [
           "DP-1,3840x2160@144,0x0,1,,,cm,auto"
-          "HDMI-A-1,3840x2160@120,0x0,1,,,cm,auto"
-          # "DP-2,preferred,auto,1"
+          "HDMI-A-1,3840x2160@120,0x0,1.1,,,cm,auto"
         ];
         ecosystem = {
           no_update_news = true;
