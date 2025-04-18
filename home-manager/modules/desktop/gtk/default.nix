@@ -21,11 +21,10 @@ in {
       package = pkgs.papirus-icon-theme;
     };
 
-    # cursorTheme = lib.mkIf globalSettings.enableHyprland {
-    #   name = "catppuccin-mocha-dark-cursors";
-    #   # package = pkgs.catppuccin-cursors.mochaDark;
-    #   size = 24;
-    # };
+    cursorTheme = lib.mkIf globalSettings.enableHyprland {
+      name = "catppuccin-mocha-dark-cursors";
+      size = 16;
+    };
 
     font = lib.mkIf globalSettings.enableHyprland {
       name = "SF Pro Display";
