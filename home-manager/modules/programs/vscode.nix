@@ -172,13 +172,13 @@ in {
           {
             name = "copilot";
             publisher = "github";
-            version = "1.304.1516";
+            version = "1.303.0";
             sha256 = "NWeRoQJCWmpup04ntYMpH0esKkVmpNAiXUtxC9tOX2w=";
           }
           {
             name = "copilot-chat";
             publisher = "github";
-            version = "0.27.2025041801";
+            version = "0.27.2025041601";
             sha256 = "Ihn7V2bLrXp/g5C/Uf2ZLJb1RBT6MjjS+aYjtMlAVJo=";
           }
         ];
