@@ -146,8 +146,8 @@ in {
             ]
           else
             with pkgs.vscode-extensions; [
-              github.copilot
-              github.copilot-chat
+              # github.copilot
+              # github.copilot-chat
             ]
         )
         ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -167,6 +167,18 @@ in {
             name = "remote-explorer";
             publisher = "ms-vscode";
             version = "0.5.2025021709";
+            sha256 = "tCNkC7qa59oL9TXA+OKN0Tq5wl0TOLJhHpiKRLmMlgo=";
+          }
+          {
+            name = "copilot";
+            publisher = "github";
+            version = "1.304.1516";
+            sha256 = "tCNkC7qa59oL9TXA+OKN0Tq5wl0TOLJhHpiKRLmMlgo=";
+          }
+          {
+            name = "copilot-chat";
+            publisher = "github";
+            version = "1.304.1516";
             sha256 = "tCNkC7qa59oL9TXA+OKN0Tq5wl0TOLJhHpiKRLmMlgo=";
           }
         ];
