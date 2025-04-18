@@ -154,16 +154,26 @@
     pkill -9 wine steam wineserver winedevice.exe explorer.exe gamescope plugplay.exe services.exe svchost.exe rpcss.exe .exe
   '';
 
+  # start_static_wallpaper = (
+  #   pkgs.writeShellScriptBin "start_static_wallpaper" ''
+  #     STATIC_WALLPAPER=$1
+  #     if pgrep -x "swww-daemon" > /dev/null
+  #     then
+  #         echo "swww is running. Stopping it now..."
+  #         ${pkgs.swww}/bin/swww kill
+  #     fi
+  #     ${pkgs.swww}/bin/swww-daemon &
+  #     ${pkgs.swww}/bin/swww img "$STATIC_WALLPAPER"
+  #     ${pkgs.imagemagick}/bin/magick "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
+  #     exit 0
+  #   ''
+  # );
+
   start_static_wallpaper = (
     pkgs.writeShellScriptBin "start_static_wallpaper" ''
       STATIC_WALLPAPER=$1
-      if pgrep -x "swww-daemon" > /dev/null
-      then
-          echo "swww is running. Stopping it now..."
-          ${pkgs.swww}/bin/swww kill
-      fi
-      ${pkgs.swww}/bin/swww-daemon &
-      ${pkgs.swww}/bin/swww img "$STATIC_WALLPAPER"
+      hyprctl hyprpaper preload "$STATIC_WALLPAPER"
+      hyprctl hyprpaper wallpaper "HDMI-A-1,$STATIC_WALLPAPER"
       ${pkgs.imagemagick}/bin/magick "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
       exit 0
     ''

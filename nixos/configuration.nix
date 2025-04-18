@@ -760,6 +760,7 @@ in {
       evtest
       trigger-control
       hyprpicker
+      hyprpaper
       corepack
       localsend
       calibre
