@@ -4,11 +4,11 @@
   pkgs-stable,
   ...
 }: let
-  enableContinue = true;
+  enableContinue = false;
   enableVimMode = false;
 in {
   programs.vscode = {
-    enable = false;
+    enable = true;
     profiles.default = {
       enableUpdateCheck = false;
       enableExtensionUpdateCheck = false;
