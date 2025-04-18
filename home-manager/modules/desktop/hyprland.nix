@@ -183,7 +183,7 @@ in {
 
   home.sessionVariables = {
     HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-    HYPRCURSOR_SIZE = lib.mkForce "32";
+    HYPRCURSOR_SIZE = lib.mkForce "24";
     ASAN_OPTIONS = "log_path=~/asan.log";
     MOZ_ENABLE_WAYLAND = 1;
     XDG_CURRENT_DESKTOP = "Hyprland";

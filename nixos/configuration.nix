@@ -310,7 +310,7 @@ in {
           XCURSOR_THEME = "catppuccin-mocha-dark-cursors";
           # XDG_DATA_DIRS = "${catppuccinPackage}/share/themes:${pkgs.papirus-icon-theme}/share/icons:$XDG_DATA_DIRS";
           HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
-          HYPRCURSOR_SIZE = "32";
+          HYPRCURSOR_SIZE = "24";
           ICON_THEME = "Papirus-Dark";
           GTK_THEME = "catppuccin-mocha-peach-standard";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
