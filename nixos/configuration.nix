@@ -632,7 +632,6 @@ in {
       alejandra
       dive
       gperftools
-      swww
       rhythmbox
       polkit_gnome
       libsecret

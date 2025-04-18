@@ -55,6 +55,16 @@
 in {
   services.mpris-proxy.enable = true;
 
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      preload = ["${wallpaperPath}"];
+      wallpaper = [
+        "HDMI-A-1,${wallpaperPath}"
+      ];
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = globalSettings.enableHyprland;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -202,7 +212,7 @@ in {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
-        exec-once = start_static_wallpaper ${wallpaperPath}
+        # exec-once = start_static_wallpaper ${wallpaperPath}
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
       '';
