@@ -92,6 +92,7 @@ in {
         "explorer.confirmDragAndDrop" = false;
         "explorer.confirmDelete" = false;
         "editor.wordWrap" = "on";
+        "github.copilot.nextEditSuggestions.enabled" = true;
         "extensions.autoUpdate" = false;
       };
       extensions = with pkgs.vscode-extensions;
