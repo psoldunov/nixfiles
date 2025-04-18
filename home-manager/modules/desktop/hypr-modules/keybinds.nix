@@ -56,7 +56,7 @@ in {
     "$MOD1, J, movefocus, d"
 
     # MOD1 Terminal + Rofi
-    "$MOD1, RETURN, exec, ${pkgs.ghostty}/bin/ghostty"
+    "$MOD1, RETURN, exec, ${pkgs.kitty}/bin/kitty"
     "$MOD1, SPACE, exec, pkill rofi || rofi -show drun"
 
     # MOD2 Hyprland move windows VIM style
@@ -86,7 +86,7 @@ in {
     # MOD3 Applications Launcher
     "$MOD3, F, exec, brave"
     "$MOD3, E, exec, nemo"
-    "$MOD3, T, exec, ${pkgs.ghostty}/bin/ghostty -e tmux"
+    "$MOD3, T, exec, ${pkgs.kitty}/bin/kitty -e tmux"
     "$MOD3, V, exec, code --new-window"
     "$MOD3, C, exec, google-chrome"
     "$MOD3, S, exec, slack"
@@ -131,7 +131,7 @@ in {
     "$ctrl, K, workspace, e+1"
 
     # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-    "$option, RETURN, exec, ${pkgs.ghostty}/bin/ghostty"
+    "$option, RETURN, exec, ${pkgs.kitty}/bin/kitty -c ~/.config/kitty/kitty-nuphy.conf"
     "$cmd, Q, killactive,"
     "$cmd $ctrl, Q, exec, lock_screen"
     "$ctrl, M, exit, "

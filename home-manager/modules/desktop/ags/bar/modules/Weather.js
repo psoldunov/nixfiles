@@ -61,11 +61,7 @@ export default function Weather() {
     visible: weather.bind().as((data) => !!data),
     className: "weather-button",
     onClicked: () =>
-      Utils.execAsync([
-        "bash",
-        "-c",
-        `ghostty --wait-after-command=true -e curl "wttr.in/${city}"`,
-      ]),
+      Utils.execAsync(["bash", "-c", `kitty -e --hold curl "wttr.in/${city}"`]),
     child: Widget.Box({
       spacing: 8,
       children: [

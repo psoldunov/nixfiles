@@ -169,7 +169,7 @@ in {
         "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
         "text/html" = ["brave-browser.desktop"];
         "text/*" = ["code.desktop" "zed.desktop"];
-        "TerminalEmulator" = "ghostty.desktop";
+        "TerminalEmulator" = "kitty.desktop";
         "image/jpeg" = ["org.gnome.eog.desktop"];
         "image/png" = ["org.gnome.eog.desktop"];
         "image/svg+xml" = ["org.gnome.eog.desktop"];
@@ -611,7 +611,6 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
-      ghostty
       catppuccinPackage
       papirus-icon-theme
       abcde
@@ -620,7 +619,7 @@ in {
       libmusicbrainz
       monkeysAudio
       libdiscid
-      (writeShellScriptBin "gnome-terminal" "exec -a $0 ${pkgs.ghostty}/bin/ghostty $@")
+      (writeShellScriptBin "gnome-terminal" "exec -a $0 ${pkgs.kitty}/bin/kitty $@")
       appimage-run
       wev
       usbutils
