@@ -3,37 +3,6 @@ const hyprland = await Service.import("hyprland");
 
 /** @param {import('types/service/mpris').MprisPlayer} player */
 
-/*
-[{
-    "address": "0x26c048d0",
-    "mapped": true,
-    "hidden": false,
-    "at": [3840, 2160],
-    "size": [100, 100],
-    "workspace": {
-        "id": 1,
-        "name": "1"
-    },
-    "floating": true,
-    "pseudo": false,
-    "monitor": 0,
-    "class": "xwaylandvideobridge",
-    "title": "Wayland to X Recording bridge — Xwayland Video Bridge",
-    "initialClass": "xwaylandvideobridge",
-    "initialTitle": "Wayland to X Recording bridge — Xwayland Video Bridge",
-    "pid": 15541,
-    "xwayland": true,
-    "pinned": false,
-    "fullscreen": 0,
-    "fullscreenClient": 0,
-    "grouped": [],
-    "tags": [],
-    "swallowing": "0x0",
-    "focusHistoryID": 7,
-    "inhibitingIdle": false
-}]
-    */
-
 const focusWindow = (name) => {
   const address = hyprland.clients.find(
     (c) => c.class === (name === "spotify" ? "Spotify" : name)
