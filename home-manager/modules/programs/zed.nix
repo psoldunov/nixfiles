@@ -19,7 +19,7 @@
         nickname = "BigTasty";
       }
     ];
-    theme = "Catppuccin Mocha Peach";
+    theme = lib.mkForce "Catppuccin Mocha Peach";
     vim_mode = false;
     ui_font_size = 18.5;
     buffer_font_size = 18.5;
