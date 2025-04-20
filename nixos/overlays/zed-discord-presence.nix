@@ -20,7 +20,7 @@ self: super: {
       # Update `sha256` based on architecture-specific tarballs.
       sha256 =
         if super.stdenv.system == "x86_64-linux"
-        then "sha256-dHeM9e6sjvvOzcBoAyAZ60ELfy51q/ZEI6TN8yZY1FU="
+        then "sha256-QiHo4euR5sbI5P4yAhcQAE9rJl88b2eYt0fZPiPE18E="
         else if super.stdenv.system == "x86_64-darwin"
         then "03p6h2ls3687f73533yx7mc8imnb2bjdxg50006ycn9i9a6b76p6"
         else if super.stdenv.system == "aarch64-darwin"
