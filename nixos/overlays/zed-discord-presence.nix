@@ -46,7 +46,7 @@ self: super: {
     '';
 
     meta = {
-      description = "A language server that handles hover information in package.json files";
+      description = "extension for zed that adds support for discord rich presence using lsp";
       homepage = "https://github.com/xhyrom/zed-discord-presence";
       platforms = [
         "x86_64-linux"

@@ -94,6 +94,13 @@ in {
     executable = true;
   };
 
+  home.file."${config.xdg.dataHome}/zed/extensions/work/discord-presence/discord-presence-lsp" = {
+    source = pkgs.writeShellScript "discord-presence-lsp" ''
+      ${pkgs.zed-discord-presence}/bin/discord-presence-lsp
+    '';
+    executable = true;
+  };
+
   home.file."${config.xdg.configHome}/zed/themes/catppuccin-mocha-peach.json" = {
     text = ''
       {
