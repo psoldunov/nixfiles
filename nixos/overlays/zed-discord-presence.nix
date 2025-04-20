@@ -32,11 +32,6 @@ self: super: {
       autoPatchelfHook
     ];
 
-    buildInputs = with super; [
-      openssl
-      libgcc
-    ];
-
     sourceRoot = ".";
 
     installPhase = ''
