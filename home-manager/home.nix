@@ -126,7 +126,7 @@ in {
       name = "Open Nixfiles in Zed";
       genericName = "This opens nixfiles in Zed";
       icon = "nix-snowflake";
-      exec = "${pkgs.zed-editor}/bin/zeditor --new /home/psoldunov/.nixfiles";
+      exec = "zeditor --new /home/psoldunov/.nixfiles";
     };
     "nixfiles-code" = {
       name = "Open Nixfiles in VS Code";
@@ -304,7 +304,6 @@ in {
         withVencord = true;
       })
       motrix
-      zed-editor
       transmission-remote-gtk
       (
         pkgs.writeScriptBin "hello-world" ''

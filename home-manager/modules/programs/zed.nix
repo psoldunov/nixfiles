@@ -57,22 +57,22 @@
     };
   };
 in {
-programs.zed-editor = {
+  programs.zed-editor = {
     enable = true;
     installRemoteServer = true;
     extraPackages = with pkgs; [
-        alejandra
+      alejandra
     ];
     # userSettings = zedConfig;
     extensions = [
-        "html"
-        "toml"
-        "git-firefly"
-        "scss"
-        "nix"
-        "discord-presence"
+      "html"
+      "toml"
+      "git-firefly"
+      "scss"
+      "nix"
+      "discord-presence"
     ];
-};
+  };
 
   home.file."${config.xdg.dataHome}/zed/node/" = {
     source = pkgs.nodejs_22;
