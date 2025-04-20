@@ -34,7 +34,7 @@
     selected_project=$(echo -e "$project_names" | rofi -no-fixed-num-lines -dmenu -p "Select a project")
 
     if [[ -n "$selected_project" && -n "''${projects[$selected_project]}" ]]; then
-        ${pkgs.zed}/bin/zeditor -n "''${projects[$selected_project]}"
+        ${pkgs.zed-editor}/bin/zeditor -n "''${projects[$selected_project]}"
     else
         echo "No valid project selected."
     fi
