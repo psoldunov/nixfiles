@@ -34,7 +34,7 @@
     assistant = {
       default_model = {
         provider = "anthropic";
-        model = "claude-3-5-sonnet";
+        model = "claude-3-7-sonnet-latest";
       };
       version = "2";
     };
@@ -63,7 +63,7 @@ in {
     extraPackages = with pkgs; [
       alejandra
     ];
-    # userSettings = zedConfig;
+    userSettings = zedConfig;
     extensions = [
       "html"
       "toml"
