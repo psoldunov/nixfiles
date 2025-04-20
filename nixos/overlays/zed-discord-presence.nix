@@ -32,6 +32,11 @@ self: super: {
       autoPatchelfHook
     ];
 
+    buildInputs = with super; [
+      libz
+      libgcc
+    ];
+
     sourceRoot = ".";
 
     installPhase = ''
