@@ -1,5 +1,5 @@
 self: super: {
-  zed-discord-presence = zed-discord-presence rec {
+  zed-discord-presence = super.stdenv.mkDerivation rec {
     pname = "zed-discord-presence";
     version = "0.7.0";
 
