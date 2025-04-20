@@ -57,6 +57,23 @@
     };
   };
 in {
+programs.zed-editor = {
+    enable = true;
+    installRemoteServer = true;
+    extraPackages = with pkgs; [
+        alejandra
+    ];
+    # userSettings = zedConfig;
+    extensions = [
+        "html"
+        "toml"
+        "git-firefly"
+        "scss"
+        "nix"
+        "discord-presence"
+    ];
+};
+
   home.file."${config.xdg.dataHome}/zed/node/" = {
     source = pkgs.nodejs_22;
     recursive = true;
@@ -75,10 +92,6 @@ in {
     '';
     executable = true;
   };
-
-  #   home.file."${config.xdg.configHome}/zed/settings.json" = {
-  #     text = "${builtins.toJSON zedConfig}";
-  #   };
 
   home.file."${config.xdg.configHome}/zed/themes/catppuccin-mocha-peach.json" = {
     text = ''
