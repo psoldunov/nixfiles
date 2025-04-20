@@ -483,6 +483,7 @@ in {
     (import ./overlays/bun.nix)
     # (import ./overlays/supabase-cli.nix)
     (import ./overlays/package-version-server.nix)
+    (import ./overlays/zed-discord-presence.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
@@ -611,6 +612,7 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
+      zed-discord-presence
       catppuccinPackage
       papirus-icon-theme
       abcde
