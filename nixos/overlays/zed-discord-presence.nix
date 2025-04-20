@@ -41,7 +41,7 @@ self: super: {
 
     installPhase = ''
       runHook preInstall
-      install -m755 -D discord-presence-lsp-${arch} $out/bin/discord-presence-lsp
+      install -m755 -D discord-presence-lsp $out/bin/discord-presence-lsp
       runHook postInstall
     '';
 
