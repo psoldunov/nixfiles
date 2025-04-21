@@ -54,11 +54,14 @@
     vim_mode = false;
   };
 in {
+  catppuccin.zed.enable = false;
+
   programs.zed-editor = {
     enable = true;
     installRemoteServer = true;
     userSettings = zedConfig;
     extensions = [
+      "discord-presence"
       "html"
       "toml"
       "git-firefly"
