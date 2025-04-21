@@ -612,6 +612,7 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
+      prisma
       nodePackages.prettier
       catppuccinPackage
       papirus-icon-theme
