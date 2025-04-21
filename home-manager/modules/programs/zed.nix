@@ -31,6 +31,9 @@
         };
       };
       TypeScript = {
+        code_actions_on_format = {
+          "source.addMissingImports" = true;
+        };
         formatter = {
           external = {
             command = "${pkgs.nodePackages.prettier}/bin/prettier";
