@@ -64,7 +64,7 @@ in {
     extraPackages = with pkgs; [
       alejandra
     ];
-    userSettings = zedConfig;
+    # userSettings = zedConfig;
     extensions = [
       "html"
       "toml"
