@@ -30,9 +30,12 @@
       };
     };
     languages = {
-        Markdown = {
-          show_inline_completions = false;
-        };
+      Prisma = {
+        format_on_save = true;
+      };
+      Markdown = {
+        show_inline_completions = false;
+      };
       Nix = {
         format_on_save = {
           external = {
