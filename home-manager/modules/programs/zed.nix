@@ -21,6 +21,14 @@
       HTML = ["html" "svg"];
     };
     font_family = "SFMono Nerd Font";
+    formatter = {
+      code_actions_on_format = {
+        "source.addMissingImports.ts" = true;
+      };
+      code_action = {
+        "source.addMissingImports.ts" = true;
+      };
+    };
     languages = {
       Nix = {
         format_on_save = {
