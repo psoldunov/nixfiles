@@ -30,6 +30,14 @@
           };
         };
       };
+      TypeScript = {
+        formatter = {
+          external = {
+            command = "${pkgs.nodePackages.prettier}/bin/prettier";
+            arguments = ["--stdin-filepath" "{buffer_path}"];
+          };
+        };
+      };
     };
     relative_line_numbers = false;
     soft_wrap = "editor_width";
