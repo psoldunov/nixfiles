@@ -31,15 +31,22 @@
     };
     languages = {
       Prisma = {
-        formatter = {
+        format_on_save = {
           external = {
             command = "${pkgs.prisma}/bin/prisma";
-            arguments = ["format" "--schema" "{buffer_path}"];
-            stdin = true;
+            arguments = ["format"];
           };
         };
-        format_on_save = "on";
       };
+      #       "JavaScript": {
+      #   "formatter": {
+      #     "external": {
+      #       "command": "prettier",
+      #       "arguments": ["--stdin-filepath", "{buffer_path}"]
+      #     }
+      #   },
+      #   "format_on_save": "on"
+      # },
       Markdown = {
         show_inline_completions = false;
       };
