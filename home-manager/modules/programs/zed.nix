@@ -81,6 +81,7 @@ in {
     userSettings = zedConfig;
     extensions = [
       "discord-presence"
+      "prisma"
       "html"
       "toml"
       "git-firefly"
