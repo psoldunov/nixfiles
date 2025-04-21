@@ -32,7 +32,7 @@
       };
       TypeScript = {
         code_actions_on_format = {
-          "source.addMissingImports" = true;
+          "source.addMissingImports.ts" = true;
         };
         formatter = {
           external = {
