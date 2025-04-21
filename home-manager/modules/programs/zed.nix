@@ -6,8 +6,8 @@
   zedConfig = {
     assistant = {
       default_model = {
-        model = "claude-3-7-sonnet-latest";
-        provider = "copilot";
+        model = "gpt-4.1";
+        provider = "copilot_chat";
       };
       version = "2";
     };
