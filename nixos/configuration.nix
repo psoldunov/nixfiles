@@ -612,7 +612,7 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
-      zed-discord-presence
+      nodePackages.prettier
       catppuccinPackage
       papirus-icon-theme
       abcde
