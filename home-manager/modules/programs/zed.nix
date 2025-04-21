@@ -31,7 +31,12 @@
     };
     languages = {
       Prisma = {
-        format_on_save = true;
+        format_on_save = {
+          external = {
+            command = "${pkgs.prisma}/bin/prisma format";
+            arguments = ["--schema" "{buffer_path}"];
+          };
+        };
       };
       Markdown = {
         show_inline_completions = false;
