@@ -58,6 +58,8 @@
     };
   };
 in {
+    catppuccin.zed.enable = false;
+
   programs.zed-editor = {
     enable = true;
     installRemoteServer = true;
@@ -65,14 +67,14 @@ in {
       alejandra
     ];
     # userSettings = zedConfig;
-    extensions = [
-      "html"
-      "toml"
-      "git-firefly"
-      "scss"
-      "nix"
-      "discord-presence"
-    ];
+    # extensions = [
+    #   "html"
+    #   "toml"
+    #   "git-firefly"
+    #   "scss"
+    #   "nix"
+    #   "discord-presence"
+    # ];
   };
 
   home.file."${config.xdg.dataHome}/zed/node/" = {
