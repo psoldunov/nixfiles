@@ -34,7 +34,7 @@
         format_on_save = {
           external = {
             command = "${pkgs.prisma}/bin/prisma format";
-            arguments = ["--schema" "{buffer_path}"];
+            arguments = [];
           };
         };
       };
