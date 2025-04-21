@@ -84,6 +84,5 @@ in {
   home.file."${config.xdg.dataHome}/zed/extensions/work/discord-presence" = {
     source = "${pkgs.zed-discord-presence}/bin/";
     force = true;
-    recursive = true;
   };
 }
