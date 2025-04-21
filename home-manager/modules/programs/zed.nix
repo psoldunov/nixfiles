@@ -64,7 +64,6 @@ in {
       "git-firefly"
       "scss"
       "nix"
-      "discord-presence"
     ];
   };
 
