@@ -30,6 +30,9 @@
       };
     };
     languages = {
+        Markdown = {
+          show_inline_completions = false;
+        };
       Nix = {
         format_on_save = {
           external = {
