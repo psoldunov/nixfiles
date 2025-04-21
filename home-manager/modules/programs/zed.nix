@@ -7,7 +7,7 @@
     assistant = {
       default_model = {
         model = "claude-3-7-sonnet-latest";
-        provider = "anthropic";
+        provider = "copilot";
       };
       version = "2";
     };
