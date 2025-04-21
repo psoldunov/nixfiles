@@ -9,7 +9,7 @@
         model = "claude-3-7-sonnet-latest";
         provider = "anthropic";
       };
-      version = 2;
+      version = "2";
     };
     auto_update = false;
     buffer_font_family = "SFMono Nerd Font";
