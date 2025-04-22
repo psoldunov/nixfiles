@@ -9,7 +9,7 @@
     GOPATH = "/home/psoldunov/.go";
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     DENO_INSTALL = "/home/psoldunov/.deno";
-    PATH = "HOME/.local/bin:/usr/sbin:$HOME/.local/podman/bin:$HOME/.cargo/bin:$DENO_INSTALL/bin:$PATH";
+    PATH = "HOME/.local/bin:/usr/sbin:$HOME/.local/podman/bin:$HOME/.cargo/bin:$DENO_INSTALL/bin:$BUN_PATH:$PATH";
     TERMINAL = "${pkgs.kitty}/bin/kitty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
