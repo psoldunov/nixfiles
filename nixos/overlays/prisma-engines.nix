@@ -9,7 +9,5 @@ self: super: {
       rev = version;
       hash = "sha256-moonBNNGWECGPvhyyeHKKAQRXj5lNP0k99JB+1POMUE=";
     };
-
-    cargoHash = "";
   });
 }
