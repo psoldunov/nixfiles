@@ -3,7 +3,7 @@ self: super: {
     pname = "prisma-engines";
     version = "6.6.0";
 
-    src = fetchFromGitHub {
+    src = super.fetchFromGitHub {
       owner = "prisma";
       repo = "prisma-engines";
       rev = version;
