@@ -13,6 +13,9 @@
     TERMINAL = "${pkgs.kitty}/bin/kitty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
+    PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
+    PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
+    PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
   };
 
   programs.lazygit = {
