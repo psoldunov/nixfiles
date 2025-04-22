@@ -10,6 +10,6 @@ self: super: {
       hash = "sha256-moonBNNGWECGPvhyyeHKKAQRXj5lNP0k99JB+1POMUE=";
     };
 
-    cargoHash = "sha256-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=";
+    cargoHash = "sha256-1almbackh06am0d2kc4a089n3al91jg3ahgg9kcrg3zfrwhhzzrq";
   });
 }
