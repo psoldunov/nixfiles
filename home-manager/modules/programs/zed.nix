@@ -30,14 +30,6 @@
       };
     };
     languages = {
-      Prisma = {
-        format_on_save = {
-          external = {
-            command = "${pkgs.prisma}/bin/prisma";
-            arguments = ["format"];
-          };
-        };
-      };
       #       "JavaScript": {
       #   "formatter": {
       #     "external": {
