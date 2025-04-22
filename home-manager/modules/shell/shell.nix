@@ -13,6 +13,7 @@
     TERMINAL = "${pkgs.kitty}/bin/kitty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
+    BUN_PATH = "${config.home.homeDirectory}/.bun/bin";
   };
 
   programs.lazygit = {
