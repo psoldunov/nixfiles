@@ -87,8 +87,8 @@ in {
       name = "Memos";
       genericName = "Notes Manager";
       icon = pkgs.fetchurl {
-        url = "https://memos.theswisscheese.com/logo.webp";
-        sha256 = "+HpE+5YdMqHOzj0AcXKJtKMPZSjGGmeF0Jfk/qspGFk=";
+        url = "https://avatars.githubusercontent.com/u/95764151?s=64";
+        sha256 = "1x97jwi994jlglmk9v8hf4cdmh2kdnbjjil9bipvh204c4ypjhqw";
       };
       exec = ''${pkgs.brave}/bin/brave --profile-directory=Default --new-window --app="https://memos.theswisscheese.com" %U'';
       terminal = false;
