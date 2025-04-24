@@ -16,16 +16,16 @@ self: super: {
     # Use system openssl.
     OPENSSL_NO_VENDOR = 1;
 
-    nativeBuildInputs = [pkg-config];
+    nativeBuildInputs = [super.pkg-config];
 
-    buildInputs = [openssl];
+    buildInputs = [super.openssl];
 
     preBuild = ''
-      export OPENSSL_DIR=${lib.getDev openssl}
-      export OPENSSL_LIB_DIR=${lib.getLib openssl}/lib
+      export OPENSSL_DIR=${super.lib.getDev openssl}
+      export OPENSSL_LIB_DIR=${super.lib.getLib openssl}/lib
 
       export PROTOC=${protobuf}/bin/protoc
-      export PROTOC_INCLUDE="${protobuf}/include";
+      export PROTOC_INCLUDE="${super.protobuf}/include";
 
       export SQLITE_MAX_VARIABLE_NUMBER=250000
       export SQLITE_MAX_EXPR_DEPTH=10000
