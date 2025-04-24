@@ -478,7 +478,7 @@ in {
   nixpkgs.overlays = [
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
-    # (import ./overlays/prisma-engines.nix)
+    (import ./overlays/prisma-engines.nix)
     (import ./overlays/pedro-raccoon-plymouth.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/bun.nix)
