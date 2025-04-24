@@ -45,7 +45,7 @@ self: super: {
     ];
 
     postInstall = ''
-      mv $out/lib/libquery_engine${stdenv.hostPlatform.extensions.sharedLibrary} $out/lib/libquery_engine.node
+      mv $out/lib/libquery_engine${super.stdenv.hostPlatform.extensions.sharedLibrary} $out/lib/libquery_engine.node
     '';
 
     # Tests are long to compile
