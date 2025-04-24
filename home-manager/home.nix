@@ -297,7 +297,7 @@ in {
       teams-for-linux
       protonup-ng
       via
-      rpcs3
+      # rpcs3
       ookla-speedtest
       (discord-canary.override {
         withOpenASAR = true;
@@ -305,12 +305,6 @@ in {
       })
       motrix
       transmission-remote-gtk
-      (
-        pkgs.writeScriptBin "hello-world" ''
-          #!${pkgs.bun}/bin/bun
-          console.log("hello world!");
-        ''
-      )
     ])
     ++ (with scripts; [
       kill_gamescope
