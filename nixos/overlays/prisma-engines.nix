@@ -51,7 +51,7 @@ self: super: {
     # Tests are long to compile
     doCheck = false;
 
-    meta = with lib; {
+    meta = with super.lib; {
       description = "Collection of engines that power the core stack for Prisma";
       homepage = "https://www.prisma.io/";
       license = licenses.asl20;
