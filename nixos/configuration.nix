@@ -612,6 +612,7 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
+      prisma
       nodePackages.prettier
       catppuccinPackage
       papirus-icon-theme
@@ -643,7 +644,6 @@ in {
       file-roller
       grilo
       grilo-plugins
-
       sg3_utils
       solaar
       evince
