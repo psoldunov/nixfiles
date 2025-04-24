@@ -297,7 +297,7 @@ in {
       teams-for-linux
       protonup-ng
       via
-      # rpcs3
+      rpcs3
       ookla-speedtest
       (discord-canary.override {
         withOpenASAR = true;
