@@ -21,10 +21,10 @@ self: super: {
     buildInputs = [super.openssl];
 
     preBuild = ''
-      export OPENSSL_DIR=${super.lib.getDev openssl}
-      export OPENSSL_LIB_DIR=${super.lib.getLib openssl}/lib
+      export OPENSSL_DIR=${super.lib.getDev super.openssl}
+      export OPENSSL_LIB_DIR=${super.lib.getLib super.openssl}/lib
 
-      export PROTOC=${protobuf}/bin/protoc
+      export PROTOC=${super.protobuf}/bin/protoc
       export PROTOC_INCLUDE="${super.protobuf}/include";
 
       export SQLITE_MAX_VARIABLE_NUMBER=250000
