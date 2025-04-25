@@ -2,6 +2,7 @@
   lib,
   globalSettings,
   pkgs,
+  config,
   ...
 }: let
   catppuccin-gtk-theme = pkgs.catppuccin-gtk.override {
