@@ -39,5 +39,17 @@ in {
       source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/assets";
       recursive = true;
     };
+    ".config/gtk-3.0/bookmarks" = {
+      force = true;
+      text = ''
+        file:///${config.home.homeDirectory}/Downloads Downloads
+        file:///${config.home.homeDirectory}/Projects Projects
+        file:///${config.home.homeDirectory}/Documents Documents
+        file:///${config.home.homeDirectory}/Videos Videos
+        file:///${config.home.homeDirectory}/Pictures Pictures
+        file:///${config.home.homeDirectory}/Nextcloud Nextcloud
+        file:///${config.home.homeDirectory}/Sync Sync
+      '';
+    };
   };
 }
