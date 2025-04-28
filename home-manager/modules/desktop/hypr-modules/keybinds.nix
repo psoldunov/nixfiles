@@ -131,7 +131,6 @@ in {
     "SUPER, RETURN, exec, ${pkgs.kitty}/bin/kitty"
     "CTRL, Q, killactive,"
     "SUPER, Q, killactive,"
-    "SUPER, W, closewindow,"
     "CTRL SUPER, Q, exec, lock_screen"
     "SUPER, M, exit, "
     "SUPER, E, exec, nemo"
