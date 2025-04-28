@@ -165,13 +165,8 @@ in {
           }
 
           {
-            name = "by-tech-air75-1";
-            kb_options = "grp:ctrl_space_toggle, compose:rctrl";
-          }
-
-          {
-            name = "by-tech-air75-2";
-            kb_options = "grp:ctrl_space_toggle, compose:rctrl";
+            name = "nuphy-nuphy-air75-v2-keyboard";
+            kb_options = "grp:alt_space_toggle, compose:rctrl";
           }
 
           {
