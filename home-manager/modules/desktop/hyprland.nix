@@ -87,6 +87,7 @@ in {
         };
         input = {
           kb_layout = "us,ru";
+          kb_options = "grp:alt_space_toggle, compose:rctrl";
           kb_variant = ",mac";
           follow_mouse = true;
           mouse_refocus = false;
@@ -157,21 +158,6 @@ in {
           {
             name = "dualsense-wireless-controller-touchpad";
             enabled = 0;
-          }
-
-          {
-            name = "nuphy-nuphy-air75-v2-keyboard";
-            kb_options = "grp:alt_space_toggle, compose:rctrl";
-          }
-
-          {
-            name = "kinesis-corporation-adv360-pro-keyboard";
-            kb_options = "grp:alt_space_toggle, compose:rctrl";
-          }
-
-          {
-            name = "adv360-pro-keyboard";
-            kb_options = "grp:alt_space_toggle, compose:rctrl";
           }
         ];
       }
