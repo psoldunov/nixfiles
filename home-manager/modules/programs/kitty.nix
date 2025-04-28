@@ -22,17 +22,4 @@
       confirm_os_window_close = 0;
     };
   };
-
-  home.file."${config.xdg.configHome}/kitty/kitty-nuphy.conf" = {
-    text = ''
-      include ${config.xdg.configHome}/kitty/kitty.conf
-      map ctrl+c copy_to_clipboard
-      map ctrl+v paste_from_clipboard
-      map super+c send_text normal,application \x03
-      map super+v send_text normal,application \x16
-      map super+x send_text normal,application \x18
-      map super+z send_text normal,application \x1a
-      map super+d send_text normal,application \x04
-    '';
-  };
 }
