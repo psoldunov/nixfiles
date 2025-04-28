@@ -40,14 +40,11 @@
     fi
   '';
 in {
-  "$ctrl" = "SUPER";
-  "$cmd" = "CTRL";
-  "$option" = "ALT";
   "$MOD1" = "CTRL_SUPER";
   "$MOD2" = "CTRL_SUPER_SHIFT";
   "$MOD3" = "CTRL_ALT";
   "$MOD4" = "CTRL_ALT_SHIFT";
-  "$optionShift" = "ALT_SHIFT";
+  "$altShift" = "ALT_SHIFT";
   bind = [
     # MOD1 Hyprland navigation VIM style
     "$MOD1, H, movefocus, l"
@@ -127,87 +124,89 @@ in {
     "$MOD4, K, exec, fish -c 'wkill'"
 
     # Nuphy binds
-    "$ctrl, J, workspace, e-1"
-    "$ctrl, K, workspace, e+1"
+    "SUPER, J, workspace, e-1"
+    "SUPER, K, workspace, e+1"
 
     # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-    "$option, RETURN, exec, ${pkgs.kitty}/bin/kitty -c ~/.config/kitty/kitty-nuphy.conf"
-    "$cmd, Q, killactive,"
-    "$cmd $ctrl, Q, exec, lock_screen"
-    "$ctrl, M, exit, "
-    "$ctrl, E, exec, nemo"
-    "$ctrl, A, togglespecialworkspace, music"
-    "$ctrl SHIFT, A, movetoworkspace, special"
-    "$ctrl, V, togglefloating, "
-    "$ctrl SHIFT, V, togglefloating,"
-    "$ctrl SHIFT, V, pin,"
-    "$ctrl, K, pin,"
-    # "$ctrl, T, exec, swaync-client -t -sw"
-    "$option, SPACE, exec, pkill rofi || rofi -show drun"
-    "$ctrl, F, fullscreen,"
-    "$ctrl SHIFT, P, exec, hyprpicker | wl-copy"
-    "$ctrl, P, pseudo, # dwindle"
-    "$ctrl, J, togglesplit, # dwindle"
-    # "$ctrl, X, exec, hyprprop | wl-copy "
-    "$ctrl SHIFT, r, exec, fish -c 'resetDE'"
-    "$ctrl, code:51, exec, 1password --quick-access & disown"
-    "$cmd SHIFT, 2, exec, ${scripts.grab_screen_text}/bin/grab_screen_text"
-    "$cmd SHIFT, 3, exec, ${scripts.create_screenshot}/bin/create_screenshot"
-    "$cmd SHIFT, 4, exec, ${scripts.create_screenshot_area}/bin/create_screenshot_area"
-    "$cmd SHIFT, 5, exec, ${scripts.record_screen}/bin/record_screen"
-    "$cmd SHIFT, M, exec, hyprpicker -a"
-    "$cmd SHIFT, V, exec, ${pkgs.cliphist}/bin/cliphist list | rofi -dmenu | ${pkgs.cliphist}/bin/cliphist decode | wl-copy"
+    "SUPER, RETURN, exec, ${pkgs.kitty}/bin/kitty"
+    "CTRL, Q, killactive,"
+    "SUPER, Q, killactive,"
+    "SUPER, W, closewindow,"
+    "CTRL SUPER, Q, exec, lock_screen"
+    "SUPER, M, exit, "
+    "SUPER, E, exec, nemo"
+    "SUPER, A, togglespecialworkspace, music"
+    "SUPER SHIFT, A, movetoworkspace, special"
+    "SUPER, V, togglefloating, "
+    "SUPER SHIFT, V, togglefloating,"
+    "SUPER SHIFT, V, pin,"
+    "SUPER, K, pin,"
+    # "SUPER, T, exec, swaync-client -t -sw"
+    "SUPER, SPACE, exec, pkill rofi || rofi -show drun"
+    "SUPER, F, fullscreen,"
+    "SUPER SHIFT, P, exec, hyprpicker | wl-copy"
+    "SUPER, P, pseudo, # dwindle"
+    "SUPER, J, togglesplit, # dwindle"
+    # "SUPER, X, exec, hyprprop | wl-copy "
+    "SUPER SHIFT, r, exec, fish -c 'resetDE'"
+    "SUPER, code:51, exec, 1password --quick-access & disown"
+    "CTRL SHIFT, 2, exec, ${scripts.grab_screen_text}/bin/grab_screen_text"
+    "CTRL SHIFT, 3, exec, ${scripts.create_screenshot}/bin/create_screenshot"
+    "CTRL SHIFT, 4, exec, ${scripts.create_screenshot_area}/bin/create_screenshot_area"
+    "CTRL SHIFT, 5, exec, ${scripts.record_screen}/bin/record_screen"
+    "CTRL SHIFT, M, exec, hyprpicker -a"
+    "CTRL SHIFT, V, exec, ${pkgs.cliphist}/bin/cliphist list | rofi -dmenu | ${pkgs.cliphist}/bin/cliphist decode | wl-copy"
 
     # Move focus with mainMod + arrow keys
-    "$ctrl, left, movefocus, l"
-    "$ctrl, right, movefocus, r"
-    "$ctrl, up, movefocus, u"
-    "$ctrl, down, movefocus, d"
+    "SUPER, left, movefocus, l"
+    "SUPER, right, movefocus, r"
+    "SUPER, up, movefocus, u"
+    "SUPER, down, movefocus, d"
 
     # Switch workspaces with mainMod + [0-9]
-    "$ctrl, 1, workspace, 1"
-    "$ctrl, 2, workspace, 2"
-    "$ctrl, 3, workspace, 3"
-    "$ctrl, 4, workspace, 4"
-    "$ctrl, 5, workspace, 5"
-    "$ctrl, 6, workspace, 6"
-    "$ctrl, 7, workspace, 7"
-    "$ctrl, 8, workspace, 8"
-    "$ctrl, 9, workspace, 9"
-    "$ctrl, 0, workspace, 10"
+    "SUPER, 1, workspace, 1"
+    "SUPER, 2, workspace, 2"
+    "SUPER, 3, workspace, 3"
+    "SUPER, 4, workspace, 4"
+    "SUPER, 5, workspace, 5"
+    "SUPER, 6, workspace, 6"
+    "SUPER, 7, workspace, 7"
+    "SUPER, 8, workspace, 8"
+    "SUPER, 9, workspace, 9"
+    "SUPER, 0, workspace, 10"
 
     # Move active window to a workspace with mainMod + SHIFT + [0-9]
-    "$ctrl SHIFT, 1, movetoworkspace, 1"
-    "$ctrl SHIFT, 2, movetoworkspace, 2"
-    "$ctrl SHIFT, 3, movetoworkspace, 3"
-    "$ctrl SHIFT, 4, movetoworkspace, 4"
-    "$ctrl SHIFT, 5, movetoworkspace, 5"
-    "$ctrl SHIFT, 6, movetoworkspace, 6"
-    "$ctrl SHIFT, 7, movetoworkspace, 7"
-    "$ctrl SHIFT, 8, movetoworkspace, 8"
-    "$ctrl SHIFT, 9, movetoworkspace, 9"
-    "$ctrl SHIFT, 0, movetoworkspace, 10"
+    "SUPER SHIFT, 1, movetoworkspace, 1"
+    "SUPER SHIFT, 2, movetoworkspace, 2"
+    "SUPER SHIFT, 3, movetoworkspace, 3"
+    "SUPER SHIFT, 4, movetoworkspace, 4"
+    "SUPER SHIFT, 5, movetoworkspace, 5"
+    "SUPER SHIFT, 6, movetoworkspace, 6"
+    "SUPER SHIFT, 7, movetoworkspace, 7"
+    "SUPER SHIFT, 8, movetoworkspace, 8"
+    "SUPER SHIFT, 9, movetoworkspace, 9"
+    "SUPER SHIFT, 0, movetoworkspace, 10"
 
     # Scroll through existing workspaces with mainMod + scroll
-    "$ctrl, mouse_down, workspace, e+1"
-    "$ctrl, mouse_up, workspace, e-1"
+    "SUPER, mouse_down, workspace, e+1"
+    "SUPER, mouse_up, workspace, e-1"
 
     # media keys
     ",XF86MonBrightnessUp, exec, ddcutil -d 1 setvcp 10 + 10"
     ",XF86MonBrightnessDown, exec, ddcutil -d 1 setvcp 10 - 10"
 
     # # temp binds for ags
-    # "$ctrl, q, exec, ags -q && ags"
-    # "$ctrl, w, exec, ags -i"
+    # "SUPER, q, exec, ags -q && ags"
+    # "SUPER, w, exec, ags -i"
 
     # Custom scripts
-    "$optionShift, P, exec, ${rofiProjects}"
+    "$altShift, P, exec, ${rofiProjects}"
   ];
 
   # Move/resize windows with mainMod + LMB/RMB and dragging
   bindm = [
-    "$ctrl, mouse:272, movewindow"
-    "$ctrl, mouse:273, resizewindow"
+    "SUPER, mouse:272, movewindow"
+    "SUPER, mouse:273, resizewindow"
     #"mouse:277, mouse:272, movewindow"
     #"mouse:277, mouse:273, resizewindow"
   ];

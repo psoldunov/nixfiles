@@ -155,11 +155,6 @@ in {
         };
         device = [
           {
-            name = "by-tech-air75";
-            kb_options = "grp:ctrl_space_toggle, compose:rctrl";
-          }
-
-          {
             name = "dualsense-wireless-controller-touchpad";
             enabled = 0;
           }
