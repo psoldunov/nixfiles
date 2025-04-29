@@ -50,7 +50,7 @@
   };
 
   fileSystems."/mnt/Paperless" = {
-    device = "10.24.24.2:/export/paperless";
+    device = "10.24.24.2:/export/Paperless";
     fsType = "nfs";
     options = ["defaults" "x-gvfs-show" "x-gvfs-symbolic-icon=x-office-document-symbolic"];
   };
