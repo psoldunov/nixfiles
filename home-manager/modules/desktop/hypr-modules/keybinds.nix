@@ -197,7 +197,7 @@ in {
     # "SUPER, w, exec, ags -i"
 
     # Custom scripts
-    "$altShift, P, exec, ${rofiProjects}"
+    "SUPER, P, exec, ${rofiProjects}"
   ];
 
   # Move/resize windows with mainMod + LMB/RMB and dragging
