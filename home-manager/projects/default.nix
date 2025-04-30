@@ -32,14 +32,6 @@ in {
       path = "${boundary}/promise";
     }
     {
-      name = "fullsteam-onboarding";
-      path = "${boundary}/fullsteam-onboarding";
-    }
-    {
-      name = "fullsteam-portal";
-      path = "${boundary}/fullsteam-portal";
-    }
-    {
       name = "toca-madera-2025";
       path = "${boundary}/toca-madera-2025";
     }
@@ -50,6 +42,14 @@ in {
     {
       name = "fullsteam-app";
       path = "${boundary}/fullsteam-app";
+    }
+    {
+      name = "fullsteam-onboarding";
+      path = "${boundary}/fullsteam-onboarding";
+    }
+    {
+      name = "fullsteam-portal";
+      path = "${boundary}/fullsteam-portal";
     }
     {
       name = "angrymob-next";
