@@ -48,6 +48,10 @@ in {
       path = "${boundary}/fullsteam-sanity";
     }
     {
+      name = "fullsteam-app";
+      path = "${boundary}/fullsteam-app";
+    }
+    {
       name = "angrymob-next";
       path = "${boundary}/angrymob-next";
     }

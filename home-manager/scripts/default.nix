@@ -3,6 +3,10 @@
   config,
   ...
 }: {
+  shadd = pkgs.writeShellScriptBin "shadd" ''
+    ${pkgs.bun}/bin/bunx shadcn@latest add $1
+  '';
+
   convert_all_to_mkv = pkgs.writeShellScriptBin "convert_all_to_mkv" ''
     # Use the current working directory
     DIRECTORY=$(pwd)
