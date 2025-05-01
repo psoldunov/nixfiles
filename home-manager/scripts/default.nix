@@ -285,60 +285,84 @@
       MONITOR="-p"
       FIFO="/tmp/brightness_fifo"
 
-      # Clean up FIFO on exit
       cleanup() {
-        [[ -p "$FIFO" ]] && rm -f "$FIFO"
-        exit
+          echo "[DEBUG] cleanup: removing FIFO $FIFO" >&2
+          [[ -p "$FIFO" ]] && rm -f "$FIFO"
+          exit
       }
+
       trap cleanup EXIT INT TERM
 
-      # Ensure FIFO is valid
+      # Setup FIFO
       if [[ -e "$FIFO" && ! -p "$FIFO" ]]; then
-        rm -f "$FIFO"
+          echo "[DEBUG] FIFO file $FIFO exists but is not a pipe, removing." >&2
+          rm -f "$FIFO"
       fi
-      [[ -p "$FIFO" ]] || mkfifo "$FIFO"
+
+      if [[ ! -p "$FIFO" ]]; then
+          echo "[DEBUG] Creating FIFO $FIFO" >&2
+          mkfifo "$FIFO"
+      else
+          echo "[DEBUG] FIFO $FIFO already exists." >&2
+      fi
 
       get_current_brightness() {
-        ddccontrol $MONITOR -r 0x10 2>/dev/null | awk -F'[:/]' '/Control 0x10:/ {gsub(/ /, "", $3); print $3}'
+          local current
+          echo "[DEBUG] Getting current brightness..." >&2
+          current=$(ddccontrol $MONITOR -r 0x10 2>/dev/null | awk -F'[:/]' '/Control 0x10:/ {gsub(/ /, "", $3); print $3}')
+          echo "[DEBUG] Current brightness = '$current'" >&2
+          echo "$current"
       }
 
       set_brightness() {
-        local value="$1"
-        ddccontrol $MONITOR -r 0x10 -w "$value" 2>/dev/null
+          local value="$1"
+          echo "[DEBUG] Setting brightness to: $value" >&2
+          ddccontrol $MONITOR -r 0x10 -w "$value" 2>/dev/null
       }
 
       adjust_brightness() {
-        local delta="$1"
-        curr=$(get_current_brightness)
-        if [[ -z "$curr" ]]; then
-          echo "Could not get current brightness"
-          exit 1
-        fi
-        new=$((curr + delta))
-        (( new > MAX )) && new=$MAX
-        (( new < MIN )) && new=$MIN
-        set_brightness "$new"
+          local delta="$1"
+          local curr new
+          curr=$(get_current_brightness)
+          if [[ -z "$curr" ]]; then
+              echo "[ERROR] Could not get current brightness" >&2
+              return 1
+          fi
+          new=$((curr + delta))
+          (( new > MAX )) && new=$MAX
+          (( new < MIN )) && new=$MIN
+          echo "[DEBUG] Adjusting brightness: $curr + ($delta) = $new" >&2
+          set_brightness "$new"
       }
 
-      debounce() {
-        buffer=0
-        while true; do
+      # Main, single event loop
+      buffer=0
+      last_input_time=0
+      current_time=0
+      echo "[DEBUG] Script started. Waiting for input..." >&2
+
+      while true; do
           if read -r -t "$DELAY" key < "$FIFO"; then
-            if [[ $key == "up" ]]; then
-              buffer=$(( buffer + STEP ))
-            elif [[ $key == "down" ]]; then
-              buffer=$(( buffer - STEP ))
-            fi
+              current_time=$(date +%s.%N)
+              echo "[DEBUG] Key read: '$key'" >&2
+              if [[ $key == "up" ]]; then
+                  buffer=$(( buffer + STEP ))
+                  echo "[DEBUG] Buffer increased by $STEP, now $buffer" >&2
+                  # Apply changes immediately
+                  adjust_brightness "$buffer"
+                  buffer=0
+              elif [[ $key == "down" ]]; then
+                  buffer=$(( buffer - STEP ))
+                  echo "[DEBUG] Buffer decreased by $STEP, now $buffer" >&2
+                  # Apply changes immediately
+                  adjust_brightness "$buffer"
+                  buffer=0
+              else
+                  echo "[DEBUG] Invalid key: '$key'" >&2
+              fi
+              last_input_time=$current_time
           fi
-          if [[ -z $key && $buffer -ne 0 ]]; then
-            adjust_brightness "$buffer"
-            buffer=0
-          fi
-          key=""
-        done
-      }
-
-      debounce
+      done
     ''
   );
 }
