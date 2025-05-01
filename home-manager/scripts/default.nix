@@ -309,7 +309,7 @@
       get_current_brightness() {
           local current
           echo "[DEBUG] Getting current brightness..." >&2
-          current=$(ddccontrol $MONITOR -r 0x10 2>/dev/null | awk -F'[:/]' '/Control 0x10:/ {gsub(/ /, "", $3); print $3}')
+          current=$(${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 2>/dev/null | awk -F'[:/]' '/Control 0x10:/ {gsub(/ /, "", $3); print $3}')
           echo "[DEBUG] Current brightness = '$current'" >&2
           echo "$current"
       }
@@ -317,23 +317,15 @@
       set_brightness() {
           local value="$1"
           echo "[DEBUG] Setting brightness to: $value" >&2
-          ddccontrol $MONITOR -r 0x10 -w "$value" 2>/dev/null
+          ${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 -w "$value" 2>/dev/null
       }
 
-      adjust_brightness() {
-          local delta="$1"
-          local curr new
-          curr=$(get_current_brightness)
-          if [[ -z "$curr" ]]; then
-              echo "[ERROR] Could not get current brightness" >&2
-              return 1
-          fi
-          new=$((curr + delta))
-          (( new > MAX )) && new=$MAX
-          (( new < MIN )) && new=$MIN
-          echo "[DEBUG] Adjusting brightness: $curr + ($delta) = $new" >&2
-          set_brightness "$new"
-      }
+      # Initialize current brightness
+      current_brightness=$(get_current_brightness)
+      if [[ -z "$current_brightness" ]]; then
+          echo "[ERROR] Could not get initial brightness" >&2
+          exit 1
+      fi
 
       # Main, single event loop
       buffer=0
@@ -346,17 +338,15 @@
               current_time=$(date +%s.%N)
               echo "[DEBUG] Key read: '$key'" >&2
               if [[ $key == "up" ]]; then
-                  buffer=$(( buffer + STEP ))
-                  echo "[DEBUG] Buffer increased by $STEP, now $buffer" >&2
-                  # Apply changes immediately
-                  adjust_brightness "$buffer"
-                  buffer=0
+                  current_brightness=$((current_brightness + STEP))
+                  (( current_brightness > MAX )) && current_brightness=$MAX
+                  echo "[DEBUG] New brightness: $current_brightness" >&2
+                  set_brightness "$current_brightness"
               elif [[ $key == "down" ]]; then
-                  buffer=$(( buffer - STEP ))
-                  echo "[DEBUG] Buffer decreased by $STEP, now $buffer" >&2
-                  # Apply changes immediately
-                  adjust_brightness "$buffer"
-                  buffer=0
+                  current_brightness=$((current_brightness - STEP))
+                  (( current_brightness < MIN )) && current_brightness=$MIN
+                  echo "[DEBUG] New brightness: $current_brightness" >&2
+                  set_brightness "$current_brightness"
               else
                   echo "[DEBUG] Invalid key: '$key'" >&2
               fi
