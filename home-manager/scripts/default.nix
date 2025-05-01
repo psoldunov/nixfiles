@@ -278,66 +278,55 @@
 
   brightness_control = (
     pkgs.writeShellScriptBin "brightness_control" ''
-      # ==== CONFIG ======================
       DELAY=0.3      # debounce delay in seconds
-      STEP=10        # brightness step per keypress
-      DISPLAY_ID=1   # which display
-      MIN=0          # min brightness
-      MAX=100        # max brightness
-      # ===================================
+      STEP=10        # value for each up/down keypress
+      MIN=0
+      MAX=100
+      MONITOR="-p"   # or e.g. -c /dev/i2c-5 for a specific monitor
 
       buffer=0
 
-      # Function: get_current_brightness
       get_current_brightness() {
-          ddcutil -d "$DISPLAY_ID" getvcp 10 2>/dev/null | grep -oP '(?<=current value = )\d+'
+          ${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 2>/dev/null | grep -Po '(?<=current value = )\d+'
       }
 
-      # Function: adjust_brightness
+      set_brightness() {
+          local value="$1"
+          ${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 -w "$value"
+          echo "Set brightness to $value"
+      }
+
       adjust_brightness() {
           local delta="$1"
-          local curr
-          curr="$(get_current_brightness)"
+          curr=$(get_current_brightness)
           if [[ -z "$curr" ]]; then
               echo "Could not get current brightness"
               exit 1
           fi
-
-          local new
           new=$((curr + delta))
-          if (( new > MAX )); then new=$MAX; fi
-          if (( new < MIN )); then new=$MIN; fi
-
-          ddcutil -d "$DISPLAY_ID" setvcp 10 "$new"
-          echo "Brightness set to $new"
+          (( new > MAX )) && new=$MAX
+          (( new < MIN )) && new=$MIN
+          set_brightness "$new"
       }
 
-      # Function: debounce
       debounce() {
-          local last_time pressed key
-          last_time=0
           buffer=0
-
           while true; do
               read -r -t "$DELAY" key
-              now=$(date +%s.%N)
               if [[ $key == "up" ]]; then
-                  buffer=$((buffer + STEP))
+                  buffer=$(( buffer + STEP ))
               elif [[ $key == "down" ]]; then
-                  buffer=$((buffer - STEP))
+                  buffer=$(( buffer - STEP ))
               fi
 
-              # If there was no key within DELAY or if buffer is nonzero and no key is pressed
-              if [[ -z $key ]] && [[ $buffer -ne 0 ]]; then
+              if [[ -z $key && $buffer -ne 0 ]]; then
                   adjust_brightness "$buffer"
                   buffer=0
               fi
           done
       }
 
-      # === MAIN ===
-      # Usage: press Enter and then type 'up' or 'down' per line (simulate keypress handler)
-      echo "Listening for 'up' or 'down' on stdin (one per line)..."
+      echo "Listening for 'up' or 'down' (one per line)..."
       debounce
     ''
   );
