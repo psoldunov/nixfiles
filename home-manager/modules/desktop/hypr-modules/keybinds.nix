@@ -189,8 +189,8 @@ in {
     "SUPER, mouse_up, workspace, e-1"
 
     # media keys
-    ",XF86MonBrightnessUp, exec, echo up > /tmp/brightness_fifo"
-    ",XF86MonBrightnessDown, exec, echo down > /tmp/brightness_fifo"
+    ",XF86MonBrightnessUp, exec, ${scripts.brightness_control}/bin/brightness_control up"
+    ",XF86MonBrightnessDown, exec, ${scripts.brightness_control}/bin/brightness_control down"
 
     # # temp binds for ags
     # "SUPER, q, exec, ags -q && ags"

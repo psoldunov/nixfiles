@@ -278,81 +278,84 @@
 
   brightness_control = (
     pkgs.writeShellScriptBin "brightness_control" ''
-      DELAY=0.3
-      STEP=10
-      MIN=0
-      MAX=100
-      MONITOR="-p"
-      FIFO="/tmp/brightness_fifo"
+      # File to store timestamp and count
+      TEMP_FILE="/tmp/brightness_counter"
+      TIMEOUT=1  # Timeout in seconds
+      STEP=10    # Each press changes brightness by 10%
 
-      cleanup() {
-          echo "[DEBUG] cleanup: removing FIFO $FIFO" >&2
-          [[ -p "$FIFO" ]] && rm -f "$FIFO"
-          exit
-      }
-
-      trap cleanup EXIT INT TERM
-
-      # Setup FIFO
-      if [[ -e "$FIFO" && ! -p "$FIFO" ]]; then
-          echo "[DEBUG] FIFO file $FIFO exists but is not a pipe, removing." >&2
-          rm -f "$FIFO"
-      fi
-
-      if [[ ! -p "$FIFO" ]]; then
-          echo "[DEBUG] Creating FIFO $FIFO" >&2
-          mkfifo "$FIFO"
-      else
-          echo "[DEBUG] FIFO $FIFO already exists." >&2
-      fi
-
+      # Function to get current brightness
       get_current_brightness() {
-          local current
-          echo "[DEBUG] Getting current brightness..." >&2
-          current=$(${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 2>/dev/null | awk -F'[:/]' '/Control 0x10:/ {gsub(/ /, "", $3); print $3}')
-          echo "[DEBUG] Current brightness = '$current'" >&2
-          echo "$current"
+          ddccontrol -p -r 0x10 2>/dev/null | grep -oP 'Control 0x10: \+/\K\d+(?=/\d+)'
       }
 
-      set_brightness() {
-          local value="$1"
-          echo "[DEBUG] Setting brightness to: $value" >&2
-          ${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 -w "$value" 2>/dev/null
+      # Function to apply brightness change
+      apply_brightness() {
+          local change=$1
+          local current=$(get_current_brightness)
+          local new_value=$((current + change))
+
+          # Ensure brightness stays within 0-100 range
+          if [ $new_value -gt 100 ]; then
+              new_value=100
+          elif [ $new_value -lt 0 ]; then
+              new_value=0
+          fi
+
+          echo "Applying brightness change:"
+          echo "Current brightness: $current"
+          echo "Change amount: $change"
+          echo "New brightness: $new_value"
+
+          ddccontrol -p -r 0x10 -w $new_value >/dev/null 2>&1
       }
 
-      # Initialize current brightness
-      current_brightness=$(get_current_brightness)
-      if [[ -z "$current_brightness" ]]; then
-          echo "[ERROR] Could not get initial brightness" >&2
+      # Get direction from argument
+      direction=$1  # "up" or "down"
+
+      # Check if direction is provided
+      if [ -z "$direction" ]; then
+          echo "Usage: $0 [up|down]"
           exit 1
       fi
 
-      # Main, single event loop
-      buffer=0
-      last_input_time=0
-      current_time=0
-      echo "[DEBUG] Script started. Waiting for input..." >&2
+      # Get current time
+      current_time=$(date +%s)
 
-      while true; do
-          if read -r -t "$DELAY" key < "$FIFO"; then
-              current_time=$(date +%s.%N)
-              echo "[DEBUG] Key read: '$key'" >&2
-              if [[ $key == "up" ]]; then
-                  current_brightness=$((current_brightness + STEP))
-                  (( current_brightness > MAX )) && current_brightness=$MAX
-                  echo "[DEBUG] New brightness: $current_brightness" >&2
-                  set_brightness "$current_brightness"
-              elif [[ $key == "down" ]]; then
-                  current_brightness=$((current_brightness - STEP))
-                  (( current_brightness < MIN )) && current_brightness=$MIN
-                  echo "[DEBUG] New brightness: $current_brightness" >&2
-                  set_brightness "$current_brightness"
-              else
-                  echo "[DEBUG] Invalid key: '$key'" >&2
-              fi
-              last_input_time=$current_time
+      if [ -f "$TEMP_FILE" ]; then
+          # Read last timestamp and count
+          read last_time last_direction count < "$TEMP_FILE"
+
+          # Check if we're within timeout and same direction
+          if [ $((current_time - last_time)) -le $TIMEOUT ] && [ "$direction" = "$last_direction" ]; then
+              # Increment count
+              count=$((count + 1))
+              echo "Keypress count: $count"
+          else
+              # Reset count
+              count=1
+              echo "Starting new count: $count"
           fi
-      done
+      else
+          # First press
+          count=1
+          last_time=$current_time
+          echo "First keypress"
+      fi
+
+      # Save current state
+      echo "$current_time $direction $count" > "$TEMP_FILE"
+
+      # If this is the last press (after timeout)
+      if [ $((current_time - last_time)) -gt $TIMEOUT ] || [ ! -f "$TEMP_FILE" ]; then
+          # Calculate total change
+          change=$((count * STEP))
+          if [ "$direction" = "down" ]; then
+              change=$((-change))
+          fi
+
+          # Apply the change
+          apply_brightness $change
+      fi
     ''
   );
 }
