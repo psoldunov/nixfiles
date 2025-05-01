@@ -166,6 +166,10 @@ in {
             name = "dualsense-wireless-controller-touchpad";
             enabled = 0;
           }
+          {
+            name = "sony-interactive-entertainment-dualsense-wireless-controller-touchpad";
+            enabled = 0;
+          }
         ];
       }
       // windowRules
