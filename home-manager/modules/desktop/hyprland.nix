@@ -19,6 +19,13 @@
     withOpenASAR = true;
   };
 
+  scripts =
+    import ../../scripts
+    {
+      pkgs = pkgs;
+      config = config;
+    };
+
   startupSound = ./assets/startup.wav;
 
   # wallpaperPath = pkgs.fetchurl {
@@ -188,6 +195,7 @@ in {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
+        exec-once = ${scripts.brightness_control}/bin/brightness_control
         # exec-once = start_static_wallpaper ${wallpaperPath}
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
