@@ -189,8 +189,8 @@ in {
     "SUPER, mouse_up, workspace, e-1"
 
     # media keys
-    ",XF86MonBrightnessUp, exec, ddcutil -d 1 setvcp 10 + 10"
-    ",XF86MonBrightnessDown, exec, ddcutil -d 1 setvcp 10 - 10"
+    ",XF86MonBrightnessUp, exec, echo up | ${scripts.brightness_control}/bin/brightness_control"
+    ",XF86MonBrightnessDown, exec, echo down | ${scripts.brightness_control}/bin/brightness_control"
 
     # # temp binds for ags
     # "SUPER, q, exec, ags -q && ags"
