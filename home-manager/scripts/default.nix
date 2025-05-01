@@ -278,63 +278,66 @@
 
   brightness_control = (
     pkgs.writeShellScriptBin "brightness_control" ''
-      # --- Configuration ---
-      DELAY=0.3            # debounce delay in seconds
-      STEP=10              # step value per press
+      DELAY=0.3
+      STEP=10
       MIN=0
       MAX=100
-      MONITOR="-p"         # use -p to probe all monitors; or specify -c /dev/i2c-5
+      MONITOR="-p"
       FIFO="/tmp/brightness_fifo"
-      # ----------------------
 
-      # Create FIFO if it doesn't exist
-      [ -p "$FIFO" ] || mkfifo "$FIFO"
+      # Clean up FIFO on exit
+      cleanup() {
+        [[ -p "$FIFO" ]] && rm -f "$FIFO"
+        exit
+      }
+      trap cleanup EXIT INT TERM
+
+      # Ensure FIFO is valid
+      if [[ -e "$FIFO" && ! -p "$FIFO" ]]; then
+        rm -f "$FIFO"
+      fi
+      [[ -p "$FIFO" ]] || mkfifo "$FIFO"
 
       get_current_brightness() {
-          ${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 2>/dev/null | grep -Po '(?<=current value = )\d+'
+        ddccontrol $MONITOR -r 0x10 2>/dev/null | awk -F'[:/]' '/Control 0x10:/ {gsub(/ /, "", $3); print $3}'
       }
 
       set_brightness() {
-          local value="$1"
-          ${pkgs.ddccontrol}/bin/ddccontrol $MONITOR -r 0x10 -w "$value"
+        local value="$1"
+        ddccontrol $MONITOR -r 0x10 -w "$value" 2>/dev/null
       }
 
       adjust_brightness() {
-          local delta="$1"
-          curr=$(get_current_brightness)
-          if [[ -z "$curr" ]]; then
-              # (You can add notification code here if you want)
-              exit 1
-          fi
-          new=$((curr + delta))
-          (( new > MAX )) && new=$MAX
-          (( new < MIN )) && new=$MIN
-          set_brightness "$new"
+        local delta="$1"
+        curr=$(get_current_brightness)
+        if [[ -z "$curr" ]]; then
+          echo "Could not get current brightness"
+          exit 1
+        fi
+        new=$((curr + delta))
+        (( new > MAX )) && new=$MAX
+        (( new < MIN )) && new=$MIN
+        set_brightness "$new"
       }
 
       debounce() {
-          buffer=0
-          while true; do
-              # Wait for input, with timeout
-              if read -r -t "$DELAY" key < "$FIFO"; then
-                  if [[ $key == "up" ]]; then
-                      buffer=$(( buffer + STEP ))
-                  elif [[ $key == "down" ]]; then
-                      buffer=$(( buffer - STEP ))
-                  fi
-              fi
-
-              # On timeout, apply buffered brightness change (if any)
-              if [[ -z $key && $buffer -ne 0 ]]; then
-                  adjust_brightness "$buffer"
-                  buffer=0
-              fi
-
-              key=""  # reset key
-          done
+        buffer=0
+        while true; do
+          if read -r -t "$DELAY" key < "$FIFO"; then
+            if [[ $key == "up" ]]; then
+              buffer=$(( buffer + STEP ))
+            elif [[ $key == "down" ]]; then
+              buffer=$(( buffer - STEP ))
+            fi
+          fi
+          if [[ -z $key && $buffer -ne 0 ]]; then
+            adjust_brightness "$buffer"
+            buffer=0
+          fi
+          key=""
+        done
       }
 
-      # --- Main ---
       debounce
     ''
   );
