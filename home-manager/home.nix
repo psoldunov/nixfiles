@@ -264,6 +264,7 @@ in {
       ledger-live-desktop
       beets
       bruno
+      yaak
       shortwave
       hyprshade
       qflipper
