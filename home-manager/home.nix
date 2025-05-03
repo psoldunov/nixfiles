@@ -265,6 +265,7 @@ in {
       beets
       bruno
       yaak
+      legcord
       shortwave
       hyprshade
       qflipper
