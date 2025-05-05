@@ -149,7 +149,10 @@ in {
     "open-clockify" = {
       name = "Open Clockify in Browser";
       genericName = "Time Tracker";
-      # icon = "${pkgs.clockify}/share/pixmaps/clockify.png";
+      icon = pkgs.fetchurl {
+        url = "https://brand.cake.com/wp-content/uploads/2024/02/logo-light-bg-2.png";
+        sha256 = "0fv5j5gcsjxp8bq58y04wqwji8cvksk8sisipm44kyj70hpyjb0m";
+      };
       exec = "${pkgs.brave}/bin/brave --new-window https://app.clockify.me/timesheet";
     };
     "clockify" = {
