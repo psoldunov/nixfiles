@@ -91,7 +91,7 @@
     "workspace special:music,class:(rhythmbox)"
     "workspace special:music,class:(Plexamp)"
     "float,class:(Plexamp)"
-    "move 50% 50%,class:(Plexamp)"
+    "move 50%-w-632 50%-h-445,class:(Plexamp)"
     "size 1264 890,class:(Plexamp)"
     "workspace 5,class:(tidal-hifi)"
     "workspace 5,class:(chrome-www.youtube.com__-YouTube)"
