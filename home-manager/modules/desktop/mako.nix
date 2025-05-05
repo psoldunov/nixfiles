@@ -6,7 +6,7 @@
   catppuccin.mako.enable = false;
 
   services.mako = {
-    enable = globalSettings.enableHyprland;
+    enable = true;
     settings = lib.mkForce {
       defaultTimeout = 5000;
     };
