@@ -1,7 +1,11 @@
-{globalSettings, ...}: {
+{
+  globalSettings,
+  lib,
+  ...
+}: {
   services.mako = {
     enable = globalSettings.enableHyprland;
-    settings = {
+    settings = lib.mkForce {
       defaultTimeout = 5000;
     };
   };
