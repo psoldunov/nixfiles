@@ -7,7 +7,7 @@
 
   services.mako = {
     enable = true;
-    settings = lib.mkForce {
+    settings = {
       defaultTimeout = 5000;
     };
   };
