@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  cattppuccin.mako.enable = false;
+  catppuccin.mako.enable = false;
 
   services.mako = {
     enable = globalSettings.enableHyprland;
