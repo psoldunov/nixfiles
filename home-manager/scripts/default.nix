@@ -110,6 +110,10 @@
     fi
   '';
 
+  sops-code = pkgs.writeShellScriptBin "sops-code" ''
+    EDITOR="${pkgs.vscode}/bin/code --wait" ${pkgs.sops}/bin/sops $1
+  '';
+
   create_screenshot = pkgs.writeShellScriptBin "create_screenshot" ''
     source ${config.sops.secrets.SHELL_SECRETS.path}
 

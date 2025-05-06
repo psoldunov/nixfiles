@@ -313,6 +313,7 @@ in {
     ])
     ++ (with scripts; [
       shadd
+      sops-code
       kill_gamescope
       convert_all_to_webp
       convert_all_to_woff2
