@@ -278,7 +278,7 @@ in {
       deno
       neovim
       zoom-us
-      nodejs_23
+      nodejs_24
       obsidian
       pywal
       mattermost-desktop
