@@ -816,6 +816,7 @@ in {
       keychain
       yubioath-flutter
       expressvpn
+      nbd
     ])
     ++ (
       if globalSettings.ollamaDocker
@@ -824,6 +825,10 @@ in {
       ]
       else []
     );
+
+  # systemd.services.nbd_cdrom = {
+
+  # };
 
   # systemd.user.services.activate_expressvpn = {
   #   description = "Activates ExpressVPN";
