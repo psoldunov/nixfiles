@@ -884,7 +884,10 @@ in {
     args = [
       "-W 3840"
       "-H 2160"
+      "-r 120"
       "--hdr-enabled"
+      "--adaptive-sync"
+      "--force-grab-cursor"
     ];
   };
 
