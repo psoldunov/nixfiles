@@ -304,10 +304,6 @@ in {
       via
       # rpcs3
       ookla-speedtest
-      (discord-canary.override {
-        withOpenASAR = true;
-        withVencord = true;
-      })
       motrix
       transmission-remote-gtk
     ])

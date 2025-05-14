@@ -89,7 +89,7 @@ in {
     "$MOD3, S, exec, slack"
     "$MOD3, M, exec, spotify --ozone-platform=x11"
     "$MOD3, B, exec, thunderbird"
-    "$MOD3, D, exec, discord"
+    "$MOD3, D, exec, legcord"
     "$MOD3, P, exec, 1password"
     "$MOD3, G, exec, steam"
     "$MOD3, L, exec, ags -q && ags"

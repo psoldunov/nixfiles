@@ -14,11 +14,6 @@
     inherit pkgs-stable;
   };
 
-  discordVencord = pkgs.discord-canary.override {
-    withVencord = true;
-    withOpenASAR = true;
-  };
-
   scripts =
     import ../../scripts
     {
@@ -48,7 +43,7 @@
       ${pkgs.localsend}/bin/localsend_app --hidden
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
       ${pkgs._1password-gui}/bin/1password --silent
-      ${discordVencord}/bin/discordcanary --start-minimized
+      ${pkgs.legcord}/bin/legcord
       ${pkgs.zapzap}/bin/zapzap
       steam -silent
     "
