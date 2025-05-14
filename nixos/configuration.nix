@@ -905,12 +905,15 @@ in {
   };
 
   # 10gbps card
-  networking.interfaces.enp10s0.ipv4.addresses = [
-    {
-      address = "10.24.24.5";
-      prefixLength = 24;
-    }
-  ];
+  networking.interfaces.enp10s0 = {
+    wakeOnLan.enable = true;
+    ipv4.addresses = [
+      {
+        address = "10.24.24.5";
+        prefixLength = 24;
+      }
+    ];
+  };
 
   # Networking firewall configuration.
   networking.firewall = {
