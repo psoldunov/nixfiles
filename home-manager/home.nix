@@ -333,6 +333,7 @@ in {
           start_video_wallpaper
           create_screenshot
           create_screenshot_area
+          restart_xdg_desktop_portal
         ])
       else []
     );

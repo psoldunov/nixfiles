@@ -280,6 +280,14 @@
     ''
   );
 
+  restart_xdg_desktop_portal = (
+    pkgs.writeShellScriptBin "restart_xdg_desktop_portal" ''
+      ${pkgs.systemd}/bin/systemctl --user disable xdg-desktop-portal-hyprland.service
+      ${pkgs.systemd}/bin/systemctl --user enable xdg-desktop-portal-hyprland.service
+      ${pkgs.systemd}/bin/systemctl --user restart xdg-desktop-portal-hyprland.service
+    ''
+  );
+
   brightness_control = (
     pkgs.writeShellScriptBin "brightness_control" ''
       # File to store timestamp and count
