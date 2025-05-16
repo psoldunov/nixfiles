@@ -304,6 +304,7 @@ in {
       via
       # rpcs3
       denaro
+      gnome-solanum
       ookla-speedtest
       motrix
       transmission-remote-gtk
