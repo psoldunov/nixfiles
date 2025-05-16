@@ -617,6 +617,7 @@ in {
       typescript
       nodePackages.prettier
       nodePackages.vercel
+      code-cursor
       catppuccinPackage
       papirus-icon-theme
       abcde
