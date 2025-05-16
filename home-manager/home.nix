@@ -319,6 +319,7 @@ in {
       make_timed_commit
       clean_system
       restart_steam
+      denaro
     ])
     ++ (
       if globalSettings.enableHyprland
