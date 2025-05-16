@@ -303,6 +303,7 @@ in {
       protonup-ng
       via
       # rpcs3
+      denaro
       ookla-speedtest
       motrix
       transmission-remote-gtk
@@ -319,7 +320,6 @@ in {
       make_timed_commit
       clean_system
       restart_steam
-      denaro
     ])
     ++ (
       if globalSettings.enableHyprland
