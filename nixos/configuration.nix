@@ -616,6 +616,7 @@ in {
       puppeteer-cli
       typescript
       nodePackages.prettier
+      nodePackages.vercel
       catppuccinPackage
       papirus-icon-theme
       abcde
