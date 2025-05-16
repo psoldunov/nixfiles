@@ -319,6 +319,7 @@ in {
       update_system
       rebuild_system
       make_timed_commit
+      cursor_open
       clean_system
       restart_steam
     ])
