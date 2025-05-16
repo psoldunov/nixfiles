@@ -288,6 +288,12 @@
     ''
   );
 
+  cursor_open = (
+    pkgs.writeShellScriptBin "cursor_open" ''
+      nohup ${pkgs.code-cursor}/bin/cursor "$@" >/dev/null 2>&1 &
+    ''
+  );
+
   brightness_control = (
     pkgs.writeShellScriptBin "brightness_control" ''
       # File to store timestamp and count
