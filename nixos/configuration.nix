@@ -897,9 +897,7 @@ in {
   # Network stuff
   networking = {
     defaultGateway = "10.24.24.1";
-    nameservers = [
-      "10.24.24.1"
-    ];
+    nameservers = [];
   };
 
   # 10gbps card
