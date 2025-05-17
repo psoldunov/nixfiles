@@ -51,7 +51,7 @@ in {
     device = "nodev";
     efiSupport = true;
     useOSProber = true;
-    gfxmodeEfi = "3840x2160x32";
+    gfxmodeEfi = "3840x2160-120";
   };
 
   nix = {
