@@ -260,6 +260,7 @@ in {
 
   home.packages =
     (with pkgs; [
+      notion-app
       clockify
       figma-linux
       spotify
