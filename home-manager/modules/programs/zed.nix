@@ -85,21 +85,21 @@
     vim_mode = false;
   };
 in {
-  catppuccin.zed.enable = true;
+  catppuccin.zed.enable = false;
 
   programs.zed-editor = {
     enable = true;
-    installRemoteServer = true;
-    userSettings = zedConfig;
-    extensions = [
-      "discord-presence"
-      "prisma"
-      "html"
-      "toml"
-      "git-firefly"
-      "scss"
-      "nix"
-    ];
+    # installRemoteServer = true;
+    # userSettings = zedConfig;
+    # extensions = [
+    #   "discord-presence"
+    #   "prisma"
+    #   "html"
+    #   "toml"
+    #   "git-firefly"
+    #   "scss"
+    #   "nix"
+    # ];
   };
 
   home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
