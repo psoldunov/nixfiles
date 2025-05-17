@@ -281,35 +281,14 @@ in {
     xkb.variant = "";
   };
 
-  services.flatpak = {
-    enable = true;
-    update.onActivation = true;
-    packages = [
-      "com.github.tchx84.Flatseal"
-      "com.steamgriddb.SGDBoop"
-    ];
-    overrides = {
-      global = {
-        Context = {
-          filesystems = [
-            "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
-            "${catppuccinPackage}/share/themes:ro"
-            "/run/current-system/sw/share:ro"
-            "/mnt/Games/Emulation:rw"
-            "/run/current-system/sw/bin/:ro"
-          ];
-          sockets = ["wayland" "!x11" "!fallback-x11"];
-        };
-
-        Environment = {
-          ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "catppuccin-mocha-peach-standard";
-          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-        };
-      };
-    };
-  };
+  # services.flatpak = {
+  #   enable = true;
+  #   update.onActivation = true;
+  #   packages = [
+  #     "com.github.tchx84.Flatseal"
+  #     "com.steamgriddb.SGDBoop"
+  #   ];
+  # };
 
   services.gvfs = {
     enable = true;
@@ -897,7 +876,7 @@ in {
   # Network stuff
   networking = {
     defaultGateway = "10.24.24.1";
-    nameservers = [];
+    # nameservers = [];
   };
 
   # 10gbps card
