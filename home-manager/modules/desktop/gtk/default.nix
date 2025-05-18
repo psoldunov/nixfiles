@@ -12,6 +12,11 @@
 in {
   gtk = lib.mkIf globalSettings.enableHyprland {
     enable = true;
+
+    portal.extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+
     theme = {
       name = "catppuccin-mocha-peach-standard";
       package = catppuccin-gtk-theme;

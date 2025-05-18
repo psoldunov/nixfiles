@@ -157,8 +157,8 @@ in {
   xdg = {
     menus.enable = true;
     icons.enable = true;
-    portal.extraPortals = [
-      pkgs.xdg-desktop-portal-gnome
+    portal.extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
     ];
     autostart.enable = true;
     sounds.enable = true;
