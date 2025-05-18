@@ -166,6 +166,16 @@ in {
     };
   };
 
+  xdg = {
+    mime.enable = true;
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk
+      ];
+    };
+  };
+
   systemd.user.enable = true;
 
   programs.nix-index = {
