@@ -89,6 +89,9 @@ in {
 
   programs.zed-editor = {
     enable = true;
+    extraPackages = with pkgs; [
+      xdg-desktop-portal-gnome
+    ];
     # installRemoteServer = true;
     # userSettings = zedConfig;
     # extensions = [
