@@ -169,10 +169,6 @@ in {
       // keyBinds;
   };
 
-  xdg = {
-    mime.enable = true;
-  };
-
   home.sessionVariables = {
     HYPRCURSOR_THEME = "catppuccin-mocha-dark-cursors";
     HYPRCURSOR_SIZE = lib.mkForce "24";
