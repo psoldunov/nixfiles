@@ -81,7 +81,7 @@ in {
     "$MOD3, 0, workspace, 10"
 
     # MOD3 Applications Launcher
-    "$MOD3, F, exec, brave"
+    "$MOD3, F, exec, chromium"
     "$MOD3, E, exec, nemo"
     "$MOD3, T, exec, ${pkgs.kitty}/bin/kitty -e tmux"
     "$MOD3, V, exec, code --new-window"

@@ -9,7 +9,7 @@
     "noblur,class:^steam_app_.*$"
     "idleinhibit always,class:^steam_app_.*$"
     "idleinhibit fullscreen,class:^duckstation-qt.*$"
-    "idleinhibit fullscreen,class:^brave-browser.*$"
+    "idleinhibit fullscreen,class:^chromium-browser.*$"
     "idleinhibit fullscreen,class:^zen.*$"
     "idleinhibit always,class:^Ryujinx.*$"
     "rounding 4,title:^(Firefox — Sharing Indicator)$"

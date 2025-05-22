@@ -167,7 +167,7 @@ in {
       defaultApplications = {
         "inode/directory" = ["nemo.desktop" "yazi.desktop"];
         "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
-        "text/html" = ["brave-browser.desktop"];
+        "text/html" = ["chromium-browser.desktop"];
         "text/*" = ["code.desktop" "zed.desktop"];
         "TerminalEmulator" = "kitty.desktop";
         "image/jpeg" = ["org.gnome.eog.desktop"];
@@ -180,19 +180,19 @@ in {
         "video/webm" = ["mpv.desktop"];
         "video/x-matroska" = ["mpv.desktop"];
         "x-scheme-handler/magnet" = ["io.github.TransmissionRemoteGtk.desktop"];
-        "WebBrowser" = "brave-browser.desktop";
-        "x-scheme-handler/http" = "brave-browser.desktop";
-        "x-scheme-handler/https" = "brave-browser.desktop";
-        "x-scheme-handler/chrome" = "brave-browser.desktop";
-        "x-scheme-handler/about" = "brave-browser.desktop";
-        "x-scheme-handler/unknown" = "brave-browser.desktop";
+        "WebBrowser" = "chromium-browser.desktop";
+        "x-scheme-handler/http" = "chromium-browser.desktop";
+        "x-scheme-handler/https" = "chromium-browser.desktop";
+        "x-scheme-handler/chrome" = "chromium-browser.desktop";
+        "x-scheme-handler/about" = "chromium-browser.desktop";
+        "x-scheme-handler/unknown" = "chromium-browser.desktop";
         "x-scheme-handler/vscode" = "code-url-handler.desktop";
-        "application/x-extension-htm" = "brave-browser.desktop";
-        "application/x-extension-html" = "brave-browser.desktop";
-        "application/x-extension-shtml" = "brave-browser.desktop";
-        "application/xhtml+xml" = "brave-browser.desktop";
-        "application/x-extension-xhtml" = "brave-browser.desktop";
-        "application/x-extension-xht" = "brave-browser.desktop";
+        "application/x-extension-htm" = "chromium-browser.desktop";
+        "application/x-extension-html" = "chromium-browser.desktop";
+        "application/x-extension-shtml" = "chromium-browser.desktop";
+        "application/xhtml+xml" = "chromium-browser.desktop";
+        "application/x-extension-xhtml" = "chromium-browser.desktop";
+        "application/x-extension-xht" = "chromium-browser.desktop";
         "application/zip" = "org.gnome.FileRoller.desktop";
         "Email" = "thunderbird.desktop";
         "message/rfc822" = "thunderbird.desktop";
@@ -449,7 +449,7 @@ in {
   environment.etc = {
     "1password/custom_allowed_browsers" = {
       text = ''
-        brave
+        chromium
         zen
       '';
       mode = "0755";
