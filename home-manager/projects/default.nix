@@ -36,6 +36,10 @@ in {
       path = "${boundary}/toca-madera-2025";
     }
     {
+      name = "haartz";
+      path = "${boundary}/haartz";
+    }
+    {
       name = "toca-sanity-temp";
       path = "${boundary}/toca-sanity-temp";
     }
