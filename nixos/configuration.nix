@@ -543,7 +543,7 @@ in {
     appleFonts.sf-pro
     appleFonts.sf-compact
     appleFonts.sf-mono
-    # appleFonts.sf-mono-nerd
+    appleFonts.sf-mono-nerd
     appleFonts.sf-arabic
     appleFonts.ny
     nerd-fonts.jetbrains-mono
