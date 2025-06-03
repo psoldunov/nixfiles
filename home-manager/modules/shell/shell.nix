@@ -83,12 +83,6 @@
     ];
   };
 
-  programs.thefuck = {
-    enable = true;
-    enableBashIntegration = true;
-    enableFishIntegration = true;
-  };
-
   programs.fzf = {
     enable = true;
     enableBashIntegration = true;
