@@ -12,6 +12,10 @@ in {
       path = "${projects}/Snippets";
     }
     {
+      name = "plated";
+      path = "${personal}/plated";
+    }
+    {
       name = "digiskies";
       path = "${tsc}/digiskies";
     }
