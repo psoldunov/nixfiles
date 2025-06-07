@@ -122,12 +122,12 @@ in {
       mimeType = ["x-scheme-handler/figma"];
       categories = ["Graphics"];
     };
-    "nixfiles-zed" = {
-      name = "Open Nixfiles in Zed";
-      genericName = "This opens nixfiles in Zed";
-      icon = "nix-snowflake";
-      exec = "zeditor --new /home/psoldunov/.nixfiles";
-    };
+    # "nixfiles-zed" = {
+    #   name = "Open Nixfiles in Zed";
+    #   genericName = "This opens nixfiles in Zed";
+    #   icon = "nix-snowflake";
+    #   exec = "zeditor --new /home/psoldunov/.nixfiles";
+    # };
     "nixfiles-code" = {
       name = "Open Nixfiles in VS Code";
       genericName = "This opens nixfiles in VS Code";
