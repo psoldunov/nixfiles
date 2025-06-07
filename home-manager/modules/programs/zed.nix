@@ -88,7 +88,7 @@ in {
   catppuccin.zed.enable = false;
 
   programs.zed-editor = {
-    enable = true;
+    enable = false;
     # installRemoteServer = true;
     # userSettings = zedConfig;
     # extensions = [
@@ -102,22 +102,22 @@ in {
     # ];
   };
 
-  home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
-    source = pkgs.writeShellScript "package-version-server-v0.0.7" ''
-      ${pkgs.package-version-server}/bin/package-version-server
-    '';
-    executable = true;
-  };
+  # home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
+  #   source = pkgs.writeShellScript "package-version-server-v0.0.7" ''
+  #     ${pkgs.package-version-server}/bin/package-version-server
+  #   '';
+  #   executable = true;
+  # };
 
-  home.file."${config.xdg.dataHome}/zed/languages/rust-analyzer/rust-analyzer-2025-01-08" = {
-    source = pkgs.writeShellScript "rust-analyzer-2025-01-08" ''
-      ${pkgs.rust-analyzer}/bin/rust-analyzer
-    '';
-    executable = true;
-  };
+  # home.file."${config.xdg.dataHome}/zed/languages/rust-analyzer/rust-analyzer-2025-01-08" = {
+  #   source = pkgs.writeShellScript "rust-analyzer-2025-01-08" ''
+  #     ${pkgs.rust-analyzer}/bin/rust-analyzer
+  #   '';
+  #   executable = true;
+  # };
 
-  home.file."${config.xdg.dataHome}/zed/extensions/work/discord-presence" = {
-    source = "${pkgs.zed-discord-presence}/bin/";
-    force = true;
-  };
+  # home.file."${config.xdg.dataHome}/zed/extensions/work/discord-presence" = {
+  #   source = "${pkgs.zed-discord-presence}/bin/";
+  #   force = true;
+  # };
 }
