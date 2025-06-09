@@ -162,6 +162,11 @@ in {
     # "SUPER, left, move, -col"
     # "SUPER, right, move, +col"
 
+    "SUPER SHIFT, left, movewindow, l"
+    "SUPER SHIFT, right, movewindow, r"
+    "SUPER SHIFT, up, movewindow, u"
+    "SUPER SHIFT, down, movewindow, d"
+
     # Switch workspaces with mainMod + [0-9]
     "SUPER, 1, workspace, 1"
     "SUPER, 2, workspace, 2"
