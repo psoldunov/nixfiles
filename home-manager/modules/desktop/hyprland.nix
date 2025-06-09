@@ -119,7 +119,7 @@ in {
 
         "plugin:hyprscrolling" = {
           column_width = 0.5;
-          focus_fit_method = 1;
+          fullscreen_on_one_column = true;
         };
 
         xwayland = {
