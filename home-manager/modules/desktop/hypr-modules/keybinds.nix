@@ -155,12 +155,12 @@ in {
     "CTRL SHIFT, M, exec, hyprpicker -a"
 
     # Move focus with mainMod + arrow keys
-    # "SUPER, left, movefocus, l"
-    # "SUPER, right, movefocus, r"
+    "SUPER, left, movefocus, l"
+    "SUPER, right, movefocus, r"
     "SUPER, up, movefocus, u"
     "SUPER, down, movefocus, d"
-    "SUPER, left, move, -col"
-    "SUPER, right, move, +col"
+    # "SUPER, left, move, -col"
+    # "SUPER, right, move, +col"
 
     # Switch workspaces with mainMod + [0-9]
     "SUPER, 1, workspace, 1"
