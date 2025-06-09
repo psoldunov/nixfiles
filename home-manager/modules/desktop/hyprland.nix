@@ -118,7 +118,7 @@ in {
         };
 
         "plugin:hyprscrolling" = {
-          column_width = 1;
+          column_width = 0.5;
         };
 
         xwayland = {
