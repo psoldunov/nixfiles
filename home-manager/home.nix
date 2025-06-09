@@ -288,6 +288,7 @@ in {
 
   home.packages =
     (with pkgs; [
+      anytype
       clockify
       figma-linux
       spotify
