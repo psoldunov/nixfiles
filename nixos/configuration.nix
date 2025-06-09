@@ -661,6 +661,9 @@ in {
       bat
       cloudflared
       hyprcursor
+      distrobox
+      distroshelf
+      distrobox-tui
       run
       iperf
       yubikey-manager-qt
