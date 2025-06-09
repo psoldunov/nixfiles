@@ -74,6 +74,9 @@ in {
       enable = true;
       enableXdgAutostart = true;
     };
+    plugins = [
+      inputs.hyprland-plugins.packages.${pkgs.system}.hyprscrolling
+    ];
     xwayland.enable = true;
     settings =
       {
