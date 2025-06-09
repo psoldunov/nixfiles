@@ -117,10 +117,9 @@ in {
           layout = "scrolling";
         };
 
-        # "plugin:hyprscrolling" = {
-        #   fullscreen_on_one_column = true;
-        #   column_width = 0.5;
-        # };
+        "plugin:hyprscrolling" = {
+          column_width = 1;
+        };
 
         xwayland = {
           force_zero_scaling = true;
