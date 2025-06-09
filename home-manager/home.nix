@@ -219,6 +219,9 @@ in {
     ];
     extensions = [
       {
+        id = "kgcjekpmcjjogibpjebkhaanilehneje";
+      }
+      {
         id = "aeblfdkhhhdcdjpifhhbdiojplfjncoa";
       }
       {
