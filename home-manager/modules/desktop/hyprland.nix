@@ -113,14 +113,14 @@ in {
           border_size = 2;
           "col.active_border" = "rgb(fcfdfc)";
           "col.inactive_border" = "rgb(2d3b53)";
-          # layout = "dwindle";
-          layout = "scrolling";
+          layout = "dwindle";
+          # layout = "scrolling";
         };
 
-        "plugin:hyprscrolling" = {
-          column_width = 0.5;
-          fullscreen_on_one_column = true;
-        };
+        # "plugin:hyprscrolling" = {
+        #   column_width = 0.5;
+        #   fullscreen_on_one_column = true;
+        # };
 
         xwayland = {
           force_zero_scaling = true;
