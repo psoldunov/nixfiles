@@ -78,7 +78,7 @@ in {
     openwebui = {
       name = "Open WebUI";
       genericName = "AI Chat Interface";
-      icon = ./modules/desktop/assets/openwebui.png;
+      icon = ./modules/desktop/assets/open-webui.png;
       exec = ''${pkgs.chromium}/bin/chromium --profile-directory=Default --new-window --app="https://open-webui.theswisscheese.com" %U'';
       terminal = false;
       categories = ["Office" "Development"];
