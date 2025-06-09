@@ -113,7 +113,13 @@ in {
           border_size = 2;
           "col.active_border" = "rgb(fcfdfc)";
           "col.inactive_border" = "rgb(2d3b53)";
-          layout = "dwindle";
+          # layout = "dwindle";
+          layout = "scrolling";
+        };
+
+        "plugin:hyprscrolling" = {
+          fullscreen_on_one_column = true;
+          column_width = 0.5;
         };
 
         xwayland = {
