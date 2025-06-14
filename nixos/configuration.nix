@@ -666,7 +666,7 @@ in {
       distrobox-tui
       run
       iperf
-      yubikey-manager-qt
+      yubioath-flutter
       yubikey-manager
       virt-manager
       gnome-icon-theme
@@ -822,7 +822,6 @@ in {
       mpc-cli
       nemo-with-extensions
       keychain
-      yubioath-flutter
       expressvpn
       nbd
     ])
