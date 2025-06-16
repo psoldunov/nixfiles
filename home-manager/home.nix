@@ -307,7 +307,7 @@ in {
       # rpi-imager
       # mysql-workbench
       geekbench
-      # deno
+      deno
       neovim
       zoom-us
       nodejs_24
