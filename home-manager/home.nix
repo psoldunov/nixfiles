@@ -222,6 +222,9 @@ in {
         id = "kgcjekpmcjjogibpjebkhaanilehneje";
       }
       {
+        id = "lahhiofdgnbcgmemekkmjnpifojdaelb";
+      }
+      {
         id = "aeblfdkhhhdcdjpifhhbdiojplfjncoa";
       }
       {
