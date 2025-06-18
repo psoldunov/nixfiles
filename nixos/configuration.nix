@@ -46,13 +46,39 @@ in {
     theme = "pedro-raccoon";
     themePackages = [pkgs.pedro-raccoon-plymouth];
   };
-  boot.loader.grub = {
-    enable = true;
-    device = "nodev";
-    efiSupport = true;
-    useOSProber = true;
-    gfxmodeEfi = "1920x1080x32";
+
+  boot = {
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    loader.timeout = 0;
   };
+
+  # boot.loader.grub = {
+  #   enable = true;
+  #   device = "nodev";
+  #   efiSupport = true;
+  #   useOSProber = true;
+  #   gfxmodeEfi = "1920x1080x32";
+  # };
+
+  boot.kernelParams = [
+    "quiet"
+    "splash"
+    "boot.shell_on_fail"
+    "udev.log_priority=3"
+    "rd.systemd.show_status=auto"
+    "video=HDMI-A-1:3840x2160@120"
+  ];
+
+  boot.kernelModules = ["uinput" "uhid" "tun"];
+
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    gasket
+    v4l2loopback
+  ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+  '';
 
   nix = {
     nixPath = ["nixpkgs=${inputs.nixpkgs}"];
@@ -71,18 +97,6 @@ in {
       ];
     };
   };
-
-  boot.kernelParams = ["quiet" "video=HDMI-A-1:3840x2160@60"];
-
-  boot.kernelModules = ["uinput" "uhid" "tun"];
-
-  boot.extraModulePackages = with config.boot.kernelPackages; [
-    gasket
-    v4l2loopback
-  ];
-  boot.extraModprobeConfig = ''
-    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-  '';
 
   services.rpcbind.enable = true;
 
@@ -662,6 +676,7 @@ in {
       distroshelf
       distrobox-tui
       run
+      hwinfo
       iperf
       yubioath-flutter
       yubikey-manager
