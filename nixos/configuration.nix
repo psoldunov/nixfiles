@@ -53,13 +53,13 @@ in {
     loader.timeout = 0;
   };
 
-  # boot.loader.grub = {
-  #   enable = true;
-  #   device = "nodev";
-  #   efiSupport = true;
-  #   useOSProber = true;
-  #   gfxmodeEfi = "1920x1080x32";
-  # };
+  boot.loader.grub = {
+    enable = false;
+    # device = "nodev";
+    # efiSupport = true;
+    # useOSProber = true;
+    # gfxmodeEfi = "1920x1080x32";
+  };
 
   boot.kernelParams = [
     "quiet"
