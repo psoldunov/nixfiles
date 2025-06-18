@@ -63,6 +63,7 @@ in {
       preload = ["${wallpaperPath}"];
       wallpaper = [
         "HDMI-A-1,${wallpaperPath}"
+        "DP-2,${wallpaperPath}"
       ];
     };
   };
