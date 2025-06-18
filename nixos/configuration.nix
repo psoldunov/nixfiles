@@ -38,7 +38,7 @@ in {
   boot.initrd.kernelModules = ["nfs"];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = false;
+  boot.loader.systemd-boot.enable = true;
   boot.initrd.systemd.dbus.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.plymouth = {
