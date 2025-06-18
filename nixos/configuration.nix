@@ -111,13 +111,20 @@ in {
         path = "/usr/share/backgrounds/user/lock_background.png";
         fit = "Cover";
       };
-      cursorTheme.name = "catppuccin-mocha-dark-cursors";
-      iconTheme.name = "Papirus-Dark";
+      cursorTheme = {
+        name = "catppuccin-mocha-dark-cursors";
+        package = pkgs.catppuccin-cursors.mochaDark;
+      };
+      iconTheme = {
+        name = "Papirus-Dark";
+        package = pkgs.papirus-icon-theme;
+      };
+      font = {
+        name = "SF Pro Display";
+        size = 12;
+      };
       GTK = {
         application_prefer_dark_theme = true;
-        icon_theme_name = lib.mkForce "Papirus-Dark";
-        theme_name = lib.mkForce "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
-        font_name = lib.mkForce "SF Pro Display 12";
       };
       commands = {
         reboot = ["systemctl" "reboot"];
@@ -639,7 +646,6 @@ in {
       nodePackages.vercel
       code-cursor
       catppuccinPackage
-      papirus-icon-theme
       abcde
       cddiscid
       libmusicbrainz5
