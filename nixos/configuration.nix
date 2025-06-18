@@ -689,6 +689,7 @@ in {
       slurp
       wl-clipboard
       speedcrunch
+      dracut
       openssl
       openssl.dev
       imagemagick
