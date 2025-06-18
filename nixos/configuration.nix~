@@ -72,7 +72,7 @@ in {
     };
   };
 
-  boot.kernelParams = ["quiet" "video=HDMI-A-1:3840x2160@60"];
+  boot.kernelParams = ["quiet" "video=DP-2:3840x2160@144"];
 
   boot.kernelModules = ["uinput" "uhid" "tun"];
 
