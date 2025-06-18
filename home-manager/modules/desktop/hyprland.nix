@@ -86,12 +86,14 @@ in {
         monitor = [
           "DP-1,3840x2160@144,0x0,1,,,cm,auto"
         ];
-        monitorv2 = {
-          output = "HDMI-A-1";
-          mode = "3840x2160@120";
-          scale = 1;
-          bitdepth = 10;
-        };
+        monitorv2 = ''
+          {
+            output = HDMI-A-1
+            mode = 3840x2160@120
+            scale = 1
+            bitdepth = 10
+          }
+        '';
         ecosystem = {
           no_update_news = true;
         };
