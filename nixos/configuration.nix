@@ -51,7 +51,7 @@ in {
     device = "nodev";
     efiSupport = true;
     useOSProber = true;
-    gfxmodeEfi = "3840x2160";
+    gfxmodeEfi = "1920x1080x32";
   };
 
   nix = {
@@ -72,10 +72,7 @@ in {
     };
   };
 
-  boot.kernelParams = [
-    "quiet"
-    "DP-2:3840x2160@60"
-  ];
+  boot.kernelParams = ["quiet" "video=DP-2:3840x2160@144"];
 
   boot.kernelModules = ["uinput" "uhid" "tun"];
 
