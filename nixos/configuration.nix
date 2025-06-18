@@ -149,7 +149,7 @@ in {
       name = "catppuccin-mocha-dark-cursors";
     };
     settings = {
-      appearance.greeting_msg = "Howdy";
+      appearance.greeting_msg = "Howdy partner";
       commands = {
         reboot = ["systemctl" "reboot"];
         poweroff = ["systemctl" "poweroff"];
