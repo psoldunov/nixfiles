@@ -148,6 +148,11 @@ in {
       };
       name = "catppuccin-mocha-green-compact";
     };
+    font = {
+      name = "SF Pro Display";
+      size = 12;
+      package = appleFonts.sf-pro;
+    };
     iconTheme = {
       package = pkgs.pkgs.papirus-icon-theme;
       name = "Papirus-Dark";
