@@ -45,6 +45,9 @@ in {
     enable = true;
     theme = "pedro-raccoon";
     themePackages = [pkgs.pedro-raccoon-plymouth];
+    extraConfig = ''
+      DeviceScale=an-integer-scaling-factor
+    '';
   };
 
   boot = {
