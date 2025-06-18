@@ -104,39 +104,26 @@ in {
 
   services.rpcbind.enable = true;
 
-  programs.regreet = {
-    enable = globalSettings.enableHyprland;
-    settings = {
-      background = {
-        path = "/usr/share/backgrounds/user/lock_background.png";
-        fit = "Cover";
-      };
-      cursorTheme = {
-        name = "catppuccin-mocha-dark";
-        package = pkgs.catppuccin-cursors.mochaDark;
-      };
-      # iconTheme = {
-      #   name = "Papirus-Dark";
-      #   package = pkgs.papirus-icon-theme;
-      # };
-      # font = {
-      #   name = "SF Pro Display";
-      #   size = 12;
-      #   package = appleFonts.sf-pro;
-      # };
-      GTK = {
-        application_prefer_dark_theme = true;
-        icon_theme_name = lib.mkForce "Papirus-Dark";
-        theme_name = lib.mkForce "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
-        cursor_theme_name = lib.mkForce "catppuccin-mocha-dark";
-        font_name = lib.mkForce "SF Pro Display 12";
-      };
-      commands = {
-        reboot = ["systemctl" "reboot"];
-        poweroff = ["systemctl" "poweroff"];
-      };
-    };
-  };
+  # programs.regreet = {
+  #   enable = globalSettings.enableHyprland;
+  #   settings = {
+  #     background = {
+  #       path = "/usr/share/backgrounds/user/lock_background.png";
+  #       fit = "Cover";
+  #     };
+  #     GTK = {
+  #       application_prefer_dark_theme = true;
+  #       icon_theme_name = lib.mkForce "Papirus-Dark";
+  #       theme_name = lib.mkForce "catppuccin-${config.catppuccin.flavor}-${config.catppuccin.accent}-standard";
+  #       cursor_theme_name = lib.mkForce "catppuccin-mocha-dark";
+  #       font_name = lib.mkForce "SF Pro Display 12";
+  #     };
+  #     commands = {
+  #       reboot = ["systemctl" "reboot"];
+  #       poweroff = ["systemctl" "poweroff"];
+  #     };
+  #   };
+  # };
 
   programs.regreet = {
     enable = globalSettings.enableHyprland;
