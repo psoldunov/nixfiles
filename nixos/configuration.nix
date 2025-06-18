@@ -35,7 +35,7 @@ in {
   services.displayManager.sddm.enable = !globalSettings.enableHyprland;
   services.desktopManager.plasma6.enable = !globalSettings.enableHyprland;
 
-  boot.initrd.kernelModules = ["nfs"];
+  boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
