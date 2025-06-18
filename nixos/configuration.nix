@@ -111,6 +111,8 @@ in {
         path = "/usr/share/backgrounds/user/lock_background.png";
         fit = "Cover";
       };
+      cursorTheme.name = "catppuccin-mocha-peach-standard";
+      iconTheme.name = "Papirus-Dark";
       GTK = {
         application_prefer_dark_theme = true;
         icon_theme_name = lib.mkForce "Papirus-Dark";
