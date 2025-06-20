@@ -66,6 +66,15 @@ in {
       mimeType = ["x-scheme-handler/spotify"];
       categories = ["Audio" "Music" "Player" "AudioVideo"];
     };
+    lm-studio = {
+      name = "Spotify";
+      genericName = "Music Player";
+      icon = "${pkgs.lmstudio}/share/icons/hicolor/0x0/apps/lm-studio.png";
+      exec = "${pkgs.lmstudio}/bin/lm-studio -ozone-platform=wayland";
+      terminal = false;
+      categories = ["Development" "Utility"];
+      comment = "Use the chat UI or local server to experiment and develop with local LLMs.";
+    };
     webflow = {
       name = "Webflow";
       genericName = "Web Editor";
