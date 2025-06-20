@@ -67,11 +67,12 @@ in {
       categories = ["Audio" "Music" "Player" "AudioVideo"];
     };
     lm-studio = {
-      name = "Spotify";
-      genericName = "Music Player";
+      name = "LM Studio";
       icon = "${pkgs.lmstudio}/share/icons/hicolor/0x0/apps/lm-studio.png";
       exec = "${pkgs.lmstudio}/bin/lm-studio -ozone-platform=wayland";
       terminal = false;
+      keywords = ["developer" "llm"];
+      mimeType = ["x-scheme-handler/lmstudio"];
       categories = ["Development" "Utility"];
       comment = "Use the chat UI or local server to experiment and develop with local LLMs.";
     };
