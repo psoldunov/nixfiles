@@ -317,6 +317,7 @@ in {
       obsidian
       pywal
       mattermost-desktop
+      lmstudio
       gnome-font-viewer
       rofi-bluetooth
       duckstation
