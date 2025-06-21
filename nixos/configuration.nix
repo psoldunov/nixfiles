@@ -697,7 +697,6 @@ in {
       alejandra
       dive
       gperftools
-      rhythmbox
       polkit_gnome
       libsecret
       ddcutil
