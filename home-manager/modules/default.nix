@@ -12,7 +12,7 @@
     ./desktop/qt
     ./desktop/gtk
     ./git/git.nix
-    ./programs/ncmpcpp.nix
+    # ./programs/ncmpcpp.nix
     ./programs/spotifyd.nix
     # ./programs/ghostty.nix
     ./programs/kitty.nix
