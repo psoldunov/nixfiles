@@ -303,6 +303,7 @@ in {
 
   home.packages =
     (with pkgs; [
+      audacity
       anytype
       clockify
       figma-linux
