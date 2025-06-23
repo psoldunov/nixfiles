@@ -200,19 +200,19 @@ in {
     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
   };
 
-  # services.mpd = {
-  #   enable = true;
-  #   musicDirectory = "/mnt/Media/Music";
-  #   startWhenNeeded = true;
-  #   network.listenAddress = "any";
-  #   user = "psoldunov";
-  #   extraConfig = ''
-  #     audio_output {
-  #       type "pipewire"
-  #       name "PipeWire"
-  #     }
-  #   '';
-  # };
+  services.mpd = {
+    enable = true;
+    musicDirectory = "/mnt/Media/Music";
+    startWhenNeeded = true;
+    network.listenAddress = "any";
+    user = "psoldunov";
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "PipeWire"
+      }
+    '';
+  };
 
   xdg = {
     menus.enable = true;
@@ -875,7 +875,7 @@ in {
       jq
       wget
       wlogout
-      # mpc-cli
+      mpc-cli
       nemo-with-extensions
       keychain
       expressvpn
