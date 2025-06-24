@@ -40,6 +40,10 @@ in {
       path = "${boundary}/toca-madera-2025";
     }
     {
+      name = "meduza-2025";
+      path = "${boundary}/meduza-2025";
+    }
+    {
       name = "haartz";
       path = "${boundary}/haartz";
     }
