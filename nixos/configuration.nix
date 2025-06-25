@@ -44,8 +44,10 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.plymouth = {
     enable = true;
-    theme = "pedro-raccoon";
-    themePackages = [pkgs.pedro-raccoon-plymouth];
+    # theme = "pedro-raccoon";
+    # themePackages = [pkgs.pedro-raccoon-plymouth];
+    theme = "steamos";
+    themePackages = [pkgs.plymouth-themes-steamos];
     extraConfig = ''
       DeviceScale=an-integer-scaling-factor
     '';
@@ -539,6 +541,7 @@ in {
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
     (import ./overlays/pedro-raccoon-plymouth.nix)
+    (import ./overlays/plymouth-themes-steamos.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/bun.nix)
     # (import ./overlays/supabase-cli.nix)
