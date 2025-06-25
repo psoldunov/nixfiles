@@ -46,7 +46,7 @@ in {
     enable = true;
     # theme = "pedro-raccoon";
     # themePackages = [pkgs.pedro-raccoon-plymouth];
-    theme = "Steam-Deck";
+    theme = "Steam";
     themePackages = [pkgs.plymouth-steam];
     extraConfig = ''
       DeviceScale=an-integer-scaling-factor
