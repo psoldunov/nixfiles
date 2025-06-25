@@ -13,7 +13,7 @@ self: super: {
     installPhase = ''
       runHook preInstall
       mkdir -p $out/share/plymouth/themes/steam
-      cp * $out/share/plymouth/themes/steam
+      cp Steam/* $out/share/plymouth/themes/steam
       substituteInPlace $out/share/plymouth/themes/steam/Steam.plymouth \
         --replace-fail "/usr/" "$out/"
       runHook postInstall
