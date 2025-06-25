@@ -868,6 +868,8 @@ in {
       kdePackages.qt6ct
       qt5.qtwayland
       gsettings-qt
+      keymapp
+      kontroll
       libsForQt5.qt5.qtwayland
       kdePackages.qtwayland
       qt6.qmake
