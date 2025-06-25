@@ -44,10 +44,8 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.plymouth = {
     enable = true;
-    # theme = "pedro-raccoon";
-    # themePackages = [pkgs.pedro-raccoon-plymouth];
-    theme = "Steam";
-    themePackages = [pkgs.plymouth-steam];
+    theme = "pedro-raccoon";
+    themePackages = [pkgs.pedro-raccoon-plymouth];
     extraConfig = ''
       DeviceScale=an-integer-scaling-factor
     '';
