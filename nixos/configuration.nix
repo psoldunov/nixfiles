@@ -46,8 +46,8 @@ in {
     enable = true;
     # theme = "pedro-raccoon";
     # themePackages = [pkgs.pedro-raccoon-plymouth];
-    theme = "steamos";
-    themePackages = [pkgs.plymouth-themes-steamos];
+    theme = "Steam-Deck";
+    themePackages = [pkgs.plymouth-steam];
     extraConfig = ''
       DeviceScale=an-integer-scaling-factor
     '';
@@ -541,7 +541,7 @@ in {
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
     (import ./overlays/pedro-raccoon-plymouth.nix)
-    (import ./overlays/plymouth-themes-steamos.nix)
+    (import ./overlays/plymouth-steam.nix)
     (import ./overlays/hyprprop.nix)
     (import ./overlays/bun.nix)
     # (import ./overlays/supabase-cli.nix)
