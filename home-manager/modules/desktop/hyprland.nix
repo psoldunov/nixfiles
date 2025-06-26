@@ -39,7 +39,7 @@
       ${pkgs.solaar}/bin/solaar -w hide
       ${pkgs.slack}/bin/slack -u
       ${pkgs.ferdium}/bin/ferdium
-      ${pkgs.telegram-desktop}/bin/telegram-desktop -startintray
+      ${pkgs.telegram-desktop}/bin/Telegram -startintray
       ${pkgs.localsend}/bin/localsend_app --hidden
       ${pkgs.motrix}/bin/motrix --ozone-platform-hint=auto
       ${pkgs._1password-gui}/bin/1password --silent
