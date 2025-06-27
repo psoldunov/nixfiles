@@ -220,7 +220,7 @@ in {
 
   programs.chromium = {
     enable = true;
-    # package = pkgs.chromium;
+    package = pkgs.chromium.override {enableWideVine = true;};
     dictionaries = with pkgs; [
       hunspellDictsChromium.en_US
       hunspellDictsChromium.fr_FR
