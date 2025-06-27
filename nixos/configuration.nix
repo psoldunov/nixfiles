@@ -57,6 +57,8 @@ in {
     loader.timeout = 0;
   };
 
+  hardware.keyboard.zsa.enable = true;
+
   boot.loader.grub = {
     enable = false;
     # device = "nodev";
