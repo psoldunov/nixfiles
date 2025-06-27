@@ -807,6 +807,7 @@ in {
       dconf-editor
       cabextract
       killall
+      widevine-cdm
       sbctl
       pavucontrol
       ffmpeg-full
