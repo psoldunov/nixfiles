@@ -291,6 +291,7 @@ in {
   };
 
   # programs.password-store.enable = true;
+  services.gnome-keyring.enable = true;
 
   # nixpkgs.config = {
   #   allowUnfree = true;
