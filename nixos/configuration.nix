@@ -842,7 +842,6 @@ in {
       freetube
       grim
       xdg-utils
-      pass
       xdg-user-dirs
       php
       libxcrypt
