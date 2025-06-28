@@ -742,6 +742,7 @@ in {
       pciutils
       cliphist
       proton-pass
+      protonmail-bridge-gui
       protonmail-desktop
       vulkan-hdr-layer-kwin6
       webp-pixbuf-loader
@@ -898,7 +899,7 @@ in {
 
   services.protonmail-bridge = {
     enable = true;
-    path = with pkgs; [pass gnome-keyring protonmail-bridge-gui];
+    path = with pkgs; [gnome-keyring];
   };
 
   # systemd.services.nbd_cdrom = {
