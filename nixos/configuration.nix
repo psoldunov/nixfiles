@@ -742,6 +742,7 @@ in {
       pciutils
       cliphist
       proton-pass
+      protonmail-desktop
       vulkan-hdr-layer-kwin6
       webp-pixbuf-loader
       supabase-cli
@@ -894,6 +895,8 @@ in {
       ]
       else []
     );
+
+  services.protonmail-bridge.enable = true;
 
   # systemd.services.nbd_cdrom = {
 
