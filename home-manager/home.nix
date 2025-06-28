@@ -290,7 +290,7 @@ in {
     };
   };
 
-  programs.password-store.enable = true;
+  # programs.password-store.enable = true;
 
   # nixpkgs.config = {
   #   allowUnfree = true;
