@@ -896,7 +896,10 @@ in {
       else []
     );
 
-  services.protonmail-bridge.enable = true;
+  services.protonmail-bridge = {
+    enable = true;
+    path = with pkgs; [gnome-keyring];
+  };
 
   # systemd.services.nbd_cdrom = {
 
