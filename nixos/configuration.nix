@@ -741,6 +741,7 @@ in {
       hwdata
       pciutils
       cliphist
+      proton-pass
       vulkan-hdr-layer-kwin6
       webp-pixbuf-loader
       supabase-cli
