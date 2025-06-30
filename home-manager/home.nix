@@ -402,5 +402,13 @@ in {
     htop.enable = true;
   };
 
+  programs.ssh = {
+    enable = true;
+    extraConfig = ''
+      Host *
+          IdentityAgent ~/.1password/agent.sock
+    '';
+  };
+
   home.stateVersion = systemStateVersion;
 }
