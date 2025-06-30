@@ -741,8 +741,6 @@ in {
       hwdata
       pciutils
       cliphist
-      proton-pass
-      protonmail-desktop
       vulkan-hdr-layer-kwin6
       webp-pixbuf-loader
       supabase-cli
@@ -895,14 +893,7 @@ in {
       else []
     );
 
-  services.protonmail-bridge = {
-    enable = true;
-    path = with pkgs; [gnome-keyring];
-  };
-
-  # systemd.services.nbd_cdrom = {
-
-  # };
+  # systemd.services.nbd_cdrom = {};
 
   # systemd.user.services.activate_expressvpn = {
   #   description = "Activates ExpressVPN";
