@@ -322,6 +322,7 @@ in {
       # mysql-workbench
       geekbench
       pkgs-stable.deno
+      biome
       neovim
       zoom-us
       nodejs_24
