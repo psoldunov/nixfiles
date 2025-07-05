@@ -425,8 +425,8 @@ in {
       Host thinkpad.theswisscheese.com
           ProxyCommand ${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h
 
-      Host *
-          IdentityAgent ~/.1password/agent.sock
+      # Host *
+      #     IdentityAgent ~/.1password/agent.sock
     '';
   };
 
