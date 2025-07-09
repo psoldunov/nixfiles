@@ -716,6 +716,7 @@ in {
       bat
       cloudflared
       hyprcursor
+      boxbuddy
       distrobox
       distroshelf
       distrobox-tui
