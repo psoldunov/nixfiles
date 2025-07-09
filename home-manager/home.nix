@@ -21,6 +21,17 @@
     url = "https://github.com/Figma-Linux/figma-linux/releases/download/v0.11.5/figma-linux_0.11.5_linux_x86_64.AppImage";
     sha256 = "19vkjc2f3h61zya757dnq4rij67q8a2yb0whchz27z7r0aqfa3pr";
   };
+
+  browser = {
+    brave = {
+      package = pkgs.brave;
+      path = "${package}/bin/brave";
+    };
+    chromium = {
+      package = pkgs.chromium;
+      path = "${package}/bin/chromium";
+    };
+  };
 in {
   imports = [
     ./modules
@@ -220,7 +231,8 @@ in {
 
   programs.chromium = {
     enable = true;
-    package = pkgs.chromium.override {enableWideVine = true;};
+    # package = pkgs.chromium.override {enableWideVine = true;};
+    package = browser.brave.package;
     dictionaries = with pkgs; [
       hunspellDictsChromium.en_US
       hunspellDictsChromium.fr_FR
