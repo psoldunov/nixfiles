@@ -304,6 +304,7 @@ in {
 
   home.packages =
     (with pkgs; [
+      (writeShellScriptBin "zed" "exec -a $0 ${pkgs.distrobox}/bin/distrobox-enter -n Fedora -- zed $@")
       audacity
       anytype
       clockify
