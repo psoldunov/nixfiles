@@ -23,12 +23,12 @@
   };
 
   browser = {
-    brave = {
+    brave = rec {
       package = pkgs.brave;
       path = "${package}/bin/brave";
     };
-    chromium = {
-      package = pkgs.chromium;
+    chromium = rec {
+      package = pkgs.chromium.override {enableWideVine = true;};
       path = "${package}/bin/chromium";
     };
   };
