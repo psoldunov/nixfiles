@@ -686,6 +686,7 @@ in {
       monkeysAudio
       libdiscid
       (writeShellScriptBin "gnome-terminal" "exec -a $0 ${pkgs.kitty}/bin/kitty $@")
+      (writeShellScriptBin "zed" "exec -a $0 ${pkgs.distrobox}/bin/distrobox-enter -n Fedora -- zed $@")
       appimage-run
       wev
       usbutils
