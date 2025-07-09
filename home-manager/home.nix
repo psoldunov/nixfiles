@@ -24,7 +24,7 @@
 
   browser = {
     brave = rec {
-      package = pkgs.brave.override {enableWideVine = true;};
+      package = pkgs.brave;
       path = "${package}/bin/brave";
     };
     chromium = rec {
@@ -90,7 +90,7 @@ in {
       name = "Webflow";
       genericName = "Web Editor";
       icon = ./modules/desktop/assets/webflow.png;
-      exec = ''${pkgs.chromium}/bin/chromium --profile-directory=Default --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
+      exec = ''${browser.brave.path} --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/webflow"];
       categories = ["Development"];
@@ -99,7 +99,7 @@ in {
       name = "Open WebUI";
       genericName = "AI Chat Interface";
       icon = ./modules/desktop/assets/open-webui.png;
-      exec = ''${pkgs.chromium}/bin/chromium --profile-directory=Default --new-window --app="https://open-webui.theswisscheese.com" %U'';
+      exec = ''${browser.brave.path} --new-window --app="https://open-webui.theswisscheese.com" %U'';
       terminal = false;
       categories = ["Office" "Development"];
     };
@@ -107,7 +107,7 @@ in {
       name = "Postman";
       genericName = "API Development Environment";
       icon = "postman";
-      exec = ''${pkgs.chromium}/bin/chromium --profile-directory=Default --new-window --app="https://web.postman.co/workspaces" %U'';
+      exec = ''${browser.brave.path} --new-window --app="https://web.postman.co/workspaces" %U'';
       terminal = false;
       categories = ["Development"];
     };
@@ -118,7 +118,7 @@ in {
         url = "https://avatars.githubusercontent.com/u/95764151?s=64";
         sha256 = "1x97jwi994jlglmk9v8hf4cdmh2kdnbjjil9bipvh204c4ypjhqw";
       };
-      exec = ''${pkgs.chromium}/bin/chromium --profile-directory=Default --new-window --app="https://memos.theswisscheese.com" %U'';
+      exec = ''${browser.brave.path}  --new-window --app="https://memos.theswisscheese.com" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/memos"];
       categories = ["Office"];
@@ -181,7 +181,7 @@ in {
         url = "https://brand.cake.com/wp-content/uploads/2024/02/logo-light-bg-2.png";
         sha256 = "0fv5j5gcsjxp8bq58y04wqwji8cvksk8sisipm44kyj70hpyjb0m";
       };
-      exec = "${pkgs.chromium}/bin/chromium --new-window https://app.clockify.me/timesheet";
+      exec = "${browser.brave.path} --new-window https://app.clockify.me/timesheet";
     };
     "clockify" = {
       name = "Clockify";
@@ -279,9 +279,6 @@ in {
       }
       {
         id = "jbbplnpkjmmeebjpijfedlgcdilocofh";
-      }
-      {
-        id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
       }
       {
         id = "eljapbgkmlngdpckoiiibecpemleclhh";
