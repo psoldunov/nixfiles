@@ -88,8 +88,8 @@ in {
   catppuccin.zed.enable = false;
 
   programs.zed-editor = {
-    enable = false;
-    # installRemoteServer = true;
+    enable = true;
+    installRemoteServer = true;
     # userSettings = zedConfig;
     # extensions = [
     #   "discord-presence"
