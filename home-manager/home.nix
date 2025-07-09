@@ -24,7 +24,7 @@
 
   browser = {
     brave = rec {
-      package = pkgs.brave;
+      package = pkgs.brave.override {enableWideVine = true;};
       path = "${package}/bin/brave";
     };
     chromium = rec {
