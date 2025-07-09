@@ -102,12 +102,12 @@ in {
     # ];
   };
 
-  # home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
-  #   source = pkgs.writeShellScript "package-version-server-v0.0.7" ''
-  #     ${pkgs.package-version-server}/bin/package-version-server
-  #   '';
-  #   executable = true;
-  # };
+  home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
+    source = pkgs.writeShellScript "package-version-server-v0.0.7" ''
+      ${pkgs.package-version-server}/bin/package-version-server
+    '';
+    executable = true;
+  };
 
   # home.file."${config.xdg.dataHome}/zed/languages/rust-analyzer/rust-analyzer-2025-01-08" = {
   #   source = pkgs.writeShellScript "rust-analyzer-2025-01-08" ''
