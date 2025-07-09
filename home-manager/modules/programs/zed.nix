@@ -109,13 +109,13 @@ in {
     executable = true;
   };
 
-  home.file."${config.xdg.dataHome}/zed/extensions/work/biome/node_modules/@biomejs/cli-linux-x64/biome" = {
-    source = pkgs.writeShellScript "biome" ''
-      ${pkgs.biome}/bin/biome
-    '';
-    executable = true;
-    force = true;
-  };
+  # home.file."${config.xdg.dataHome}/zed/extensions/work/biome/node_modules/@biomejs/cli-linux-x64/biome" = {
+  #   source = pkgs.writeShellScript "biome" ''
+  #     ${pkgs.biome}/bin/biome
+  #   '';
+  #   executable = true;
+  #   force = true;
+  # };
 
   # home.file."${config.xdg.dataHome}/zed/languages/rust-analyzer/rust-analyzer-2025-01-08" = {
   #   source = pkgs.writeShellScript "rust-analyzer-2025-01-08" ''
