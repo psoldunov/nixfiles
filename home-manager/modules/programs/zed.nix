@@ -88,8 +88,8 @@ in {
   catppuccin.zed.enable = false;
 
   programs.zed-editor = {
-    enable = true;
-    installRemoteServer = true;
+    enable = false;
+    installRemoteServer = false;
     # userSettings = zedConfig;
     # extensions = [
     #   "discord-presence"
@@ -102,12 +102,12 @@ in {
     # ];
   };
 
-  home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
-    source = pkgs.writeShellScript "package-version-server-v0.0.7" ''
-      ${pkgs.package-version-server}/bin/package-version-server
-    '';
-    executable = true;
-  };
+  # home.file."${config.xdg.dataHome}/zed/languages/package-version-server/package-version-server-v0.0.7" = {
+  #   source = pkgs.writeShellScript "package-version-server-v0.0.7" ''
+  #     ${pkgs.package-version-server}/bin/package-version-server
+  #   '';
+  #   executable = true;
+  # };
 
   # home.file."${config.xdg.dataHome}/zed/extensions/work/biome/node_modules/@biomejs/cli-linux-x64/biome" = {
   #   source = pkgs.writeShellScript "biome" ''
