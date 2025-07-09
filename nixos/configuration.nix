@@ -678,7 +678,6 @@ in {
       typescript
       nodePackages.prettier
       nodePackages.vercel
-      code-cursor
       catppuccinPackage
       abcde
       cddiscid
