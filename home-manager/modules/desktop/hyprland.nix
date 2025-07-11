@@ -85,8 +85,8 @@ in {
           "${config.xdg.configHome}/hypr/exec.conf"
         ];
         monitor = [
-          "DP-2,3840x2160@144,0x0,1,bitdepth,10"
-          "HDMI-A-1,3840x2160@120,0x0,1,bitdepth,10"
+          "DP-2,3840x2160@144,0x0,1"
+          "HDMI-A-1,3840x2160@120,0x0,1"
         ];
         ecosystem = {
           no_update_news = true;
