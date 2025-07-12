@@ -722,6 +722,7 @@ in {
       distrobox-tui
       run
       hwinfo
+      openmoji-color
       iperf
       yubioath-flutter
       yubikey-manager
