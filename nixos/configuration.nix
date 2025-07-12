@@ -595,6 +595,7 @@ in {
 
   fonts.packages = with pkgs; [
     roboto
+    openmoji-color
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-emoji
@@ -723,7 +724,6 @@ in {
       distrobox-tui
       run
       hwinfo
-      openmoji-color
       iperf
       yubioath-flutter
       yubikey-manager
