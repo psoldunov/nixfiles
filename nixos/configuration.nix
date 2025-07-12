@@ -596,6 +596,7 @@ in {
   fonts.enableDefaultPackages = true;
   fonts.fontconfig = {
     enable = true;
+    useEmbeddedBitmaps = true;
     defaultFonts.emoji = [
       "Noto Color Emoji"
     ];
