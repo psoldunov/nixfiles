@@ -593,6 +593,10 @@ in {
   # █▀▀ █▀█ █▄░█ ▀█▀ █▀
   # █▀░ █▄█ █░▀█ ░█░ ▄█
 
+  fonts.enableDefaultPackages = true;
+  fonts.fontconfig.defaultFonts.emoji = [
+    "Noto Color Emoji"
+  ];
   fonts.packages = with pkgs; [
     roboto
     openmoji-color
