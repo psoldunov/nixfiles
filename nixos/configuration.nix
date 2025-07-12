@@ -719,6 +719,7 @@ in {
       boxbuddy
       distrobox
       distroshelf
+      emote
       distrobox-tui
       run
       hwinfo
