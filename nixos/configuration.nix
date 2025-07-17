@@ -682,7 +682,6 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
-      prisma
       puppeteer-cli
       typescript
       nodePackages.prettier
