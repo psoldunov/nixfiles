@@ -284,11 +284,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1752833460,
-        "narHash": "sha256-jA0mHFP5eAFUNgAlIZ6rcNpuBzBM3UKmz6p8IvxXyI0=",
+        "lastModified": 1752873617,
+        "narHash": "sha256-Uj27t9m6m6lxyw5MM8W1GGNsZDZskDh/w2ngChw2Yy0=",
         "ref": "refs/heads/main",
-        "rev": "088e8af95567398ea0e339698e086039eba140ef",
-        "revCount": 6288,
+        "rev": "ae3cc48f223386b057137400354ed0ca1f7a8b1a",
+        "revCount": 6291,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hyprwm/Hyprland"
@@ -316,11 +316,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1752254688,
-        "narHash": "sha256-XJJ+frO4NOxVkoSGc1Mag8ESumzx2FmVRspOgFlMqF8=",
+        "lastModified": 1752875239,
+        "narHash": "sha256-fyMI4mWt29sEdTSFJKhIdVQrrewycFWLmrOX/HRf4Ig=",
         "owner": "hyprwm",
         "repo": "hyprland-plugins",
-        "rev": "d723e5b153b7990d36e62a425bda3768c41dd9eb",
+        "rev": "d4bf99e72243e035b15f34db8572d62d73b9a68c",
         "type": "github"
       },
       "original": {
@@ -522,11 +522,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1752832532,
-        "narHash": "sha256-YvQ6sjTxS+cw+w8fhEL41vAC28q4sB0vT77uhzQ1eOA=",
+        "lastModified": 1752890591,
+        "narHash": "sha256-zvJs+RxrYWoPt4w3+e4H9PGOvsKVgqGDMpmZjZStLVw=",
         "owner": "fufexan",
         "repo": "nix-gaming",
-        "rev": "4e113d7f833a78a54a35dfc5514a89e5e7c78d4f",
+        "rev": "e68cf458c6644ad07a8fc9d762b843e192efe966",
         "type": "github"
       },
       "original": {
