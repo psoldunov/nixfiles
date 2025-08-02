@@ -20,7 +20,7 @@ in {
 
     iconTheme = {
       name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+      package = lib.mkForce pkgs.papirus-icon-theme;
     };
 
     cursorTheme = lib.mkIf globalSettings.enableHyprland {
