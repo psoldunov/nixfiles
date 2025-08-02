@@ -17,7 +17,7 @@
     accents = ["peach"];
     variant = "mocha";
   };
-  # pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in {
   imports = [
     # Include the results of the hardware scan.
