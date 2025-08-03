@@ -686,6 +686,8 @@ in {
 
   services.fwupd.enable = true;
 
+  services.usbmuxd.enable = true;
+
   environment.systemPackages =
     (with pkgs; [
       puppeteer-cli
@@ -823,6 +825,7 @@ in {
       gnome-disk-utility
       dconf-editor
       cabextract
+      idevicerestore
       killall
       widevine-cdm
       sbctl
