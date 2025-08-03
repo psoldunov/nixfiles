@@ -794,6 +794,7 @@ in {
       gum
       rhythmbox
       libgpod
+      hfsprogs
       translate-shell
       clang
       cmake
