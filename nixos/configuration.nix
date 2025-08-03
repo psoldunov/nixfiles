@@ -395,6 +395,7 @@ in {
     docker.enableOnBoot = true;
     libvirtd.enable = true;
     containerd.enable = true;
+    spiceUSBRedirection.enable = true;
   };
 
   services.ollama = {
@@ -669,6 +670,8 @@ in {
 
   hardware.amdgpu.opencl.enable = true;
 
+  programs.virt-manager.enable = true;
+
   hardware.printers = {
     ensurePrinters = [
       {
@@ -742,7 +745,6 @@ in {
       iperf
       yubioath-flutter
       yubikey-manager
-      virt-manager
       gnome-icon-theme
       adwaita-icon-theme
       p7zip
