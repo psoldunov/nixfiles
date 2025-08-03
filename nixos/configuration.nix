@@ -793,6 +793,7 @@ in {
       hyprprop
       gum
       rhythmbox
+      libgpod
       translate-shell
       clang
       cmake
