@@ -76,7 +76,7 @@ in {
     "video=HDMI-A-1:3840x2160@120"
   ];
 
-  boot.kernelModules = ["uinput" "uhid" "tun"];
+  boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus"];
 
   boot.extraModulePackages = with config.boot.kernelPackages; [
     gasket
