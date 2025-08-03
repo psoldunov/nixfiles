@@ -749,6 +749,7 @@ in {
       adwaita-icon-theme
       p7zip
       gnome-themes-extra
+      virtio-win
       zenity
       hyprevents
       joypixels
