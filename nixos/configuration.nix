@@ -42,6 +42,12 @@ in {
   boot.loader.systemd-boot.consoleMode = "max";
   boot.initrd.systemd.dbus.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.supportedFilesystems = {
+    hfs = true;
+    hfsplus = true;
+  };
+
   boot.plymouth = {
     enable = true;
     theme = "pedro-raccoon";
