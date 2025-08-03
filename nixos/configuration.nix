@@ -792,6 +792,7 @@ in {
       skate
       hyprprop
       gum
+      rhythmbox
       translate-shell
       clang
       cmake
