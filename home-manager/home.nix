@@ -352,7 +352,7 @@ in {
       steam-rom-manager
       mediawriter
       prismlauncher
-      # ryujinx
+      ryubing
       picard
       telegram-desktop
       slack
