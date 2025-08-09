@@ -346,6 +346,7 @@ in {
       plexamp
       pcsx2
       heroic
+      lutris
       shipments
       ferdium
       lollypop
