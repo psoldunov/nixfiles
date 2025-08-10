@@ -48,6 +48,10 @@ in {
       path = "${boundary}/haartz";
     }
     {
+      name = "haartz-next";
+      path = "${boundary}/haartz-next";
+    }
+    {
       name = "toca-sanity-temp";
       path = "${boundary}/toca-sanity-temp";
     }
