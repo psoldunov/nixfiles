@@ -342,7 +342,7 @@ in {
       lmstudio
       gnome-font-viewer
       rofi-bluetooth
-      duckstation
+      pkgs-stable.duckstation
       plexamp
       pcsx2
       heroic
