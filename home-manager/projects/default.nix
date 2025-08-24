@@ -16,6 +16,10 @@ in {
       path = "${personal}/plated";
     }
     {
+      name = "book+street";
+      path = "${personal}/book+street";
+    }
+    {
       name = "digiskies";
       path = "${tsc}/digiskies";
     }
