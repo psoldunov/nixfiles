@@ -49,10 +49,6 @@ in {
     }
     {
       name = "haartz";
-      path = "${boundary}/haartz";
-    }
-    {
-      name = "haartz-next";
       path = "${boundary}/haartz-next";
     }
     {
