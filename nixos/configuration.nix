@@ -830,7 +830,6 @@ in {
       cabextract
       idevicerestore
       killall
-      widevine-cdm
       sbctl
       pavucontrol
       ffmpeg-full
