@@ -809,7 +809,7 @@ in {
       translate-shell
       clang
       cmake
-      cmake-language-server
+      # cmake-language-server
       cmake-format
       cmake-lint
       ccd2iso
