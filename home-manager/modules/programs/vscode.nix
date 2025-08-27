@@ -7,7 +7,7 @@
   enableContinue = false;
   enableVimMode = false;
 in {
-  catppuccin.vscode.enable = false;
+  catppuccin.vscode.profiles.default.enable = false;
   programs.vscode = {
     enable = true;
     # profiles.default = {
