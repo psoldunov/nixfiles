@@ -112,6 +112,7 @@ in {
 
   services.rpcbind.enable = true;
   services.upower.enable = true;
+  services.fstrim.enable = true;
 
   # programs.regreet = {
   #   enable = globalSettings.enableHyprland;
