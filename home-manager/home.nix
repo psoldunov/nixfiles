@@ -318,6 +318,7 @@ in {
       anytype
       clockify
       figma-linux
+      upscayl
       spotify
       zapzap
       ledger-live-desktop
