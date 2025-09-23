@@ -10,16 +10,6 @@ in {
 
   programs.rofi = {
     enable = globalSettings.enableHyprland;
-    package = pkgs.rofi-wayland.override {
-      plugins = with pkgs; [
-        (rofi-calc.override {
-          rofi-unwrapped = rofi-wayland-unwrapped;
-        })
-        (rofi-top.override {
-          rofi-unwrapped = rofi-wayland-unwrapped;
-        })
-      ];
-    };
     font = "JetBrainsMono Nerd Font 11";
     extraConfig = {
       display-drun = "Applications";
@@ -32,7 +22,6 @@ in {
     };
     pass = {
       enable = true;
-      package = pkgs.rofi-pass-wayland;
     };
     theme = {
       "#window" = {
