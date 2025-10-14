@@ -342,7 +342,6 @@ in {
       mattermost-desktop
       lmstudio
       gnome-font-viewer
-      rofi-bluetooth
       pkgs-stable.duckstation
       plexamp
       pcsx2
