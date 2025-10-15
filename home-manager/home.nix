@@ -329,6 +329,7 @@ in {
       shortwave
       hyprshade
       qflipper
+      nextcloud-client
       # rpi-imager
       # mysql-workbench
       geekbench
