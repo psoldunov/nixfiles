@@ -85,7 +85,7 @@
     vim_mode = false;
   };
 in {
-  catppuccin.zed.enable = false;
+  catppuccin.zed.enable = true;
 
   programs.zed-editor = {
     enable = true;
