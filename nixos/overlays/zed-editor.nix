@@ -9,9 +9,4 @@ self: super: {
         patchelf --add-rpath ${super.zlib}/lib $out/libexec/*
       '';
   });
-
-  # Also apply the same changes to the FHS version
-  zed-editor-fhs = super.zed-editor-fhs.override {
-    zed-editor = self.zed-editor;
-  };
 }
