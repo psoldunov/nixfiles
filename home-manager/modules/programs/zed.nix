@@ -88,7 +88,7 @@ in {
   catppuccin.zed.enable = false;
 
   programs.zed-editor = {
-    enable = false;
+    enable = true;
     installRemoteServer = false;
     # userSettings = zedConfig;
     # extensions = [
