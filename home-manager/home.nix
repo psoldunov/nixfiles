@@ -55,6 +55,7 @@ in {
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
+    package = pkgs-stable.nextcloud-client;
   };
 
   sops = {
@@ -329,7 +330,6 @@ in {
       shortwave
       hyprshade
       qflipper
-      nextcloud-client
       # rpi-imager
       # mysql-workbench
       geekbench
