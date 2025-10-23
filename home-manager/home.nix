@@ -345,7 +345,7 @@ in {
       gnome-font-viewer
       pkgs-stable.duckstation
       plexamp
-      pcsx2
+      pkgs-stable.pcsx2
       heroic
       bchunk
       lutris
