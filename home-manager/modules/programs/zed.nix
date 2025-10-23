@@ -89,8 +89,14 @@ in {
 
   programs.zed-editor = {
     enable = true;
-    # package = pkgs.zed-editor-fhs;
+    package = pkgs.zed-editor-fhs;
     installRemoteServer = false;
+    extraPackages = with pkgs; [
+      nil
+      alejandra
+      rust-analyzer
+    ];
+
     # userSettings = zedConfig;
     # extensions = [
     #   "discord-presence"
