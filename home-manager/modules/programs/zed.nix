@@ -92,9 +92,7 @@ in {
     package = pkgs.zed-editor-fhs;
     installRemoteServer = false;
     extraPackages = with pkgs; [
-      nil
-      alejandra
-      rust-analyzer
+      libz
     ];
 
     # userSettings = zedConfig;
