@@ -1,7 +1,7 @@
 self: super: {
   zed-discord-presence = super.stdenv.mkDerivation rec {
     pname = "zed-discord-presence";
-    version = "0.7.0";
+    version = "0.9.0";
 
     # Helper functions for choosing the correct architecture and platform.
     arch =
