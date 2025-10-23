@@ -529,7 +529,6 @@ in {
     inputs.catppuccin-vsc.overlays.default
     (import ./overlays/hyprevents.nix)
     (import ./overlays/pedro-raccoon-plymouth.nix)
-    (import ./overlays/hyprprop.nix)
     (import ./overlays/bun.nix)
     # (import ./overlays/supabase-cli.nix)
     (import ./overlays/package-version-server.nix)
