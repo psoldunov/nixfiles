@@ -89,6 +89,7 @@ in {
 
   programs.zed-editor = {
     enable = true;
+    package = pkgs.zed-editor-fhs;
     installRemoteServer = false;
     # userSettings = zedConfig;
     # extensions = [
