@@ -835,7 +835,7 @@ in {
       hyprpaper
       corepack
       localsend
-      pgks-stable.calibre
+      pkgs-stable.calibre
       unzip
       woff2
       freetube
