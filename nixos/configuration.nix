@@ -533,7 +533,6 @@ in {
     # (import ./overlays/supabase-cli.nix)
     (import ./overlays/package-version-server.nix)
     (import ./overlays/zed-discord-presence.nix)
-    (import ./overlays/zed-editor.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
