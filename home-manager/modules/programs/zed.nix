@@ -16,5 +16,6 @@
       ${pkgs.zed-discord-presence}/bin/discord-presence-lsp
     '';
     executable = true;
+    force = true;
   };
 }

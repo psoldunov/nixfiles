@@ -7,8 +7,13 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    userName = "Philipp Soldunov";
-    userEmail = "69530789+psoldunov@users.noreply.github.com";
+    settings.user = {
+      name = "Philipp Soldunov";
+      email = "69530789+psoldunov@users.noreply.github.com";
+      core = {
+        sshCommand = "ssh -i ${config.home.homeDirectory}/.ssh/git";
+      };
+    };
     ignores = [
       # Compiled source #
       ###################
@@ -48,11 +53,6 @@
       "ehthumbs.db"
       "Thumbs.db"
     ];
-    extraConfig = {
-      core = {
-        sshCommand = "ssh -i ${config.home.homeDirectory}/.ssh/git";
-      };
-    };
   };
 
   programs.gh = {
