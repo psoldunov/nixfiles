@@ -329,7 +329,7 @@ in {
       legcord
       shortwave
       hyprshade
-      qflipper
+      qFlipper
       # rpi-imager
       # mysql-workbench
       geekbench
