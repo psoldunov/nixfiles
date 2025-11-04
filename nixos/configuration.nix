@@ -880,7 +880,7 @@ in {
       jq
       wget
       wlogout
-      mpc-cli
+      mpc
       nemo-with-extensions
       keychain
       expressvpn
