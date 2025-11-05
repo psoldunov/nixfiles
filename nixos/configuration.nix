@@ -79,8 +79,7 @@ in {
     "boot.shell_on_fail"
     "udev.log_priority=3"
     "rd.systemd.show_status=auto"
-    "video=HDMI-A-1:3840x2160@120"
-    "video=DP-1:3840x2160@120"
+    "video=DP-1:3840x2160@144e"
   ];
 
   boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus"];
@@ -162,6 +161,7 @@ in {
     package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     extraPackages = with pkgs; [
       libva
+      vaapiVdpau
       libva-vdpau-driver
       vdpauinfo
       libvdpau
@@ -593,6 +593,7 @@ in {
     openmoji-color
     noto-fonts
     noto-fonts-cjk-sans
+    noto-fonts-emoji
     noto-fonts-color-emoji
     comic-neue
     comic-mono
@@ -880,7 +881,7 @@ in {
       jq
       wget
       wlogout
-      mpc
+      mpc-cli
       nemo-with-extensions
       keychain
       expressvpn
