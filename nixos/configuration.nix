@@ -161,7 +161,6 @@ in {
     package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     extraPackages = with pkgs; [
       libva
-      vaapiVdpau
       libva-vdpau-driver
       vdpauinfo
       libvdpau
