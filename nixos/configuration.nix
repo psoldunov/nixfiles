@@ -80,6 +80,7 @@ in {
     "udev.log_priority=3"
     "rd.systemd.show_status=auto"
     "video=HDMI-A-1:3840x2160@120"
+    "video=DP-1:3840x2160@120"
   ];
 
   boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus"];

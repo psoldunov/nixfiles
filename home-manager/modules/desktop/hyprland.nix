@@ -63,7 +63,7 @@ in {
       preload = ["${wallpaperPath}"];
       wallpaper = [
         "HDMI-A-1,${wallpaperPath}"
-        "DP-2,${wallpaperPath}"
+        "DP-1,${wallpaperPath}"
       ];
     };
   };
@@ -85,7 +85,7 @@ in {
           "${config.xdg.configHome}/hypr/exec.conf"
         ];
         monitor = [
-          "DP-2,3840x2160@144,0x0,1"
+          "DP-1,3840x2160@144,0x0,1"
           "HDMI-A-1,3840x2160@120,0x0,1"
         ];
         ecosystem = {
