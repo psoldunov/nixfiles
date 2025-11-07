@@ -801,6 +801,7 @@ in {
       gcc
       mkcert
       libadwaita
+      dig
       winetricks
       wineWowPackages.full
       gnome-disk-utility
