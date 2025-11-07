@@ -607,6 +607,20 @@ in {
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
   # █▀█ █▀█ █▀▄ █▄▀ ▀▄▀▄▀ █▀█ █▀▄ ██▄   █▀█ █░▀█ █▄▀   █▀▀ █▀▄ █ █░▀█ ░█░ ██▄ █▀▄ ▄█
 
+  systemd.services.dp-retrain = {
+    description = "Force DisplayPort link retrain after suspend";
+    wantedBy = ["suspend.target"];
+    after = ["suspend.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = ''
+        bash -c 'sleep 2 && for conn in /sys/class/drm/card*-DP-*; do \
+          if [ -w "$conn/retrain" ]; then echo 1 > "$conn/retrain"; fi; \
+        done'
+      '';
+    };
+  };
+
   hardware.keyboard.qmk.enable = true;
 
   services.ddccontrol.enable = true;
