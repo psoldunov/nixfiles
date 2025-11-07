@@ -156,9 +156,9 @@ in {
 
   hardware.graphics = {
     enable = true;
-    package = pkgs-hyprland.mesa;
+    # package = pkgs-hyprland.mesa;
     enable32Bit = true;
-    package32 = pkgs-hyprland.pkgsi686Linux.mesa;
+    # package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     extraPackages = with pkgs; [
       libva
       libva-vdpau-driver
