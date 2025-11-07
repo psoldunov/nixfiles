@@ -81,8 +81,7 @@ in {
     "rd.systemd.show_status=auto"
     "video=DP-1:3840x2160@144"
     "amdgpu.dc=1"
-    "amdgpu.force_link_training=1"
-    "amdgpu.ppfeaturemask=0xffffffff"
+    "amdgpu.dcdebugmask=0x10"
   ];
 
   boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus"];
