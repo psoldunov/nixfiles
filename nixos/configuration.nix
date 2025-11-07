@@ -89,7 +89,7 @@ in {
     v4l2loopback
   ];
   boot.extraModprobeConfig = ''
-    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+    options amdgpu.dc=0 v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
 
   nix = {
@@ -606,6 +606,23 @@ in {
 
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
   # █▀█ █▀█ █▀▄ █▄▀ ▀▄▀▄▀ █▀█ █▀▄ ██▄   █▀█ █░▀█ █▄▀   █▀▀ █▀▄ █ █░▀█ ░█░ ██▄ █▀▄ ▄█
+
+  systemd.services.fix-displayport-retrain = {
+    description = "Force DisplayPort retrain after resume";
+    wantedBy = ["suspend.target" "hibernate.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = ''
+        bash -c '
+          sleep 2
+          for out in /sys/class/drm/*DP*/status; do
+            grep -q connected "$out" && \
+              echo 1 > "$(dirname "$out")/force_retrain" 2>/dev/null || true
+          done
+        '
+      '';
+    };
+  };
 
   hardware.keyboard.qmk.enable = true;
 
