@@ -736,6 +736,7 @@ in {
       emote
       distrobox-tui
       run
+      libdrm
       hwinfo
       iperf
       yubioath-flutter
