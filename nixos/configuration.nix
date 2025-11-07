@@ -79,7 +79,7 @@ in {
     "boot.shell_on_fail"
     "udev.log_priority=3"
     "rd.systemd.show_status=auto"
-    "video=DP-1:3840x2160@144e"
+    "video=DP-1:3840x2160@144"
   ];
 
   boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus"];
