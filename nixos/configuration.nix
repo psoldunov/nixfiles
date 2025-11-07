@@ -89,7 +89,7 @@ in {
     v4l2loopback
   ];
   boot.extraModprobeConfig = ''
-    options amdgpu.dc=0 v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
 
   nix = {
@@ -607,23 +607,6 @@ in {
   # █░█ ▄▀█ █▀█ █▀▄ █░█░█ ▄▀█ █▀█ █▀▀   ▄▀█ █▄░█ █▀▄   █▀█ █▀█ █ █▄░█ ▀█▀ █▀▀ █▀█ █▀
   # █▀█ █▀█ █▀▄ █▄▀ ▀▄▀▄▀ █▀█ █▀▄ ██▄   █▀█ █░▀█ █▄▀   █▀▀ █▀▄ █ █░▀█ ░█░ ██▄ █▀▄ ▄█
 
-  systemd.services.fix-displayport-retrain = {
-    description = "Force DisplayPort retrain after resume";
-    wantedBy = ["suspend.target" "hibernate.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = ''
-        bash -c '
-          sleep 2
-          for out in /sys/class/drm/*DP*/status; do
-            grep -q connected "$out" && \
-              echo 1 > "$(dirname "$out")/force_retrain" 2>/dev/null || true
-          done
-        '
-      '';
-    };
-  };
-
   hardware.keyboard.qmk.enable = true;
 
   services.ddccontrol.enable = true;
@@ -911,45 +894,6 @@ in {
       ]
       else []
     );
-
-  # systemd.services.nbd_cdrom = {};
-
-  # systemd.user.services.activate_expressvpn = {
-  #   description = "Activates ExpressVPN";
-  #   after = ["network.target"];
-  #   wantedBy = ["default.target"];
-  #   serviceConfig.ExecStart = (
-  #     pkgs.writeScript "activate_expressvpn" ''
-  #       #!${pkgs.expect}/bin/expect -f
-
-  #       set filepath ${config.sops.secrets.EXPRESSVPN_KEY.path}
-  #       set fp [open $filepath r]
-  #       set activation_code [string trim [read $fp]]
-  #       close $fp
-
-  #       spawn ${pkgs.expressvpn}/bin/expressvpn activate
-
-  #       set timeout 10
-  #       expect {
-  #         "Enter activation code: " {
-  #           send "$activation_code\r"
-  #         }
-  #         timeout {
-  #           puts "Error: Activation prompt not found"
-  #           exit 1
-  #         }
-  #         eof {
-  #           puts "Error: Program terminated unexpectedly"
-  #           exit 1
-  #         }
-  #       }
-
-  #       expect "Help improve ExpressVPN: Share crash reports, speed tests, usability diagnostics, and whether VPN connection attempts succeed. These reports never contain personally identifiable information. (Y/n)"
-  #       send "n\r"
-  #       expect eof
-  #     ''
-  #   );
-  # };
 
   services.expressvpn.enable = true;
 
