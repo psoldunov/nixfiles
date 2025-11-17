@@ -724,7 +724,6 @@ in {
       evince
       eog
       simple-scan
-      emojione
       sassc
       bat
       cloudflared
