@@ -343,7 +343,7 @@ in {
       mattermost-desktop
       lmstudio
       gnome-font-viewer
-      pkgs-stable.duckstation
+      duckstation
       plexamp
       pkgs-stable.pcsx2
       heroic
