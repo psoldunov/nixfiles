@@ -333,7 +333,7 @@ in {
       # rpi-imager
       # mysql-workbench
       geekbench
-      pkgs-stable.deno
+      deno
       biome
       neovim
       zoom-us
@@ -345,7 +345,7 @@ in {
       gnome-font-viewer
       duckstation
       plexamp
-      pkgs-stable.pcsx2
+      pcsx2
       heroic
       bchunk
       lutris
