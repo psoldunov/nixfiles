@@ -355,6 +355,7 @@ in {
       steam-rom-manager
       mediawriter
       parted
+      lsof
       prismlauncher
       ryubing
       picard
