@@ -354,6 +354,7 @@ in {
       lollypop
       steam-rom-manager
       mediawriter
+      parted
       prismlauncher
       ryubing
       picard
