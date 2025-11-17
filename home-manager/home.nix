@@ -399,6 +399,7 @@ in {
           create_screenshot
           create_screenshot_area
           restart_xdg_desktop_portal
+          cycle_monitor_refresh_rate
         ])
       else []
     );

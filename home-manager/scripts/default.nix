@@ -293,6 +293,13 @@
   #   ''
   # );
 
+  cycle_monitor_refresh_rate = (
+    pkgs.writeShellScriptBin "cycle-rr" ''
+      ${pkgs.hyprland}/bin/hyprctl keyword monitor DP-1,3840x2160@120,auto,auto
+      ${pkgs.hyprland}/bin/hyprctl keyword monitor DP-1,3840x2160@144,auto,auto
+    ''
+  );
+
   brightness_control = (
     pkgs.writeShellScriptBin "brightness_control" ''
       # File to store timestamp and count
