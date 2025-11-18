@@ -60,6 +60,10 @@ in {
       path = "${boundary}/fullsteam-sanity";
     }
     {
+      name = "studio-help-desk";
+      path = "${personal}/studio-help-desk";
+    }
+    {
       name = "kast-academy";
       path = "${boundary}/kast-academy";
     }
