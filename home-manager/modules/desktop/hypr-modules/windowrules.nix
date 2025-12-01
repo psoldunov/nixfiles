@@ -88,7 +88,7 @@
     "workspace 6,class:^(steam)$,title:(Steam)"
     "workspace 6,class:^(heroic)$"
     "workspace 9,class:^(FreeTube)$"
-    "workspace 4,class:figma-linux"
+    "workspace 3,class:figma-linux"
     "fullscreen,class:figma-linux"
     "workspace 10,class:^steam_app_.*$"
     "workspace 10,class:^(hl2_linux)$"
