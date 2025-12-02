@@ -344,7 +344,7 @@ in {
       lmstudio
       gnome-font-viewer
       duckstation
-      nixpkgs-plexamp.legacyPackages.${system}.plexamp
+      inputs.nixpkgs-plexamp.legacyPackages.${system}.plexamp
       pcsx2
       heroic
       bchunk
