@@ -83,6 +83,13 @@
       };
     };
 
+    pkgs-plexamp = import nixpkgs-plexamp {
+      inherit system;
+      config = {
+        allowUnfree = true;
+      };
+    };
+
     appleFonts = apple-fonts.packages.${system};
 
     globalSettings = {
@@ -121,6 +128,7 @@
                 outputs
                 pkgs-stable
                 globalSettings
+                pkgs-plexamp
                 ;
             };
             useGlobalPkgs = true;

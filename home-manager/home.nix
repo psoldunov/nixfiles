@@ -7,6 +7,7 @@
   inputs,
   globalSettings,
   pkgs-stable,
+  pkgs-plexamp,
   ...
 }: let
   systemStateVersion = "23.11";
@@ -344,7 +345,7 @@ in {
       lmstudio
       gnome-font-viewer
       duckstation
-      inputs.nixpkgs-plexamp.legacyPackages.${system}.plexamp
+      pkgs-plexamp.plexamp
       pcsx2
       heroic
       bchunk
