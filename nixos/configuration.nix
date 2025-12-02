@@ -218,7 +218,7 @@ in {
         "inode/directory" = ["nemo.desktop" "yazi.desktop"];
         "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
         "text/html" = ["brave-browser.desktop"];
-        "text/*" = ["code.desktop" "zed.desktop"];
+        "text/*" = ["code.desktop"];
         "TerminalEmulator" = "kitty.desktop";
         "image/jpeg" = ["org.gnome.eog.desktop"];
         "image/png" = ["org.gnome.eog.desktop"];
@@ -531,9 +531,6 @@ in {
     (import ./overlays/hyprevents.nix)
     (import ./overlays/pedro-raccoon-plymouth.nix)
     (import ./overlays/bun.nix)
-    # (import ./overlays/supabase-cli.nix)
-    (import ./overlays/package-version-server.nix)
-    (import ./overlays/zed-discord-presence.nix)
     (self: super: {
       mpv = super.mpv.override {
         scripts = [
