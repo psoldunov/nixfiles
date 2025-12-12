@@ -332,7 +332,7 @@ in {
       neovim
       zoom-us
       nodejs_24
-      obsidian
+      pkgs-stable.obsidian
       pywal
       mattermost-desktop
       lmstudio
