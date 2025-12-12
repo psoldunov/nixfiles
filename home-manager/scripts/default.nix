@@ -287,11 +287,11 @@
     ''
   );
 
-  # cursor_open = (
-  #   pkgs.writeShellScriptBin "cursor_open" ''
-  #     nohup ${pkgs.code-cursor}/bin/cursor "$@" >/dev/null 2>&1 &
-  #   ''
-  # );
+  cursor_open = (
+    pkgs.writeShellScriptBin "cursor_open" ''
+      nohup ${pkgs.code-cursor}/bin/cursor "$@" >/dev/null 2>&1 &
+    ''
+  );
 
   cycle_monitor_refresh_rate = (
     pkgs.writeShellScriptBin "cycle-rr" ''
