@@ -382,7 +382,7 @@ in {
 
   services.ollama = {
     enable = !globalSettings.ollamaDocker;
-    acceleration = "rocm";
+    package = pkgs.ollama-rocm;
     rocmOverrideGfx = "11.0.0";
     openFirewall = true;
     environmentVariables = {
