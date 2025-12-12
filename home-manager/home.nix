@@ -313,6 +313,7 @@ in {
       audacity
       anytype
       clockify
+      cursor-cli
       code-cursor
       upscayl
       spotify
