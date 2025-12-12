@@ -6,10 +6,10 @@
 
     catppuccin-vsc.url = "https://flakehub.com/f/catppuccin/vscode/*.tar.gz";
 
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # zen-browser = {
+    #   url = "github:youwen5/zen-browser-flake";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -58,7 +58,7 @@
   outputs = {
     self,
     nixpkgs,
-    zen-browser,
+    # zen-browser,
     ags,
     vscode-server,
     nixpkgs-stable,
@@ -144,7 +144,7 @@
               catppuccin.homeModules.catppuccin
               {
                 home.packages = [
-                  zen-browser.packages."${system}".default
+                  # zen-browser.packages."${system}".default
                 ];
               }
             ];
