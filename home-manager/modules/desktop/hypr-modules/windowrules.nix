@@ -78,7 +78,7 @@
   #   "float,class:(thunar),title:(Confirm to replace files)$"
   #   "float,class:^()$,title:(Google Chrome)$"
   #   "stayfocused, title:^()$,class:^(steam)$"
-  #   "minsize 1 1, title:^()$,class:^(steam)$"
+  #   "min_size 1 1, title:^()$,class:^(steam)$"
   #   "float,class:^(firefox)$,title:^(.*Font Finder — Mozilla Firefox)$"
   #   "workspace 6,class:(thunderbird)"
   #   "workspace 5,class:(Slack)"
@@ -123,7 +123,7 @@
   #   "noblur,class:(zoom),title:(as_toolbar)"
   #   "noshadow,class:(zoom),title:(as_toolbar)"
   #   "noanim,class:(zoom),title:(as_toolbar) "
-  #   "minsize 816 91,class:(zoom),title:(as_toolbar)"
+  #   "min_size 816 91,class:(zoom),title:(as_toolbar)"
   #   "max_size 816 91,class:(zoom),title:(as_toolbar)"
   #   "rounding 0,class:(zoom),title:(as_toolbar)"
   #   "rounding 20,class:(zoom),title:(zoom)"
@@ -201,9 +201,9 @@
     "match:class (thunderbird), match:title ^(Account Setup|Address Book|Chat|Calendar|Tasks|About Mozilla Thunderbird|Preferences|Settings)$, float on"
     "match:class (1Password), match:title ^(.* - 1Password)$, tile on"
     "match:class (1Password), match:title ^(Quick Access|Unlock|Settings|Preferences)$, float on"
-    "match:class (1Password), match:title ^(Quick Access|Unlock|Settings|Preferences)$, center"
+    "match:class (1Password), match:title ^(Quick Access|Unlock|Settings|Preferences)$, center on"
     "match:class 1Password, match:title ^1Password$, pin on"
-    "match:class 1Password, match:title ^1Password$, center"
+    "match:class 1Password, match:title ^1Password$, center on"
     "match:class (python3), match:title ^(.*Maestral.*)$, float on"
     "match:class (org.onionshare.OnionShare), float on"
     "match:class (solaar), float on"
@@ -227,7 +227,7 @@
     "match:class (thunar), match:title ^(Confirm to replace files)$, float on"
     "match:class ^()$, match:title ^(Google Chrome)$, float on"
     "match:class ^(steam)$, match:title ^()$, stay_focused on"
-    "match:class ^(steam)$, match:title ^()$, minsize 1 1"
+    "match:class ^(steam)$, match:title ^()$, min_size 1 1"
     "match:class ^(firefox)$, match:title ^(.*Font Finder — Mozilla Firefox)$, float on"
     "match:class (thunderbird), workspace 6"
     "match:class (Slack), workspace 5"
@@ -272,7 +272,7 @@
     "match:class (zoom), match:title ^(as_toolbar)$, no_blur on"
     "match:class (zoom), match:title ^(as_toolbar)$, no_shadow on"
     "match:class (zoom), match:title ^(as_toolbar)$, no_anim on"
-    "match:class (zoom), match:title ^(as_toolbar)$, minsize 816 91"
+    "match:class (zoom), match:title ^(as_toolbar)$, min_size 816 91"
     "match:class (zoom), match:title ^(as_toolbar)$, max_size 816 91"
     "match:class (zoom), match:title ^(as_toolbar)$, rounding 0"
     "match:class (zoom), match:title ^(zoom)$, rounding 20"
@@ -308,6 +308,6 @@
   ];
   # layerrule = ["dim_around,rofi"];
   layerrule = [
-    "match:namespace rofi, dim_around"
+    "match:namespace rofi, dim_around on"
   ];
 }
