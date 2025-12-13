@@ -85,7 +85,7 @@ in {
           "${config.xdg.configHome}/hypr/exec.conf"
         ];
         monitor = [
-          "DP-1,3840x2160@144,auto,auto"
+          "DP-1,3840x2160@120,auto,auto"
           "HDMI-A-1,3840x2160@120,0x0,1"
         ];
         ecosystem = {
