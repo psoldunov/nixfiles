@@ -339,7 +339,7 @@ in {
       mattermost-desktop
       lmstudio
       gnome-font-viewer
-      duckstation
+      # duckstation
       pkgs-plexamp.plexamp
       pcsx2
       heroic
