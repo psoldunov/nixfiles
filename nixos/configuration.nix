@@ -196,12 +196,12 @@ in {
     startWhenNeeded = true;
     network.listenAddress = "any";
     user = "psoldunov";
-    extraConfig = ''
-      audio_output {
-        type "pipewire"
-        name "PipeWire"
-      }
-    '';
+    settings = {
+      audio_output = {
+        type = "pipewire";
+        name = "PipeWire";
+      };
+    };
   };
 
   xdg = {
