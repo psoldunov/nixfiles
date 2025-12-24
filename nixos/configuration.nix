@@ -197,7 +197,7 @@ in {
     network.listenAddress = "any";
     user = "psoldunov";
     settings = {
-      audio_output = {
+      audioOutput = {
         type = "pipewire";
         name = "PipeWire";
       };
