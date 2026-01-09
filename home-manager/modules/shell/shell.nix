@@ -3,6 +3,7 @@
   pkgs,
   globalSettings,
   lib,
+  pkgs-stable,
   ...
 }: {
   home.sessionVariables = {
@@ -13,10 +14,10 @@
     TERMINAL = "${pkgs.kitty}/bin/kitty";
     TERM = "xterm-256color";
     MAILER = "${pkgs.thunderbird}/bin/thunderbird";
-    PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines_6}/bin/query-engine";
-    PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines_6}/bin/schema-engine";
-    PRISMA_FMT_BINARY = "${pkgs.prisma-engines_6}/bin/prisma-fmt";
-    PRISMA_QUERY_ENGINE_LIBRARY = "${lib.getLib pkgs.prisma-engines_6}/lib/libquery_engine.node";
+    PRISMA_QUERY_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/query-engine";
+    PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/schema-engine";
+    PRISMA_FMT_BINARY = "${pkgs-stable.prisma-engines}/bin/prisma-fmt";
+    PRISMA_QUERY_ENGINE_LIBRARY = "${lib.getLib pkgs-stable.prisma-engines}/lib/libquery_engine.node";
   };
 
   programs.lazygit = {
