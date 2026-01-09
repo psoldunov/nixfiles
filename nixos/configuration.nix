@@ -190,19 +190,19 @@ in {
     HSA_OVERRIDE_GFX_VERSION = "11.0.0";
   };
 
-  services.mpd = {
-    enable = true;
-    musicDirectory = "/mnt/Media/Music";
-    startWhenNeeded = true;
-    network.listenAddress = "any";
-    user = "psoldunov";
-    # settings = {
-    #   audioOutput = {
-    #     type = "pipewire";
-    #     name = "PipeWire";
-    #   };
-    # };
-  };
+  # services.mpd = {
+  #   enable = true;
+  #   musicDirectory = "/mnt/Media/Music";
+  #   startWhenNeeded = true;
+  #   network.listenAddress = "any";
+  #   user = "psoldunov";
+  # settings = {
+  #   audioOutput = {
+  #     type = "pipewire";
+  #     name = "PipeWire";
+  #   };
+  # };
+  # };
 
   xdg = {
     menus.enable = true;
@@ -274,10 +274,10 @@ in {
   services.hypridle.enable = globalSettings.enableHyprland;
   programs.hyprlock.enable = globalSettings.enableHyprland;
 
-  systemd.services.mpd.environment = {
-    # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
-    XDG_RUNTIME_DIR = "/run/user/1000"; # User-id 1000 must match above user. MPD will look inside this directory for the PipeWire socket.
-  };
+  # systemd.services.mpd.environment = {
+  #   # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
+  #   XDG_RUNTIME_DIR = "/run/user/1000"; # User-id 1000 must match above user. MPD will look inside this directory for the PipeWire socket.
+  # };
 
   hardware = {
     openrazer = {
