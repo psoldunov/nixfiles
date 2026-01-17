@@ -161,9 +161,9 @@ in {
           vrr = 1;
           key_press_enables_dpms = true;
         };
-        experimental = {
-          xx_color_management_v4 = true;
-        };
+        # experimental = {
+        #   xx_color_management_v4 = true;
+        # };
         device = [
           {
             name = "dualsense-wireless-controller-touchpad";
