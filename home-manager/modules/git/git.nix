@@ -58,7 +58,7 @@
   programs.gh = {
     enable = true;
     extensions = with pkgs; [
-      gh-copilot
+      github-copilot-cli
     ];
     settings.editor = "code";
     gitCredentialHelper = {
