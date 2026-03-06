@@ -687,7 +687,6 @@ in {
       puppeteer-cli
       typescript
       nodePackages.prettier
-      nodePackages.vercel
       catppuccinPackage
       abcde
       cddiscid
