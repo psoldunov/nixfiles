@@ -57,16 +57,7 @@
 in {
   services.mpris-proxy.enable = true;
 
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      preload = ["${wallpaperPath}"];
-      wallpaper = [
-        "HDMI-A-1,${wallpaperPath}"
-        "DP-1,${wallpaperPath}"
-      ];
-    };
-  };
+  home.packages = [ pkgs.swww ];
 
   wayland.windowManager.hyprland = {
     enable = globalSettings.enableHyprland;
@@ -197,8 +188,9 @@ in {
   home.file = lib.mkIf globalSettings.enableHyprland {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
+        exec-once = ${pkgs.swww}/bin/swww-daemon
+        exec-once = sleep 1 && ${pkgs.swww}/bin/swww img ${wallpaperPath}
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
-        # exec-once = start_static_wallpaper ${wallpaperPath}
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
       '';

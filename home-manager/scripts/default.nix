@@ -180,8 +180,7 @@
   start_static_wallpaper = (
     pkgs.writeShellScriptBin "start_static_wallpaper" ''
       STATIC_WALLPAPER=$1
-      hyprctl hyprpaper preload "$STATIC_WALLPAPER"
-      hyprctl hyprpaper wallpaper "HDMI-A-1,$STATIC_WALLPAPER"
+      ${pkgs.swww}/bin/swww img "$STATIC_WALLPAPER"
       ${pkgs.imagemagick}/bin/magick "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
       exit 0
     ''
