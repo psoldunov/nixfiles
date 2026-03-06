@@ -684,6 +684,8 @@ in {
 
   environment.systemPackages =
     (with pkgs; [
+      claude-code
+      codex
       puppeteer-cli
       typescript
       nodePackages.prettier
