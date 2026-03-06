@@ -439,7 +439,7 @@ in {
         ];
       };
       watchtower = {
-        image = "containrrr/watchtower:latest";
+        image = "nickfedor/watchtower:latest";
         volumes = [
           "/var/run/docker.sock:/var/run/docker.sock"
         ];
