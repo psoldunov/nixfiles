@@ -846,7 +846,6 @@ in {
       trigger-control
       hyprpicker
       hyprpaper
-      corepack
       localsend
       pkgs-stable.calibre
       unzip
