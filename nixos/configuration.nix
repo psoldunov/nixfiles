@@ -116,6 +116,19 @@ in {
   services.upower.enable = true;
   services.fstrim.enable = true;
 
+  services.greetd.settings.default_session.command = let
+    hyprlandBin = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/Hyprland";
+    greetdHyprlandConfig = pkgs.writeText "greetd-hyprland.conf" ''
+      monitor = DP-1, 3840x2160@120, auto, auto
+      monitor = HDMI-A-1, 3840x2160@120, 0x0, 1
+      misc {
+        disable_hyprland_logo = true
+        disable_splash_rendering = true
+      }
+      exec-once = ${pkgs.greetd.regreet}/bin/regreet; hyprctl dispatch exit
+    '';
+  in "${hyprlandBin} --config ${greetdHyprlandConfig}";
+
   programs.regreet = {
     enable = globalSettings.enableHyprland;
     theme = {
