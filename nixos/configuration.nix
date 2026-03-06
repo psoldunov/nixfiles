@@ -817,7 +817,6 @@ in {
       libadwaita
       dig
       winetricks
-      wineWowPackages.full
       gnome-disk-utility
       dconf-editor
       cabextract
