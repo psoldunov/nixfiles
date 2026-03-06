@@ -398,6 +398,14 @@ in {
     ];
   };
 
+  programs.nix-ld.enable = true;
+
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc.lib
+    zlib
+    # add more if it still fails
+  ];
+
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
