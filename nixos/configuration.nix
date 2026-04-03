@@ -696,7 +696,7 @@ in {
       codex
       puppeteer-cli
       typescript
-      nodePackages.prettier
+      # nodePackages.prettier
       catppuccinPackage
       abcde
       cddiscid
