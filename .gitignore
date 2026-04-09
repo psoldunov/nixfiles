@@ -1,2 +1,4 @@
 home-manager/modules/desktop/ags/types
 .decrypted~secrets.yaml
+.claude/plans
+*.local.*

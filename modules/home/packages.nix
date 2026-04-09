@@ -1,0 +1,64 @@
+{
+  pkgs,
+  pkgs-stable,
+  pkgs-plexamp,
+  ...
+}: {
+  # NOTE: Script packages are managed by modules/home/scripts/default.nix
+  # and appended to home.packages there.
+  home.packages = with pkgs; [
+    audacity
+    anytype
+    clockify
+    cursor-cli
+    code-cursor
+    upscayl
+    spotify
+    zapzap
+    ledger-live-desktop
+    beets
+    bruno
+    yaak
+    legcord
+    shortwave
+    hyprshade
+    qFlipper
+    geekbench
+    deno
+    biome
+    neovim
+    zoom-us
+    nodejs_24
+    pkgs-stable.obsidian
+    pywal
+    mattermost-desktop
+    lmstudio
+    gnome-font-viewer
+    pkgs-plexamp.plexamp
+    pcsx2
+    heroic
+    bchunk
+    lutris
+    shipments
+    ferdium
+    lollypop
+    steam-rom-manager
+    mediawriter
+    parted
+    lsof
+    prismlauncher
+    ryubing
+    picard
+    telegram-desktop
+    slack
+    protonup-qt
+    teams-for-linux
+    protonup-ng
+    via
+    denaro
+    gnome-solanum
+    ookla-speedtest
+    motrix
+    transmission-remote-gtk
+  ];
+}

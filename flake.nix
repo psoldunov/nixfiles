@@ -92,26 +92,23 @@
 
     appleFonts = apple-fonts.packages.${system};
 
-    globalSettings = {
-      enableHyprland = true;
-      ollamaDocker = false;
-    };
+    mkHost = import ./lib/mkHost.nix {inherit nixpkgs;};
   in {
-    formatter = nixpkgs.pkgs.alejandra;
+    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
 
-    nixosConfigurations.Whopper = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.Whopper = mkHost {
       inherit system;
       specialArgs = {
         inherit
           inputs
           outputs
           appleFonts
-          globalSettings
           pkgs-stable
           ;
+        hostConfig = import ./hosts/whopper/hostConfig.nix;
       };
       modules = [
-        ./nixos/configuration.nix
+        ./hosts/whopper/default.nix
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
@@ -127,15 +124,15 @@
                 inputs
                 outputs
                 pkgs-stable
-                globalSettings
                 pkgs-plexamp
                 ;
+              hostConfig = import ./hosts/whopper/hostConfig.nix;
             };
             useGlobalPkgs = true;
             useUserPackages = true;
             users = {
               psoldunov =
-                import ./home-manager/home.nix;
+                import ./modules/home;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
