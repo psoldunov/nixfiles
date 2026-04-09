@@ -852,7 +852,7 @@ in {
       evtest
       trigger-control
       hyprpicker
-      swww
+      awww
       localsend
       pkgs-stable.calibre
       unzip

@@ -165,13 +165,13 @@
   # start_static_wallpaper = (
   #   pkgs.writeShellScriptBin "start_static_wallpaper" ''
   #     STATIC_WALLPAPER=$1
-  #     if pgrep -x "swww-daemon" > /dev/null
+  #     if pgrep -x "awww-daemon" > /dev/null
   #     then
-  #         echo "swww is running. Stopping it now..."
-  #         ${pkgs.swww}/bin/swww kill
+  #         echo "awww is running. Stopping it now..."
+  #         ${pkgs.awww}/bin/awww kill
   #     fi
-  #     ${pkgs.swww}/bin/swww-daemon &
-  #     ${pkgs.swww}/bin/swww img "$STATIC_WALLPAPER"
+  #     ${pkgs.awww}/bin/awww-daemon &
+  #     ${pkgs.awww}/bin/awww img "$STATIC_WALLPAPER"
   #     ${pkgs.imagemagick}/bin/magick "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
   #     exit 0
   #   ''
@@ -180,7 +180,7 @@
   start_static_wallpaper = (
     pkgs.writeShellScriptBin "start_static_wallpaper" ''
       STATIC_WALLPAPER=$1
-      ${pkgs.swww}/bin/swww img "$STATIC_WALLPAPER"
+      ${pkgs.awww}/bin/awww img "$STATIC_WALLPAPER"
       ${pkgs.imagemagick}/bin/magick "$STATIC_WALLPAPER" -blur 0x10 "/usr/share/backgrounds/user/lock_background.png"
       exit 0
     ''
@@ -221,10 +221,10 @@
 
   start_video_wallpaper = (
     pkgs.writeShellScriptBin "start_video_wallpaper" ''
-      if pgrep -x "swww-daemon" > /dev/null
+      if pgrep -x "awww-daemon" > /dev/null
       then
-          echo "swww is running. Stopping it now..."
-          ${pkgs.swww}/bin/swww kill
+          echo "awww is running. Stopping it now..."
+          ${pkgs.awww}/bin/awww kill
       fi
       VIDEO_DIR="${config.home.homeDirectory}/Videos/Wallpapers"
       if pgrep -x "mpvpaper" > /dev/null

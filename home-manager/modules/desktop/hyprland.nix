@@ -57,7 +57,7 @@
 in {
   services.mpris-proxy.enable = true;
 
-  home.packages = [ pkgs.swww ];
+  home.packages = [pkgs.awww];
 
   wayland.windowManager.hyprland = {
     enable = globalSettings.enableHyprland;
@@ -188,8 +188,8 @@ in {
   home.file = lib.mkIf globalSettings.enableHyprland {
     "${config.xdg.configHome}/hypr/exec.conf" = {
       text = ''
-        exec-once = ${pkgs.swww}/bin/swww-daemon
-        exec-once = sleep 1 && ${pkgs.swww}/bin/swww img ${wallpaperPath}
+        exec-once = ${pkgs.awww}/bin/awww-daemon
+        exec-once = sleep 1 && ${pkgs.awww}/bin/awww img ${wallpaperPath}
         exec-once = ${config.programs.ags.finalPackage}/bin/ags
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
