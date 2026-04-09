@@ -143,6 +143,8 @@
     enable = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
+    # Adopt the new default (HM ≥ 26.05) — shorter shell wrapper name.
+    shellWrapperName = "y";
   };
 
   programs.fastfetch = {

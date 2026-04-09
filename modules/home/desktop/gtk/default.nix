@@ -18,6 +18,13 @@ in {
       package = catppuccin-gtk-theme;
     };
 
+    # Preserve pre-26.05 behavior where GTK4 inherits from gtk.theme.
+    # Set explicitly to silence the HM deprecation warning.
+    gtk4.theme = {
+      name = "catppuccin-mocha-peach-standard";
+      package = catppuccin-gtk-theme;
+    };
+
     iconTheme = {
       name = "Papirus-Dark";
       package = lib.mkForce pkgs.papirus-icon-theme;

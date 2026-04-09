@@ -1,25 +1,36 @@
 {pkgs, ...}: {
   programs.ssh = {
     enable = true;
-    extraConfig = ''
-      Host github.com
-          HostName github.com
-          IdentityFile ~/.ssh/git
-          User git
-          AddKeysToAgent yes
+    # Opt out of HM's legacy default SSH config (future removal). Any
+    # wildcard defaults that were previously injected should be declared
+    # explicitly under `matchBlocks."*"` if needed.
+    enableDefaultConfig = false;
 
-      Host mynixos.com
-          HostName mynixos.com
-          IdentityFile ~/.ssh/git
-          AddKeysToAgent yes
+    matchBlocks = {
+      "github.com" = {
+        hostname = "github.com";
+        identityFile = "~/.ssh/git";
+        user = "git";
+        addKeysToAgent = "yes";
+      };
 
-      Host gitlab.com
-          PreferredAuthentications publickey
-          IdentityFile ~/.ssh/git
-          AddKeysToAgent yes
+      "mynixos.com" = {
+        hostname = "mynixos.com";
+        identityFile = "~/.ssh/git";
+        addKeysToAgent = "yes";
+      };
 
-      Host thinkpad.theswisscheese.com
-          ProxyCommand ${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h
-    '';
+      "gitlab.com" = {
+        identityFile = "~/.ssh/git";
+        addKeysToAgent = "yes";
+        extraOptions = {
+          PreferredAuthentications = "publickey";
+        };
+      };
+
+      "thinkpad.theswisscheese.com" = {
+        proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
+      };
+    };
   };
 }

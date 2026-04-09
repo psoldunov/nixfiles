@@ -33,7 +33,6 @@ Personal NixOS + home-manager configuration for **Whopper**, an AMD GPU desktop 
 │   ├── nixos/                 # 15 focused NixOS modules — see "NixOS modules"
 │   └── home/                  # Home-manager modules — see "Home-manager modules"
 ├── overlays/                  # Custom package overlays, applied in modules/nixos/overlays.nix
-│   ├── bun.nix                #   bun version pin
 │   ├── hyprevents.nix         #   hyprevents from GitHub
 │   ├── mpv-mpris.nix          #   mpv + mpris script
 │   └── pedro-raccoon-plymouth.nix
@@ -204,7 +203,6 @@ Registered in [modules/nixos/overlays.nix](modules/nixos/overlays.nix). Each fil
 | `inputs.catppuccin-vsc.overlays.default` | Adds `catppuccin-vsc` theme extension |
 | [hyprevents.nix](overlays/hyprevents.nix) | Custom derivation for [vilari-mickopf/hyprevents](https://github.com/vilari-mickopf/hyprevents) |
 | [pedro-raccoon-plymouth.nix](overlays/pedro-raccoon-plymouth.nix) | Custom Plymouth theme derivation |
-| [bun.nix](overlays/bun.nix) | Pins `bun` to `1.2.2` |
 | [mpv-mpris.nix](overlays/mpv-mpris.nix) | Rebuilds `mpv` with the `mpris` lua script bundled |
 
 `hyprprop` is used by keybinds / shell abbreviations but comes from nixpkgs directly — **no overlay needed**.

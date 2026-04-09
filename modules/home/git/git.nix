@@ -7,6 +7,10 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
+    # We don't sign commits from this host; adopt the new default to
+    # silence the HM deprecation warning. Set to "openpgp" or "ssh" if
+    # signing gets wired up later.
+    signing.format = null;
     settings.user = {
       name = "Philipp Soldunov";
       email = "69530789+psoldunov@users.noreply.github.com";
