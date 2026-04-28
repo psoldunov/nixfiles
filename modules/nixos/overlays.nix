@@ -4,5 +4,6 @@
     (import ../../overlays/hyprevents.nix)
     (import ../../overlays/pedro-raccoon-plymouth.nix)
     (import ../../overlays/mpv-mpris.nix)
+    (import ../../overlays/openldap.nix)
   ];
 }
