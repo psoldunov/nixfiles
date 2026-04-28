@@ -182,7 +182,7 @@ in {
       text = ''
         exec-once = ${pkgs.awww}/bin/awww-daemon
         exec-once = sleep 1 && ${pkgs.awww}/bin/awww img ${wallpaperPath}
-        exec-once = ${config.programs.ags.finalPackage}/bin/ags
+        exec-once = ${config.programs.ags.finalPackage}/bin/ags run
         exec-once = ${pkgs.sox}/bin/play ${startupSound}
         exec-once = ${autoStart}
       '';

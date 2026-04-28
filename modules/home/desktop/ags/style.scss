@@ -13,6 +13,14 @@ $button-radius: $global-spacing * 0.75;
   font-weight: 500;
 }
 
+icon {
+  font-size: 16px;
+}
+
+.system-logo icon {
+  font-size: 22px;
+}
+
 button {
   border-radius: $button-radius;
   padding: $global-spacing #{$global-spacing * 2};

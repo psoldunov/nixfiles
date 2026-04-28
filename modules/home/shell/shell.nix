@@ -44,9 +44,9 @@
       };
       resetDE = {
         body = ''
-          ags -q
+          ags quit
           hyprctl reload
-          ags &
+          ags run &
         '';
       };
     };

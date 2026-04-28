@@ -85,7 +85,7 @@
 
   hyprlandOnly = {
     restart_ags = pkgs.writeShellScriptBin "restart_ags" ''
-      ${config.programs.ags.finalPackage}/bin/ags -q && ${config.programs.ags.finalPackage}/bin/ags & disown
+      ${config.programs.ags.finalPackage}/bin/ags quit; ${config.programs.ags.finalPackage}/bin/ags run & disown
     '';
 
     idle_check = pkgs.writeShellScriptBin "idle_check" ''
