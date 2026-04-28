@@ -126,10 +126,9 @@ in {
             "workspaces, 1, 6, default"
           ];
         };
-        dwindle = {
-          pseudotile = "yes";
-          # preserve_split = "yes";
-        };
+        # dwindle = {
+        #   preserve_split = "yes";
+        # };
         # master = {
         #   new_is_master = true;
         # };

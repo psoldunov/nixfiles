@@ -35,7 +35,7 @@ in {
     };
 
     font = lib.mkIf hostConfig.enableHyprland {
-      name = "SF Pro Display";
+      name = "SF Pro";
       size = 12;
     };
   };

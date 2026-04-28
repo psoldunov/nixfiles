@@ -5,7 +5,7 @@
   ...
 }: let
   defaultFont = {
-    family = "SF Pro Display";
+    family = "SF Pro";
     weight = "Regular";
     size = "12";
   };

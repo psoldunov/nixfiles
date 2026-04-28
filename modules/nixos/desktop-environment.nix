@@ -44,7 +44,7 @@ in {
       name = "catppuccin-mocha-peach-standard";
     };
     font = {
-      name = "SF Pro Display";
+      name = "SF Pro";
       size = 12;
       package = appleFonts.sf-pro;
     };
