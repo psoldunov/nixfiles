@@ -7,10 +7,11 @@ const tray = AstalTray.get_default()
 const EXCLUDED = new Set(["Wayland to X11 Video bridge"])
 
 function isUsable(i: AstalTray.TrayItem) {
-  const name = i.iconName
-  if (!name || name === "image-missing") return false
   if (EXCLUDED.has(i.title)) return false
-  return true
+  if (i.gicon) return true
+  if (i.iconName && i.iconName !== "image-missing") return true
+  if (i.iconPixbuf) return true
+  return false
 }
 
 export default function SysTray() {
@@ -20,7 +21,6 @@ export default function SysTray() {
     <box class="system-tray">
       <For each={items((arr) => arr.filter(isUsable))}>
         {(item) => {
-          const iconName = createBinding(item, "iconName")
           let self: Astal.Button
           return (
             <button
@@ -35,7 +35,7 @@ export default function SysTray() {
                 }
               }}
             >
-              <icon icon={iconName((n) => n || "image-missing")} />
+              <icon gicon={createBinding(item, "gicon")} />
             </button>
           )
         }}
