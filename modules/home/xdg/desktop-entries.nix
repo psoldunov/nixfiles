@@ -10,15 +10,15 @@
   brave = "${pkgs.brave}/bin/brave";
 in {
   xdg.desktopEntries = {
-    spotify = {
-      name = "Spotify";
-      genericName = "Music Player";
-      icon = "spotify-client";
-      exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
-      terminal = false;
-      mimeType = ["x-scheme-handler/spotify"];
-      categories = ["Audio" "Music" "Player" "AudioVideo"];
-    };
+    # spotify = {
+    #   name = "Spotify";
+    #   genericName = "Music Player";
+    #   icon = "spotify-client";
+    #   exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
+    #   terminal = false;
+    #   mimeType = ["x-scheme-handler/spotify"];
+    #   categories = ["Audio" "Music" "Player" "AudioVideo"];
+    # };
     lm-studio = {
       name = "LM Studio";
       icon = "${pkgs.lmstudio}/share/icons/hicolor/0x0/apps/lm-studio.png";

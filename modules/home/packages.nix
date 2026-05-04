@@ -13,7 +13,7 @@
     cursor-cli
     code-cursor
     upscayl
-    spotify
+    cider
     zapzap
     ledger-live-desktop
     beets
