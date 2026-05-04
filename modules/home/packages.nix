@@ -13,7 +13,7 @@
     cursor-cli
     code-cursor
     upscayl
-    cider
+    cider-2
     zapzap
     ledger-live-desktop
     beets
