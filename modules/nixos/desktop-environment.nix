@@ -33,6 +33,10 @@ in {
   services.blueman.enable = hostConfig.enableHyprland;
 
   # Greeter
+  # regreet 0.3.0 hard-requires AccountsService for user enumeration
+  # (panics on startup → blank cage screen otherwise).
+  services.accounts-daemon.enable = hostConfig.enableHyprland;
+
   programs.regreet = {
     enable = hostConfig.enableHyprland;
     theme = {
