@@ -12,7 +12,10 @@
     package = pkgs-stable.nextcloud-client;
   };
 
-  services.gnome-keyring.enable = true;
+  services.gnome-keyring = {
+    enable = true;
+    components = ["pkcs11" "secrets"];
+  };
 
   programs.nix-index = {
     enable = true;
