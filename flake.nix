@@ -153,5 +153,39 @@
         }
       ];
     };
+
+    nixosConfigurations.BigTasty = mkHost {
+      inherit system;
+      specialArgs = {
+        inherit
+          inputs
+          outputs
+          pkgs-stable
+          ;
+      };
+      modules = [
+        ./vendor/server-import/nixos/configuration.nix
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        vscode-server.nixosModules.default
+        ({...}: {
+          services.vscode-server.enable = true;
+        })
+        {
+          home-manager = {
+            extraSpecialArgs = {inherit inputs outputs;};
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-backup";
+            users = {
+              psoldunov = import ./vendor/server-import/home-manager/home.nix;
+            };
+            sharedModules = [
+              sops-nix.homeManagerModules.sops
+            ];
+          };
+        }
+      ];
+    };
   };
 }
