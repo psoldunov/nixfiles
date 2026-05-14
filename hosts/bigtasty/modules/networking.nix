@@ -37,19 +37,5 @@
     settings.AllowUsers = ["psoldunov"];
   };
 
-  security.sudo.extraRules = [
-    {
-      users = ["psoldunov"];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = ["NOPASSWD" "SETENV"];
-        }
-        {
-          command = "/run/current-system/sw/bin/switch-to-configuration";
-          options = ["NOPASSWD" "SETENV"];
-        }
-      ];
-    }
-  ];
+  security.sudo.wheelNeedsPassword = false;
 }
