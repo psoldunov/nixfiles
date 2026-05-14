@@ -1,6 +1,6 @@
 {...}: {
   sops = {
-    defaultSopsFile = ../../../vendor/server-import/secrets/secrets.yaml;
+    defaultSopsFile = ../../../secrets/bigtasty.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 

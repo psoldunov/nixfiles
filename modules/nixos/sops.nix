@@ -1,6 +1,6 @@
 {...}: {
   sops = {
-    defaultSopsFile = ../../secrets/secrets.yaml;
+    defaultSopsFile = ../../secrets/whopper.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 

@@ -18,7 +18,7 @@ in {
   ];
 
   sops = {
-    defaultSopsFile = ../../../vendor/server-import/secrets/secrets.yaml;
+    defaultSopsFile = ../../../secrets/bigtasty.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 
