@@ -6,6 +6,7 @@
     warn-dirty = false;
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
+    trusted-users = ["psoldunov"];
   };
 
   nixpkgs.config = {
