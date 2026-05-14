@@ -34,7 +34,11 @@
 
   services.openssh = {
     enable = true;
-    settings.AllowUsers = ["psoldunov"];
+    settings = {
+      AllowUsers = ["psoldunov"];
+      PrintMotd = false;
+      PrintLastLog = false;
+    };
   };
 
   security.pam.sshAgentAuth = {
