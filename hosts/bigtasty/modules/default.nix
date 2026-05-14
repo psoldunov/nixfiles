@@ -1,5 +1,10 @@
+# BigTasty-local NixOS modules. Shared baseline (boot loader, locale,
+# nix settings, users, sops preamble, virtualisation, fwupd, …) is
+# pulled in via ../../../modules/nixos.
 {...}: {
   imports = [
+    ../../../modules/nixos
+
     ./boot.nix
     ./filesystems.nix
     ./hardware.nix

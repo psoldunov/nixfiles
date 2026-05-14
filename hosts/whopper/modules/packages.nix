@@ -16,12 +16,12 @@ in {
     inputs.steam-presence.nixosModules.steam-presence
   ];
 
+  # `nixpkgs.config.allow{Unfree,Insecure,Broken}` baseline is set in
+  # modules/nixos/nix.nix. Whopper-only knobs: joypixels licensing +
+  # additional insecure-package allowlist.
   nixpkgs = {
     config = {
       joypixels.acceptLicense = true;
-      allowUnfree = true;
-      allowInsecure = true;
-      allowBroken = true;
       allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
           "joypixels"
@@ -49,21 +49,9 @@ in {
     };
   };
 
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    stdenv.cc.cc.lib
-    zlib
-  ];
-
+  # nix-ld, fish, mtr, git baseline live in modules/nixos.
   programs.direnv.enable = true;
   programs.seahorse.enable = true;
-  programs.mtr.enable = true;
-  programs.fish.enable = true;
-
-  programs.git = {
-    enable = true;
-    lfs.enable = true;
-  };
 
   programs = {
     _1password = {

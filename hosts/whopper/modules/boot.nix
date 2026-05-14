@@ -7,10 +7,9 @@
   # the rest of the AMD GPU config lives in ./hardware.nix.
   boot.initrd.kernelModules = ["amdgpu" "nfs"];
 
-  boot.loader.systemd-boot.enable = true;
+  # systemd-boot, EFI vars, and swraid baseline live in modules/nixos/boot.nix.
   boot.loader.systemd-boot.consoleMode = "max";
   boot.initrd.systemd.dbus.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   boot.supportedFilesystems = {
     hfs = true;
@@ -54,7 +53,4 @@
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
-
-  boot.swraid.enable = true;
-  boot.swraid.mdadmConf = "MAILADDR=philipp@theswisscheese.com";
 }

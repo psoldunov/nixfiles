@@ -4,10 +4,10 @@
   hostConfig,
   ...
 }: {
+  # services.fwupd lives in modules/nixos/hardware.nix.
   services.rpcbind.enable = true;
   services.upower.enable = true;
   services.fstrim.enable = true;
-  services.fwupd.enable = true;
   services.usbmuxd.enable = true;
   services.locate.enable = true;
   services.ddccontrol.enable = true;
@@ -43,15 +43,8 @@
     };
   };
 
-  # Udev for Apple Superdrive
-  services.udev = {
-    packages = [
-      pkgs.yubikey-personalization
-    ];
-    extraRules = ''
-      ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="${pkgs.sg3_utils}/bin/sg_raw %r/sr%n EA 00 00 00 00 00 01"
-    '';
-  };
+  # Apple Superdrive udev rule lives in modules/nixos/hardware.nix.
+  services.udev.packages = [pkgs.yubikey-personalization];
 
   # Printing
   services.printing = {

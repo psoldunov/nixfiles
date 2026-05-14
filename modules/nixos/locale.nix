@@ -1,3 +1,5 @@
+# Timezone + locale. The full LC_* matrix used to live only on Whopper;
+# BigTasty now inherits it too.
 {...}: {
   time.timeZone = "Asia/Nicosia";
 

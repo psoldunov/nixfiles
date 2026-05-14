@@ -7,10 +7,9 @@
 in {
   # NOTE: `boot.initrd.kernelModules = ["amdgpu" ...]` is set in ./boot.nix
   # because it is a boot-time concern, even though the GPU is configured here.
+  # `hardware.graphics.enable{,32Bit}` baseline is in modules/nixos/hardware.nix.
   hardware.graphics = {
-    enable = true;
     package = pkgs-hyprland.mesa;
-    enable32Bit = true;
     package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     extraPackages = with pkgs; [
       libva

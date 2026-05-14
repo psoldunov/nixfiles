@@ -1,7 +1,7 @@
+# hardware.graphics enable/enable32Bit, services.fwupd, and the
+# Apple Superdrive udev rule live in modules/nixos/hardware.nix.
 {pkgs, ...}: {
   hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
       intel-vaapi-driver
@@ -14,8 +14,6 @@
   };
 
   hardware.intel-gpu-tools.enable = true;
-
-  services.fwupd.enable = true;
 
   services.cachefilesd = {
     enable = true;
@@ -30,12 +28,6 @@
         readonly = true;
       };
     };
-  };
-
-  services.udev = {
-    extraRules = ''
-      ACTION=="add", ATTRS{idProduct}=="1500", ATTRS{idVendor}=="05ac", DRIVERS=="usb", RUN+="${pkgs.sg3_utils}/bin/sg_raw %r/sr%n EA 00 00 00 00 00 01"
-    '';
   };
 
   powerManagement.powertop.enable = true;

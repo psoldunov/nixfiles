@@ -29,13 +29,12 @@
   networking.networkmanager.enable = false;
   programs.nm-applet.enable = false;
 
+  # openssh enable + AllowUsers live in modules/nixos/openssh.nix.
   services.openssh = {
-    enable = true;
     ports = [22];
     settings = {
       PermitRootLogin = "no";
       PasswordAuthentication = false;
-      AllowUsers = ["psoldunov"];
     };
   };
 

@@ -1,14 +1,5 @@
+# systemd-boot, EFI vars, and swraid baseline live in modules/nixos/boot.nix.
 {lib, ...}: {
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.swraid = {
-    enable = true;
-    mdadmConf = ''
-      MAILADDR philipp@theswisscheese.com
-    '';
-  };
-
   boot.initrd.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 

@@ -32,13 +32,10 @@
     };
   };
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      AllowUsers = ["psoldunov"];
-      PrintMotd = false;
-      PrintLastLog = false;
-    };
+  # openssh enable + AllowUsers live in modules/nixos/openssh.nix.
+  services.openssh.settings = {
+    PrintMotd = false;
+    PrintLastLog = false;
   };
 
   security.pam.sshAgentAuth = {

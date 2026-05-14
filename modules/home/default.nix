@@ -3,6 +3,8 @@
   imports = [
     ./git/git.nix
     ./shell/shell.nix
+    ./nix-index.nix
+    ./sops.nix
     ./programs/claude-code
   ];
 }

@@ -1,10 +1,10 @@
+# Whopper-local nix knobs: nixPath plus the gaming/Hyprland binary caches.
+# The host-agnostic settings (warn-dirty, experimental-features,
+# auto-optimise-store, trusted-users) live in modules/nixos/nix.nix.
 {inputs, ...}: {
   nix = {
     nixPath = ["nixpkgs=${inputs.nixpkgs}"];
     settings = {
-      warn-dirty = false;
-      experimental-features = "nix-command flakes";
-      auto-optimise-store = true;
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-gaming.cachix.org"

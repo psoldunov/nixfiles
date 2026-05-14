@@ -17,15 +17,8 @@ in {
     ../../../modules/home
   ];
 
-  sops = {
-    defaultSopsFile = ../../../secrets/bigtasty.yaml;
-    defaultSopsFormat = "yaml";
-    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
-
-    secrets = {
-      SHELL_SECRETS = {};
-    };
-  };
+  # Preamble + SHELL_SECRETS live in modules/home/sops.nix.
+  sops.defaultSopsFile = ../../../secrets/bigtasty.yaml;
 
   services.unison = {
     enable = false;
@@ -46,8 +39,7 @@ in {
     };
   };
 
-  programs.nix-index.enable = true;
-
+  # programs.nix-index lives in modules/home/nix-index.nix.
   programs = {
     home-manager.enable = true;
     git.enable = true;

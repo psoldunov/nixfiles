@@ -1,12 +1,14 @@
-# Whopper-local NixOS modules. Each file is host-specific; shared NixOS
-# bits would live under ../../modules/nixos/ — currently none.
+# Whopper-local NixOS modules. The shared baseline (boot loader, locale,
+# nix settings, users, sops preamble, virtualisation, fwupd, …) lives
+# under ../../../modules/nixos and is imported below.
 {...}: {
   imports = [
+    ../../../modules/nixos
+
     ./boot.nix
     ./desktop-environment.nix
     ./fonts.nix
     ./hardware.nix
-    ./locale.nix
     ./mounts.nix
     ./networking.nix
     ./nix.nix

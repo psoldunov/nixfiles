@@ -17,13 +17,7 @@
     components = ["pkcs11" "secrets"];
   };
 
-  programs.nix-index = {
-    enable = true;
-    enableZshIntegration = true;
-    enableBashIntegration = true;
-    enableFishIntegration = true;
-  };
-
+  # programs.nix-index lives in modules/home/nix-index.nix.
   manual = {
     html.enable = false;
     json.enable = false;

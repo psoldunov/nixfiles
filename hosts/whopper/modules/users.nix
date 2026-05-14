@@ -1,10 +1,13 @@
-{pkgs, ...}: {
-  users.users.psoldunov = {
-    isNormalUser = true;
-    description = "Philipp Soldunov";
-    extraGroups = ["networkmanager" "docker" "disk" "wheel" "i2c" "video" "storage" "libvirtd" "scanner" "lp" "input"];
-    shell = pkgs.fish;
-  };
-
-  system.stateVersion = "23.11";
+# Baseline psoldunov account + system.stateVersion live in
+# modules/nixos. Whopper just appends desktop-specific groups.
+{...}: {
+  users.users.psoldunov.extraGroups = [
+    "networkmanager"
+    "disk"
+    "i2c"
+    "storage"
+    "scanner"
+    "lp"
+    "input"
+  ];
 }

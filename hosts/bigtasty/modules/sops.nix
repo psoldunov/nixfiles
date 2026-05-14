@@ -1,8 +1,7 @@
+# defaultSopsFormat + age.keyFile live in modules/nixos/sops.nix.
 {...}: {
   sops = {
     defaultSopsFile = ../../../secrets/bigtasty.yaml;
-    defaultSopsFormat = "yaml";
-    age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 
     secrets = {
       SLSKD_ENV = {
