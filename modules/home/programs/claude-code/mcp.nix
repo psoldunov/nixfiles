@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: {
   # Secrets live as individual sops entries decrypted to
@@ -36,13 +37,13 @@
     enable = true;
     servers = {
       nanobanana = {
-        command = "uvx";
+        command = "${pkgs.uv}/bin/uvx";
         args = ["nanobanana-mcp-server@latest"];
         env.GEMINI_API_KEY = "\${CLAUDE_GEMINI_API_KEY}";
       };
 
       "@21st-dev/magic" = {
-        command = "npx";
+        command = "${pkgs.nodejs_24}/bin/npx";
         args = [
           "-y"
           "@21st-dev/magic@latest"
@@ -51,7 +52,7 @@
       };
 
       nocodb = {
-        command = "npx";
+        command = "${pkgs.nodejs_24}/bin/npx";
         args = [
           "mcp-remote"
           "\${CLAUDE_NOCODB_MCP_URL}"
@@ -63,6 +64,22 @@
       Sanity = {
         url = "https://mcp.sanity.io";
         headers.Authorization = "Bearer \${CLAUDE_SANITY_MCP_BEARER}";
+      };
+
+      obsidian-personal = {
+        command = "${pkgs.nodejs_24}/bin/npx";
+        args = [
+          "@bitbonsai/mcpvault@latest"
+          "${config.home.homeDirectory}/Documents/Obsidian/Personal"
+        ];
+      };
+
+      obsidian-boundary = {
+        command = "${pkgs.nodejs_24}/bin/npx";
+        args = [
+          "@bitbonsai/mcpvault@latest"
+          "${config.home.homeDirectory}/Documents/Obsidian/Boundary"
+        ];
       };
     };
   };
