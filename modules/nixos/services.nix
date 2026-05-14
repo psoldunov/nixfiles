@@ -112,6 +112,7 @@
     };
     settings.devices = {
       BigTasty.id = "GJTMGVV-ZBUNMER-CJRQLQS-CYPIVBO-UDLPMIZ-UW76NMG-YKEBQWH-IIMH5AY";
+      SteamDeck.id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
     };
     settings.folders.Obsidian = {
       path = "/home/psoldunov/Documents/Obsidian";
