@@ -119,6 +119,12 @@
       label = "Obsidian";
       devices = ["BigTasty"];
     };
+    settings.folders.Sync = {
+      id = "default";
+      path = "/home/psoldunov/Sync";
+      label = "Sync Folder";
+      devices = ["BigTasty" "SteamDeck"];
+    };
     overrideFolders = true;
     overrideDevices = true;
   };
