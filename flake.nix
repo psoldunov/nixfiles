@@ -48,6 +48,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    millennium.url = "github:SteamClientHomebrew/Millennium/e2c66a276e579ee73c5151b01897bf63503aa12c?dir=packages/nix";
+
     ags = {
       url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -66,6 +68,7 @@
     catppuccin,
     nix-gaming,
     nix-flatpak,
+    millennium,
     sops-nix,
     home-manager,
     apple-fonts,
