@@ -62,5 +62,6 @@
     ookla-speedtest
     motrix
     transmission-remote-gtk
+    uv
   ];
 }

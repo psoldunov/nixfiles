@@ -130,12 +130,12 @@
           }
         ];
       };
-      enabledPlugins = {
-        "skill-creator@claude-plugins-official" = true;
-        "superpowers@claude-plugins-official" = true;
-        "figma@claude-plugins-official" = true;
-        "vercel@claude-plugins-official" = true;
-      };
+      # enabledPlugins = {
+      #   "skill-creator@claude-plugins-official" = true;
+      #   "superpowers@claude-plugins-official" = true;
+      #   "figma@claude-plugins-official" = true;
+      #   "vercel@claude-plugins-official" = true;
+      # };
     };
   };
 }
