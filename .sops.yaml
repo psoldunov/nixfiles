@@ -1,6 +1,10 @@
 keys:
   - &primary age107gznxytzq70laud5d2t2qj8sn4d74rjf72nacj4ulv3tn3ltv9sgh4gzm
 creation_rules:
+  - path_regex: secrets/shared\.yaml$
+    key_groups:
+      - age:
+          - *primary
   - path_regex: secrets/whopper\.yaml$
     key_groups:
       - age:

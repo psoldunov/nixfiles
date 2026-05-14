@@ -6,13 +6,17 @@
 }: {
   # Secrets live as individual sops entries decrypted to
   # /run/user/$UID/secrets/<NAME>; their values never enter /nix/store.
-  sops.secrets = {
-    CLAUDE_GEMINI_API_KEY = {};
-    CLAUDE_MAGIC_21ST_API_KEY = {};
-    CLAUDE_NOCODB_MCP_URL = {};
-    CLAUDE_NOCODB_MCP_TOKEN = {};
-    CLAUDE_SANITY_MCP_BEARER = {};
-    PAPERLESS_API_KEY = {};
+  # These secrets are shared across hosts, so they're sourced from
+  # secrets/shared.yaml rather than the per-host sops file.
+  sops.secrets = let
+    sharedFile = ../../../../secrets/shared.yaml;
+  in {
+    CLAUDE_GEMINI_API_KEY.sopsFile = sharedFile;
+    CLAUDE_MAGIC_21ST_API_KEY.sopsFile = sharedFile;
+    CLAUDE_NOCODB_MCP_URL.sopsFile = sharedFile;
+    CLAUDE_NOCODB_MCP_TOKEN.sopsFile = sharedFile;
+    CLAUDE_SANITY_MCP_BEARER.sopsFile = sharedFile;
+    PAPERLESS_API_KEY.sopsFile = sharedFile;
   };
 
   # Expose the Claude MCP secrets as shell env vars. The MCP server
