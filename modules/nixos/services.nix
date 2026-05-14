@@ -119,7 +119,7 @@
       label = "Obsidian";
       devices = ["BigTasty"];
     };
-    overrideFolders = false;
-    overrideDevices = false;
+    overrideFolders = true;
+    overrideDevices = true;
   };
 }
