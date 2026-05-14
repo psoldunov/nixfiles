@@ -141,7 +141,7 @@
             backupFileExtension = "hm-backup";
             users = {
               psoldunov =
-                import ./modules/home;
+                import ./hosts/whopper/home;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
@@ -180,7 +180,11 @@
         {
           home-manager = {
             extraSpecialArgs = {
-              inherit inputs outputs;
+              inherit
+                inputs
+                outputs
+                pkgs-stable
+                ;
               hostConfig = import ./hosts/bigtasty/hostConfig.nix;
             };
             useGlobalPkgs = true;

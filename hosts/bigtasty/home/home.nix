@@ -14,7 +14,7 @@
   };
 in {
   imports = [
-    ./modules
+    ../../../modules/home
   ];
 
   sops = {

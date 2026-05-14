@@ -1,26 +1,13 @@
-{
-  config,
-  libs,
-  pkgs,
-  ...
-}: {
+{...}: {
   programs.git = {
     enable = true;
     lfs.enable = true;
-    # We don't sign commits from this host; adopt the new default to
-    # silence the HM deprecation warning. Set to "openpgp" or "ssh" if
-    # signing gets wired up later.
     signing.format = null;
     settings.user = {
       name = "Philipp Soldunov";
       email = "69530789+psoldunov@users.noreply.github.com";
-      core = {
-        sshCommand = "ssh -i ${config.home.homeDirectory}/.ssh/git";
-      };
     };
     ignores = [
-      # Compiled source #
-      ###################
       "*.com"
       "*.class"
       "*.dll"
@@ -28,10 +15,6 @@
       "*.o"
       "*.so"
 
-      # Packages #
-      ############
-      # it's better to unpack these files and commit the raw source
-      # git has its own built in compression methods
       "*.7z"
       "*.dmg"
       "*.gz"
@@ -41,14 +24,10 @@
       "*.tar"
       "*.zip"
 
-      # Logs and databases #
-      ######################
       "*.log"
       "*.sql"
       "*.sqlite"
 
-      # OS generated files #
-      ######################
       ".DS_Store"
       ".DS_Store?"
       "._*"
