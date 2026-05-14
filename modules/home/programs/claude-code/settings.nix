@@ -28,6 +28,8 @@
           "mcp__pencil"
           "mcp__claude_ai_Context7"
           "mcp__plugin_context-mode_context-mode"
+          "mcp__plugin_claude-code-home-manager_obsidian-personal__*"
+          "mcp__plugin_claude-code-home-manager_obsidian-boundary__*"
         ];
         additionalDirectories = [
           "~/.claude/plans/"
