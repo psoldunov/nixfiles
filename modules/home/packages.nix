@@ -29,6 +29,7 @@
     neovim
     zoom-us
     infisical
+    mise
     nodejs_24
     pkgs-stable.obsidian
     pywal
