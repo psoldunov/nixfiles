@@ -1,6 +1,6 @@
 {...}: {
   sops = {
-    defaultSopsFile = ../../secrets/secrets.yaml;
+    defaultSopsFile = ../../../secrets/whopper.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 
@@ -9,6 +9,9 @@
         owner = "psoldunov";
       };
       SYNCTHING_GUI_PASSWORD = {
+        owner = "psoldunov";
+      };
+      STEAM_API_KEY = {
         owner = "psoldunov";
       };
     };

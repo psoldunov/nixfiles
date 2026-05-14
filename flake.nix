@@ -55,6 +55,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    steam-presence = {
+      url = "github:JustTemmie/steam-presence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     context-mode = {
       url = "github:mksglu/context-mode";
       flake = false;
@@ -136,7 +141,7 @@
             backupFileExtension = "hm-backup";
             users = {
               psoldunov =
-                import ./modules/home;
+                import ./hosts/whopper/home;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
@@ -148,6 +153,48 @@
                   zen-browser.packages."${system}".default
                 ];
               }
+            ];
+          };
+        }
+      ];
+    };
+
+    nixosConfigurations.BigTasty = mkHost {
+      inherit system;
+      specialArgs = {
+        inherit
+          inputs
+          outputs
+          pkgs-stable
+          ;
+        hostConfig = import ./hosts/bigtasty/hostConfig.nix;
+      };
+      modules = [
+        ./hosts/bigtasty/default.nix
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        vscode-server.nixosModules.default
+        ({...}: {
+          services.vscode-server.enable = true;
+        })
+        {
+          home-manager = {
+            extraSpecialArgs = {
+              inherit
+                inputs
+                outputs
+                pkgs-stable
+                ;
+              hostConfig = import ./hosts/bigtasty/hostConfig.nix;
+            };
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-backup";
+            users = {
+              psoldunov = import ./hosts/bigtasty/home/home.nix;
+            };
+            sharedModules = [
+              sops-nix.homeManagerModules.sops
             ];
           };
         }

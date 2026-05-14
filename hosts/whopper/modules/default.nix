@@ -1,3 +1,5 @@
+# Whopper-local NixOS modules. Each file is host-specific; shared NixOS
+# bits would live under ../../modules/nixos/ — currently none.
 {...}: {
   imports = [
     ./boot.nix

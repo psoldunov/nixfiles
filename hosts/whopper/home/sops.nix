@@ -1,6 +1,6 @@
 {config, ...}: {
   sops = {
-    defaultSopsFile = ../../secrets/secrets.yaml;
+    defaultSopsFile = ../../../secrets/whopper.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 

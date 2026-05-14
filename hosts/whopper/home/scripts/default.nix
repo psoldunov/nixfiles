@@ -38,34 +38,62 @@
 
     update_system = pkgs.writeShellScriptBin "update_system" ''
       set -e
-      cd /etc/nixos
+      HOST="''${1:-$(${pkgs.inetutils}/bin/hostname)}"
+      FLAKE_DIR="''${HOME}/.nixfiles"
+      ALL_HOSTS=(Whopper BigTasty)
+      cd "$FLAKE_DIR"
       git add -A
       sudo nix flake update
-      if sudo nixos-rebuild switch --show-trace --upgrade-all; then
-        if ! git diff --cached --quiet || ! git diff --quiet; then
-          git commit -am "update commit $(date '+%d/%m/%Y %H:%M:%S')"
+      LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
+      deploy_one() {
+        local h="$1"
+        echo "===== Updating $h ====="
+        if [ "$h" = "$LOCAL_HOST" ]; then
+          sudo nixos-rebuild switch --flake ".#$h" --show-trace --upgrade-all
         else
-          echo "Update succeeded; nothing to commit."
+          local th="psoldunov@''${h,,}"
+          nixos-rebuild switch --flake ".#$h" --target-host "$th" --build-host "$th" --sudo --show-trace --upgrade-all
         fi
+      }
+      if [ "$HOST" = "all" ]; then
+        for h in "''${ALL_HOSTS[@]}"; do deploy_one "$h"; done
       else
-        echo "Update failed; staged changes left uncommitted." >&2
-        exit 1
+        deploy_one "$HOST"
+      fi
+      if ! git diff --cached --quiet || ! git diff --quiet; then
+        git commit -am "update commit $(date '+%d/%m/%Y %H:%M:%S')"
+      else
+        echo "Update succeeded; nothing to commit."
       fi
     '';
 
     rebuild_system = pkgs.writeShellScriptBin "rebuild_system" ''
       set -e
-      cd /etc/nixos
+      HOST="''${1:-$(${pkgs.inetutils}/bin/hostname)}"
+      FLAKE_DIR="''${HOME}/.nixfiles"
+      ALL_HOSTS=(Whopper BigTasty)
+      cd "$FLAKE_DIR"
       git add -A
-      if sudo nixos-rebuild switch --show-trace; then
-        if ! git diff --cached --quiet || ! git diff --quiet; then
-          git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
+      LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
+      deploy_one() {
+        local h="$1"
+        echo "===== Rebuilding $h ====="
+        if [ "$h" = "$LOCAL_HOST" ]; then
+          sudo nixos-rebuild switch --flake ".#$h" --show-trace
         else
-          echo "Rebuild succeeded; nothing to commit."
+          local th="psoldunov@''${h,,}"
+          nixos-rebuild switch --flake ".#$h" --target-host "$th" --build-host "$th" --sudo --show-trace
         fi
+      }
+      if [ "$HOST" = "all" ]; then
+        for h in "''${ALL_HOSTS[@]}"; do deploy_one "$h"; done
       else
-        echo "Rebuild failed; staged changes left uncommitted." >&2
-        exit 1
+        deploy_one "$HOST"
+      fi
+      if ! git diff --cached --quiet || ! git diff --quiet; then
+        git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
+      else
+        echo "Rebuild succeeded; nothing to commit."
       fi
     '';
 

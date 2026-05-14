@@ -276,6 +276,24 @@
         "systems": "systems_2"
       },
       "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_3"
+      },
+      "locked": {
         "lastModified": 1681202837,
         "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
         "owner": "numtide",
@@ -1165,6 +1183,7 @@
         "nixpkgs": "nixpkgs_6",
         "nixpkgs-stable": "nixpkgs-stable",
         "sops-nix": "sops-nix",
+        "steam-presence": "steam-presence",
         "vscode-server": "vscode-server",
         "zen-browser": "zen-browser"
       }
@@ -1273,6 +1292,27 @@
         "type": "github"
       }
     },
+    "steam-presence": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775402888,
+        "narHash": "sha256-PUlNAktrpPygeJBYF0IQfqfz7g/sMayZA9/pUybh7Ig=",
+        "owner": "JustTemmie",
+        "repo": "steam-presence",
+        "rev": "bd7c54d3f65948bef8b689dfcc14150e1905a18b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "JustTemmie",
+        "repo": "steam-presence",
+        "type": "github"
+      }
+    },
     "systems": {
       "locked": {
         "lastModified": 1689347949,
@@ -1303,9 +1343,24 @@
         "type": "github"
       }
     },
+    "systems_3": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "vscode-server": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": [
           "nixpkgs"
         ]
