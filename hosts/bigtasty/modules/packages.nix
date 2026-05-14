@@ -37,30 +37,6 @@
     neovim
     wget
     yazi
-    (
-      pkgs.writeShellScriptBin "update_system" ''
-        cd /etc/nixos
-        git add .
-        git commit -am "pre-update commit $(date '+%d/%m/%Y %H:%M:%S')"
-        sudo nix flake update
-        sudo nixos-rebuild switch --show-trace --upgrade-all
-      ''
-    )
-    (
-      pkgs.writeShellScriptBin "clean_system" ''
-        sudo nix-collect-garbage -d
-        nix-collect-garbage -d
-        docker image prune -a -f
-      ''
-    )
-    (
-      pkgs.writeShellScriptBin "rebuild_system" ''
-        cd /etc/nixos
-        git add .
-        git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
-        sudo nixos-rebuild switch --show-trace
-      ''
-    )
     fastfetch
     (python3.withPackages (p:
       with p; [

@@ -98,8 +98,29 @@
     '';
 
     clean_system = pkgs.writeShellScriptBin "clean_system" ''
-      sudo nix-collect-garbage -d
-      nix-collect-garbage -d
+      set -e
+      HOST="''${1:-$(${pkgs.inetutils}/bin/hostname)}"
+      ALL_HOSTS=(Whopper BigTasty)
+      LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
+      clean_one() {
+        local h="$1"
+        echo "===== Cleaning $h ====="
+        if [ "$h" = "$LOCAL_HOST" ]; then
+          sudo nix-collect-garbage -d
+          nix-collect-garbage -d
+          if command -v docker >/dev/null 2>&1; then
+            docker image prune -a -f
+          fi
+        else
+          local th="psoldunov@''${h,,}"
+          ssh -t "$th" 'set -e; sudo nix-collect-garbage -d; nix-collect-garbage -d; if command -v docker >/dev/null 2>&1; then docker image prune -a -f; fi'
+        fi
+      }
+      if [ "$HOST" = "all" ]; then
+        for h in "''${ALL_HOSTS[@]}"; do clean_one "$h"; done
+      else
+        clean_one "$HOST"
+      fi
     '';
 
     make_timed_commit = pkgs.writeShellScriptBin "make_timed_commit" ''
