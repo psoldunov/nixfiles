@@ -115,6 +115,7 @@
       SteamDeck.id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
     };
     settings.folders.Obsidian = {
+      id = "Obsidian";
       path = "/home/psoldunov/Documents/Obsidian";
       label = "Obsidian";
       devices = ["BigTasty"];
