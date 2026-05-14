@@ -28,6 +28,7 @@
     biome
     neovim
     zoom-us
+    infisical
     nodejs_24
     pkgs-stable.obsidian
     pywal
