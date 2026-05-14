@@ -120,6 +120,12 @@
       label = "Obsidian";
       devices = ["BigTasty"];
     };
+    settings.folders.Emulation = {
+      id = "ycvsf-athpn";
+      path = "/SATA/Emulation";
+      label = "Emulation";
+      devices = ["BigTasty" "SteamDeck"];
+    };
     settings.folders.Sync = {
       id = "default";
       path = "/home/psoldunov/Sync";
