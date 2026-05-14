@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  hostConfig,
   ...
 }: {
   # Secrets live as individual sops entries decrypted to
@@ -77,7 +78,7 @@
         command = "${pkgs.nodejs_24}/bin/npx";
         args = [
           "@bitbonsai/mcpvault@latest"
-          "${config.home.homeDirectory}/Documents/Obsidian/Personal"
+          "${hostConfig.obsidianBase}/Personal"
         ];
       };
 
@@ -85,7 +86,7 @@
         command = "${pkgs.nodejs_24}/bin/npx";
         args = [
           "@bitbonsai/mcpvault@latest"
-          "${config.home.homeDirectory}/Documents/Obsidian/Boundary"
+          "${hostConfig.obsidianBase}/Boundary"
         ];
       };
 
