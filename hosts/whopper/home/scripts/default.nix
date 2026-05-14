@@ -113,7 +113,7 @@
           fi
         else
           local th="psoldunov@''${h,,}"
-          ssh -t "$th" 'set -e; sudo nix-collect-garbage -d; nix-collect-garbage -d; if command -v docker >/dev/null 2>&1; then docker image prune -a -f; fi'
+          ssh -t "$th" "bash -c 'set -e; sudo nix-collect-garbage -d; nix-collect-garbage -d; if command -v docker >/dev/null 2>&1; then docker image prune -a -f; fi'"
         fi
       }
       if [ "$HOST" = "all" ]; then

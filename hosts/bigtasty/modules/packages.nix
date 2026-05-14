@@ -18,6 +18,7 @@
     vdpauinfo
     libva-utils
     bat
+    tmux
     lm_sensors
     btop
     lsd

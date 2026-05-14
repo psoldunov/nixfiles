@@ -4,6 +4,7 @@
     shell = pkgs.fish;
     description = "Philipp Soldunov";
     extraGroups = ["wheel" "docker" "libvirtd" "video" "media"];
+    linger = true;
     packages = with pkgs; [];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBY7q/8OFggXxrXUDuqFQJgRveV2CSjuFVsGLGRCmg/g philipp@theswisscheese.com"

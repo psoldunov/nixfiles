@@ -64,7 +64,9 @@ in {
       set fish_greeting
     '';
     shellInitLast = ''
-      source ${config.sops.secrets.SHELL_SECRETS.path}
+      if test -r ${config.sops.secrets.SHELL_SECRETS.path}
+        source ${config.sops.secrets.SHELL_SECRETS.path}
+      end
     '';
   };
 
@@ -85,7 +87,9 @@ in {
     enable = true;
     enableVteIntegration = true;
     enableCompletion = true;
-    bashrcExtra = "source ${config.sops.secrets.SHELL_SECRETS.path}";
+    bashrcExtra = ''
+      [ -r ${config.sops.secrets.SHELL_SECRETS.path} ] && source ${config.sops.secrets.SHELL_SECRETS.path}
+    '';
   };
 
   programs.keychain = {

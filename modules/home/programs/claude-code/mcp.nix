@@ -25,20 +25,34 @@
   # Code performs the env-substitution when it launches each server, so
   # the JSON files on disk only ever contain the placeholder text.
   programs.fish.shellInitLast = lib.mkAfter ''
-    set -gx CLAUDE_GEMINI_API_KEY (command cat ${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path})
-    set -gx CLAUDE_MAGIC_21ST_API_KEY (command cat ${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path})
-    set -gx CLAUDE_NOCODB_MCP_URL (command cat ${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path})
-    set -gx CLAUDE_NOCODB_MCP_TOKEN (command cat ${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path})
-    set -gx CLAUDE_SANITY_MCP_BEARER (command cat ${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path})
-    set -gx PAPERLESS_API_KEY (command cat ${config.sops.secrets.PAPERLESS_API_KEY.path})
+    for pair in \
+        CLAUDE_GEMINI_API_KEY:${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path} \
+        CLAUDE_MAGIC_21ST_API_KEY:${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path} \
+        CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
+        CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
+        CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}
+      set name (string split -m1 ':' $pair)[1]
+      set path (string split -m1 ':' $pair)[2]
+      if test -r $path
+        set -gx $name (command cat $path)
+      end
+    end
   '';
   programs.bash.bashrcExtra = lib.mkAfter ''
-    export CLAUDE_GEMINI_API_KEY="$(<${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path})"
-    export CLAUDE_MAGIC_21ST_API_KEY="$(<${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path})"
-    export CLAUDE_NOCODB_MCP_URL="$(<${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path})"
-    export CLAUDE_NOCODB_MCP_TOKEN="$(<${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path})"
-    export CLAUDE_SANITY_MCP_BEARER="$(<${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path})"
-    export PAPERLESS_API_KEY="$(<${config.sops.secrets.PAPERLESS_API_KEY.path})"
+    for pair in \
+        CLAUDE_GEMINI_API_KEY:${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path} \
+        CLAUDE_MAGIC_21ST_API_KEY:${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path} \
+        CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
+        CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
+        CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
+      name="''${pair%%:*}"
+      path="''${pair#*:}"
+      if [ -r "$path" ]; then
+        export "$name"="$(<"$path")"
+      fi
+    done
   '';
 
   programs.mcp = {
