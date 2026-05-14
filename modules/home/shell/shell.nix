@@ -65,6 +65,7 @@
     cat = "bat -p";
     thunar = "${pkgs.nemo}/bin/nemo";
     whisper = "docker exec -it whisper-rocm whisper-rocm";
+    c = "claude";
   };
 
   programs.bash = {
