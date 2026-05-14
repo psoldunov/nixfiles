@@ -48,7 +48,7 @@
         REBUILD_CMD=(sudo nixos-rebuild switch --flake ".#$HOST" --show-trace --upgrade-all)
       else
         TARGET_HOST="psoldunov@''${HOST,,}"
-        REBUILD_CMD=(nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET_HOST" --use-remote-sudo --show-trace --upgrade-all)
+        REBUILD_CMD=(nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET_HOST" --build-host "$TARGET_HOST" --use-remote-sudo --ask-sudo-password --show-trace --upgrade-all)
       fi
       if "''${REBUILD_CMD[@]}"; then
         if ! git diff --cached --quiet || ! git diff --quiet; then
@@ -73,7 +73,7 @@
         REBUILD_CMD=(sudo nixos-rebuild switch --flake ".#$HOST" --show-trace)
       else
         TARGET_HOST="psoldunov@''${HOST,,}"
-        REBUILD_CMD=(nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET_HOST" --use-remote-sudo --show-trace)
+        REBUILD_CMD=(nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET_HOST" --build-host "$TARGET_HOST" --use-remote-sudo --ask-sudo-password --show-trace)
       fi
       if "''${REBUILD_CMD[@]}"; then
         if ! git diff --cached --quiet || ! git diff --quiet; then
