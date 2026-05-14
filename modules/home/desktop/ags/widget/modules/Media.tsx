@@ -45,31 +45,29 @@ function Player({ player }: { player: Mpris.Player }) {
 
   const css = progress(
     (p) =>
-      `background: linear-gradient(to right, rgba(0,0,0,0.15) ${p}%, rgba(0,0,0,0) ${p}%);`,
+      `background-image: linear-gradient(to right, rgba(0,0,0,0.15) ${p}%, rgba(0,0,0,0) ${p}%);`,
   )
 
   return (
-    <overlay class="media-button-overlay" passThrough>
-      <button
-        class={`media-button ${player.entry || ""}`}
-        onClicked={() => player.play_pause()}
-        onClick={(_, event: Astal.ClickEvent) => {
-          if (event.button === Astal.MouseButton.SECONDARY) {
-            focusEntry(player.entry || "")
-          }
-        }}
-        onScroll={(_, event) => {
-          if (event.delta_y < 0) player.previous()
-          else player.next()
-        }}
-      >
-        <box spacing={8}>
-          <icon icon={icon} />
-          <label label={text} />
-        </box>
-      </button>
-      <box $type="overlay" css={css} />
-    </overlay>
+    <button
+      class={`media-button ${player.entry || ""}`}
+      css={css}
+      onClicked={() => player.play_pause()}
+      onClick={(_, event: Astal.ClickEvent) => {
+        if (event.button === Astal.MouseButton.SECONDARY) {
+          focusEntry(player.entry || "")
+        }
+      }}
+      onScroll={(_, event) => {
+        if (event.delta_y < 0) player.previous()
+        else player.next()
+      }}
+    >
+      <box spacing={8}>
+        <icon icon={icon} />
+        <label label={text} />
+      </box>
+    </button>
   )
 }
 
