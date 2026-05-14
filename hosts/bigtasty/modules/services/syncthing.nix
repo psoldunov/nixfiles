@@ -5,11 +5,8 @@
     group = "users";
     guiAddress = "0.0.0.0:8384";
     openDefaultPorts = true;
-    dataDir = "/RAID/apps/syncthing"; # Default folder for new synced folders
-    settings.gui = {
-      user = "psoldunov";
-      password = "fbw7PAB8vej1zah!vjq";
-    };
+    dataDir = "/RAID/apps/syncthing";
+    guiPasswordFile = config.sops.secrets.SYNCTHING_GUI_PASSWORD.path;
     settings = {
       options = {
         relaysEnabled = true;
@@ -21,12 +18,12 @@
           devices = ["Whopper" "BigMac" "SteamDeck"];
           path = config.services.syncthing.dataDir + "/Sync";
         };
-        "Sync Folder" = {
-          id = "default";
+        Obsidian = {
+          id = "Obsidian";
           devices = ["Whopper" "BigMac" "SteamDeck"];
-          path = config.services.syncthing.dataDir + "/Sync";
+          path = config.services.syncthing.dataDir + "/Obsidian";
         };
-        "Emulation" = {
+        Emulation = {
           id = "ycvsf-athpn";
           devices = ["SteamDeck" "Whopper"];
           path = "/mnt/Games/Emulation";

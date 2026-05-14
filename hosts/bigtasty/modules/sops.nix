@@ -52,6 +52,10 @@
       INFISICAL_SETTINGS = {
         group = "docker";
       };
+      SYNCTHING_GUI_PASSWORD = {
+        owner = "psoldunov";
+        sopsFile = ../../../secrets/shared.yaml;
+      };
     };
   };
 }

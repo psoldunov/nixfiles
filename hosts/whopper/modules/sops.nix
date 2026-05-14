@@ -10,6 +10,7 @@
       };
       SYNCTHING_GUI_PASSWORD = {
         owner = "psoldunov";
+        sopsFile = ../../../secrets/shared.yaml;
       };
       STEAM_API_KEY = {
         owner = "psoldunov";
