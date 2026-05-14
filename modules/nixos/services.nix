@@ -102,8 +102,6 @@
     relay.enable = true;
     dataDir = "/home/psoldunov/";
     configDir = "/home/psoldunov/.config/syncthing";
-    # NOTE: the previous cleartext password value is still in git
-    # history. Rotate it at the Syncthing UI after activation.
     guiPasswordFile = config.sops.secrets.SYNCTHING_GUI_PASSWORD.path;
     settings.gui = {
       user = "psoldunov";
@@ -111,6 +109,14 @@
     settings.options = {
       urAccepted = -1;
       relaysEnabled = true;
+    };
+    settings.devices = {
+      BigTasty.id = "GJTMGVV-ZBUNMER-CJRQLQS-CYPIVBO-UDLPMIZ-UW76NMG-YKEBQWH-IIMH5AY";
+    };
+    settings.folders.Obsidian = {
+      path = "/home/psoldunov/Documents/Obsidian";
+      label = "Obsidian";
+      devices = ["BigTasty"];
     };
     overrideFolders = false;
     overrideDevices = false;
