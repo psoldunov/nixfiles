@@ -37,18 +37,36 @@
     '';
 
     update_system = pkgs.writeShellScriptBin "update_system" ''
+      set -e
       cd /etc/nixos
-      git add .
-      git commit -am "pre-update commit $(date '+%d/%m/%Y %H:%M:%S')"
+      git add -A
       sudo nix flake update
-      sudo nixos-rebuild switch --show-trace --upgrade-all
+      if sudo nixos-rebuild switch --show-trace --upgrade-all; then
+        if ! git diff --cached --quiet || ! git diff --quiet; then
+          git commit -am "update commit $(date '+%d/%m/%Y %H:%M:%S')"
+        else
+          echo "Update succeeded; nothing to commit."
+        fi
+      else
+        echo "Update failed; staged changes left uncommitted." >&2
+        exit 1
+      fi
     '';
 
     rebuild_system = pkgs.writeShellScriptBin "rebuild_system" ''
+      set -e
       cd /etc/nixos
-      git add .
-      git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
-      sudo nixos-rebuild switch --show-trace
+      git add -A
+      if sudo nixos-rebuild switch --show-trace; then
+        if ! git diff --cached --quiet || ! git diff --quiet; then
+          git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
+        else
+          echo "Rebuild succeeded; nothing to commit."
+        fi
+      else
+        echo "Rebuild failed; staged changes left uncommitted." >&2
+        exit 1
+      fi
     '';
 
     clean_system = pkgs.writeShellScriptBin "clean_system" ''
