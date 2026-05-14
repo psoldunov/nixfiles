@@ -35,8 +35,6 @@
       "bigtasty" = {
         hostname = "10.24.24.2";
         user = "psoldunov";
-        identityFile = "~/.ssh/id_ed25519";
-        addKeysToAgent = "yes";
       };
     };
   };
