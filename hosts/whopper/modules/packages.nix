@@ -87,6 +87,10 @@ in {
       enable = true;
       steamApiKeyFile = config.sops.secrets.STEAM_API_KEY.path;
       userIds = ["76561197995337689"];
+      coverArt.steamGridDB = {
+        enable = true;
+        apiKeyFile = config.sops.secrets.STEAMGRIDDB_API_KEY.path;
+      };
     };
   };
 

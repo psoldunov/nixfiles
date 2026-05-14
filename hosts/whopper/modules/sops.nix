@@ -15,6 +15,9 @@
       STEAM_API_KEY = {
         owner = "psoldunov";
       };
+      STEAMGRIDDB_API_KEY = {
+        owner = "psoldunov";
+      };
     };
   };
 }
