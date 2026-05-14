@@ -34,6 +34,7 @@
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/vscode.nix
+    ./programs/claude-code
   ];
 
   programs.home-manager.enable = true;

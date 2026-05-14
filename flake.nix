@@ -54,6 +54,11 @@
       url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    context-mode = {
+      url = "github:mksglu/context-mode";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -123,6 +128,7 @@
             };
             useGlobalPkgs = true;
             useUserPackages = true;
+            backupFileExtension = "hm-backup";
             users = {
               psoldunov =
                 import ./modules/home;

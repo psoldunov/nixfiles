@@ -172,6 +172,22 @@
         "url": "https://flakehub.com/f/catppuccin/vscode/%2A.tar.gz"
       }
     },
+    "context-mode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778762013,
+        "narHash": "sha256-/KfUNA1apUhWAES21rBubRssQPwY0oeGHioMPMljYa4=",
+        "owner": "mksglu",
+        "repo": "context-mode",
+        "rev": "13fb20f4fbf68b9890520bd0180647d890642b06",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mksglu",
+        "repo": "context-mode",
+        "type": "github"
+      }
+    },
     "curl-src": {
       "flake": false,
       "locked": {
@@ -1122,6 +1138,7 @@
         "apple-fonts": "apple-fonts",
         "catppuccin": "catppuccin",
         "catppuccin-vsc": "catppuccin-vsc",
+        "context-mode": "context-mode",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
