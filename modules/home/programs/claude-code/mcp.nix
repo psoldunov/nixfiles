@@ -12,6 +12,7 @@
     CLAUDE_NOCODB_MCP_URL = {};
     CLAUDE_NOCODB_MCP_TOKEN = {};
     CLAUDE_SANITY_MCP_BEARER = {};
+    PAPERLESS_API_KEY = {};
   };
 
   # Expose the Claude MCP secrets as shell env vars. The MCP server
@@ -24,6 +25,7 @@
     set -gx CLAUDE_NOCODB_MCP_URL (command cat ${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path})
     set -gx CLAUDE_NOCODB_MCP_TOKEN (command cat ${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path})
     set -gx CLAUDE_SANITY_MCP_BEARER (command cat ${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path})
+    set -gx PAPERLESS_API_KEY (command cat ${config.sops.secrets.PAPERLESS_API_KEY.path})
   '';
   programs.bash.bashrcExtra = lib.mkAfter ''
     export CLAUDE_GEMINI_API_KEY="$(<${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path})"
@@ -31,6 +33,7 @@
     export CLAUDE_NOCODB_MCP_URL="$(<${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path})"
     export CLAUDE_NOCODB_MCP_TOKEN="$(<${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path})"
     export CLAUDE_SANITY_MCP_BEARER="$(<${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path})"
+    export PAPERLESS_API_KEY="$(<${config.sops.secrets.PAPERLESS_API_KEY.path})"
   '';
 
   programs.mcp = {
@@ -80,6 +83,19 @@
           "@bitbonsai/mcpvault@latest"
           "${config.home.homeDirectory}/Documents/Obsidian/Boundary"
         ];
+      };
+
+      Paperless = {
+        command = "${pkgs.bun}/bin/bunx";
+        args = [
+          "-y"
+          "@psoldunov/paperless-mcp@0.4.2"
+        ];
+        env = {
+          PAPERLESS_URL = "http://10.24.24.2:28981";
+          PAPERLESS_API_KEY = "\${PAPERLESS_API_KEY}";
+          PAPERLESS_PUBLIC_URL = "https://paperless.theswisscheese.com";
+        };
       };
     };
   };
