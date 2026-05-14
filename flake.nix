@@ -55,6 +55,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    steam-presence = {
+      url = "github:JustTemmie/steam-presence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     context-mode = {
       url = "github:mksglu/context-mode";
       flake = false;
@@ -182,7 +187,7 @@
             useUserPackages = true;
             backupFileExtension = "hm-backup";
             users = {
-              psoldunov = import ./vendor/server-import/home-manager/home.nix;
+              psoldunov = import ./hosts/bigtasty/home/home.nix;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops

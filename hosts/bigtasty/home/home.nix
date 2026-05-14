@@ -18,7 +18,7 @@ in {
   ];
 
   sops = {
-    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFile = ../../../vendor/server-import/secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
 
