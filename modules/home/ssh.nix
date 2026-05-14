@@ -35,6 +35,7 @@
       "bigtasty" = {
         hostname = "10.24.24.2";
         user = "psoldunov";
+        forwardAgent = true;
       };
     };
   };

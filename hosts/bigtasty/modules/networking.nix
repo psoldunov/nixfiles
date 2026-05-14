@@ -37,5 +37,14 @@
     settings.AllowUsers = ["psoldunov"];
   };
 
-  security.sudo.wheelNeedsPassword = false;
+  security.pam.sshAgentAuth = {
+    enable = true;
+    authorizedKeysFiles = ["/etc/ssh/authorized_keys.d/%u"];
+  };
+
+  security.pam.services.sudo.sshAgentAuth = true;
+
+  security.sudo.extraConfig = ''
+    Defaults env_keep += "SSH_AUTH_SOCK"
+  '';
 }
