@@ -86,6 +86,7 @@
     ];
     settings = {
       effortLevel = "xhigh";
+      skillListingBudgetFraction = "2%";
       permissions = {
         allow = [
           "mcp__pencil"
