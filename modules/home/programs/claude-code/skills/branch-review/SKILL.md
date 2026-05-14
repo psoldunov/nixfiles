@@ -1,5 +1,5 @@
 ---
-name: branch-reviewer
+name: branch-review
 description: >
   Reviews the entire current branch (every commit between the merge base and HEAD) before a
   pull request is opened, by delegating to the code-reviewer subagent operating as the most
@@ -8,7 +8,7 @@ description: >
   mistake. Use this skill whenever the user asks to "review the branch", "review before PR",
   "review my whole branch", "audit the branch", "is this branch ready for review", "check
   everything before I open the PR", "PR-readiness check", or otherwise wants a quality gate
-  before a pull request is opened. Prefer this skill over diff-reviewer when the branch has
+  before a pull request is opened. Prefer this skill over diff-review when the branch has
   multiple commits and the user is preparing to push for PR review. Prefer this over inline
   ad-hoc review whenever a feature branch exists — a structured senior review across the full
   branch range is almost always more valuable than reviewing each commit individually.
@@ -39,7 +39,7 @@ Trigger this skill when the user wants any of the following:
 - An audit of branch-level concerns: scope drift, commit hygiene, missing tests, churn
 
 Do **not** trigger this skill for:
-- Reviewing **uncommitted** working-tree changes — use `diff-reviewer` instead (working tree
+- Reviewing **uncommitted** working-tree changes — use `diff-review` instead (working tree
   scope, not branch scope).
 - Reviewing an entire static codebase with no recent changes — use `code-review` for
   architectural assessment.
@@ -177,7 +177,7 @@ End with a summary table:
 
 And TWO one-line verdicts:
 
-- **Code verdict** — APPROVE / WARNING / BLOCK (same semantics as diff-reviewer)
+- **Code verdict** — APPROVE / WARNING / BLOCK (same semantics as diff-review)
 - **PR readiness** — READY / NOT READY, with the single biggest blocker if not ready
 
 Be direct. If the branch is clean and PR-ready, say so plainly and briefly — don't pad the
@@ -204,11 +204,11 @@ When the subagent's report comes back:
 
 **No commits on branch** (`git diff <base>...HEAD` is empty): tell the user there is nothing
 to review; the branch is identical to the base. Don't invoke the subagent. Suggest making
-some commits first or, if they meant to review uncommitted work, use `diff-reviewer`.
+some commits first or, if they meant to review uncommitted work, use `diff-review`.
 
 **Uncommitted changes present**: warn the user that the working tree has uncommitted changes
 that will NOT be part of the branch review (they need to be committed first to be reviewed).
-Offer to run `diff-reviewer` first to cover the uncommitted work, then `branch-reviewer`
+Offer to run `diff-review` first to cover the uncommitted work, then `branch-review`
 afterwards.
 
 **On the default branch**: refuse and tell the user to switch to the feature branch first.

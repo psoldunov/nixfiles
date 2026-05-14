@@ -1,5 +1,5 @@
 ---
-name: diff-reviewer
+name: diff-review
 description: >
   Reviews the current git diff (staged + unstaged + untracked) by delegating to the code-reviewer
   subagent operating as the most senior, no-nonsense reviewer persona — a staff/principal engineer

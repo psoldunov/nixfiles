@@ -182,7 +182,7 @@ modules, module boundaries). For complementary, finer-grained passes, delegate v
 the Agent tool:
 
 - **`code-reviewer`** — when the user wants a diff-level review of staged/unstaged
-  changes (TypeScript / Next.js / Bun focus). Prefer the `diff-reviewer` skill if a
+  changes (TypeScript / Next.js / Bun focus). Prefer the `diff-review` skill if a
   diff exists; use the agent directly only when the diff is already framed.
 - **`security-reviewer`** — when the review surfaces auth, input handling, secrets,
   or any OWASP-adjacent concern. Hand off the specific files and let the agent
