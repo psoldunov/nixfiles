@@ -140,7 +140,7 @@
     };
   };
 
-  system.activationScripts.dockerNetworks = let
+  systemd.services.docker-networks = let
     dockercli = "${config.virtualisation.docker.package}/bin/docker";
     networks = [
       "immich-network"
@@ -149,28 +149,36 @@
       "infisical-network"
     ];
     networks_str = lib.concatStringsSep " " networks;
-  in ''
-    # Create required networks if missing
-    for network in ${networks_str}; do
-      check=$(${dockercli} network ls --format "{{.Name}}" | grep -w "$network" || true)
-      if [ -z "$check" ]; then
-        ${dockercli} network create "$network"
-        echo "$network was created."
-      else
-        echo "$network already exists in docker"
-      fi
-    done
+    script = pkgs.writeShellScript "docker-networks" ''
+      set -euo pipefail
+      for network in ${networks_str}; do
+        if ! ${dockercli} network ls --format "{{.Name}}" | grep -wq "$network"; then
+          ${dockercli} network create "$network"
+          echo "$network was created."
+        else
+          echo "$network already exists in docker"
+        fi
+      done
 
-    # Remove unused custom networks (not default, not in list, no containers)
-    for net in $(${dockercli} network ls --format "{{.Name}}" | grep -v -E '^(bridge|host|none)$'); do
-      # Skip if in required list
-      echo "${networks_str}" | grep -wq "$net" && continue
-      # Check if network has containers
-      attached=$(${dockercli} network inspect "$net" --format '{{json .Containers}}' | grep -v '{}')
-      if [ -z "$attached" ]; then
-        echo "Removing unused network: $net"
-        ${dockercli} network rm "$net" || { echo "Failed to remove $net"; true; }
-      fi
-    done
-  '';
+      for net in $(${dockercli} network ls --format "{{.Name}}" | grep -v -E '^(bridge|host|none)$'); do
+        echo "${networks_str}" | grep -wq "$net" && continue
+        attached=$(${dockercli} network inspect "$net" --format '{{json .Containers}}' | grep -v '{}' || true)
+        if [ -z "$attached" ]; then
+          echo "Removing unused network: $net"
+          ${dockercli} network rm "$net" || echo "Failed to remove $net"
+        fi
+      done
+    '';
+  in {
+    description = "Create required docker networks";
+    after = ["docker.service"];
+    requires = ["docker.service"];
+    wantedBy = ["multi-user.target"];
+    before = builtins.map (c: "docker-${c}.service") (builtins.attrNames config.virtualisation.oci-containers.containers);
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = script;
+    };
+  };
 }
