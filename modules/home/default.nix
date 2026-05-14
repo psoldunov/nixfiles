@@ -9,6 +9,7 @@
     ./scripts
     ./browser/chromium.nix
     ./xdg/desktop-entries.nix
+    ./xdg/mimeapps.nix
     ./xdg/portal.nix
 
     # Shell
