@@ -1,7 +1,6 @@
-# Per-host knobs for Whopper. Threaded into every module via specialArgs
-# as `hostConfig`. Schema is shared with hosts/bigtasty/hostConfig.nix.
-# Server flags default to false here; modules gate on them via
-# `lib.mkIf hostConfig.<flag>`.
+# Per-host knobs for BigTasty. Threaded into every module via specialArgs
+# as `hostConfig`. Schema mirrors hosts/whopper/hostConfig.nix; flags
+# default to false on Whopper, true here where the server uses them.
 #
 # Schema:
 #   role :: "desktop" | "server"
@@ -20,19 +19,19 @@
 #   enableDyndns            :: bool  (cloudflare-dyndns)
 #   enableDockerOci         :: bool  (virtualisation.oci-containers)
 {
-  role = "desktop";
+  role = "server";
 
-  enableHyprland = true;
+  enableHyprland = false;
   ollamaDocker = false;
 
-  enableRaid = false;
-  enableNfsServer = false;
-  enableSambaShares = false;
-  enableNetatalk = false;
-  enableMediaStack = false;
-  enableArrStack = false;
-  enableNginxVhosts = false;
-  enableCloudflareTunnels = false;
-  enableDyndns = false;
-  enableDockerOci = false;
+  enableRaid = true;
+  enableNfsServer = true;
+  enableSambaShares = true;
+  enableNetatalk = true;
+  enableMediaStack = true;
+  enableArrStack = true;
+  enableNginxVhosts = true;
+  enableCloudflareTunnels = true;
+  enableDyndns = true;
+  enableDockerOci = true;
 }

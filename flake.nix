@@ -162,9 +162,10 @@
           outputs
           pkgs-stable
           ;
+        hostConfig = import ./hosts/bigtasty/hostConfig.nix;
       };
       modules = [
-        ./vendor/server-import/nixos/configuration.nix
+        ./hosts/bigtasty/default.nix
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
@@ -173,7 +174,10 @@
         })
         {
           home-manager = {
-            extraSpecialArgs = {inherit inputs outputs;};
+            extraSpecialArgs = {
+              inherit inputs outputs;
+              hostConfig = import ./hosts/bigtasty/hostConfig.nix;
+            };
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "hm-backup";
