@@ -17,6 +17,10 @@ in {
       path = "${projects}/Snippets";
     }
     {
+      name = "yecp-connect";
+      path = "${boundary}/yeco-connect";
+    }
+    {
       name = "plated";
       path = "${personal}/plated";
     }
