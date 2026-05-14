@@ -10,7 +10,9 @@ All Claude Code state that's declaratively managed lives in:
 
 ```
 ~/.nixfiles/modules/home/programs/claude-code/
-├── default.nix          # programs.claude-code settings, plugins, MCP servers
+├── default.nix          # imports mcp.nix + settings.nix
+├── mcp.nix              # sops secrets, env wiring, programs.mcp servers
+├── settings.nix         # programs.claude-code settings, plugins, hooks
 ├── CLAUDE.md            # this file (rendered to ~/.claude/CLAUDE.md)
 ├── agents/              # symlinked to ~/.claude/agents/
 ├── commands/            # symlinked to ~/.claude/commands/

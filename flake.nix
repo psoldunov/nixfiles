@@ -59,6 +59,11 @@
       url = "github:mksglu/context-mode";
       flake = false;
     };
+
+    caveman = {
+      url = "github:juliusbrussee/caveman";
+      flake = false;
+    };
   };
 
   outputs = {

@@ -172,6 +172,22 @@
         "url": "https://flakehub.com/f/catppuccin/vscode/%2A.tar.gz"
       }
     },
+    "caveman": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778615072,
+        "narHash": "sha256-Jlfas2MPoQx3pOw+yKCta8kYlOEY27SP5NXJtSL+GGI=",
+        "owner": "juliusbrussee",
+        "repo": "caveman",
+        "rev": "63a91ecadbf4c4719a4602a5abb00883f9966034",
+        "type": "github"
+      },
+      "original": {
+        "owner": "juliusbrussee",
+        "repo": "caveman",
+        "type": "github"
+      }
+    },
     "context-mode": {
       "flake": false,
       "locked": {
@@ -1138,6 +1154,7 @@
         "apple-fonts": "apple-fonts",
         "catppuccin": "catppuccin",
         "catppuccin-vsc": "catppuccin-vsc",
+        "caveman": "caveman",
         "context-mode": "context-mode",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
