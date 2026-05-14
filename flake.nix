@@ -54,8 +54,6 @@
       url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # nixpkgs-plexamp.url = "github:nixos/nixpkgs/c792c60b8a97daa7efe41a6e4954497ae410e0c1";
   };
 
   outputs = {
@@ -73,7 +71,6 @@
     home-manager,
     apple-fonts,
     hyprland,
-    # nixpkgs-plexamp,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -86,13 +83,6 @@
         allowUnfree = true;
       };
     };
-
-    # pkgs-plexamp = import nixpkgs-plexamp {
-    #   inherit system;
-    #   config = {
-    #     allowUnfree = true;
-    #   };
-    # };
 
     appleFonts = apple-fonts.packages.${system};
 
@@ -128,7 +118,6 @@
                 inputs
                 outputs
                 pkgs-stable
-                # pkgs-plexamp
                 ;
               hostConfig = import ./hosts/whopper/hostConfig.nix;
             };

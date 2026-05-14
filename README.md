@@ -48,7 +48,6 @@ All sourced in [flake.nix](flake.nix).
 |---|---|
 | `nixpkgs` | nixos-unstable — default package set |
 | `nixpkgs-stable` | nixos-25.05 — used for Obsidian, Nextcloud client |
-| `nixpkgs-plexamp` | pinned revision for `plexamp` |
 | `home-manager` | Wired as a NixOS module via `home-manager.nixosModules.home-manager` |
 | `hyprland` | Upstream Hyprland flake (provides NixOS + HM modules) |
 | `hyprland-plugins` | Optional plugin set (currently not instantiated) |
