@@ -1,7 +1,9 @@
 {
+  config,
   lib,
   pkgs,
   pkgs-stable,
+  inputs,
   hostConfig,
   ...
 }: let
@@ -10,6 +12,10 @@
     variant = "mocha";
   };
 in {
+  imports = [
+    inputs.steam-presence.nixosModules.steam-presence
+  ];
+
   nixpkgs = {
     config = {
       joypixels.acceptLicense = true;
@@ -77,6 +83,11 @@ in {
     dedicatedServer.openFirewall = true;
     platformOptimizations.enable = true;
     localNetworkGameTransfers.openFirewall = true;
+    presence = {
+      enable = true;
+      steamApiKeyFile = config.sops.secrets.STEAM_API_KEY.path;
+      userIds = ["76561197995337689"];
+    };
   };
 
   programs.gamescope = {

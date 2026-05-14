@@ -38,10 +38,19 @@
 
     update_system = pkgs.writeShellScriptBin "update_system" ''
       set -e
-      cd /etc/nixos
+      HOST="''${1:-$(${pkgs.inetutils}/bin/hostname)}"
+      FLAKE_DIR="''${HOME}/.nixfiles"
+      cd "$FLAKE_DIR"
       git add -A
       sudo nix flake update
-      if sudo nixos-rebuild switch --show-trace --upgrade-all; then
+      LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
+      if [ "$HOST" = "$LOCAL_HOST" ]; then
+        REBUILD_CMD=(sudo nixos-rebuild switch --flake ".#$HOST" --show-trace --upgrade-all)
+      else
+        TARGET_HOST="psoldunov@''${HOST,,}"
+        REBUILD_CMD=(nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET_HOST" --use-remote-sudo --show-trace --upgrade-all)
+      fi
+      if "''${REBUILD_CMD[@]}"; then
         if ! git diff --cached --quiet || ! git diff --quiet; then
           git commit -am "update commit $(date '+%d/%m/%Y %H:%M:%S')"
         else
@@ -55,9 +64,18 @@
 
     rebuild_system = pkgs.writeShellScriptBin "rebuild_system" ''
       set -e
-      cd /etc/nixos
+      HOST="''${1:-$(${pkgs.inetutils}/bin/hostname)}"
+      FLAKE_DIR="''${HOME}/.nixfiles"
+      cd "$FLAKE_DIR"
       git add -A
-      if sudo nixos-rebuild switch --show-trace; then
+      LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
+      if [ "$HOST" = "$LOCAL_HOST" ]; then
+        REBUILD_CMD=(sudo nixos-rebuild switch --flake ".#$HOST" --show-trace)
+      else
+        TARGET_HOST="psoldunov@''${HOST,,}"
+        REBUILD_CMD=(nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET_HOST" --use-remote-sudo --show-trace)
+      fi
+      if "''${REBUILD_CMD[@]}"; then
         if ! git diff --cached --quiet || ! git diff --quiet; then
           git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
         else
