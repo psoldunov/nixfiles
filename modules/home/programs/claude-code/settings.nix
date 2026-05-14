@@ -19,6 +19,10 @@
       effortLevel = "xhigh";
       skillListingBudgetFraction = 0.02;
       skillListingMaxDescChars = 2048;
+      statusLine = {
+        type = "command";
+        command = ''bash "${inputs.caveman}/src/hooks/caveman-statusline.sh"'';
+      };
       permissions = {
         allow = [
           "mcp__pencil"
