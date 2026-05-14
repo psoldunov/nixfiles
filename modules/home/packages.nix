@@ -1,7 +1,7 @@
 {
   pkgs,
   pkgs-stable,
-  pkgs-plexamp,
+  # pkgs-plexamp,
   ...
 }: {
   # NOTE: Script packages are managed by modules/home/scripts/default.nix
@@ -37,7 +37,8 @@
     mattermost-desktop
     lmstudio
     gnome-font-viewer
-    pkgs-plexamp.plexamp
+    # pkgs-plexamp.plexamp
+    plexamp
     pcsx2
     heroic
     bchunk
