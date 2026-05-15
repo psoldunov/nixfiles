@@ -29,7 +29,6 @@
     zoom-us
     infisical
     mise
-    t3code
     nodejs_24
     pkgs-stable.obsidian
     pywal

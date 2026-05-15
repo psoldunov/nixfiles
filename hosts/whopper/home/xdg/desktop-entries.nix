@@ -4,6 +4,11 @@
     sha256 = "19vkjc2f3h61zya757dnq4rij67q8a2yb0whchz27z7r0aqfa3pr";
   };
 
+  t3code-appimage = pkgs.fetchurl {
+    url = "https://github.com/pingdotgg/t3code/releases/download/v0.0.24/T3-Code-0.0.24-x86_64.AppImage";
+    sha256 = "1sgzd5mz1gl9gd87x2q9pnljiim2f9qbrc73aj16jachsq19ihmp";
+  };
+
   # Locally-used browser launcher references. Kept here because the desktop
   # entries below invoke browsers with --app= flags and we do not want to
   # pull in programs.chromium as a dependency of this file.
@@ -83,6 +88,15 @@ in {
       ];
       categories = ["Network"];
     };
+    t3code = {
+      name = "T3 Code";
+      genericName = "Code Editor";
+      exec = "${pkgs.appimage-run}/bin/appimage-run ${t3code-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations %F";
+      terminal = false;
+      icon = "code";
+      comment = "VS Code fork by Theo (t3.gg)";
+      categories = ["Development" "IDE"];
+    };
     figma-linux = {
       name = "Figma";
       exec = "${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U";
@@ -132,5 +146,6 @@ in {
 
   home.packages = [
     (pkgs.writeShellScriptBin "figma-linux" "exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U")
+    (pkgs.writeShellScriptBin "t3code" ''exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${t3code-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations "$@"'')
   ];
 }
