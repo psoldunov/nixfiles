@@ -121,8 +121,8 @@ in {
       path = "${boundary}/fanfuel";
     }
     {
-      name = "app.beltbase.io";
-      path = "${personal}/app.beltbase.io";
+      name = "beltbase.io";
+      path = "${personal}/beltbase.io";
     }
   ];
 }
