@@ -90,15 +90,15 @@ in {
     };
     t3code = {
       name = "T3 Code";
-      genericName = "Code Editor";
+      genericName = "Coding Agent GUI";
       exec = "${pkgs.appimage-run}/bin/appimage-run ${t3code-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations %F";
       terminal = false;
       icon = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/pingdotgg/t3code/v0.0.24/apps/desktop/resources/icon.png";
         sha256 = "1z3jibvdfwgzjrhzh83q1vs9n6rsg9nzr44aqs5d7vfyg1g00wxd";
       };
-      comment = "VS Code fork by Theo (t3.gg)";
-      categories = ["Development" "IDE"];
+      comment = "Minimal web GUI for coding agents (Codex, Claude, OpenCode)";
+      categories = ["Development"];
     };
     figma-linux = {
       name = "Figma";
