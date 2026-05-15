@@ -167,6 +167,14 @@ in {
   home.packages = [
     (pkgs.writeShellScriptBin "figma-linux" "exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U")
     (pkgs.writeShellScriptBin "t3code" ''exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${t3code-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations "$@"'')
-    (pkgs.writeShellScriptBin "nimbalyst" ''exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${nimbalyst-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations "$@"'')
+    (pkgs.writeShellScriptBin "nimbalyst" ''
+      target="''${1:-$PWD}"
+      if [ ! -d "$target" ]; then
+        echo "Error: \"$target\" is not a directory" >&2
+        exit 1
+      fi
+      abs="$(realpath "$target")"
+      exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${nimbalyst-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations --project "$abs"
+    '')
   ];
 }
