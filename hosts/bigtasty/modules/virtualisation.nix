@@ -46,7 +46,7 @@
       ];
     };
     transmission = {
-      image = "lscr.io/linuxserver/transmission:latest";
+      image = "lscr.io/linuxserver/transmission:4.1.1-r1-ls343";
       environment = {
         PUID = "1000";
         PGID = "100";
@@ -115,6 +115,15 @@
         INSTANCE_NAME = "The Search Cheese";
       };
     };
+  };
+
+  systemd.services.docker-transmission = {
+    serviceConfig = {
+      Restart = lib.mkForce "always";
+      RestartSec = "30s";
+    };
+    startLimitBurst = 10;
+    startLimitIntervalSec = 600;
   };
 
   systemd.services.docker-networks = let
