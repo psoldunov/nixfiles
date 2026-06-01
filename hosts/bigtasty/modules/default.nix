@@ -21,6 +21,7 @@
     ./virtualisation.nix
 
     ./services/immich.nix
+    ./services/basic-memory.nix
     ./services/infisical.nix
     ./services/karakeep.nix
     ./services/n8n.nix

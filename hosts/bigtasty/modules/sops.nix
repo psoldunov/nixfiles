@@ -51,6 +51,9 @@
       INFISICAL_SETTINGS = {
         group = "docker";
       };
+      BASIC_MEMORY_MCP_TOKEN = {
+        owner = "basic-memory-auth-proxy";
+      };
       SYNCTHING_GUI_PASSWORD = {
         owner = "psoldunov";
         sopsFile = ../../../secrets/shared.yaml;
