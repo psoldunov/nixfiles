@@ -19,9 +19,6 @@
       CF_DNS_CREDS = {
         group = "acme";
       };
-      OPENAI_API_KEY = {
-        group = "docker";
-      };
       CFD_MAIN_TUNNEL = {
         owner = "cloudflared";
       };
@@ -50,9 +47,6 @@
       };
       INFISICAL_SETTINGS = {
         group = "docker";
-      };
-      BASIC_MEMORY_MCP_TOKEN = {
-        owner = "basic-memory-auth-proxy";
       };
       SYNCTHING_GUI_PASSWORD = {
         owner = "psoldunov";

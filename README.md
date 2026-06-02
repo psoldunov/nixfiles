@@ -165,6 +165,16 @@ update_system [host|all]      # same shape, runs `nix flake update` first
 clean_system                  # nix-collect-garbage -d (sudo + user)
 ```
 
+When deploying from a machine that is not managed by this flake, the helper scripts
+and `nixos-rebuild` may not exist on `$PATH`. Use the full command from a checkout
+of this repo:
+
+```sh
+nix run nixpkgs#nixos-rebuild -- switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace
+```
+
+Use `dry-activate` instead of `switch` for a remote activation preview.
+
 ### Silent remote sudo
 
 `rebuild_system BigTasty` runs without prompting because:
