@@ -33,8 +33,11 @@ in {
   hardware.keyboard.qmk.enable = true;
 
   hardware = {
+    # Disabled: openrazer 3.12.2 fails to build against kernel 6.18 due to
+    # hid_report_raw_event API change. Re-enable once nixpkgs ships a patched
+    # version (upstream issue tracked at openrazer/openrazer).
     openrazer = {
-      enable = true;
+      enable = false;
       users = ["psoldunov"];
       batteryNotifier.enable = true;
     };

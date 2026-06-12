@@ -11,6 +11,7 @@
     clockify
     cursor-cli
     code-cursor
+    pi-coding-agent
     upscayl
     cider-2
     zapzap
