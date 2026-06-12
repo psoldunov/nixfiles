@@ -48,6 +48,7 @@
       accent = "dark";
       flavor = "mocha";
     };
+    hyprland.enable = false;
   };
 
   home.stateVersion = "23.11";
