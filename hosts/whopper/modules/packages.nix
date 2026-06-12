@@ -330,7 +330,6 @@ in {
       gsettings-qt
       keymapp
       kontroll
-      libsForQt5.qt5.qtwayland
       kdePackages.qtwayland
       qt6.qmake
       qt6.qtwayland
