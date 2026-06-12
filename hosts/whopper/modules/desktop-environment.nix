@@ -33,12 +33,27 @@ in {
   services.blueman.enable = hostConfig.enableHyprland;
 
   # Greeter
-  # regreet 0.3.0 hard-requires AccountsService for user enumeration
+  # regreet hard-requires AccountsService for user enumeration
   # (panics on startup → blank cage screen otherwise).
   services.accounts-daemon.enable = hostConfig.enableHyprland;
 
   programs.regreet = {
     enable = hostConfig.enableHyprland;
+    # regreet 0.4.0 renders the background through GTK4's GtkMediaFile, which is
+    # gstreamer-backed. nixpkgs ships regreet without gstreamer plugins, so
+    # loading any `background.path` (even a static PNG) makes GTK abort (SIGABRT);
+    # greetd then reports "greeter exited without creating a session" and falls
+    # into a restart loop until start-limit-hit. Wrap regreet with gstreamer
+    # plugins so the media pipeline can actually decode the background.
+    package = pkgs.regreet.overrideAttrs (old: {
+      buildInputs =
+        (old.buildInputs or [])
+        ++ (with pkgs.gst_all_1; [
+          gstreamer
+          gst-plugins-base
+          gst-plugins-good
+        ]);
+    });
     theme = {
       package = pkgs.catppuccin-gtk.override {
         accents = ["peach"];
