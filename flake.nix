@@ -11,7 +11,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Pinned to a pre-python-3.14-default rev. nixos-unstable bumped the default
+    # python3 to 3.14 mid-migration (rev f205b55+), breaking patool, catppuccin,
+    # catppuccin-gtk and others. Hold nixpkgs here until the 3.14 migration
+    # settles upstream, then restore `nixos-unstable`. Other inputs still update.
+    nixpkgs.url = "github:nixos/nixpkgs/3e41b24abd260e8f71dbe2f5737d24122f972158";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -21,7 +25,7 @@
 
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
@@ -47,8 +51,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    millennium.url = "github:SteamClientHomebrew/Millennium/e2c66a276e579ee73c5151b01897bf63503aa12c?dir=packages/nix";
 
     ags = {
       url = "github:aylur/ags";
@@ -81,7 +83,6 @@
     catppuccin,
     nix-gaming,
     nix-flatpak,
-    millennium,
     sops-nix,
     home-manager,
     apple-fonts,

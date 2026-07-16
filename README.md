@@ -54,7 +54,7 @@ Both hosts share a small set of home-manager modules (`shell`, `git`, Claude Cod
 | Filesystem | ext4 root + 9 NFS mounts (Media, Files, Documents, Camera, Transmission, SLSKD, Paperless, Games) |
 | Desktop | Hyprland + hypridle + hyprlock + AGS bar |
 | Auth | PAM Yubikey challenge-response + u2f for sudo/login |
-| Steam | `programs.steam` (millennium) + steam-presence wired to `STEAM_API_KEY` sops secret |
+| Steam | `programs.steam` + steam-presence wired to `STEAM_API_KEY` sops secret |
 
 ### BigTasty (server)
 
@@ -120,7 +120,7 @@ Aggregator: [hosts/whopper/modules/default.nix](hosts/whopper/modules/default.ni
 | `nix-flatpak` | Whopper Flatpak declarations |
 | `catppuccin`, `catppuccin-vsc` | Whopper theming |
 | `vscode-server` | Both hosts — VS Code Remote-SSH support |
-| `zen-browser`, `apple-fonts`, `ags`, `millennium` | Whopper |
+| `zen-browser`, `apple-fonts`, `ags` | Whopper |
 | `steam-presence` | Whopper Steam Discord presence |
 | `context-mode`, `caveman` | Claude Code plugin sources |
 

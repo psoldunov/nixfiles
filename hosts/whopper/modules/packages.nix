@@ -65,7 +65,6 @@ in {
 
   programs.steam = {
     enable = true;
-    package = pkgs.millennium-steam;
     extest.enable = false;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
