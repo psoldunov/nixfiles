@@ -6,12 +6,7 @@
   inputs,
   hostConfig,
   ...
-}: let
-  catppuccinPackage = pkgs.catppuccin-gtk.override {
-    accents = ["peach"];
-    variant = "mocha";
-  };
-in {
+}: {
   imports = [
     inputs.steam-presence.nixosModules.steam-presence
   ];
@@ -136,7 +131,7 @@ in {
       codex
       puppeteer-cli
       typescript
-      catppuccinPackage
+      kdePackages.breeze-gtk
       abcde
       cddiscid
       libmusicbrainz5
@@ -172,7 +167,6 @@ in {
       sassc
       bat
       cloudflared
-      hyprcursor
       boxbuddy
       distrobox
       distroshelf
@@ -190,7 +184,6 @@ in {
       gnome-themes-extra
       virtio-win
       zenity
-      hyprevents
       joypixels
       radeontop
       pkg-config
@@ -240,7 +233,6 @@ in {
       soft-serve
       glow
       skate
-      hyprprop
       gum
       rhythmbox
       libgpod
@@ -289,8 +281,6 @@ in {
       dualsensectl
       evtest
       trigger-control
-      hyprpicker
-      awww
       localsend
       pkgs-stable.calibre
       unzip
@@ -310,8 +300,7 @@ in {
       logitech-udev-rules
       tmux
       fastfetch
-      papirus-icon-theme
-      papirus-folders
+      kdePackages.breeze-icons
       hunspell
       hunspellDicts.ru_RU
       hunspellDicts.en_US

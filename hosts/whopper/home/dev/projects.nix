@@ -1,8 +1,7 @@
-# Project-manager data consumed by the rofi project launcher in
-# modules/home/desktop/hypr-modules/keybinds.nix. This is intentionally
-# a plain data file (not a HM module) — `keybinds.nix` imports it to
-# generate shell strings at evaluation time, and the HM module system
-# cannot provide pure data for that kind of interpolation.
+# Project-manager data consumed by desktop/project-launcher.nix, which turns
+# each entry into an XDG desktop entry (surfaced in KRunner / Kickoff). This is
+# intentionally a plain data file (not a HM module) — the launcher imports it
+# with `config` to resolve $HOME at evaluation time.
 {config, ...}: let
   home = config.home.homeDirectory;
   projects = "${home}/Projects";

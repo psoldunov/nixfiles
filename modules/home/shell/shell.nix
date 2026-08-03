@@ -43,21 +43,11 @@ in {
         };
       }
       // lib.optionalAttrs isDesktop {
-        wkill = {
-          body = ''hyprprop | grep '"pid":' | sed 's/[^0-9]*//g' | xargs kill'';
-        };
         open = {
           body = ''xdg-open "$argv" & disown'';
         };
         fzf_kill = {
           body = ''pkill -9 $(ps aux | fzf | awk '{print $2}')'';
-        };
-        resetDE = {
-          body = ''
-            ags quit
-            hyprctl reload
-            ags run &
-          '';
         };
       };
     shellInit = ''

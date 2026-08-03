@@ -22,14 +22,9 @@
     ./dev/dev.nix
 
     # Desktop
-    ./desktop/hyprland.nix
-    ./desktop/hypridle.nix
-    ./desktop/ags.nix
-    ./desktop/rofi.nix
-    ./desktop/pywal.nix
-    ./desktop/mako.nix
     ./desktop/qt
     ./desktop/gtk
+    ./desktop/project-launcher.nix
 
     # Programs
     ./programs/spotifyd.nix
@@ -39,17 +34,8 @@
 
   programs.home-manager.enable = true;
 
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
-    accent = "peach";
-    cursors = {
-      enable = true;
-      accent = "dark";
-      flavor = "mocha";
-    };
-    hyprland.enable = false;
-  };
+  # Stock KDE look: no catppuccin theming. Plasma/Qt/GTK all use Breeze.
+  catppuccin.enable = false;
 
   home.stateVersion = "23.11";
 }

@@ -1,16 +1,11 @@
 {
-  inputs,
   pkgs,
   ...
-}: let
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in {
+}: {
   # NOTE: `boot.initrd.kernelModules = ["amdgpu" ...]` is set in ./boot.nix
   # because it is a boot-time concern, even though the GPU is configured here.
   # `hardware.graphics.enable{,32Bit}` baseline is in modules/nixos/hardware.nix.
   hardware.graphics = {
-    package = pkgs-hyprland.mesa;
-    package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     extraPackages = with pkgs; [
       libva
       libva-vdpau-driver

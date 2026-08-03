@@ -5,7 +5,6 @@
 # Schema:
 #   role :: "desktop" | "server"
 #
-#   enableHyprland          :: bool  (desktop session toggle)
 #   ollamaDocker            :: bool  (containerised Ollama vs native)
 #
 #   enableRaid              :: bool  (mdadm + /RAID fileSystems)
@@ -25,7 +24,6 @@
 
   obsidianBase = "/RAID/apps/syncthing/Obsidian";
 
-  enableHyprland = false;
   ollamaDocker = false;
 
   enableRaid = true;

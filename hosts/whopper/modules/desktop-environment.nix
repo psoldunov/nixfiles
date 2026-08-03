@@ -1,96 +1,13 @@
 {
-  inputs,
   pkgs,
-  appleFonts,
-  hostConfig,
   ...
-}: let
-  catppuccinPackage = pkgs.catppuccin-gtk.override {
-    accents = ["peach"];
-    variant = "mocha";
-  };
-in {
-  catppuccin = {
-    enable = false;
-    accent = "peach";
-    flavor = "mocha";
-  };
+}: {
+  catppuccin.enable = false;
 
-  services.displayManager.sddm.wayland.enable = !hostConfig.enableHyprland;
-  services.displayManager.sddm.enable = !hostConfig.enableHyprland;
-  services.desktopManager.plasma6.enable = !hostConfig.enableHyprland;
-
-  # Hyprland
-  programs.hyprland = {
-    enable = hostConfig.enableHyprland;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    xwayland.enable = true;
-  };
-
-  services.hypridle.enable = hostConfig.enableHyprland;
-  programs.hyprlock.enable = hostConfig.enableHyprland;
-  services.blueman.enable = hostConfig.enableHyprland;
-
-  # Greeter
-  # regreet hard-requires AccountsService for user enumeration
-  # (panics on startup → blank cage screen otherwise).
-  services.accounts-daemon.enable = hostConfig.enableHyprland;
-
-  programs.regreet = {
-    enable = hostConfig.enableHyprland;
-    # regreet 0.4.0 renders the background through GTK4's GtkMediaFile, which is
-    # gstreamer-backed. nixpkgs ships regreet without gstreamer plugins, so
-    # loading any `background.path` (even a static PNG) makes GTK abort (SIGABRT);
-    # greetd then reports "greeter exited without creating a session" and falls
-    # into a restart loop until start-limit-hit. Wrap regreet with gstreamer
-    # plugins so the media pipeline can actually decode the background.
-    package = pkgs.regreet.overrideAttrs (old: {
-      buildInputs =
-        (old.buildInputs or [])
-        ++ (with pkgs.gst_all_1; [
-          gstreamer
-          gst-plugins-base
-          gst-plugins-good
-        ]);
-    });
-    theme = {
-      package = pkgs.catppuccin-gtk.override {
-        accents = ["peach"];
-        size = "standard";
-        variant = "mocha";
-      };
-      name = "catppuccin-mocha-peach-standard";
-    };
-    font = {
-      name = "SF Pro";
-      size = 12;
-      package = appleFonts.sf-pro;
-    };
-    iconTheme = {
-      package = pkgs.pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
-    };
-    cursorTheme = {
-      package = pkgs.catppuccin-cursors.mochaDark;
-      name = "catppuccin-mocha-dark-cursors";
-    };
-    settings = {
-      appearance.greeting_msg = "Howdy partner";
-      commands = {
-        reboot = ["systemctl" "reboot"];
-        poweroff = ["systemctl" "poweroff"];
-      };
-      background = {
-        path = "/usr/share/backgrounds/user/lock_background.png";
-        fit = "Cover";
-      };
-      default_session = {
-        command = "Hyprland";
-        user = "psoldunov";
-      };
-    };
-  };
+  # KDE Plasma 6 desktop with SDDM as the login manager.
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
   # XDG
   xdg = {
@@ -165,9 +82,9 @@ in {
       global = {
         Context = {
           filesystems = [
-            "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
-            "${catppuccinPackage}/share/themes:ro"
+            "${pkgs.kdePackages.breeze-icons}/share/icons:ro"
+            "${pkgs.kdePackages.breeze}/share/icons:ro"
+            "${pkgs.kdePackages.breeze-gtk}/share/themes:ro"
             "/run/current-system/sw/share:ro"
             "/mnt/Games/Emulation:rw"
             "/run/current-system/sw/bin/:ro"
@@ -176,8 +93,8 @@ in {
         };
 
         Environment = {
-          ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "catppuccin-mocha-peach-standard";
+          ICON_THEME = "breeze-dark";
+          GTK_THEME = "Breeze-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         };
       };

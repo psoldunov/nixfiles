@@ -1,4 +1,4 @@
-# Whopper-local nix knobs: nixPath plus the gaming/Hyprland binary caches.
+# Whopper-local nix knobs: nixPath plus the gaming binary cache.
 # The host-agnostic settings (warn-dirty, experimental-features,
 # auto-optimise-store, trusted-users) live in modules/nixos/nix.nix.
 {inputs, ...}: {
@@ -8,11 +8,9 @@
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-gaming.cachix.org"
-        "https://hyprland.cachix.org"
       ];
       trusted-public-keys = [
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
   };

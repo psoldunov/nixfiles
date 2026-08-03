@@ -33,7 +33,6 @@
     nodejs_24
     playwright
     pkgs-stable.obsidian
-    pywal
     mattermost-desktop
     lmstudio
     gnome-font-viewer

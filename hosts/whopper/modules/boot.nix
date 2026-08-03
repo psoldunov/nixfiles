@@ -18,8 +18,8 @@
 
   boot.plymouth = {
     enable = true;
-    theme = "pedro-raccoon";
-    themePackages = [pkgs.pedro-raccoon-plymouth];
+    theme = "breeze";
+    themePackages = [pkgs.kdePackages.breeze-plymouth];
     extraConfig = ''
       DeviceScale=an-integer-scaling-factor
     '';

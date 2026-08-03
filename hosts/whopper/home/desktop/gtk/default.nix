@@ -1,53 +1,36 @@
 {
   lib,
-  hostConfig,
   pkgs,
   config,
   ...
-}: let
-  catppuccin-gtk-theme = pkgs.catppuccin-gtk.override {
-    variant = "mocha";
-    accents = ["peach"];
-  };
-in {
-  gtk = lib.mkIf hostConfig.enableHyprland {
+}: {
+  # Stock KDE GTK theming: Breeze widget theme + Breeze icons/cursor so GTK
+  # apps match the Plasma Breeze desktop.
+  gtk = {
     enable = true;
 
     theme = {
-      name = "catppuccin-mocha-peach-standard";
-      package = catppuccin-gtk-theme;
+      name = "Breeze-Dark";
+      package = pkgs.kdePackages.breeze-gtk;
     };
 
-    # Preserve pre-26.05 behavior where GTK4 inherits from gtk.theme.
-    # Set explicitly to silence the HM deprecation warning.
     gtk4.theme = {
-      name = "catppuccin-mocha-peach-standard";
-      package = catppuccin-gtk-theme;
+      name = "Breeze-Dark";
+      package = pkgs.kdePackages.breeze-gtk;
     };
 
     iconTheme = {
-      name = "Papirus-Dark";
-      package = lib.mkForce pkgs.papirus-icon-theme;
+      name = "breeze-dark";
+      package = lib.mkForce pkgs.kdePackages.breeze-icons;
     };
 
-    cursorTheme = lib.mkIf hostConfig.enableHyprland {
-      name = "catppuccin-mocha-dark-cursors";
-    };
-
-    font = lib.mkIf hostConfig.enableHyprland {
-      name = "SF Pro";
-      size = 12;
+    cursorTheme = {
+      name = "breeze_cursors";
+      package = pkgs.kdePackages.breeze;
     };
   };
 
   home.file = {
-    ".config/gtk-4.0/gtk-dark.css" = {
-      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/gtk-dark.css";
-    };
-    ".config/gtk-4.0/assets" = {
-      source = "${catppuccin-gtk-theme}/share/themes/catppuccin-mocha-peach-standard/gtk-4.0/assets";
-      recursive = true;
-    };
     ".config/gtk-3.0/bookmarks" = {
       force = true;
       text = ''

@@ -28,13 +28,6 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
-
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,11 +42,6 @@
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    ags = {
-      url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -77,7 +65,6 @@
     self,
     nixpkgs,
     zen-browser,
-    ags,
     vscode-server,
     nixpkgs-stable,
     catppuccin,
@@ -86,7 +73,6 @@
     sops-nix,
     home-manager,
     apple-fonts,
-    hyprland,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -122,7 +108,6 @@
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
-        hyprland.nixosModules.default
         nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
@@ -146,8 +131,6 @@
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
-              ags.homeManagerModules.default
-              hyprland.homeManagerModules.default
               catppuccin.homeModules.catppuccin
               {
                 home.packages = [
