@@ -13,10 +13,9 @@
     startInBackground = true;
   };
 
-  services.gnome-keyring = {
-    enable = true;
-    components = ["pkcs11" "secrets"];
-  };
+  # Secrets are handled by KWallet, unlocked at login by pam_kwallet from the
+  # plasma6 module. Running gnome-keyring alongside it made both daemons race
+  # for the org.freedesktop.secrets bus name.
 
   # programs.nix-index lives in modules/home/nix-index.nix.
   manual = {

@@ -46,7 +46,7 @@
 
   # nix-ld, fish, mtr, git baseline live in modules/nixos.
   programs.direnv.enable = true;
-  programs.seahorse.enable = true;
+  # Wallet GUI is kdePackages.kwalletmanager, installed by the plasma6 module.
 
   programs = {
     _1password = {

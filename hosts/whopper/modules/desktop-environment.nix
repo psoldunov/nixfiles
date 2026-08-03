@@ -111,9 +111,11 @@
   services.xserver.excludePackages = [pkgs.xterm];
 
   # Filesystem + desktop plumbing
+  # gnome-keyring is deliberately absent: KWallet from the plasma6 module is the
+  # Secret Service provider, and enabling both makes pam_gnome_keyring and
+  # pam_kwallet start competing daemons for org.freedesktop.secrets.
   services.gnome = {
     sushi.enable = true;
-    gnome-keyring.enable = true;
   };
   services.tumbler.enable = true;
   services.gvfs = {
