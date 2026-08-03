@@ -45,6 +45,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     steam-presence = {
       url = "github:JustTemmie/steam-presence";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -73,6 +79,7 @@
     sops-nix,
     home-manager,
     apple-fonts,
+    plasma-manager,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -132,6 +139,7 @@
             sharedModules = [
               sops-nix.homeManagerModules.sops
               catppuccin.homeModules.catppuccin
+              plasma-manager.homeManagerModules.plasma-manager
               {
                 home.packages = [
                   zen-browser.packages."${system}".default

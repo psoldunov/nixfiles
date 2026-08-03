@@ -301,6 +301,8 @@
       tmux
       fastfetch
       kdePackages.breeze-icons
+      vapor-kde-theme
+      nixos-icons
       hunspell
       hunspellDicts.ru_RU
       hunspellDicts.en_US

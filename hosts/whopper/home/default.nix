@@ -24,6 +24,7 @@
     # Desktop
     ./desktop/qt
     ./desktop/gtk
+    ./desktop/plasma.nix
     ./desktop/project-launcher.nix
 
     # Programs
