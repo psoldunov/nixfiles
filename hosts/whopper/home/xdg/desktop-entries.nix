@@ -4,31 +4,12 @@
     sha256 = "19vkjc2f3h61zya757dnq4rij67q8a2yb0whchz27z7r0aqfa3pr";
   };
 
-  t3code-appimage = pkgs.fetchurl {
-    url = "https://github.com/pingdotgg/t3code/releases/download/v0.0.24/T3-Code-0.0.24-x86_64.AppImage";
-    sha256 = "1sgzd5mz1gl9gd87x2q9pnljiim2f9qbrc73aj16jachsq19ihmp";
-  };
-
-  nimbalyst-appimage = pkgs.fetchurl {
-    url = "https://github.com/nimbalyst/nimbalyst/releases/download/v0.60.1/Nimbalyst-Linux.AppImage";
-    sha256 = "1gxkj029gqncmzsyr5j9jc005cfs45c31kgd4a5av7q1xv4sdm4j";
-  };
-
   # Locally-used browser launcher references. Kept here because the desktop
   # entries below invoke browsers with --app= flags and we do not want to
   # pull in programs.chromium as a dependency of this file.
   brave = "${pkgs.brave}/bin/brave";
 in {
   xdg.desktopEntries = {
-    # spotify = {
-    #   name = "Spotify";
-    #   genericName = "Music Player";
-    #   icon = "spotify-client";
-    #   exec = "${pkgs.spotify}/bin/spotify --ozone-platform=x11 %U";
-    #   terminal = false;
-    #   mimeType = ["x-scheme-handler/spotify"];
-    #   categories = ["Audio" "Music" "Player" "AudioVideo"];
-    # };
     lm-studio = {
       name = "LM Studio";
       icon = "${pkgs.lmstudio}/share/icons/hicolor/0x0/apps/lm-studio.png";
@@ -45,22 +26,6 @@ in {
       exec = ''${brave} --new-window --app="https://webflow.com/dashboard?r=1&workspace=boundary-digital-llc" %U'';
       terminal = false;
       mimeType = ["x-scheme-handler/webflow"];
-      categories = ["Development"];
-    };
-    openwebui = {
-      name = "Open WebUI";
-      genericName = "AI Chat Interface";
-      icon = ../desktop/assets/open-webui.png;
-      exec = ''${brave} --new-window --app="https://open-webui.theswisscheese.com" %U'';
-      terminal = false;
-      categories = ["Office" "Development"];
-    };
-    postman = {
-      name = "Postman";
-      genericName = "API Development Environment";
-      icon = "postman";
-      exec = ''${brave} --new-window --app="https://web.postman.co/workspaces" %U'';
-      terminal = false;
       categories = ["Development"];
     };
     memos = {
@@ -92,30 +57,6 @@ in {
         "x-scheme-handler/thunder"
       ];
       categories = ["Network"];
-    };
-    nimbalyst = {
-      name = "Nimbalyst";
-      genericName = "Coding Agent Workspace";
-      exec = "${pkgs.appimage-run}/bin/appimage-run ${nimbalyst-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations %F";
-      terminal = false;
-      icon = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/Nimbalyst/nimbalyst/v0.60.1/packages/electron/resources/icon.png";
-        sha256 = "0q5sa07ik8n12bwv4c0vchhzspzd9k05pnkchl64dab381h94i8b";
-      };
-      comment = "Visual workspace + session manager for Codex, Claude Code, OpenCode, Copilot";
-      categories = ["Development"];
-    };
-    t3code = {
-      name = "T3 Code";
-      genericName = "Coding Agent GUI";
-      exec = "${pkgs.appimage-run}/bin/appimage-run ${t3code-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations %F";
-      terminal = false;
-      icon = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/pingdotgg/t3code/v0.0.24/apps/desktop/resources/icon.png";
-        sha256 = "1z3jibvdfwgzjrhzh83q1vs9n6rsg9nzr44aqs5d7vfyg1g00wxd";
-      };
-      comment = "Minimal web GUI for coding agents (Codex, Claude, OpenCode)";
-      categories = ["Development"];
     };
     figma-linux = {
       name = "Figma";
@@ -166,15 +107,5 @@ in {
 
   home.packages = [
     (pkgs.writeShellScriptBin "figma-linux" "exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U")
-    (pkgs.writeShellScriptBin "t3code" ''exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${t3code-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations "$@"'')
-    (pkgs.writeShellScriptBin "nimbalyst" ''
-      target="''${1:-$PWD}"
-      if [ ! -d "$target" ]; then
-        echo "Error: \"$target\" is not a directory" >&2
-        exit 1
-      fi
-      abs="$(realpath "$target")"
-      exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${nimbalyst-appimage} --ozone-platform=wayland --enable-features=UseOzonePlatform,WaylandWindowDecorations --project "$abs"
-    '')
   ];
 }

@@ -8,6 +8,16 @@
   # home directory, so any defaults we want Steam etc. to honor must live
   # here too. Without this, Steam's "Browse local files" falls back to
   # $TERMINAL (kitty) because no inode/directory handler is found.
+  #
+  # Plasma's "Default Applications" KCM and several GTK apps rewrite
+  # ~/.config/mimeapps.list in place, which turns the home-manager symlink into
+  # a real file and made every rebuild fail on a stale .hm-backup. Take
+  # ownership outright instead: the list below is authoritative, so anything an
+  # app registers into [Added Associations] at runtime is discarded on rebuild.
+  # Consequence: a handler that only ever existed at runtime must be declared
+  # here or it is lost — see the scheme handlers at the end of the set.
+  xdg.configFile."mimeapps.list".force = true;
+
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
@@ -63,6 +73,17 @@
       "x-scheme-handler/anytype" = "anytype.desktop";
       "x-scheme-handler/discord" = "legcord.desktop";
       "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
+
+      # Registered by the apps themselves into [Added Associations] rather than
+      # declared here, so they only survived because the file was writable.
+      # Declared explicitly now that home-manager owns the file outright.
+      "x-scheme-handler/slack" = "slack.desktop";
+      "x-scheme-handler/abc" = "plexamp.desktop";
+      "x-scheme-handler/cider" = "cider-2.desktop";
+      "x-scheme-handler/itms" = "cider-2.desktop";
+      "x-scheme-handler/itmss" = "cider-2.desktop";
+      "x-scheme-handler/itunes" = "cider-2.desktop";
+      "x-scheme-handler/music" = "cider-2.desktop";
     };
   };
 }

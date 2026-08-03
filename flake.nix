@@ -132,6 +132,12 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "hm-backup";
+            # Desktop apps rewrite some home-manager-owned files at runtime
+            # (~/.config/mimeapps.list, ~/.gtkrc-2.0). Activation then wants to
+            # back the file up, finds a stale <file>.hm-backup from the previous
+            # rebuild, and aborts with "would be clobbered". Overwrite the stale
+            # backup instead of failing — the authoritative copy is in the store.
+            overwriteBackup = true;
             users = {
               psoldunov =
                 import ./hosts/whopper/home;
@@ -182,6 +188,12 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "hm-backup";
+            # Desktop apps rewrite some home-manager-owned files at runtime
+            # (~/.config/mimeapps.list, ~/.gtkrc-2.0). Activation then wants to
+            # back the file up, finds a stale <file>.hm-backup from the previous
+            # rebuild, and aborts with "would be clobbered". Overwrite the stale
+            # backup instead of failing — the authoritative copy is in the store.
+            overwriteBackup = true;
             users = {
               psoldunov = import ./hosts/bigtasty/home/home.nix;
             };

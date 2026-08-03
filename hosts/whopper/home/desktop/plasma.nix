@@ -44,6 +44,23 @@ in {
 
     workspace.lookAndFeel = "com.valve.vapor.desktop";
 
+    # SF Pro Display everywhere in the Plasma UI. The family comes from
+    # appleFonts.sf-pro, installed system-wide in modules/fonts.nix.
+    # Written to kdeglobals ([General] font/smallestReadableFont/toolBarFont/
+    # menuFont and [WM] activeFont), so Qt/KDE apps pick it up too.
+    fonts = let
+      ui = size: {
+        family = "SF Pro Display";
+        pointSize = size;
+      };
+    in {
+      general = ui 10;
+      menu = ui 10;
+      toolbar = ui 10;
+      windowTitle = ui 10;
+      small = ui 8;
+    };
+
     panels = [
       {
         location = "bottom";

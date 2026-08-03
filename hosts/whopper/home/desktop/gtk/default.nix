@@ -9,6 +9,12 @@
   gtk = {
     enable = true;
 
+    # kde-gtk-config rewrites ~/.gtkrc-2.0 whenever Plasma syncs its appearance
+    # to GTK2 apps, turning the home-manager symlink back into a real file.
+    # Overwrite it outright rather than backing it up on every rebuild — the
+    # declarative copy is authoritative.
+    gtk2.force = true;
+
     theme = {
       name = "Breeze-Dark";
       package = pkgs.kdePackages.breeze-gtk;
