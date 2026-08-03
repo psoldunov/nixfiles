@@ -1,15 +1,16 @@
 {
   config,
   pkgs,
-  pkgs-stable,
   ...
 }: {
   systemd.user.enable = true;
 
+  # Must track the same nixpkgs as the system graphics stack: a stable-channel
+  # build links an older Qt/Mesa and cannot create a GL context against the
+  # unstable Mesa in /run/opengl-driver, which aborts every Qt Quick window.
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
-    package = pkgs-stable.nextcloud-client;
   };
 
   services.gnome-keyring = {
