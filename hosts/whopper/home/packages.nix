@@ -10,6 +10,7 @@
     anytype
     clockify
     cursor-cli
+    ensemblr
     code-cursor
     pi-coding-agent
     upscayl
