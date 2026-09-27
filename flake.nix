@@ -65,6 +65,11 @@
       url = "github:juliusbrussee/caveman";
       flake = false;
     };
+
+    skrepka = {
+      url = "github:psoldunov/skrepka";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

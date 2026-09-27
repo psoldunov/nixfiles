@@ -450,6 +450,7 @@
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-stable": "nixpkgs-stable",
         "plasma-manager": "plasma-manager",
+        "skrepka": "skrepka",
         "sops-nix": "sops-nix",
         "steam-presence": "steam-presence",
         "vscode-server": "vscode-server",
@@ -538,6 +539,26 @@
       "original": {
         "type": "file",
         "url": "https://devimages-cdn.apple.com/design/resources/download/SF-Pro.dmg"
+      }
+    },
+    "skrepka": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790273713,
+        "narHash": "sha256-tmG/E9d+ALjR3bK28YGiSsl7CARriPAcbI4xyX45N84=",
+        "owner": "psoldunov",
+        "repo": "skrepka",
+        "rev": "a02ceb11191e02f7c30a1651ce03595534eca5f1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "repo": "skrepka",
+        "type": "github"
       }
     },
     "sops-nix": {

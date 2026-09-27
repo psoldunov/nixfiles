@@ -30,6 +30,7 @@
     # Programs
     ./programs/spotifyd.nix
     ./programs/kitty.nix
+    ./programs/skrepka.nix
     ./programs/vscode.nix
   ];
 
