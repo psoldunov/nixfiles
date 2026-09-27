@@ -8,39 +8,38 @@
     enable = true;
     # Opt out of HM's legacy default SSH config (future removal). Any
     # wildcard defaults that were previously injected should be declared
-    # explicitly under `matchBlocks."*"` if needed.
+    # explicitly under `settings."*"` if needed.
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    # Keys are upstream ssh_config(5) directive names.
+    settings = {
       "github.com" = {
-        hostname = "github.com";
-        identityFile = "~/.ssh/git";
-        user = "git";
-        addKeysToAgent = "yes";
+        HostName = "github.com";
+        IdentityFile = "~/.ssh/git";
+        User = "git";
+        AddKeysToAgent = "yes";
       };
 
       "mynixos.com" = {
-        hostname = "mynixos.com";
-        identityFile = "~/.ssh/git";
-        addKeysToAgent = "yes";
+        HostName = "mynixos.com";
+        IdentityFile = "~/.ssh/git";
+        AddKeysToAgent = "yes";
       };
 
       "gitlab.com" = {
-        identityFile = "~/.ssh/git";
-        addKeysToAgent = "yes";
-        extraOptions = {
-          PreferredAuthentications = "publickey";
-        };
+        IdentityFile = "~/.ssh/git";
+        AddKeysToAgent = "yes";
+        PreferredAuthentications = "publickey";
       };
 
       "thinkpad.theswisscheese.com" = {
-        proxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
+        ProxyCommand = "${pkgs.cloudflared}/bin/cloudflared access ssh --hostname %h";
       };
 
       "bigtasty" = {
-        hostname = "10.24.24.2";
-        user = "psoldunov";
-        forwardAgent = true;
+        HostName = "10.24.24.2";
+        User = "psoldunov";
+        ForwardAgent = true;
       };
     };
   };

@@ -11,11 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Pinned to a pre-python-3.14-default rev. nixos-unstable bumped the default
-    # python3 to 3.14 mid-migration (rev f205b55+), breaking patool, catppuccin,
-    # catppuccin-gtk and others. Hold nixpkgs here until the 3.14 migration
-    # settles upstream, then restore `nixos-unstable`. Other inputs still update.
-    nixpkgs.url = "github:nixos/nixpkgs/3e41b24abd260e8f71dbe2f5737d24122f972158";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -25,7 +21,6 @@
 
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     sops-nix = {
@@ -150,7 +145,7 @@
             sharedModules = [
               sops-nix.homeManagerModules.sops
               catppuccin.homeModules.catppuccin
-              plasma-manager.homeManagerModules.plasma-manager
+              plasma-manager.homeModules.plasma-manager
               {
                 home.packages = [
                   zen-browser.packages."${system}".default

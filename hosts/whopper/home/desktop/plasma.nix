@@ -13,9 +13,10 @@
   # KScreen mode option, so we reassert the desired mode at graphical-session
   # start via kscreen-doctor. DP-1 is the primary display; 3840x2160@120 is a
   # native EDID mode. Retries because the output may not be ready the instant
-  # the session target activates.
+  # the session target activates. kscreen-doctor can hang forever when the
+  # KScreen backend is wedged, so every call is bounded by `timeout`.
   forceRefreshRate = pkgs.writeShellScript "force-refresh-rate" ''
-    doctor=${pkgs.kdePackages.libkscreen}/bin/kscreen-doctor
+    doctor="${pkgs.coreutils}/bin/timeout 5 ${pkgs.kdePackages.libkscreen}/bin/kscreen-doctor"
     for _ in $(seq 1 30); do
       if $doctor -o 2>/dev/null | grep -q 'DP-1'; then
         $doctor output.DP-1.enable output.DP-1.mode.3840x2160@120 && exit 0
@@ -30,9 +31,13 @@ in {
       Description = "Force DP-1 to 3840x2160@120 under Plasma Wayland";
       After = ["plasma-workspace.target"];
       PartOf = ["graphical-session.target"];
+      # Session-start job only. Re-running it during Home Manager activation
+      # blocked the whole switch while kscreen-doctor hung.
+      X-RestartIfChanged = false;
     };
     Service = {
       Type = "oneshot";
+      TimeoutStartSec = 200; # 30 tries x (5s timeout + 1s sleep) worst case
       RemainAfterExit = true;
       ExecStart = "${forceRefreshRate}";
     };

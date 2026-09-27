@@ -2,7 +2,12 @@
   pkgs,
   ...
 }: {
-  catppuccin.enable = false;
+  # Explicit autoEnable silences the upcoming-default warning; the global
+  # toggle stays off so no port applies.
+  catppuccin = {
+    enable = false;
+    autoEnable = false;
+  };
 
   # KDE Plasma 6 desktop with SDDM as the login manager.
   services.displayManager.sddm.enable = true;

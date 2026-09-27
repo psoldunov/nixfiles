@@ -76,6 +76,11 @@
     };
   };
 
+  # Upstream module sets WorkingDirectory=%h/.local/state/steam-presence but
+  # never creates it, so the unit dies at CHDIR and blocks HM activation.
+  # For user units StateDirectory resolves to $XDG_STATE_HOME/<name>.
+  systemd.user.services.steam-presence.serviceConfig.StateDirectory = "steam-presence";
+
   programs.gamescope = {
     enable = true;
     capSysNice = true;
@@ -160,7 +165,6 @@
       grilo
       grilo-plugins
       sg3_utils
-      solaar
       evince
       eog
       simple-scan
@@ -178,7 +182,6 @@
       iperf
       yubioath-flutter
       yubikey-manager
-      gnome-icon-theme
       adwaita-icon-theme
       p7zip
       gnome-themes-extra

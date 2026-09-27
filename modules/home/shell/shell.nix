@@ -93,6 +93,8 @@ in {
     enable = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
+    # Atuin owns Ctrl-R; keep fzf off it (fzf file/dir widgets stay).
+    historyWidget.command = "";
   };
 
   programs.starship = {

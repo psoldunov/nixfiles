@@ -37,7 +37,12 @@
   programs.home-manager.enable = true;
 
   # Stock KDE look: no catppuccin theming. Plasma/Qt/GTK all use Breeze.
-  catppuccin.enable = false;
+  # Explicit autoEnable silences the upcoming-default warning; the global
+  # toggle stays off so no port applies.
+  catppuccin = {
+    enable = false;
+    autoEnable = false;
+  };
 
   home.stateVersion = "23.11";
 }

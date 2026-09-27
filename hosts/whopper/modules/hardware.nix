@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # NOTE: `boot.initrd.kernelModules = ["amdgpu" ...]` is set in ./boot.nix
   # because it is a boot-time concern, even though the GPU is configured here.
   # `hardware.graphics.enable{,32Bit}` baseline is in modules/nixos/hardware.nix.
@@ -39,7 +36,6 @@
     logitech = {
       wireless = {
         enable = true;
-        enableGraphical = true;
       };
     };
     sane.enable = true;
@@ -65,4 +61,9 @@
     ];
     ensureDefaultPrinter = "HP_LaserJet_MFP_M28w_9B18D8";
   };
+
+  # Solaar, for the Logitech receiver above. This replaces
+  # `hardware.logitech.wireless.enableGraphical`, which nixpkgs renamed; the
+  # option brings the package, so it is no longer in ./packages.nix.
+  programs.solaar.enable = true;
 }

@@ -5,7 +5,7 @@
 {pkgs, ...}: {
   nix.settings = {
     warn-dirty = false;
-    experimental-features = "nix-command flakes";
+    experimental-features = ["nix-command" "flakes"];
     auto-optimise-store = true;
     trusted-users = ["psoldunov"];
   };
