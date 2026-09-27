@@ -46,7 +46,7 @@
 
   # Home Manager links ~/.ssh/config into the store, where the file belongs to
   # root. An unprivileged bubblewrap sandbox — every FHS app nixpkgs wraps,
-  # Ensemblr and Steam among them — maps our own uid and nothing else, so every
+  # Steam among them — maps our own uid and nothing else, so every
   # root-owned file inside it reads as the overflow uid, `nobody`. ssh accepts
   # its config only from root or from us, so inside those sandboxes it aborts
   # with "Bad owner or permissions on ~/.ssh/config" and git and gh cannot
