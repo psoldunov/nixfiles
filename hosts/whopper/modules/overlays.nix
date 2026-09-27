@@ -1,7 +1,9 @@
 {inputs, ...}: {
   nixpkgs.overlays = [
     inputs.catppuccin-vsc.overlays.default
-    (import ../../../overlays/ensemblr.nix)
+    # Adds `ensemblr` (release AppImage) and `ensemblr-master` (built from
+    # the pinned master commit). Both install as `ensemblr`; install only one.
+    inputs.ensemblr.overlays.default
     (import ../../../overlays/mpv-mpris.nix)
     (import ../../../overlays/openldap.nix)
     (import ../../../overlays/vapor-kde.nix)

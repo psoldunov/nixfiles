@@ -65,6 +65,11 @@
       url = "github:psoldunov/skrepka";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ensemblr = {
+      url = "github:ensemblr-hq/ensemblr/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

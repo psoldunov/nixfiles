@@ -144,6 +144,27 @@
         "type": "github"
       }
     },
+    "ensemblr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790539680,
+        "narHash": "sha256-pUf/D1TFmBEGyiOkzMC7nPri+GJUufT/M1hFRDgsZLc=",
+        "owner": "ensemblr-hq",
+        "repo": "ensemblr",
+        "rev": "3e95e41b76519c1909d1035759faa755c57d033c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ensemblr-hq",
+        "ref": "master",
+        "repo": "ensemblr",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -444,6 +465,7 @@
         "catppuccin-vsc": "catppuccin-vsc",
         "caveman": "caveman",
         "context-mode": "context-mode",
+        "ensemblr": "ensemblr",
         "home-manager": "home-manager",
         "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
