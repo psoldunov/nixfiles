@@ -9,5 +9,6 @@
     "scanner"
     "lp"
     "input"
+    "librepods"
   ];
 }

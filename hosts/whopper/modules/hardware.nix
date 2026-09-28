@@ -66,4 +66,15 @@
   # `hardware.logitech.wireless.enableGraphical`, which nixpkgs renamed; the
   # option brings the package, so it is no longer in ./packages.nix.
   programs.solaar.enable = true;
+
+  # LibrePods, a tray app for AirPods over the Bluetooth adapter above: battery,
+  # noise control modes, ear detection and conversational awareness. The option
+  # brings the package and a `librepods` wrapper in /run/wrappers/bin that holds
+  # cap_net_admin, runnable only by the `librepods` group (see ./users.nix).
+  # Launch it through that wrapper, not the store path.
+  #
+  # Hearing aid features also need `DeviceID = bluetooth:004C:0000:0000` under
+  # `hardware.bluetooth.settings.General`, which makes the AirPods drop the
+  # connection now and then, so it is left off.
+  programs.librepods.enable = true;
 }

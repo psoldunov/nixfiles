@@ -66,5 +66,13 @@ in {
       icon = "1password";
       exec = "${lib.getExe osConfig.programs._1password-gui.package} --silent";
     })
+    # The cap_net_admin wrapper from programs.librepods, not the store binary.
+    # The in-app toggle writes this same file name.
+    (autostart {
+      name = "librepods";
+      desktopName = "LibrePods";
+      icon = "librepods";
+      exec = "${osConfig.security.wrapperDir}/librepods --hide";
+    })
   ];
 }
