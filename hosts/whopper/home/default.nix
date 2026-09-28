@@ -15,6 +15,7 @@
     ./browser/chromium.nix
     ./xdg/desktop-entries.nix
     ./xdg/mimeapps.nix
+    ./xdg/autostart.nix
 
     # Dev
     ./dev/neovim.nix
