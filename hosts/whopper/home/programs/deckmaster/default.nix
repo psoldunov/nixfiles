@@ -19,11 +19,19 @@
   pkgs,
   ...
 }: let
+  # Upstream has been quiet since 0.9.0, so the patches are local.
   # ./button-icon-command.patch adds `iconCommand` to the button widget: a
   # command run on the widget's interval (default 1 s) whose output names the
-  # icon to show. Upstream has been quiet since 0.9.0, so the patch is local.
+  # icon to show. ./action-repeat.patch adds `repeat` to an action: once the
+  # key is held past the 350 ms long press, the action fires every `repeat` ms
+  # until release, in place of `action_hold`.
   deckmaster = pkgs.deckmaster.overrideAttrs (old: {
-    patches = (old.patches or []) ++ [./button-icon-command.patch];
+    patches =
+      (old.patches or [])
+      ++ [
+        ./button-icon-command.patch
+        ./action-repeat.patch
+      ];
   });
 
   breeze = "${pkgs.kdePackages.breeze-icons}/share/icons/breeze-dark";
