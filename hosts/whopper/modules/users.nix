@@ -9,6 +9,8 @@
     "scanner"
     "lp"
     "input"
+    # /dev/uinput, for deckmaster's key emulation (hardware.uinput in ./hardware.nix).
+    "uinput"
     "librepods"
   ];
 }
