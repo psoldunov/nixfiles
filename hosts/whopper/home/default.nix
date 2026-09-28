@@ -27,6 +27,7 @@
     ./desktop/gtk
     ./desktop/plasma.nix
     ./desktop/plasma-shortcuts.nix
+    ./desktop/window-rules.nix
 
     # Programs
     ./programs/deckmaster
