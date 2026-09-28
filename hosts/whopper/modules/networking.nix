@@ -1,4 +1,12 @@
-{...}: {
+{inputs, ...}: {
+  # Skrepka itself is installed per user through its Home Manager module
+  # (home/programs/skrepka.nix). Home Manager cannot open firewall ports, so
+  # the NixOS module is imported here for `openFirewall` alone, which works
+  # without `enable`: TCP 27182-27183 for LAN sync and UDP 5353 for mDNS.
+  imports = [inputs.skrepka.nixosModules.default];
+
+  programs.skrepka.openFirewall = true;
+
   networking.hostName = "Whopper";
 
   networking = {
