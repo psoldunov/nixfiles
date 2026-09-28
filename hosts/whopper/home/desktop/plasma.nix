@@ -59,6 +59,17 @@ in {
       BrowserApplication = "zen.desktop";
     };
 
+    # English plus Russian with the Mac key positions, written to kxkbrc. Alt+Space
+    # switches between them (plasma-shortcuts.nix). SDDM and the TTY keep the
+    # system-wide "us" from modules/desktop-environment.nix.
+    input.keyboard.layouts = [
+      {layout = "us";}
+      {
+        layout = "ru";
+        variant = "mac";
+      }
+    ];
+
     # SF Pro Display everywhere in the Plasma UI. The family comes from
     # appleFonts.sf-pro, installed system-wide in modules/fonts.nix.
     # Written to kdeglobals ([General] font/smallestReadableFont/toolBarFont/

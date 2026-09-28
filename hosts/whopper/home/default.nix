@@ -24,6 +24,7 @@
     ./desktop/qt
     ./desktop/gtk
     ./desktop/plasma.nix
+    ./desktop/plasma-shortcuts.nix
 
     # Programs
     ./programs/spotifyd.nix
