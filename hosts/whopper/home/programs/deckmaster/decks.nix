@@ -54,13 +54,11 @@
       label = "Vol -";
       icon = icon "status/24/audio-volume-low";
       action.keycode = "Volumedown";
-      hold.keycode = "Mute";
     })
     (button 14 {
       label = "Vol +";
       icon = icon "status/24/audio-volume-high";
       action.keycode = "Volumeup";
-      hold.keycode = "Mute";
     })
   ];
 in {
