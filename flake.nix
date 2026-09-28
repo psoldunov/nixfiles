@@ -11,11 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Pinned to a pre-python-3.14-default rev. nixos-unstable bumped the default
-    # python3 to 3.14 mid-migration (rev f205b55+), breaking patool, catppuccin,
-    # catppuccin-gtk and others. Hold nixpkgs here until the 3.14 migration
-    # settles upstream, then restore `nixos-unstable`. Other inputs still update.
-    nixpkgs.url = "github:nixos/nixpkgs/3e41b24abd260e8f71dbe2f5737d24122f972158";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -25,14 +21,6 @@
 
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
-
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
     };
 
     sops-nix = {
@@ -52,9 +40,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ags = {
-      url = "github:aylur/ags";
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     steam-presence = {
@@ -71,13 +60,22 @@
       url = "github:juliusbrussee/caveman";
       flake = false;
     };
+
+    skrepka = {
+      url = "github:psoldunov/skrepka/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ensemblr = {
+      url = "github:ensemblr-hq/ensemblr/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
     zen-browser,
-    ags,
     vscode-server,
     nixpkgs-stable,
     catppuccin,
@@ -86,7 +84,7 @@
     sops-nix,
     home-manager,
     apple-fonts,
-    hyprland,
+    plasma-manager,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -122,7 +120,6 @@
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
-        hyprland.nixosModules.default
         nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
@@ -140,15 +137,20 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "hm-backup";
+            # Desktop apps rewrite some home-manager-owned files at runtime
+            # (~/.config/mimeapps.list, ~/.gtkrc-2.0). Activation then wants to
+            # back the file up, finds a stale <file>.hm-backup from the previous
+            # rebuild, and aborts with "would be clobbered". Overwrite the stale
+            # backup instead of failing — the authoritative copy is in the store.
+            overwriteBackup = true;
             users = {
               psoldunov =
                 import ./hosts/whopper/home;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
-              ags.homeManagerModules.default
-              hyprland.homeManagerModules.default
               catppuccin.homeModules.catppuccin
+              plasma-manager.homeModules.plasma-manager
               {
                 home.packages = [
                   zen-browser.packages."${system}".default
@@ -191,6 +193,12 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             backupFileExtension = "hm-backup";
+            # Desktop apps rewrite some home-manager-owned files at runtime
+            # (~/.config/mimeapps.list, ~/.gtkrc-2.0). Activation then wants to
+            # back the file up, finds a stale <file>.hm-backup from the previous
+            # rebuild, and aborts with "would be clobbered". Overwrite the stale
+            # backup instead of failing — the authoritative copy is in the store.
+            overwriteBackup = true;
             users = {
               psoldunov = import ./hosts/bigtasty/home/home.nix;
             };

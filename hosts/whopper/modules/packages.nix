@@ -6,12 +6,7 @@
   inputs,
   hostConfig,
   ...
-}: let
-  catppuccinPackage = pkgs.catppuccin-gtk.override {
-    accents = ["peach"];
-    variant = "mocha";
-  };
-in {
+}: {
   imports = [
     inputs.steam-presence.nixosModules.steam-presence
   ];
@@ -51,7 +46,7 @@ in {
 
   # nix-ld, fish, mtr, git baseline live in modules/nixos.
   programs.direnv.enable = true;
-  programs.seahorse.enable = true;
+  # Wallet GUI is kdePackages.kwalletmanager, installed by the plasma6 module.
 
   programs = {
     _1password = {
@@ -80,6 +75,11 @@ in {
       };
     };
   };
+
+  # Upstream module sets WorkingDirectory=%h/.local/state/steam-presence but
+  # never creates it, so the unit dies at CHDIR and blocks HM activation.
+  # For user units StateDirectory resolves to $XDG_STATE_HOME/<name>.
+  systemd.user.services.steam-presence.serviceConfig.StateDirectory = "steam-presence";
 
   programs.gamescope = {
     enable = true;
@@ -131,19 +131,29 @@ in {
     syntaxHighlight = true;
   };
 
+  # GNOME/GTK desktop apps and the Hyprland-era Wayland tools were replaced by
+  # their KDE counterparts. Most ship with the plasma6 module: Ark (File
+  # Roller), Okular (Evince), Gwenview (Eye of GNOME), the Audio volume applet
+  # and settings page (pavucontrol), the Device Notifier (udiskie), the emoji
+  # selector (Emote), polkit-kde-agent (polkit_gnome), Spectacle (grim, slurp,
+  # wf-recorder), Klipper (cliphist), kscreen-doctor (wlr-randr) and, because
+  # hardware.sane is on, Skanpage (Simple Scan). KRename (Bulky) and
+  # programs.partition-manager (GNOME Disks, in desktop-environment.nix) are
+  # added explicitly.
+  # Rhythmbox stays: it is the only player here that syncs iPods through
+  # libgpod.
   environment.systemPackages =
     (with pkgs; [
       codex
       puppeteer-cli
       typescript
-      catppuccinPackage
+      kdePackages.breeze-gtk
       abcde
       cddiscid
       libmusicbrainz5
       libmusicbrainz
       monkeysAudio
       libdiscid
-      (writeShellScriptBin "gnome-terminal" "exec -a $0 ${pkgs.kitty}/bin/kitty $@")
       appimage-run
       wev
       usbutils
@@ -151,32 +161,23 @@ in {
       nixd
       nixpkgs-fmt
       lm_sensors
-      bulky
+      krename
       sops
       alejandra
       dive
       gperftools
-      polkit_gnome
       libsecret
       ddcutil
       ddcui
       trashy
-      file-roller
       grilo
       grilo-plugins
       sg3_utils
-      solaar
-      evince
-      eog
-      simple-scan
-      sassc
       bat
       cloudflared
-      hyprcursor
       boxbuddy
       distrobox
       distroshelf
-      emote
       distrobox-tui
       run
       libdrm
@@ -184,27 +185,19 @@ in {
       iperf
       yubioath-flutter
       yubikey-manager
-      gnome-icon-theme
       adwaita-icon-theme
       p7zip
-      gnome-themes-extra
       virtio-win
       zenity
-      hyprevents
       joypixels
       radeontop
       pkg-config
       thunderbird
-      wf-recorder
       tesseract
       hwdata
-      pciutils
-      cliphist
-      webp-pixbuf-loader
       supabase-cli
       kdiskmark
       libwebp
-      slurp
       wl-clipboard
       speedcrunch
       dracut
@@ -212,7 +205,6 @@ in {
       openssl.dev
       imagemagick
       devenv
-      libsecret
       (python3.withPackages (p:
         with p; [
           discid
@@ -229,7 +221,6 @@ in {
       socat
       mangohud
       vulkan-tools
-      devenv
       bottles
       libva-utils
       cargo
@@ -240,7 +231,6 @@ in {
       soft-serve
       glow
       skate
-      hyprprop
       gum
       rhythmbox
       libgpod
@@ -258,23 +248,17 @@ in {
       libclang
       gdb
       clang-tools
-      gcc
       mkcert
-      libadwaita
       dig
       winetricks
-      gnome-disk-utility
-      dconf-editor
       cabextract
       idevicerestore
       killall
       sbctl
-      pavucontrol
       ffmpeg-full
       mpv
       (wrapOBS {
         plugins = with pkgs.obs-studio-plugins; [
-          wlrobs
           obs-backgroundremoval
           obs-vkcapture
           obs-pipewire-audio-capture
@@ -282,21 +266,16 @@ in {
       })
       go
       ripgrep
-      udiskie
-      wlr-randr
       nix-prefetch-scripts
       pamixer
       dualsensectl
       evtest
       trigger-control
-      hyprpicker
-      awww
       localsend
       pkgs-stable.calibre
       unzip
       woff2
       freetube
-      grim
       xdg-utils
       xdg-user-dirs
       php
@@ -310,8 +289,9 @@ in {
       logitech-udev-rules
       tmux
       fastfetch
-      papirus-icon-theme
-      papirus-folders
+      kdePackages.breeze-icons
+      vapor-kde-theme
+      nixos-icons
       hunspell
       hunspellDicts.ru_RU
       hunspellDicts.en_US
@@ -324,9 +304,7 @@ in {
       glib
       sox
       gsettings-desktop-schemas
-      kdePackages.qt6ct
       qt5.qtwayland
-      gsettings-qt
       keymapp
       kontroll
       kdePackages.qtwayland
@@ -334,9 +312,7 @@ in {
       qt6.qtwayland
       jq
       wget
-      wlogout
       mpc
-      nemo-with-extensions
       keychain
       expressvpn
       nbd

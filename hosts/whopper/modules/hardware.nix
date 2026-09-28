@@ -1,16 +1,17 @@
 {
-  inputs,
+  lib,
   pkgs,
   ...
 }: let
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  # Stream Deck product IDs that deckmaster's device library drives: original,
+  # V2, MK.2, Mini, Mini MK.2 and XL. Elgato's capture cards and mics share the
+  # vendor ID, so the rule below names the models instead of matching 0fd9.
+  streamDeckProducts = ["0060" "006d" "0080" "0063" "0090" "006c"];
 in {
   # NOTE: `boot.initrd.kernelModules = ["amdgpu" ...]` is set in ./boot.nix
   # because it is a boot-time concern, even though the GPU is configured here.
   # `hardware.graphics.enable{,32Bit}` baseline is in modules/nixos/hardware.nix.
   hardware.graphics = {
-    package = pkgs-hyprland.mesa;
-    package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     extraPackages = with pkgs; [
       libva
       libva-vdpau-driver
@@ -44,7 +45,6 @@ in {
     logitech = {
       wireless = {
         enable = true;
-        enableGraphical = true;
       };
     };
     sane.enable = true;
@@ -70,4 +70,40 @@ in {
     ];
     ensureDefaultPrinter = "HP_LaserJet_MFP_M28w_9B18D8";
   };
+
+  # Solaar, for the Logitech receiver above. This replaces
+  # `hardware.logitech.wireless.enableGraphical`, which nixpkgs renamed; the
+  # option brings the package, so it is no longer in ./packages.nix.
+  programs.solaar.enable = true;
+
+  # LibrePods, a tray app for AirPods over the Bluetooth adapter above: battery,
+  # noise control modes, ear detection and conversational awareness. The option
+  # brings the package and a `librepods` wrapper in /run/wrappers/bin that holds
+  # cap_net_admin, runnable only by the `librepods` group (see ./users.nix).
+  # Launch it through that wrapper, not the store path.
+  #
+  # Hearing aid features also need `DeviceID = bluetooth:004C:0000:0000` under
+  # `hardware.bluetooth.settings.General`, which makes the AirPods drop the
+  # connection now and then, so it is left off.
+  programs.librepods.enable = true;
+
+  # Elgato Stream Deck, driven by deckmaster from the user session (see
+  # ../home/programs/deckmaster). deckmaster opens the USB device through
+  # libusb, so the rule targets the usb_device node rather than hidraw. It
+  # grants the seat user access, links the deck as /dev/streamdeck and starts
+  # the user's deckmaster.service when the deck is plugged in.
+  #
+  # `uaccess` only takes effect in rules that sort before 73-seat-late.rules,
+  # which services.udev.extraRules (99-local.rules) does not, hence a package.
+  services.udev.packages = [
+    (pkgs.writeTextFile {
+      name = "streamdeck-udev-rules";
+      destination = "/etc/udev/rules.d/70-streamdeck.rules";
+      text =
+        lib.concatMapStrings (product: ''
+          SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0fd9", ATTR{idProduct}=="${product}", TAG+="uaccess", TAG+="systemd", SYMLINK+="streamdeck", ENV{SYSTEMD_USER_WANTS}+="deckmaster.service"
+        '')
+        streamDeckProducts;
+    })
+  ];
 }

@@ -11,10 +11,10 @@
       "enforce-bun.sh" = builtins.readFile ./hooks/enforce-bun.sh;
       "context-mode-cache-heal.mjs" = builtins.readFile ./hooks/context-mode-cache-heal.mjs;
     };
-    plugins = [
-      inputs.context-mode
-      inputs.caveman
-    ];
+    plugins = {
+      context-mode = inputs.context-mode;
+      caveman = inputs.caveman;
+    };
     settings = {
       effortLevel = "xhigh";
       skillListingBudgetFraction = 0.02;

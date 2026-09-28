@@ -5,23 +5,23 @@
 }: {
   # NOTE: Script packages are managed by modules/home/scripts/default.nix
   # and appended to home.packages there.
+  #
+  # KDE-native picks: Plasma already ships Elisa (music) and KFontView (fonts),
+  # so no GNOME counterparts here. KDE ISO Image Writer writes install media
+  # and Tremotesf drives the Transmission daemon on BigTasty.
   home.packages = with pkgs; [
     audacity
-    anytype
     clockify
-    cursor-cli
-    code-cursor
+    ensemblr-master
+    zed-editor
     pi-coding-agent
-    upscayl
     cider-2
-    zapzap
     ledger-live-desktop
     beets
     bruno
     yaak
     legcord
     shortwave
-    hyprshade
     qFlipper
     geekbench
     deno
@@ -33,20 +33,17 @@
     nodejs_24
     playwright
     pkgs-stable.obsidian
-    pywal
     mattermost-desktop
-    lmstudio
-    gnome-font-viewer
     plexamp
     pcsx2
+    duckstation
     heroic
     bchunk
     lutris
     shipments
     ferdium
-    lollypop
     steam-rom-manager
-    mediawriter
+    kdePackages.isoimagewriter
     parted
     lsof
     prismlauncher
@@ -55,14 +52,13 @@
     telegram-desktop
     slack
     protonup-qt
-    teams-for-linux
     protonup-ng
     via
-    denaro
     gnome-solanum
     ookla-speedtest
     motrix
-    transmission-remote-gtk
+    tremotesf
     uv
+    bambu-studio-bin
   ];
 }

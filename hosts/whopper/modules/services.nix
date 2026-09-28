@@ -26,6 +26,13 @@
     lowLatency = {
       enable = true;
     };
+    # A dummy AVRCP player (off by default) makes AirPods send play/pause/skip
+    # to the host; LibrePods' README asks for it.
+    wireplumber.extraConfig."51-bluez-avrcp" = {
+      "monitor.bluez.properties" = {
+        "bluez5.dummy-avrcp-player" = true;
+      };
+    };
   };
 
   # Force DisplayPort link retrain after suspend

@@ -1,157 +1,32 @@
-{
-  inputs,
-  pkgs,
-  appleFonts,
-  hostConfig,
-  ...
-}: let
-  catppuccinPackage = pkgs.catppuccin-gtk.override {
-    accents = ["peach"];
-    variant = "mocha";
-  };
-in {
+{pkgs, ...}: {
+  # Explicit autoEnable silences the upcoming-default warning; the global
+  # toggle stays off so no port applies.
   catppuccin = {
     enable = false;
-    accent = "peach";
-    flavor = "mocha";
+    autoEnable = false;
   };
 
-  services.displayManager.sddm.wayland.enable = !hostConfig.enableHyprland;
-  services.displayManager.sddm.enable = !hostConfig.enableHyprland;
-  services.desktopManager.plasma6.enable = !hostConfig.enableHyprland;
+  # KDE Plasma 6 desktop with SDDM as the login manager.
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
-  # Hyprland
-  programs.hyprland = {
-    enable = hostConfig.enableHyprland;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    xwayland.enable = true;
-  };
-
-  services.hypridle.enable = hostConfig.enableHyprland;
-  programs.hyprlock.enable = hostConfig.enableHyprland;
-  services.blueman.enable = hostConfig.enableHyprland;
-
-  # Greeter
-  # regreet hard-requires AccountsService for user enumeration
-  # (panics on startup → blank cage screen otherwise).
-  services.accounts-daemon.enable = hostConfig.enableHyprland;
-
-  programs.regreet = {
-    enable = hostConfig.enableHyprland;
-    # regreet 0.4.0 renders the background through GTK4's GtkMediaFile, which is
-    # gstreamer-backed. nixpkgs ships regreet without gstreamer plugins, so
-    # loading any `background.path` (even a static PNG) makes GTK abort (SIGABRT);
-    # greetd then reports "greeter exited without creating a session" and falls
-    # into a restart loop until start-limit-hit. Wrap regreet with gstreamer
-    # plugins so the media pipeline can actually decode the background.
-    package = pkgs.regreet.overrideAttrs (old: {
-      buildInputs =
-        (old.buildInputs or [])
-        ++ (with pkgs.gst_all_1; [
-          gstreamer
-          gst-plugins-base
-          gst-plugins-good
-        ]);
-    });
-    theme = {
-      package = pkgs.catppuccin-gtk.override {
-        accents = ["peach"];
-        size = "standard";
-        variant = "mocha";
-      };
-      name = "catppuccin-mocha-peach-standard";
-    };
-    font = {
-      name = "SF Pro";
-      size = 12;
-      package = appleFonts.sf-pro;
-    };
-    iconTheme = {
-      package = pkgs.pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
-    };
-    cursorTheme = {
-      package = pkgs.catppuccin-cursors.mochaDark;
-      name = "catppuccin-mocha-dark-cursors";
-    };
-    settings = {
-      appearance.greeting_msg = "Howdy partner";
-      commands = {
-        reboot = ["systemctl" "reboot"];
-        poweroff = ["systemctl" "poweroff"];
-      };
-      background = {
-        path = "/usr/share/backgrounds/user/lock_background.png";
-        fit = "Cover";
-      };
-      default_session = {
-        command = "Hyprland";
-        user = "psoldunov";
-      };
-    };
-  };
-
-  # XDG
+  # XDG. The portal backends (kde, gtk, kwallet, plasmanotify) and their
+  # kde-portals.conf routing come from the plasma6 module.
   xdg = {
     menus.enable = true;
     icons.enable = true;
-    portal.extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-    ];
     autostart.enable = true;
     sounds.enable = true;
     mime = {
       enable = true;
-      defaultApplications = {
-        "inode/directory" = ["nemo.desktop" "yazi.desktop"];
-        "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
-        "text/html" = ["brave-browser.desktop"];
-        "text/*" = ["code.desktop"];
-        "TerminalEmulator" = "kitty.desktop";
-        "image/jpeg" = ["org.gnome.eog.desktop"];
-        "image/png" = ["org.gnome.eog.desktop"];
-        "image/svg+xml" = ["org.gnome.eog.desktop"];
-        "image/gif" = ["org.gnome.eog.desktop"];
-        "image/webp" = ["org.gnome.eog.desktop"];
-        "image/avif" = ["org.gnome.eog.desktop"];
-        "video/mp4" = ["mpv.desktop"];
-        "video/webm" = ["mpv.desktop"];
-        "video/x-matroska" = ["mpv.desktop"];
-        "x-scheme-handler/magnet" = ["io.github.TransmissionRemoteGtk.desktop"];
-        "WebBrowser" = "brave-browser.desktop";
-        "x-scheme-handler/http" = "brave-browser.desktop";
-        "x-scheme-handler/https" = "brave-browser.desktop";
-        "x-scheme-handler/chrome" = "brave-browser.desktop";
-        "x-scheme-handler/about" = "brave-browser.desktop";
-        "x-scheme-handler/unknown" = "brave-browser.desktop";
-        "x-scheme-handler/vscode" = "code-url-handler.desktop";
-        "application/x-extension-htm" = "brave-browser.desktop";
-        "application/x-extension-html" = "brave-browser.desktop";
-        "application/x-extension-shtml" = "brave-browser.desktop";
-        "application/xhtml+xml" = "brave-browser.desktop";
-        "application/x-extension-xhtml" = "brave-browser.desktop";
-        "application/x-extension-xht" = "brave-browser.desktop";
-        "application/zip" = "org.gnome.FileRoller.desktop";
-        "Email" = "thunderbird.desktop";
-        "message/rfc822" = "thunderbird.desktop";
-        "x-scheme-handler/mailto" = "thunderbird.desktop";
-        "x-scheme-handler/mid" = "thunderbird.desktop";
-        "x-scheme-handler/news" = "thunderbird.desktop";
-        "x-scheme-handler/snews" = "thunderbird.desktop";
-        "x-scheme-handler/nntp" = "thunderbird.desktop";
-        "x-scheme-handler/feed" = "thunderbird.desktop";
-        "x-scheme-handler/figma" = "figma-linux.desktop";
-        "application/rss+xml" = "thunderbird.desktop";
-        "application/x-extension-rss" = "thunderbird.desktop";
-        "x-scheme-handler/webcal" = "thunderbird.desktop";
-        "text/calendar" = "thunderbird.desktop";
-        "application/x-extension-ics" = "thunderbird.desktop";
-        "x-scheme-handler/webcals" = "thunderbird.desktop";
-        "x-scheme-handler/whatsapp" = "whatsie.desktop";
-      };
+      defaultApplications = import ../mime-defaults.nix;
     };
   };
+
+  # KDE Partition Manager (replaces GNOME Disks). The module also registers
+  # kpmcore's D-Bus helper and polkit actions, which a bare package lacks.
+  programs.partition-manager.enable = true;
 
   # Flatpak
   services.flatpak = {
@@ -165,9 +40,9 @@ in {
       global = {
         Context = {
           filesystems = [
-            "${pkgs.papirus-icon-theme}/share/icons:ro"
-            "${pkgs.catppuccin-cursors.mochaDark}/share/icons:ro"
-            "${catppuccinPackage}/share/themes:ro"
+            "${pkgs.kdePackages.breeze-icons}/share/icons:ro"
+            "${pkgs.kdePackages.breeze}/share/icons:ro"
+            "${pkgs.kdePackages.breeze-gtk}/share/themes:ro"
             "/run/current-system/sw/share:ro"
             "/mnt/Games/Emulation:rw"
             "/run/current-system/sw/bin/:ro"
@@ -176,8 +51,8 @@ in {
         };
 
         Environment = {
-          ICON_THEME = "Papirus-Dark";
-          GTK_THEME = "catppuccin-mocha-peach-standard";
+          ICON_THEME = "breeze-dark";
+          GTK_THEME = "Breeze-Dark";
           QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
         };
       };
@@ -194,11 +69,12 @@ in {
   services.xserver.excludePackages = [pkgs.xterm];
 
   # Filesystem + desktop plumbing
-  services.gnome = {
-    sushi.enable = true;
-    gnome-keyring.enable = true;
-  };
-  services.tumbler.enable = true;
+  # gnome-keyring is deliberately absent: KWallet from the plasma6 module is the
+  # Secret Service provider, and enabling both makes pam_gnome_keyring and
+  # pam_kwallet start competing daemons for org.freedesktop.secrets.
+  # Thumbnails and previews come from KIO (kdegraphics-thumbnailers,
+  # ffmpegthumbs), so the Nemo-era sushi/tumbler services are gone. gvfs stays
+  # for GTK apps: their file dialogs use it for trash, MTP and network shares.
   services.gvfs = {
     enable = true;
     package = pkgs.gvfs;

@@ -15,40 +15,35 @@
     ./browser/chromium.nix
     ./xdg/desktop-entries.nix
     ./xdg/mimeapps.nix
-    ./xdg/portal.nix
+    ./xdg/autostart.nix
 
     # Dev
     ./dev/neovim.nix
     ./dev/dev.nix
+    ./dev/swift.nix
 
     # Desktop
-    ./desktop/hyprland.nix
-    ./desktop/hypridle.nix
-    ./desktop/ags.nix
-    ./desktop/rofi.nix
-    ./desktop/pywal.nix
-    ./desktop/mako.nix
     ./desktop/qt
     ./desktop/gtk
+    ./desktop/plasma.nix
+    ./desktop/plasma-shortcuts.nix
 
     # Programs
+    ./programs/deckmaster
     ./programs/spotifyd.nix
     ./programs/kitty.nix
+    ./programs/skrepka.nix
     ./programs/vscode.nix
   ];
 
   programs.home-manager.enable = true;
 
+  # Stock KDE look: no catppuccin theming. Plasma/Qt/GTK all use Breeze.
+  # Explicit autoEnable silences the upcoming-default warning; the global
+  # toggle stays off so no port applies.
   catppuccin = {
-    enable = true;
-    flavor = "mocha";
-    accent = "peach";
-    cursors = {
-      enable = true;
-      accent = "dark";
-      flavor = "mocha";
-    };
-    hyprland.enable = false;
+    enable = false;
+    autoEnable = false;
   };
 
   home.stateVersion = "23.11";

@@ -1,0 +1,59 @@
+#:schema https://www.ensemblr.dev/schemas/settings.schema.json
+
+# Every command targets this worktree's flake (`.#...`), never ~/.nixfiles.
+# rebuild_system/update_system hardcode ~/.nixfiles and `git add -A` + commit
+# there, so the switch/update scripts below reimplement them against the
+# worktree and leave staging and committing to the workspace.
+
+[scripts]
+# Fetch every locked flake input into the store (no-op when already cached).
+setup = "nix flake archive"
+
+[scripts.run.check]
+command = "nix flake check --no-build"
+icon = "shield-check"
+default = true
+
+[scripts.run.lint]
+command = "nix fmt -- --check flake.nix lib hosts modules overlays"
+icon = "list-checks"
+
+[scripts.run.format]
+command = "nix fmt -- flake.nix lib hosts modules overlays"
+icon = "paintbrush"
+
+[scripts.run.build-whopper]
+command = "nix build .#nixosConfigurations.Whopper.config.system.build.toplevel --no-link --print-out-paths && nix store diff-closures /run/current-system .#nixosConfigurations.Whopper.config.system.build.toplevel"
+icon = "hammer"
+
+# rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.
+# Builds run as the user; --sudo elevates only activation.
+[scripts.run.rebuild-whopper]
+command = "nixos-rebuild switch --flake .#Whopper --sudo --show-trace"
+icon = "rocket"
+
+[scripts.run.rebuild-bigtasty]
+command = "nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
+icon = "server"
+
+[scripts.run.rebuild-all]
+command = "nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
+icon = "layers"
+
+# Bump flake.lock only, so the input changes can be reviewed before a rebuild.
+[scripts.run.update-lock]
+command = "nix flake update"
+icon = "refresh-cw"
+
+# update-* mirror `update_system [host|all]`: bump flake.lock, then switch.
+[scripts.run.update-whopper]
+command = "nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace"
+icon = "download"
+
+[scripts.run.update-bigtasty]
+command = "nix flake update && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
+icon = "cloud"
+
+[scripts.run.update-all]
+command = "nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
+icon = "zap"
