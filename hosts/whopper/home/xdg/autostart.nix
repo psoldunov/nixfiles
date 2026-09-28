@@ -51,15 +51,12 @@ in {
       icon = "org.telegram.desktop";
       exec = "${pkgs.telegram-desktop}/bin/Telegram -startintray";
     })
-    # The packages come from the system modules: programs._1password-gui
+    # Solaar's entry lives in ../programs/solaar.nix, which launches it
+    # through a wrapper.
+    #
+    # The package comes from the system module: programs._1password-gui
     # overrides its package with the polkit policy owners, so pkgs._1password-gui
     # would be a second copy of the app.
-    (autostart {
-      name = "solaar";
-      desktopName = "Solaar";
-      icon = "solaar";
-      exec = "${lib.getExe osConfig.programs.solaar.package} --window=hide";
-    })
     (autostart {
       name = "com.onepassword.OnePassword";
       desktopName = "1Password";

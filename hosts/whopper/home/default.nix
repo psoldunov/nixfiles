@@ -33,6 +33,7 @@
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/skrepka.nix
+    ./programs/solaar.nix
     ./programs/vscode.nix
   ];
 
