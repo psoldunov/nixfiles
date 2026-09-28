@@ -19,6 +19,7 @@
     # Dev
     ./dev/neovim.nix
     ./dev/dev.nix
+    ./dev/swift.nix
 
     # Desktop
     ./desktop/qt
