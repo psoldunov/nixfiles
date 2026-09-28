@@ -19,11 +19,13 @@
     # Dev
     ./dev/neovim.nix
     ./dev/dev.nix
+    ./dev/swift.nix
 
     # Desktop
     ./desktop/qt
     ./desktop/gtk
     ./desktop/plasma.nix
+    ./desktop/plasma-shortcuts.nix
 
     # Programs
     ./programs/spotifyd.nix
