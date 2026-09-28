@@ -1,0 +1,94 @@
+--- a/config.go
++++ b/config.go
+@@ -31,6 +31,8 @@ type ActionConfig struct {
+ 	Paste   string     `toml:"paste,omitempty"`
+ 	Device  string     `toml:"device,omitempty"`
+ 	DBus    DBusConfig `toml:"dbus,omitempty"`
++	// Repeat, in milliseconds, re-triggers the action while its key is held.
++	Repeat uint `toml:"repeat,omitempty"`
+ }
+
+ // WidgetConfig describes configuration data for widgets.
+--- a/deck.go
++++ b/deck.go
+@@ -205,6 +205,38 @@ func executeCommand(cmd string) {
+ 	}
+ }
+
++// repeatInterval returns how often a held key repeats its action, or 0 if it
++// does not repeat.
++func (d *Deck) repeatInterval(index uint8) time.Duration {
++	for _, w := range d.Widgets {
++		if w.Key() == index && w.Action() != nil {
++			return time.Duration(w.Action().Repeat) * time.Millisecond
++		}
++	}
++	return 0
++}
++
++// repeatAction triggers a key's action every interval until released closes.
++func repeatAction(dev *streamdeck.Device, index uint8, interval time.Duration, released <-chan struct{}) {
++	ticker := time.NewTicker(interval)
++	defer ticker.Stop()
++
++	for {
++		select {
++		case <-released:
++			return
++		default:
++			deck.triggerAction(dev, index, false)
++		}
++
++		select {
++		case <-released:
++			return
++		case <-ticker.C:
++		}
++	}
++}
++
+ // triggerAction triggers an action.
+ func (d *Deck) triggerAction(dev *streamdeck.Device, index uint8, hold bool) {
+ 	for _, w := range d.Widgets {
+--- a/main.go
++++ b/main.go
+@@ -90,6 +90,8 @@ func eventLoop(dev *streamdeck.Device, tch chan interface{}) error {
+
+ 	var keyStates sync.Map
+ 	keyTimestamps := make(map[uint8]time.Time)
++	// closed when the key is released, which ends a repeating action
++	keyReleased := make(map[uint8]chan struct{})
+
+ 	kch, err := dev.ReadKeys()
+ 	if err != nil {
+@@ -116,6 +118,10 @@ func eventLoop(dev *streamdeck.Device, tch chan interface{}) error {
+
+ 			if state && !k.Pressed {
+ 				// key was released
++				if released, ok := keyReleased[k.Index]; ok {
++					close(released)
++					delete(keyReleased, k.Index)
++				}
+ 				if time.Since(keyTimestamps[k.Index]) < longPressDuration {
+ 					verbosef("Triggering short action for key %d", k.Index)
+ 					deck.triggerAction(dev, k.Index, false)
+@@ -123,12 +129,19 @@ func eventLoop(dev *streamdeck.Device, tch chan interface{}) error {
+ 			}
+ 			if !state && k.Pressed {
+ 				// key was pressed
++				released := make(chan struct{})
++				keyReleased[k.Index] = released
+ 				go func() {
+ 					// launch timer to observe keystate
+ 					time.Sleep(longPressDuration)
+
+ 					if state, ok := keyStates.Load(k.Index); ok && state.(bool) {
+ 						// key still pressed
++						if interval := deck.repeatInterval(k.Index); interval > 0 {
++							verbosef("Repeating action for key %d", k.Index)
++							repeatAction(dev, k.Index, interval, released)
++							return
++						}
+ 						verbosef("Triggering long action for key %d", k.Index)
+ 						deck.triggerAction(dev, k.Index, true)
+ 					}

@@ -50,15 +50,22 @@
       icon = icon "actions/32/media-skip-forward";
       action.keycode = "Nextsong";
     })
+    # A tap steps the volume once; holding keeps stepping every 150 ms.
     (button 13 {
       label = "Vol -";
       icon = icon "status/24/audio-volume-low";
-      action.keycode = "Volumedown";
+      action = {
+        keycode = "Volumedown";
+        repeat = 150;
+      };
     })
     (button 14 {
       label = "Vol +";
       icon = icon "status/24/audio-volume-high";
-      action.keycode = "Volumeup";
+      action = {
+        keycode = "Volumeup";
+        repeat = 150;
+      };
     })
   ];
 in {
