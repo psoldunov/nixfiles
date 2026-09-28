@@ -24,7 +24,6 @@
     ./desktop/qt
     ./desktop/gtk
     ./desktop/plasma.nix
-    ./desktop/project-launcher.nix
 
     # Programs
     ./programs/spotifyd.nix

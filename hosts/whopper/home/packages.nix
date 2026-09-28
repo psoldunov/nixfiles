@@ -11,15 +11,11 @@
   # and Tremotesf drives the Transmission daemon on BigTasty.
   home.packages = with pkgs; [
     audacity
-    anytype
     clockify
-    cursor-cli
     ensemblr-master
-    code-cursor
+    zed-editor
     pi-coding-agent
-    upscayl
     cider-2
-    zapzap
     ledger-live-desktop
     beets
     bruno
@@ -56,10 +52,8 @@
     telegram-desktop
     slack
     protonup-qt
-    teams-for-linux
     protonup-ng
     via
-    denaro
     gnome-solanum
     ookla-speedtest
     motrix
