@@ -154,7 +154,6 @@
       libmusicbrainz
       monkeysAudio
       libdiscid
-      (writeShellScriptBin "gnome-terminal" "exec -a $0 ${pkgs.kitty}/bin/kitty $@")
       appimage-run
       wev
       usbutils
