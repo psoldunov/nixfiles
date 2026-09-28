@@ -131,6 +131,17 @@
     syntaxHighlight = true;
   };
 
+  # GNOME/GTK desktop apps and the Hyprland-era Wayland tools were replaced by
+  # their KDE counterparts. Most ship with the plasma6 module: Ark (File
+  # Roller), Okular (Evince), Gwenview (Eye of GNOME), the Audio volume applet
+  # and settings page (pavucontrol), the Device Notifier (udiskie), the emoji
+  # selector (Emote), polkit-kde-agent (polkit_gnome), Spectacle (grim, slurp,
+  # wf-recorder), Klipper (cliphist), kscreen-doctor (wlr-randr) and, because
+  # hardware.sane is on, Skanpage (Simple Scan). KRename (Bulky) and
+  # programs.partition-manager (GNOME Disks, in desktop-environment.nix) are
+  # added explicitly.
+  # Rhythmbox stays: it is the only player here that syncs iPods through
+  # libgpod.
   environment.systemPackages =
     (with pkgs; [
       codex
@@ -151,30 +162,23 @@
       nixd
       nixpkgs-fmt
       lm_sensors
-      bulky
+      krename
       sops
       alejandra
       dive
       gperftools
-      polkit_gnome
       libsecret
       ddcutil
       ddcui
       trashy
-      file-roller
       grilo
       grilo-plugins
       sg3_utils
-      evince
-      eog
-      simple-scan
-      sassc
       bat
       cloudflared
       boxbuddy
       distrobox
       distroshelf
-      emote
       distrobox-tui
       run
       libdrm
@@ -184,23 +188,17 @@
       yubikey-manager
       adwaita-icon-theme
       p7zip
-      gnome-themes-extra
       virtio-win
       zenity
       joypixels
       radeontop
       pkg-config
       thunderbird
-      wf-recorder
       tesseract
       hwdata
-      pciutils
-      cliphist
-      webp-pixbuf-loader
       supabase-cli
       kdiskmark
       libwebp
-      slurp
       wl-clipboard
       speedcrunch
       dracut
@@ -208,7 +206,6 @@
       openssl.dev
       imagemagick
       devenv
-      libsecret
       (python3.withPackages (p:
         with p; [
           discid
@@ -225,7 +222,6 @@
       socat
       mangohud
       vulkan-tools
-      devenv
       bottles
       libva-utils
       cargo
@@ -253,23 +249,17 @@
       libclang
       gdb
       clang-tools
-      gcc
       mkcert
-      libadwaita
       dig
       winetricks
-      gnome-disk-utility
-      dconf-editor
       cabextract
       idevicerestore
       killall
       sbctl
-      pavucontrol
       ffmpeg-full
       mpv
       (wrapOBS {
         plugins = with pkgs.obs-studio-plugins; [
-          wlrobs
           obs-backgroundremoval
           obs-vkcapture
           obs-pipewire-audio-capture
@@ -277,8 +267,6 @@
       })
       go
       ripgrep
-      udiskie
-      wlr-randr
       nix-prefetch-scripts
       pamixer
       dualsensectl
@@ -289,7 +277,6 @@
       unzip
       woff2
       freetube
-      grim
       xdg-utils
       xdg-user-dirs
       php
@@ -318,9 +305,7 @@
       glib
       sox
       gsettings-desktop-schemas
-      kdePackages.qt6ct
       qt5.qtwayland
-      gsettings-qt
       keymapp
       kontroll
       kdePackages.qtwayland
@@ -328,9 +313,7 @@
       qt6.qtwayland
       jq
       wget
-      wlogout
       mpc
-      nemo-with-extensions
       keychain
       expressvpn
       nbd

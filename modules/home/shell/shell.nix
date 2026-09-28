@@ -69,7 +69,6 @@ in {
       c = "claude";
     }
     // lib.optionalAttrs isDesktop {
-      thunar = "${pkgs.nemo}/bin/nemo";
       whisper = "docker exec -it whisper-rocm whisper-rocm";
     };
 

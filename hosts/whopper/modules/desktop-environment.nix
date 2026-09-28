@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   # Explicit autoEnable silences the upcoming-default warning; the global
   # toggle stays off so no port applies.
   catppuccin = {
@@ -14,66 +11,22 @@
   services.displayManager.sddm.wayland.enable = true;
   services.desktopManager.plasma6.enable = true;
 
-  # XDG
+  # XDG. The portal backends (kde, gtk, kwallet, plasmanotify) and their
+  # kde-portals.conf routing come from the plasma6 module.
   xdg = {
     menus.enable = true;
     icons.enable = true;
-    portal.extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-    ];
     autostart.enable = true;
     sounds.enable = true;
     mime = {
       enable = true;
-      defaultApplications = {
-        "inode/directory" = ["nemo.desktop" "yazi.desktop"];
-        "application/pdf" = ["org.gnome.Papers.desktop" "org.gnome.evince.desktop"];
-        "text/html" = ["zen.desktop"];
-        "text/*" = ["code.desktop"];
-        "TerminalEmulator" = "kitty.desktop";
-        "image/jpeg" = ["org.gnome.eog.desktop"];
-        "image/png" = ["org.gnome.eog.desktop"];
-        "image/svg+xml" = ["org.gnome.eog.desktop"];
-        "image/gif" = ["org.gnome.eog.desktop"];
-        "image/webp" = ["org.gnome.eog.desktop"];
-        "image/avif" = ["org.gnome.eog.desktop"];
-        "video/mp4" = ["mpv.desktop"];
-        "video/webm" = ["mpv.desktop"];
-        "video/x-matroska" = ["mpv.desktop"];
-        "x-scheme-handler/magnet" = ["io.github.TransmissionRemoteGtk.desktop"];
-        "WebBrowser" = "zen.desktop";
-        "x-scheme-handler/http" = "zen.desktop";
-        "x-scheme-handler/https" = "zen.desktop";
-        "x-scheme-handler/chrome" = "zen.desktop";
-        "x-scheme-handler/about" = "zen.desktop";
-        "x-scheme-handler/unknown" = "zen.desktop";
-        "x-scheme-handler/vscode" = "code-url-handler.desktop";
-        "application/x-extension-htm" = "zen.desktop";
-        "application/x-extension-html" = "zen.desktop";
-        "application/x-extension-shtml" = "zen.desktop";
-        "application/xhtml+xml" = "zen.desktop";
-        "application/x-extension-xhtml" = "zen.desktop";
-        "application/x-extension-xht" = "zen.desktop";
-        "application/zip" = "org.gnome.FileRoller.desktop";
-        "Email" = "thunderbird.desktop";
-        "message/rfc822" = "thunderbird.desktop";
-        "x-scheme-handler/mailto" = "thunderbird.desktop";
-        "x-scheme-handler/mid" = "thunderbird.desktop";
-        "x-scheme-handler/news" = "thunderbird.desktop";
-        "x-scheme-handler/snews" = "thunderbird.desktop";
-        "x-scheme-handler/nntp" = "thunderbird.desktop";
-        "x-scheme-handler/feed" = "thunderbird.desktop";
-        "x-scheme-handler/figma" = "figma-linux.desktop";
-        "application/rss+xml" = "thunderbird.desktop";
-        "application/x-extension-rss" = "thunderbird.desktop";
-        "x-scheme-handler/webcal" = "thunderbird.desktop";
-        "text/calendar" = "thunderbird.desktop";
-        "application/x-extension-ics" = "thunderbird.desktop";
-        "x-scheme-handler/webcals" = "thunderbird.desktop";
-        "x-scheme-handler/whatsapp" = "whatsie.desktop";
-      };
+      defaultApplications = import ../mime-defaults.nix;
     };
   };
+
+  # KDE Partition Manager (replaces GNOME Disks). The module also registers
+  # kpmcore's D-Bus helper and polkit actions, which a bare package lacks.
+  programs.partition-manager.enable = true;
 
   # Flatpak
   services.flatpak = {
@@ -119,10 +72,9 @@
   # gnome-keyring is deliberately absent: KWallet from the plasma6 module is the
   # Secret Service provider, and enabling both makes pam_gnome_keyring and
   # pam_kwallet start competing daemons for org.freedesktop.secrets.
-  services.gnome = {
-    sushi.enable = true;
-  };
-  services.tumbler.enable = true;
+  # Thumbnails and previews come from KIO (kdegraphics-thumbnailers,
+  # ffmpegthumbs), so the Nemo-era sushi/tumbler services are gone. gvfs stays
+  # for GTK apps: their file dialogs use it for trash, MTP and network shares.
   services.gvfs = {
     enable = true;
     package = pkgs.gvfs;
