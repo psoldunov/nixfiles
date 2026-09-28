@@ -29,6 +29,7 @@
     ./desktop/plasma-shortcuts.nix
 
     # Programs
+    ./programs/deckmaster
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/skrepka.nix

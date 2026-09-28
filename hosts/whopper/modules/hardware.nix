@@ -1,4 +1,13 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: let
+  # Stream Deck product IDs that deckmaster's device library drives: original,
+  # V2, MK.2, Mini, Mini MK.2 and XL. Elgato's capture cards and mics share the
+  # vendor ID, so the rule below names the models instead of matching 0fd9.
+  streamDeckProducts = ["0060" "006d" "0080" "0063" "0090" "006c"];
+in {
   # NOTE: `boot.initrd.kernelModules = ["amdgpu" ...]` is set in ./boot.nix
   # because it is a boot-time concern, even though the GPU is configured here.
   # `hardware.graphics.enable{,32Bit}` baseline is in modules/nixos/hardware.nix.
@@ -77,4 +86,24 @@
   # `hardware.bluetooth.settings.General`, which makes the AirPods drop the
   # connection now and then, so it is left off.
   programs.librepods.enable = true;
+
+  # Elgato Stream Deck, driven by deckmaster from the user session (see
+  # ../home/programs/deckmaster). deckmaster opens the USB device through
+  # libusb, so the rule targets the usb_device node rather than hidraw. It
+  # grants the seat user access, links the deck as /dev/streamdeck and starts
+  # the user's deckmaster.service when the deck is plugged in.
+  #
+  # `uaccess` only takes effect in rules that sort before 73-seat-late.rules,
+  # which services.udev.extraRules (99-local.rules) does not, hence a package.
+  services.udev.packages = [
+    (pkgs.writeTextFile {
+      name = "streamdeck-udev-rules";
+      destination = "/etc/udev/rules.d/70-streamdeck.rules";
+      text =
+        lib.concatMapStrings (product: ''
+          SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0fd9", ATTR{idProduct}=="${product}", TAG+="uaccess", TAG+="systemd", SYMLINK+="streamdeck", ENV{SYSTEMD_USER_WANTS}+="deckmaster.service"
+        '')
+        streamDeckProducts;
+    })
+  ];
 }
