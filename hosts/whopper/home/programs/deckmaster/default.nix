@@ -9,7 +9,8 @@
 #
 # The system side lives in hosts/whopper/modules/hardware.nix: a udev rule
 # grants the seat user the device, links it as /dev/streamdeck and starts this
-# unit on hotplug. The user sits in the `uinput` group for key emulation.
+# unit on hotplug. The user sits in the `uinput` group for key emulation. The
+# unit only runs inside the graphical session, so launched apps get its display.
 #
 # On unplug the daemon exits with an error and the restart is skipped by the
 # ExecCondition, so the unit goes quiet instead of failing in a loop.
@@ -131,6 +132,12 @@ in {
       Documentation = "https://github.com/muesli/deckmaster";
       After = ["graphical-session.target"];
       PartOf = ["graphical-session.target"];
+      # The udev rule wants this unit as soon as the user manager sees the
+      # deck, which at login is before Plasma has pushed WAYLAND_DISPLAY and
+      # DISPLAY into the manager. A daemon started then hands every `exec`
+      # a display-less environment, and kstart aborts. Requisite fails that
+      # early start instead; WantedBy starts the daemon once the session is up.
+      Requisite = ["graphical-session.target"];
     };
 
     Service = {
