@@ -570,11 +570,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790615908,
-        "narHash": "sha256-BNgMkG6IS0EQBH0G5vTVWM3nCYaVd6XU6MldIyD7N+g=",
+        "lastModified": 1790631422,
+        "narHash": "sha256-HltFNB9so7eubJnL0UP2oSMC6iWw3si5ffmN2Oj0iMg=",
         "owner": "psoldunov",
         "repo": "skrepka",
-        "rev": "5c675762d5bb65c869402a63e3fb85be6d19ddba",
+        "rev": "edc3d31099ef7f25bba9fef22a31bb718e4b1c3c",
         "type": "github"
       },
       "original": {
