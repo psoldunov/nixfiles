@@ -7,5 +7,6 @@
     (import ../../../overlays/mpv-mpris.nix)
     (import ../../../overlays/openldap.nix)
     (import ../../../overlays/vapor-kde.nix)
+    (import ../../../overlays/duckstation.nix)
   ];
 }

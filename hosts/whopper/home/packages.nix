@@ -34,9 +34,9 @@
     playwright
     pkgs-stable.obsidian
     mattermost-desktop
-    lmstudio
     plexamp
     pcsx2
+    duckstation
     heroic
     bchunk
     lutris

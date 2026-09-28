@@ -1,9 +1,10 @@
 {
   lib,
   pkgs,
+  osConfig,
   ...
 }: let
-  # One XDG autostart entry per chat app, each launched straight into the tray.
+  # One XDG autostart entry per tray app, each launched straight into the tray.
   #
   # The file names match the ones the apps write themselves, so a "Launch at
   # login" toggle left on inside an app cannot add a second entry beside this
@@ -12,6 +13,8 @@
   # background portal; `force` takes both paths back on rebuild instead of
   # piling up .hm-backup files. Turn those in-app toggles off: switching one off
   # later deletes the file, and with it this entry, until the next rebuild.
+  # The same goes for entries added in Plasma's Autostart settings, which copy
+  # the app's own .desktop file under its name.
   autostart = {
     name,
     desktopName,
@@ -47,6 +50,21 @@ in {
       desktopName = "Telegram";
       icon = "org.telegram.desktop";
       exec = "${pkgs.telegram-desktop}/bin/Telegram -startintray";
+    })
+    # The packages come from the system modules: programs._1password-gui
+    # overrides its package with the polkit policy owners, so pkgs._1password-gui
+    # would be a second copy of the app.
+    (autostart {
+      name = "solaar";
+      desktopName = "Solaar";
+      icon = "solaar";
+      exec = "${lib.getExe osConfig.programs.solaar.package} --window=hide";
+    })
+    (autostart {
+      name = "com.onepassword.OnePassword";
+      desktopName = "1Password";
+      icon = "1password";
+      exec = "${lib.getExe osConfig.programs._1password-gui.package} --silent";
     })
   ];
 }
