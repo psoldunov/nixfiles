@@ -59,5 +59,6 @@
     motrix
     tremotesf
     uv
+    bambu-studio-bin
   ];
 }

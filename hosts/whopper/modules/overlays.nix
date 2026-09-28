@@ -8,5 +8,6 @@
     (import ../../../overlays/openldap.nix)
     (import ../../../overlays/vapor-kde.nix)
     (import ../../../overlays/duckstation.nix)
+    (import ../../../overlays/bambu-studio.nix)
   ];
 }
