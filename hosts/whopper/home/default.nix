@@ -15,7 +15,6 @@
     ./browser/chromium.nix
     ./xdg/desktop-entries.nix
     ./xdg/mimeapps.nix
-    ./xdg/portal.nix
 
     # Dev
     ./dev/neovim.nix
