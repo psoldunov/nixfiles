@@ -112,11 +112,7 @@ in
 
     "x-scheme-handler/vscode" = "code-url-handler.desktop";
     "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
-    "x-scheme-handler/figma" = "figma-linux.desktop";
-    "x-scheme-handler/whatsapp" = "com.rtosta.zapzap.desktop";
     "x-scheme-handler/heroic" = "com.heroicgameslauncher.hgl.desktop";
-    "x-scheme-handler/msteams" = "teams-for-linux.desktop";
-    "x-scheme-handler/anytype" = "anytype.desktop";
     "x-scheme-handler/discord" = "legcord.desktop";
     "x-scheme-handler/slack" = "slack.desktop";
     "x-scheme-handler/abc" = "plexamp.desktop";

@@ -1,9 +1,4 @@
 {pkgs, ...}: let
-  figma-appimage = pkgs.fetchurl {
-    url = "https://github.com/Figma-Linux/figma-linux/releases/download/v0.11.5/figma-linux_0.11.5_linux_x86_64.AppImage";
-    sha256 = "19vkjc2f3h61zya757dnq4rij67q8a2yb0whchz27z7r0aqfa3pr";
-  };
-
   # Locally-used browser launcher references. Kept here because the desktop
   # entries below invoke browsers with --app= flags and we do not want to
   # pull in programs.chromium as a dependency of this file.
@@ -58,32 +53,11 @@ in {
       ];
       categories = ["Network"];
     };
-    figma-linux = {
-      name = "Figma";
-      exec = "${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U";
-      terminal = false;
-      icon = "figma";
-      comment = "Unofficial desktop application for linux";
-      mimeType = ["x-scheme-handler/figma"];
-      categories = ["Graphics"];
-    };
     "nixfiles-code" = {
       name = "Open Nixfiles in VS Code";
       genericName = "This opens nixfiles in VS Code";
       icon = "nix-snowflake";
       exec = "${pkgs.vscode}/bin/code -n /home/psoldunov/.nixfiles";
-    };
-    "nixfiles-bigtasty" = {
-      name = "Open SERVER Nixfiles in VS Code";
-      genericName = "This opens SERVER nixfiles in VS Code";
-      icon = "nix-snowflake";
-      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.2/home/psoldunov/.nixfiles";
-    };
-    "nixfiles-nugget" = {
-      name = "Open NUGGET Nixfiles in VS Code";
-      genericName = "This opens NUGGET nixfiles in VS Code";
-      icon = "nix-snowflake";
-      exec = "${pkgs.vscode}/bin/code -n --folder-uri vscode-remote://ssh-remote+10.24.24.7/home/psoldunov/.nixfiles";
     };
     "open-clockify" = {
       name = "Open Clockify in Browser";
@@ -104,8 +78,4 @@ in {
       categories = ["Development"];
     };
   };
-
-  home.packages = [
-    (pkgs.writeShellScriptBin "figma-linux" "exec -a $0 ${pkgs.appimage-run}/bin/appimage-run ${figma-appimage} --ozone-platform=wayland --no-sandbox --enable-oop-rasterization --ignore-gpu-blacklist -enable-experimental-canvas-features --enable-accelerated-2d-canvas --force-gpu-rasterization --enable-fast-unload --enable-accelerated-vpx-decode=3 --enable-tcp-fastopen --javascript-harmony --enable-checker-imaging --v8-cache-options=code --v8-cache-strategies-for-cache-storage=aggressive --enable-zero-copy --ui-enable-zero-copy --enable-native-gpu-memory-buffers --enable-webgl-image-chromium --enable-accelerated-video --enable-gpu-rasterization %U")
-  ];
 }
