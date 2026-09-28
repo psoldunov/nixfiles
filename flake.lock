@@ -131,11 +131,11 @@
     "context-mode": {
       "flake": false,
       "locked": {
-        "lastModified": 1790510787,
-        "narHash": "sha256-edPFX10l5AuUM5tasOzrBRhMTN9lTMCIzO7DJRDWeZg=",
+        "lastModified": 1790597274,
+        "narHash": "sha256-UOHF8btq8pKSZGk/E+zCoFrvMMBqb6NctGaL5M6lYKI=",
         "owner": "mksglu",
         "repo": "context-mode",
-        "rev": "5d13dc4556a5a5d30eb5ea4653b10a2f9142c8a1",
+        "rev": "c6477b6f18fca6dc3d9619f7f5470dd03a747fe7",
         "type": "github"
       },
       "original": {
@@ -151,11 +151,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790595244,
-        "narHash": "sha256-mPS94EhpbLv8gl2opOdTXb9HLBCZiH5E+lWhWfzxtv4=",
+        "lastModified": 1790596515,
+        "narHash": "sha256-U9kc5EkrG39fqEAi2E/XjUvC+PkrvgtRemVXnqzRkOs=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "569032a49b9931e9d41223697d445e3f50749864",
+        "rev": "76defbfdc1c6351d4e2e7ed738b37860013435d7",
         "type": "github"
       },
       "original": {
@@ -409,11 +409,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1790463110,
-        "narHash": "sha256-hKlVl12B1dF0Q5vd9dY3lIJM5mFGWYSlXwSLAqHZ1+s=",
+        "lastModified": 1790578696,
+        "narHash": "sha256-ZoxIApko70jCdbH3l20HWXOBaT2HZd87orzd2yJ9dVE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e158d9ed9b51c98974c5e66e1ba1c9e0255fecaa",
+        "rev": "7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f",
         "type": "github"
       },
       "original": {
@@ -570,15 +570,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1790273713,
-        "narHash": "sha256-tmG/E9d+ALjR3bK28YGiSsl7CARriPAcbI4xyX45N84=",
+        "lastModified": 1790605841,
+        "narHash": "sha256-V4OtWSZk2ebPXAnQVuD4+ynfPG9rayx6kRQcA20ORqg=",
         "owner": "psoldunov",
         "repo": "skrepka",
-        "rev": "a02ceb11191e02f7c30a1651ce03595534eca5f1",
+        "rev": "9cfed4afaddc5e9cb0b9ec9686d03efec531a428",
         "type": "github"
       },
       "original": {
         "owner": "psoldunov",
+        "ref": "master",
         "repo": "skrepka",
         "type": "github"
       }

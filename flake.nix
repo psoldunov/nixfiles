@@ -62,7 +62,7 @@
     };
 
     skrepka = {
-      url = "github:psoldunov/skrepka";
+      url = "github:psoldunov/skrepka/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
