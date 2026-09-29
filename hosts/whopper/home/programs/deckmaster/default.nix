@@ -28,7 +28,11 @@
   # until release, in place of `action_hold`. ./widget-toggle.patch adds a
   # `toggle` widget that shows one of its `widgets` and switches to the next on
   # a tap. ./top-gpu.patch adds `gpu` and `vram` modes to the `top` widget,
-  # read from the amdgpu card with the most VRAM.
+  # read from the amdgpu card with the most VRAM. ./top-columns.patch lets the
+  # `top` widget take several modes split on `;`, drawn as columns side by
+  # side. ./widget-temp.patch adds a `temp` widget that draws one hwmon
+  # temperature sensor in the same bar, filled towards the sensor's critical
+  # temperature.
   deckmaster = pkgs.deckmaster.overrideAttrs (old: {
     patches =
       (old.patches or [])
@@ -37,6 +41,8 @@
         ./action-repeat.patch
         ./widget-toggle.patch
         ./top-gpu.patch
+        ./top-columns.patch
+        ./widget-temp.patch
       ];
   });
 
@@ -96,13 +102,14 @@
 
   # A labelled button. `hold` fires once the key is held for 350 ms. With
   # `iconCommand`, `icon` is only the first frame and the key is repainted
-  # every 500 ms.
+  # every `interval` ms.
   button = index: {
     label,
     icon,
     action,
     hold ? null,
     iconCommand ? null,
+    interval ? 500,
   }:
     {
       inherit index action;
@@ -116,14 +123,17 @@
             }
             // lib.optionalAttrs (iconCommand != null) {inherit iconCommand;};
         }
-        // lib.optionalAttrs (iconCommand != null) {interval = 500;};
+        // lib.optionalAttrs (iconCommand != null) {inherit interval;};
     }
     // lib.optionalAttrs (hold != null) {action_hold = hold;};
 
   # A key showing Claude Code or Codex plan usage from Token Station.
   usageKey = import ./usage.nix {inherit lib pkgs button svgIcon;};
 
-  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon usageKey;};
+  # A key showing the weather from Open-Meteo.
+  weatherKey = import ./weather.nix {inherit lib pkgs button icon breeze;};
+
+  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon usageKey weatherKey;};
 
   toml = pkgs.formats.toml {};
   deckDir = pkgs.linkFarm "deckmaster-decks" (lib.mapAttrsToList (name: deck: {
@@ -158,8 +168,8 @@ in {
       ];
       # SIGHUP makes deckmaster re-read the current deck file.
       ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-      # The usage keys keep the images they draw in $RUNTIME_DIRECTORY, which
-      # systemd removes when the daemon stops.
+      # The usage and weather keys keep the images they draw in
+      # $RUNTIME_DIRECTORY, which systemd removes when the daemon stops.
       RuntimeDirectory = "deckmaster";
       Restart = "on-failure";
       RestartSec = 2;

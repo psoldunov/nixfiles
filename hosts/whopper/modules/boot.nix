@@ -43,7 +43,9 @@
     "amdgpu.dcdebugmask=0x10"
   ];
 
-  boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus"];
+  # drivetemp publishes the SATA drives' temperatures through hwmon, where
+  # lm_sensors and the Stream Deck's temperature key read them.
+  boot.kernelModules = ["uinput" "uhid" "tun" "hfs" "hfsplus" "drivetemp"];
 
   boot.extraModulePackages = with config.boot.kernelPackages; [
     gasket
