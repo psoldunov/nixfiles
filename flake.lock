@@ -664,11 +664,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790659029,
-        "narHash": "sha256-0v66Ee7N+nIbkxs4AvLkvK8WwgbjCG+AxZTnx0LvGls=",
+        "lastModified": 1790667540,
+        "narHash": "sha256-9Q9YHiBLwEFOid8FndOj4dokL3BkVGv+AaHuhr2eNQM=",
         "owner": "psoldunov",
         "repo": "token-station",
-        "rev": "0703fa130aae22458a3d556827a2722780d23f21",
+        "rev": "a306d41a07e4c80f3a24066523dd404335b460fd",
         "type": "github"
       },
       "original": {
