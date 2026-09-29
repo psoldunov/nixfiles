@@ -166,11 +166,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790683891,
-        "narHash": "sha256-WKMf1uECYChjDSMAo4q3nuQ6FZEtu9RSoZ84gV6CcWs=",
+        "lastModified": 1790699378,
+        "narHash": "sha256-2b0N3P/dzkgmAIn4UgIxmvApo7ii5vBZgJUMe3kZwI0=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "afc8869494c449d972f4ec7ee99f0c1205ebbd3b",
+        "rev": "dd88b6f19bdec97fc25ca8e013c179752fadd992",
         "type": "github"
       },
       "original": {
@@ -682,11 +682,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790690683,
-        "narHash": "sha256-fQxPHj954tP++uAby0MM5af6sct1lRR0JVgkNSV8x8M=",
+        "lastModified": 1790697983,
+        "narHash": "sha256-Zi81Y//PnahETqwUL+GXaNvovvNszMLiVHJtoH5BOhY=",
         "owner": "psoldunov",
         "repo": "token-station",
-        "rev": "11162ca1f0ea57c5362029d2b1d80df7cbdab302",
+        "rev": "400606d3f44e85a6c5f414481356845931bc2237",
         "type": "github"
       },
       "original": {
