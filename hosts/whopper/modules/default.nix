@@ -17,6 +17,7 @@
     ./security.nix
     ./services.nix
     ./sops.nix
+    ./sunshine
     ./users.nix
     ./virtualisation.nix
   ];
