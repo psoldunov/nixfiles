@@ -73,7 +73,8 @@ in {
 
   # Solaar, for the Logitech receiver above. This replaces
   # `hardware.logitech.wireless.enableGraphical`, which nixpkgs renamed; the
-  # option brings the package, so it is no longer in ./packages.nix.
+  # option brings the package, so it is no longer in ./packages.nix. The
+  # package is built from the psoldunov/Solaar fork; see overlays/solaar.nix.
   programs.solaar.enable = true;
 
   # LibrePods, a tray app for AirPods over the Bluetooth adapter above: battery,
