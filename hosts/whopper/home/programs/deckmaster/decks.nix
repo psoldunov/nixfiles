@@ -84,49 +84,48 @@
       };
     })
   ];
+
+  # A key that shows the first of `widgets` and switches to the next on a tap,
+  # through the `toggle` widget from ./widget-toggle.patch. The key takes no
+  # action of its own, since an action would replace the switch.
+  toggle = index: widgets: {
+    inherit index;
+    widget = {
+      id = "toggle";
+      config = {inherit widgets;};
+    };
+  };
+
+  # A clock face. `format` and `font` hold one entry per line, split on `;`.
+  time = format: font: {
+    id = "time";
+    config = {inherit format font;};
+  };
+
+  # A usage bar. `mode` is cpu or memory, or gpu or vram from ./top-gpu.patch.
+  top = mode: fillColor: {
+    id = "top";
+    config = {inherit mode fillColor;};
+  };
 in {
   main.keys =
     [
-      {
-        index = 0;
-        widget = {
-          id = "time";
-          config = {
-            format = "%H;%i;%s";
-            font = "bold;regular;thin";
-          };
-        };
-      }
+      (toggle 0 [
+        (time "%H;%i;%s" "bold;regular;thin")
+        (time "%D;%d;%M" "regular;bold;regular")
+      ])
       {
         index = 1;
-        widget = {
-          id = "time";
-          config = {
-            format = "%D;%d;%M";
-            font = "regular;bold;regular";
-          };
-        };
+        widget = top "cpu" "#3daee9";
       }
       {
         index = 2;
-        widget = {
-          id = "top";
-          config = {
-            mode = "cpu";
-            fillColor = "#3daee9";
-          };
-        };
+        widget = top "memory" "#27ae60";
       }
-      {
-        index = 3;
-        widget = {
-          id = "top";
-          config = {
-            mode = "memory";
-            fillColor = "#27ae60";
-          };
-        };
-      }
+      (toggle 3 [
+        (top "gpu" "#fdbc4b")
+        (top "vram" "#9b59b6")
+      ])
       # wttr.in, located by IP address. Set `location` to pin a city.
       {
         index = 4;
