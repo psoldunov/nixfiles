@@ -49,6 +49,19 @@ them:
 
 Anything else under `~/.claude/` is fair game to be replaced by nix on next rebuild.
 
+## Package version
+
+The `claude-code` binary tracks Anthropic's `latest` release channel, not
+nixpkgs. `~/.nixfiles/overlays/claude-code/` swaps the pinned release manifest
+into nixpkgs' package; nixpkgs' own version wins if it is newer. Bump it:
+
+```bash
+update_claude_code            # or: update_claude_code <version>
+rebuild_system
+```
+
+`update_system` runs `update_claude_code` on its own.
+
 ## Plugins
 
 The `context-mode` plugin is installed via a flake input pinned in
