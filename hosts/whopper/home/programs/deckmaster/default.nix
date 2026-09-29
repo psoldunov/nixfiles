@@ -25,13 +25,18 @@
   # command run on the widget's interval (default 1 s) whose output names the
   # icon to show. ./action-repeat.patch adds `repeat` to an action: once the
   # key is held past the 350 ms long press, the action fires every `repeat` ms
-  # until release, in place of `action_hold`.
+  # until release, in place of `action_hold`. ./widget-toggle.patch adds a
+  # `toggle` widget that shows one of its `widgets` and switches to the next on
+  # a tap. ./top-gpu.patch adds `gpu` and `vram` modes to the `top` widget,
+  # read from the amdgpu card with the most VRAM.
   deckmaster = pkgs.deckmaster.overrideAttrs (old: {
     patches =
       (old.patches or [])
       ++ [
         ./button-icon-command.patch
         ./action-repeat.patch
+        ./widget-toggle.patch
+        ./top-gpu.patch
       ];
   });
 
