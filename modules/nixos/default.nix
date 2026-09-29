@@ -6,6 +6,7 @@
     ./boot.nix
     ./locale.nix
     ./nix.nix
+    ./overlays.nix
     ./openssh.nix
     ./users.nix
     ./sops.nix

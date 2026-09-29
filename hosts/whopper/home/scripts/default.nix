@@ -5,7 +5,40 @@
   pkgs,
   ...
 }: let
+  # Pins overlays/claude-code to a release manifest from Anthropic's `latest`
+  # channel (or the version given as $1). The manifest carries each
+  # platform's sha256, so the pin is a plain file and needs no prefetch.
+  update_claude_code = pkgs.writeShellScriptBin "update_claude_code" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    BASE_URL="https://downloads.claude.ai/claude-code-releases"
+    TARGET="$FLAKE_DIR/overlays/claude-code/manifest.zst.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "$BASE_URL/latest")}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "update_claude_code: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${pkgs.jq}/bin/jq -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "Claude Code already pinned at $VERSION."
+      exit 0
+    fi
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${pkgs.curl}/bin/curl -fsSL "$BASE_URL/$VERSION/manifest.zst.json" -o "$TMP"
+    if ! ${pkgs.jq}/bin/jq -e --arg v "$VERSION" \
+      '.version == $v and (.platforms["linux-x64"].checksum | test("^[0-9a-f]{64}$"))' \
+      "$TMP" >/dev/null; then
+      echo "update_claude_code: manifest for $VERSION is malformed" >&2
+      exit 1
+    fi
+    install -m 644 "$TMP" "$TARGET"
+    echo "Claude Code pin: $CURRENT -> $VERSION"
+  '';
+
   alwaysOn = {
+    inherit update_claude_code;
+
     shadd = pkgs.writeShellScriptBin "shadd" ''
       ${pkgs.bun}/bin/bunx shadcn@latest add $1
     '';
@@ -41,6 +74,7 @@
       cd "$FLAKE_DIR"
       git add -A
       sudo nix flake update
+      FLAKE_DIR="$FLAKE_DIR" ${update_claude_code}/bin/update_claude_code
       LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
       deploy_one() {
         local h="$1"
