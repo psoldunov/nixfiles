@@ -174,6 +174,11 @@ in {
       icon = icon "apps/64/system-file-manager";
       desktopId = "org.kde.dolphin";
     })
+    (app 4 {
+      label = "Ensemblr";
+      icon = appIcon pkgs.ensemblr-master "ensemblr";
+      desktopId = "ensemblr";
+    })
   ];
 
   # Icons come from the installed packages the launchers start: ../../packages.nix
