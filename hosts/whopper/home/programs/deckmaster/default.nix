@@ -28,7 +28,11 @@
   # until release, in place of `action_hold`. ./widget-toggle.patch adds a
   # `toggle` widget that shows one of its `widgets` and switches to the next on
   # a tap. ./top-gpu.patch adds `gpu` and `vram` modes to the `top` widget,
-  # read from the amdgpu card with the most VRAM.
+  # read from the amdgpu card with the most VRAM. ./top-columns.patch lets the
+  # `top` widget take several modes split on `;`, drawn as columns side by
+  # side. ./widget-temp.patch adds a `temp` widget that draws one hwmon
+  # temperature sensor in the same bar, filled towards the sensor's critical
+  # temperature.
   deckmaster = pkgs.deckmaster.overrideAttrs (old: {
     patches =
       (old.patches or [])
@@ -37,6 +41,8 @@
         ./action-repeat.patch
         ./widget-toggle.patch
         ./top-gpu.patch
+        ./top-columns.patch
+        ./widget-temp.patch
       ];
   });
 

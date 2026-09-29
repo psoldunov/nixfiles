@@ -102,10 +102,28 @@
     config = {inherit format font;};
   };
 
-  # A usage bar. `mode` is cpu or memory, or gpu or vram from ./top-gpu.patch.
+  # Usage bars, one column per mode. `mode` and `fillColor` hold one entry per
+  # column, split on `;` (./top-columns.patch). A mode is cpu or memory, or gpu
+  # or vram from ./top-gpu.patch.
   top = mode: fillColor: {
     id = "top";
     config = {inherit mode fillColor;};
+  };
+
+  # A temperature bar from hwmon through the `temp` widget from
+  # ./widget-temp.patch. `sensor` picks it: `chip` is the hwmon name, `sensor`
+  # the temp*_label (left out for an unlabelled one), and `device` a part of the
+  # chip's resolved sysfs device path, for chips that exist more than once.
+  # `warn` and `crit` in °C turn the bar orange and red; they default to the
+  # sensor's own temp*_max and temp*_crit, and the bar fills towards `crit`.
+  temp = label: sensor: {
+    id = "temp";
+    config =
+      {
+        inherit label;
+        fillColor = "#1abc9c";
+      }
+      // sensor;
   };
 in {
   main.keys =
@@ -116,22 +134,80 @@ in {
       ])
       {
         index = 1;
-        widget = top "cpu" "#3daee9";
+        widget = top "cpu;memory" "#3daee9;#27ae60";
       }
       {
         index = 2;
-        widget = top "memory" "#27ae60";
+        widget = top "gpu;vram" "#fdbc4b;#9b59b6";
       }
+      # Every temperature sensor worth reading, one per tap. The CPU cores and
+      # the NVMe drives' extra sensors are left out; the package and each
+      # drive's composite reading sum them up. Thresholds are set here only
+      # for sensors that report none (or, for the SATA drives, may not).
       (toggle 3 [
-        (top "gpu" "#fdbc4b")
-        (top "vram" "#9b59b6")
+        (temp "CPU" {
+          chip = "coretemp";
+          sensor = "Package id 0";
+        })
+        # The NZXT Kraken X53 AIO.
+        (temp "Coolant" {
+          chip = "x53";
+          sensor = "Coolant temp";
+          warn = 45;
+          crit = 60;
+        })
+        (temp "GPU" {
+          chip = "amdgpu";
+          sensor = "edge";
+          warn = 85;
+        })
+        (temp "Hotspot" {
+          chip = "amdgpu";
+          sensor = "junction";
+          warn = 95;
+        })
+        (temp "VRAM" {
+          chip = "amdgpu";
+          sensor = "mem";
+          warn = 95;
+        })
+        # The system drive (/) and /NVMe, told apart by PCI address.
+        (temp "Kingston" {
+          chip = "nvme";
+          sensor = "Composite";
+          device = "0000:05:00.0";
+        })
+        (temp "980 Pro" {
+          chip = "nvme";
+          sensor = "Composite";
+          device = "0000:04:00.0";
+        })
+        # The two Crucial MX500s in the /SATA array, told apart by ATA port.
+        # They report through drivetemp, loaded in ../../../modules/boot.nix.
+        (temp "SATA 1" {
+          chip = "drivetemp";
+          device = "/ata5/";
+          warn = 55;
+          crit = 70;
+        })
+        (temp "SATA 2" {
+          chip = "drivetemp";
+          device = "/ata7/";
+          warn = 55;
+          crit = 70;
+        })
+        (temp "Wi-Fi" {chip = "iwlwifi_1";})
       ])
-      # wttr.in, located by IP address. Set `location` to pin a city.
+      # wttr.in, pinned to Parekklisia. deckmaster pastes `location` into the
+      # URL unescaped, so it must not contain spaces.
       {
         index = 4;
         widget = {
           id = "weather";
-          config.unit = "celsius";
+          config = {
+            location = "Parekklisia,Limassol,Cyprus";
+            unit = "celsius";
+          };
         };
       }
 
