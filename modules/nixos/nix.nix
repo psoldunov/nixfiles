@@ -1,5 +1,5 @@
 # nix / nixpkgs / nix-ld baseline shared across hosts.
-# Host-local nix.nix files add cachix substituters, nixPath, and the
+# Host-local nix.nix files add cachix substituters, nix-path, and the
 # `allowUnfreePredicate` / per-host `permittedInsecurePackages` entries
 # (the list type means hosts can append without conflict).
 {pkgs, ...}: {

@@ -1,10 +1,10 @@
-# Whopper-local nix knobs: nixPath, the gaming binary cache, and build
+# Whopper-local nix knobs: nix-path, the gaming binary cache, and build
 # throttling so a heavy rebuild doesn't bog down the desktop.
 # The host-agnostic settings (warn-dirty, experimental-features,
 # auto-optimise-store, trusted-users) live in modules/nixos/nix.nix.
 {inputs, ...}: {
   nix = {
-    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
+    settings.nix-path = ["nixpkgs=${inputs.nixpkgs}"];
 
     # Builds only get CPU time and disk I/O that nothing else wants, so
     # interactive work always preempts them.
