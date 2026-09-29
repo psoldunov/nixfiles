@@ -71,5 +71,14 @@ in {
       icon = "librepods";
       exec = "${osConfig.security.wrapperDir}/librepods --hide";
     })
+    # The FHS-wrapped package from programs.steam, not pkgs.steam. -silent
+    # starts Steam in the tray with no main window. Steam's "Run Steam when my
+    # computer starts" setting writes this same file name.
+    (autostart {
+      name = "steam";
+      desktopName = "Steam";
+      icon = "steam";
+      exec = "${lib.getExe osConfig.programs.steam.package} -silent";
+    })
   ];
 }
