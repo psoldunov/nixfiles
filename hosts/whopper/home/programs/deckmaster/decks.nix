@@ -21,6 +21,7 @@
   launch,
   playerIcon,
   usageKey,
+  weatherKey,
 }: let
   back = index:
     button index {
@@ -198,18 +199,9 @@ in {
         })
         (temp "Wi-Fi" {chip = "iwlwifi_1";})
       ])
-      # wttr.in, pinned to Parekklisia. deckmaster pastes `location` into the
-      # URL unescaped, so it must not contain spaces.
-      {
-        index = 4;
-        widget = {
-          id = "weather";
-          config = {
-            location = "Parekklisia,Limassol,Cyprus";
-            unit = "celsius";
-          };
-        };
-      }
+      # The weather in Parekklisia from ./weather.nix. A tap opens the weather
+      # page, holding the key fetches the forecast again.
+      (weatherKey 4 "main" {deck = "weather.deck";})
 
       # Plan usage from Token Station. A tap switches the usage window, holding
       # the key refreshes the numbers.
@@ -255,6 +247,37 @@ in {
       icon = appIcon pkgs.ensemblr-master "ensemblr";
       desktopId = "ensemblr";
     })
+  ];
+
+  # Behind the weather key: the weather now on the top row, today on the middle
+  # row and the next five days on the bottom one. A tap on any key closes the
+  # page, holding one fetches the forecast again.
+  weather.keys = let
+    detail = index: name: weatherKey index name {deck = "main.deck";};
+  in [
+    (back 0)
+    (detail 1 "now")
+    (detail 2 "feels")
+    (detail 3 "humidity")
+    # Speed and gusts in km/h, and the compass point the wind blows from.
+    (detail 4 "wind")
+
+    (detail 5 "today")
+    # The highest rain chance in the next 24 hours, then when rain gets
+    # likely or how much falls.
+    (detail 6 "rain")
+    (detail 7 "uv")
+    # Today's sunrise and sunset, or tomorrow's once the sun has set.
+    (detail 8 "sun")
+    # The European Air Quality Index, or the Saharan dust level when it is
+    # high.
+    (detail 9 "air")
+
+    (detail 10 "day1")
+    (detail 11 "day2")
+    (detail 12 "day3")
+    (detail 13 "day4")
+    (detail 14 "day5")
   ];
 
   # Icons come from the installed packages the launchers start: ../../packages.nix

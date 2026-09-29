@@ -102,13 +102,14 @@
 
   # A labelled button. `hold` fires once the key is held for 350 ms. With
   # `iconCommand`, `icon` is only the first frame and the key is repainted
-  # every 500 ms.
+  # every `interval` ms.
   button = index: {
     label,
     icon,
     action,
     hold ? null,
     iconCommand ? null,
+    interval ? 500,
   }:
     {
       inherit index action;
@@ -122,14 +123,17 @@
             }
             // lib.optionalAttrs (iconCommand != null) {inherit iconCommand;};
         }
-        // lib.optionalAttrs (iconCommand != null) {interval = 500;};
+        // lib.optionalAttrs (iconCommand != null) {inherit interval;};
     }
     // lib.optionalAttrs (hold != null) {action_hold = hold;};
 
   # A key showing Claude Code or Codex plan usage from Token Station.
   usageKey = import ./usage.nix {inherit lib pkgs button svgIcon;};
 
-  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon usageKey;};
+  # A key showing the weather from Open-Meteo.
+  weatherKey = import ./weather.nix {inherit lib pkgs button icon breeze;};
+
+  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon usageKey weatherKey;};
 
   toml = pkgs.formats.toml {};
   deckDir = pkgs.linkFarm "deckmaster-decks" (lib.mapAttrsToList (name: deck: {
@@ -164,8 +168,8 @@ in {
       ];
       # SIGHUP makes deckmaster re-read the current deck file.
       ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-      # The usage keys keep the images they draw in $RUNTIME_DIRECTORY, which
-      # systemd removes when the daemon stops.
+      # The usage and weather keys keep the images they draw in
+      # $RUNTIME_DIRECTORY, which systemd removes when the daemon stops.
       RuntimeDirectory = "deckmaster";
       Restart = "on-failure";
       RestartSec = 2;
