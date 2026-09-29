@@ -35,6 +35,7 @@
     ./programs/kitty.nix
     ./programs/skrepka.nix
     ./programs/solaar.nix
+    ./programs/token-station.nix
     ./programs/vscode.nix
   ];
 
