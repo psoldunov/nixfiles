@@ -20,12 +20,28 @@
   appIcon,
   launch,
   playerIcon,
+  usageKey,
 }: let
   back = index:
     button index {
       label = "Back";
       icon = icon "actions/32/go-previous";
       action.deck = "main.deck";
+    };
+
+  # A launcher on the Apps page. It also returns to the main page, so the page
+  # closes like a folder once the app starts.
+  app = index: {
+    label,
+    icon,
+    desktopId,
+  }:
+    button index {
+      inherit label icon;
+      action = {
+        exec = launch desktopId;
+        deck = "main.deck";
+      };
     };
 
   # The bottom row of every page that plays music.
@@ -120,20 +136,14 @@ in {
         };
       }
 
-      (button 5 {
-        label = "Terminal";
-        icon = appIcon config.programs.kitty.package "kitty";
-        action.exec = launch "kitty";
-      })
-      (button 6 {
-        label = "Browser";
-        icon = icon "apps/48/internet-web-browser";
-        action.exec = launch "zen";
-      })
+      # Plan usage from Token Station. A tap switches the usage window, holding
+      # the key refreshes the numbers.
+      (usageKey 5 "claude")
+      (usageKey 6 "codex")
       (button 7 {
-        label = "Files";
-        icon = icon "apps/64/system-file-manager";
-        action.exec = launch "org.kde.dolphin";
+        label = "Apps";
+        icon = icon "categories/32/applications-all";
+        action.deck = "apps.deck";
       })
       (button 8 {
         label = "Music";
@@ -147,6 +157,25 @@ in {
       })
     ]
     ++ mediaKeys;
+
+  apps.keys = [
+    (back 0)
+    (app 1 {
+      label = "Terminal";
+      icon = appIcon config.programs.kitty.package "kitty";
+      desktopId = "kitty";
+    })
+    (app 2 {
+      label = "Browser";
+      icon = icon "apps/48/internet-web-browser";
+      desktopId = "zen";
+    })
+    (app 3 {
+      label = "Files";
+      icon = icon "apps/64/system-file-manager";
+      desktopId = "org.kde.dolphin";
+    })
+  ];
 
   # Icons come from the installed packages the launchers start: ../../packages.nix
   # (Cider, Plexamp, Shortwave), ../../../modules/packages.nix (Rhythmbox) and
