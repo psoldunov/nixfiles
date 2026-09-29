@@ -205,6 +205,7 @@
       openssl.dev
       imagemagick
       devenv
+      cachix
       (python3.withPackages (p:
         with p; [
           discid
