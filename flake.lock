@@ -488,6 +488,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "plasma-manager": "plasma-manager",
         "skrepka": "skrepka",
+        "solaar": "solaar",
         "sops-nix": "sops-nix",
         "steam-presence": "steam-presence",
         "token-station": "token-station",
@@ -597,6 +598,23 @@
         "owner": "psoldunov",
         "ref": "master",
         "repo": "skrepka",
+        "type": "github"
+      }
+    },
+    "solaar": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790681971,
+        "narHash": "sha256-O4rW3+xvrY8ezYgUExcQDwln5DFP1NCYtMXVIuVXhig=",
+        "owner": "psoldunov",
+        "repo": "Solaar",
+        "rev": "edc89123956bc4e2dfef754881038f072432016c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "Solaar",
         "type": "github"
       }
     },

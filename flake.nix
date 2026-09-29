@@ -75,6 +75,12 @@
       url = "github:psoldunov/token-station/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Source for overlays/solaar.nix. Bump with `nix flake update solaar`.
+    solaar = {
+      url = "github:psoldunov/Solaar/master";
+      flake = false;
+    };
   };
 
   outputs = {

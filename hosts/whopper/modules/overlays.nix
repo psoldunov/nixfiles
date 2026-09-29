@@ -9,5 +9,6 @@
     (import ../../../overlays/vapor-kde.nix)
     (import ../../../overlays/duckstation.nix)
     (import ../../../overlays/bambu-studio.nix)
+    (import ../../../overlays/solaar.nix {src = inputs.solaar;})
   ];
 }
