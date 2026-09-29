@@ -10,8 +10,9 @@ All Claude Code state that's declaratively managed lives in:
 
 ```
 ~/.nixfiles/modules/home/programs/claude-code/
-├── default.nix          # imports mcp.nix + settings.nix
+├── default.nix          # imports the modules below
 ├── mcp.nix              # sops secrets, env wiring, programs.mcp servers
+├── mutable-settings.nix # merges settings.nix into a writable settings.json
 ├── settings.nix         # programs.claude-code settings, plugins, hooks
 ├── CLAUDE.md            # this file (rendered to ~/.claude/CLAUDE.md)
 ├── agents/              # symlinked to ~/.claude/agents/
@@ -48,6 +49,21 @@ them:
 - `~/.claude/telemetry/`, `~/.claude/file-history/`, `~/.claude/backups/` — runtime data.
 
 Anything else under `~/.claude/` is fair game to be replaced by nix on next rebuild.
+
+## settings.json is writable
+
+`~/.claude/settings.json` is a real file, not a nix-store symlink, so `/model`,
+`/plugin`, `/permissions`, `/hooks` and `/statusline` can save their changes.
+On each rebuild, `mutable-settings.nix` deep-merges the declared
+`programs.claude-code.settings` into it:
+
+- Scalar keys declared in nix win over the live file.
+- Arrays (permissions, hooks) are unioned, so entries the CLI added survive.
+- Keys only the CLI set are left alone.
+
+Removing an array entry from nix does not remove it from the live file. Delete
+it from `~/.claude/settings.json` by hand as well. To make a CLI change
+permanent, copy it into `settings.nix`.
 
 ## Package version
 
