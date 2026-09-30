@@ -7,8 +7,9 @@
   # and appended to home.packages there.
   #
   # KDE-native picks: Plasma already ships Elisa (music) and KFontView (fonts),
-  # so no GNOME counterparts here. KDE ISO Image Writer writes install media
-  # and Tremotesf drives the Transmission daemon on BigTasty.
+  # so no GNOME counterparts here. KDE ISO Image Writer writes install media,
+  # Filelight maps disk usage and Tremotesf drives the Transmission daemon on
+  # BigTasty.
   home.packages = with pkgs; [
     audacity
     clockify
@@ -44,6 +45,7 @@
     ferdium
     steam-rom-manager
     kdePackages.isoimagewriter
+    kdePackages.filelight
     parted
     lsof
     prismlauncher
