@@ -87,7 +87,7 @@
     args = [
       "-W 3840"
       "-H 2160"
-      "-r 120"
+      "-r 144"
       "--hdr-enabled"
       "--adaptive-sync"
       "--force-grab-cursor"

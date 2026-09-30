@@ -52,6 +52,10 @@
         owner = "psoldunov";
         sopsFile = ../../../secrets/shared.yaml;
       };
+      # WiFi PSK, rendered into wpa_supplicant's secrets file (./networking.nix).
+      WIFI_PASSWORD = {
+        sopsFile = ../../../secrets/shared.yaml;
+      };
     };
   };
 }
