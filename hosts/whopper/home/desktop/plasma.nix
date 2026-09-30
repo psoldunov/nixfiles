@@ -54,12 +54,13 @@ in {
 
     # System Settings > Default Applications keeps the terminal and browser in
     # kdeglobals, not mimeapps.list. Dolphin's "Open Terminal Here" and KIO's
-    # URL handling read these, so point them at kitty and Zen rather than the
-    # Konsole default. Everything else lives in hosts/whopper/mime-defaults.nix.
+    # URL handling read these, so point them at kitty and Wye (which then picks
+    # the browser) rather than the Konsole default. Everything else lives in
+    # hosts/whopper/mime-defaults.nix.
     configFile.kdeglobals.General = {
       TerminalApplication = "kitty";
       TerminalService = "kitty.desktop";
-      BrowserApplication = "zen.desktop";
+      BrowserApplication = "dev.soldunov.wye.desktop";
     };
 
     # English plus Russian with the Mac key positions, written to kxkbrc. Alt+Space

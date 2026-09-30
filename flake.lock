@@ -159,6 +159,21 @@
         "type": "github"
       }
     },
+    "crane_2": {
+      "locked": {
+        "lastModified": 1789760033,
+        "narHash": "sha256-jtT4yxZpR8seYnlCMMWSSPlFN92zO6ICuZ8pJrmi86k=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "73b980519cefc727a5f6cc8e5c0947a2f9be6edd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
     "ensemblr": {
       "inputs": {
         "nixpkgs": [
@@ -493,6 +508,7 @@
         "steam-presence": "steam-presence",
         "token-station": "token-station",
         "vscode-server": "vscode-server",
+        "wye": "wye",
         "zen-browser": "zen-browser"
       }
     },
@@ -711,6 +727,31 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixos-vscode-server",
+        "type": "github"
+      }
+    },
+    "wye": {
+      "inputs": {
+        "crane": "crane_2",
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790793368,
+        "narHash": "sha256-JGgHQ+EOhJ0UO5g2EZwefnYL9hufKrdGNXLpYumm2HM=",
+        "owner": "psoldunov",
+        "repo": "wye",
+        "rev": "611fdbf6742f785e177ee36c093c535901c99884",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "wye",
         "type": "github"
       }
     },

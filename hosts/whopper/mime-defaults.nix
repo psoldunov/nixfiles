@@ -9,6 +9,10 @@
 # Gwenview, Ark, Elisa); MIME keys are the canonical shared-mime-info names.
 let
   browser = "zen.desktop";
+  # Wye (home/programs/wye.nix) picks the browser for every web link; its
+  # desktop entry claims only the http and https schemes, so local HTML files
+  # and the other browser schemes stay with Zen.
+  linkPicker = "dev.soldunov.wye.desktop";
   mail = "thunderbird.desktop";
   editor = "code.desktop";
   imageViewer = "org.kde.gwenview.desktop";
@@ -35,11 +39,13 @@ in
     "application/x-extension-shtml"
     "application/x-extension-xhtml"
     "application/x-extension-xht"
-    "x-scheme-handler/http"
-    "x-scheme-handler/https"
     "x-scheme-handler/chrome"
     "x-scheme-handler/about"
     "x-scheme-handler/unknown"
+  ]
+  // handledBy linkPicker [
+    "x-scheme-handler/http"
+    "x-scheme-handler/https"
   ]
   // handledBy mail [
     "message/rfc822"

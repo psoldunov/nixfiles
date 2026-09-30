@@ -76,6 +76,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # home-manager is only used by wye's own module-evaluation check.
+    wye = {
+      url = "github:psoldunov/wye/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Source for overlays/solaar.nix. Bump with `nix flake update solaar`.
     solaar = {
       url = "github:psoldunov/Solaar/master";
