@@ -5,8 +5,6 @@
 # Schema:
 #   role :: "desktop" | "server"
 #
-#   ollamaDocker            :: bool  (containerised Ollama vs native)
-#
 #   enableRaid              :: bool  (mdadm + /RAID fileSystems)
 #   enableNfsServer         :: bool  (NFS server exports)
 #   enableSambaShares       :: bool  (Samba + samba-wsdd)
@@ -23,8 +21,6 @@
   role = "server";
 
   obsidianBase = "/RAID/apps/syncthing/Obsidian";
-
-  ollamaDocker = false;
 
   enableRaid = true;
   enableNfsServer = true;

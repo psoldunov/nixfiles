@@ -55,7 +55,7 @@ Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix se
 
 | | |
 |---|---|
-| GPU | AMD Radeon RX 7900 XTX (amdgpu, OpenCL, VA-API, `ollama-rocm`) |
+| GPU | AMD Radeon RX 7900 XTX (amdgpu, OpenCL, VA-API) |
 | Display | DP-1 @ 3840x2160@144 with HDR, reasserted at session start by the `force-refresh-rate` user service |
 | Network | 10 Gbps NIC (`enp10s0`), static IP `10.24.24.5`, Wake-on-LAN, avahi |
 | Filesystem | ext4 root, local `/NVMe` + `/SATA`, 8 NFS mounts under `/mnt` (Media, Files, Documents, Camera, Transmission, SLSKD, Paperless, Games) |
@@ -85,9 +85,8 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 
 | Field | Type | Meaning |
 |---|---|---|
-| `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/shell.nix` uses it to omit desktop-only env vars (kitty/thunderbird/prisma/deno), aliases (`suspend`, `whisper`), fish functions (`open`, `fzf_kill`), the `git` keychain key and the starship supabase module on servers. |
+| `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/shell.nix` uses it to omit desktop-only env vars (kitty/thunderbird/prisma/deno), aliases (`suspend`), fish functions (`open`, `fzf_kill`), the `git` keychain key and the starship supabase module on servers. |
 | `obsidianBase` | path | Root of the Obsidian vaults. Read by the Claude Code MCP config (`modules/home/programs/claude-code/mcp.nix`). |
-| `ollamaDocker` | bool | Run Ollama as a rocm container instead of native `services.ollama` (Whopper). |
 | `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
@@ -122,12 +121,12 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
 | `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, openldap, vapor-kde, duckstation, bambu-studio, periphery, solaar) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
-| `security.nix` | polkit (ollama start/stop rule), rtkit, PAM Yubikey + u2f, gnupg agent |
-| `services.nix` | vscode-server, ollama (ROCm), syncthing, and other desktop services |
+| `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
+| `services.nix` | vscode-server, syncthing, and other desktop services |
 | `sops.nix` | Whopper system secrets |
 | `sunshine/` | Sunshine game streaming + per-stream display mode script |
 | `users.nix` | Extra groups for `psoldunov` (disk, i2c, input, uinput, scanner, lp, librepods, ...) |
-| `virtualisation.nix` | Whopper containers (optional Ollama rocm, whisper-rocm) |
+| `virtualisation.nix` | Whopper containers (portainer agent) |
 
 ## BigTasty modules
 

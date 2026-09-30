@@ -1,6 +1,6 @@
 # Container + VM baseline. Watchtower is the only OCI container shared
-# by every host; everything else (ollama, transmission, slskd, immich,
-# …) lives in the host's virtualisation module and merges into
+# by every host; everything else (portainer agent, transmission, slskd,
+# immich, …) lives in the host's virtualisation module and merges into
 # `oci-containers.containers` by key.
 {...}: {
   virtualisation = {

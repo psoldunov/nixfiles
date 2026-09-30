@@ -60,17 +60,13 @@ in {
     '';
   };
 
-  home.shellAliases =
-    {
-      ls = "lsd -laFh";
-      rm = "gio trash";
-      fucking = "sudo";
-      cat = "bat -p";
-      c = "claude";
-    }
-    // lib.optionalAttrs isDesktop {
-      whisper = "docker exec -it whisper-rocm whisper-rocm";
-    };
+  home.shellAliases = {
+    ls = "lsd -laFh";
+    rm = "gio trash";
+    fucking = "sudo";
+    cat = "bat -p";
+    c = "claude";
+  };
 
   programs.bash = {
     enable = true;
