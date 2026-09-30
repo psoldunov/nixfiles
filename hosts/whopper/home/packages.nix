@@ -20,7 +20,7 @@
     beets
     bruno
     yaak
-    legcord
+    discord
     shortwave
     qFlipper
     geekbench

@@ -113,7 +113,7 @@ in
     "x-scheme-handler/vscode" = "code-url-handler.desktop";
     "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
     "x-scheme-handler/heroic" = "com.heroicgameslauncher.hgl.desktop";
-    "x-scheme-handler/discord" = "legcord.desktop";
+    "x-scheme-handler/discord" = "discord.desktop";
     "x-scheme-handler/slack" = "slack.desktop";
     "x-scheme-handler/abc" = "plexamp.desktop";
   }
