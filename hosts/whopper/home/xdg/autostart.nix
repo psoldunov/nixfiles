@@ -39,11 +39,12 @@ in {
       icon = "slack";
       exec = "${pkgs.slack}/bin/slack -u";
     })
+    # Vencord and OpenASAR come from ../../../../overlays/discord.nix.
     (autostart {
-      name = "legcord";
-      desktopName = "Legcord";
-      icon = "legcord";
-      exec = "${pkgs.legcord}/bin/legcord --start-in-tray";
+      name = "discord";
+      desktopName = "Discord";
+      icon = "discord";
+      exec = "${lib.getExe pkgs.discord} --start-minimized";
     })
     (autostart {
       name = "org.telegram.desktop";
