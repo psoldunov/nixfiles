@@ -193,7 +193,6 @@
     thunderbird
     tesseract
     hwdata
-    supabase-cli
     kdiskmark
     libwebp
     wl-clipboard

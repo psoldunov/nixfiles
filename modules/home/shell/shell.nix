@@ -96,38 +96,27 @@ in {
     enable = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
-    settings =
-      {
-        format = "$nix_shell$env_var $all";
-        hostname = {
-          ssh_only = true;
-          disabled = false;
-        };
-        bun = {
-          format = "via [🥟 $version](bold green) ";
-        };
-        nodejs = {
-          detect_files = ["package.json" ".node-version" "!bunfig.toml" "!deno.lock" "!bun.lockb" "!bun.lock" "!deno.json"];
-        };
-        deno = {
-          format = "via [🦕 $version](green bold) ";
-        };
-        nix_shell = {
-          format = "[$symbol$state( \($name\))]($style) ";
-          impure_msg = "";
-          pure_msg = "";
-        };
-      }
-      // lib.optionalAttrs isDesktop {
-        custom = {
-          supabase = {
-            command = "${pkgs.supabase-cli}/bin/supabase -v";
-            format = "via [⚡ $output](green bold) ";
-            detect_folders = ["supabase"];
-            ignore_timeout = true;
-          };
-        };
+    settings = {
+      format = "$nix_shell$env_var $all";
+      hostname = {
+        ssh_only = true;
+        disabled = false;
       };
+      bun = {
+        format = "via [🥟 $version](bold green) ";
+      };
+      nodejs = {
+        detect_files = ["package.json" ".node-version" "!bunfig.toml" "!deno.lock" "!bun.lockb" "!bun.lock" "!deno.json"];
+      };
+      deno = {
+        format = "via [🦕 $version](green bold) ";
+      };
+      nix_shell = {
+        format = "[$symbol$state( \($name\))]($style) ";
+        impure_msg = "";
+        pure_msg = "";
+      };
+    };
   };
 
   programs.zoxide = {
