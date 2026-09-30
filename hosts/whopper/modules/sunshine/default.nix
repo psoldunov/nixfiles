@@ -13,7 +13,7 @@
 #
 # Each stream switches the monitor to the client's resolution and back (see
 # ./display.sh). The Steam Deck OLED's Moonlight asks for 1920x1200 at 90 fps,
-# which renders sharper than the Deck's native 1280x800. DP-2 advertises
+# which renders sharper than the Deck's native 1280x800. DP-1 advertises
 # 1920x1200 only at 60 and 144 Hz, so the 90 Hz mode is added in KWin as a
 # custom mode.
 {

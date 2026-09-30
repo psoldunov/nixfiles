@@ -4,7 +4,7 @@ Personal NixOS + home-manager configuration. Multi-host flake, single source of 
 
 | Host | Role | Hardware |
 |---|---|---|
-| **Whopper** | Desktop | AMD Radeon RX 7900 XTX (ROCm, VA-API, gamescope), DP-1 @ 3840x2160@120, 10 Gbps NIC, KDE Plasma 6 on Wayland |
+| **Whopper** | Desktop | AMD Radeon RX 7900 XTX (ROCm, VA-API, gamescope), DP-1 @ 3840x2160@144 HDR, 10 Gbps NIC, KDE Plasma 6 on Wayland |
 | **BigTasty** | Home server | Intel iGPU (Quick Sync), mdadm RAID, static IP `10.24.24.2`, NFS + Samba + Netatalk exports, nginx vhosts behind Cloudflare DNS-01 |
 
 Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, openssh, sops, docker/libvirt) and a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code config). Everything else is host-scoped.
@@ -56,12 +56,12 @@ Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix se
 | | |
 |---|---|
 | GPU | AMD Radeon RX 7900 XTX (amdgpu, OpenCL, VA-API, `ollama-rocm`) |
-| Display | DP-1 @ 3840x2160@120, reasserted at session start by the `force-refresh-rate` user service |
+| Display | DP-1 @ 3840x2160@144 with HDR, reasserted at session start by the `force-refresh-rate` user service |
 | Network | 10 Gbps NIC (`enp10s0`), static IP `10.24.24.5`, Wake-on-LAN, avahi |
 | Filesystem | ext4 root, local `/NVMe` + `/SATA`, 8 NFS mounts under `/mnt` (Media, Files, Documents, Camera, Transmission, SLSKD, Paperless, Games) |
 | Desktop | KDE Plasma 6 + SDDM (Wayland only), configured through plasma-manager, Vapor global theme, KWallet as Secret Service |
 | Auth | PAM Yubikey challenge-response + u2f for sudo/login |
-| Steam | `programs.steam` + gamescope (3840x2160@120, HDR) + steam-presence wired to `STEAM_API_KEY` / `STEAMGRIDDB_API_KEY` sops secrets |
+| Steam | `programs.steam` + gamescope (3840x2160@144, HDR) + steam-presence wired to `STEAM_API_KEY` / `STEAMGRIDDB_API_KEY` sops secrets |
 | Streaming | Sunshine (KMS capture, VA-API encode) for Moonlight clients; switches the monitor to the client's mode per stream — see [hosts/whopper/modules/sunshine](hosts/whopper/modules/sunshine/default.nix) |
 | Peripherals | Stream Deck via deckmaster, Solaar (built from the psoldunov/Solaar fork), LibrePods, ZSA/QMK keyboards, HP LaserJet printer |
 
