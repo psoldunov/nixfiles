@@ -162,6 +162,8 @@ in {
       swiftlyWrapper
       pkgs.swiftlint
       pkgs.swiftformat
+      # Built from source by overlays/periphery.nix; runs `swift` from above.
+      pkgs.periphery
     ]
     ++ map mkSwiftTool swiftTools;
 
