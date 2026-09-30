@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  hostConfig,
   ...
 }: {
   # services.fwupd lives in modules/nixos/hardware.nix.
@@ -58,25 +57,6 @@
     enable = true;
     cups-pdf.enable = true;
     drivers = with pkgs; [hplipWithPlugin];
-  };
-
-  # Ollama (native; containerized variant lives in ./virtualisation.nix)
-  services.ollama = {
-    enable = !hostConfig.ollamaDocker;
-    package = pkgs.ollama-rocm;
-    rocmOverrideGfx = "11.0.0";
-    openFirewall = true;
-    environmentVariables = {
-      OLLAMA_ORIGINS = "app://obsidian.md*";
-      OLLAMA_GPU_OVERHEAD = "2147483648";
-    };
-    loadModels = [
-      "deepseek-coder-v2:16b-lite-base-q4_K_M"
-      "mxbai-embed-large:latest"
-      "codestral:latest"
-      "llama3.2:latest"
-      "nomic-embed-text:latest"
-    ];
   };
 
   services.mysql = {

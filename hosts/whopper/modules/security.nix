@@ -3,16 +3,6 @@
 
   security = {
     polkit.enable = true;
-    polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.freedesktop.systemd1.manage-units" &&
-            subject.user == "psoldunov" &&
-            action.lookup("unit") == "ollama.service" &&
-            (action.lookup("verb") == "start" || action.lookup("verb") == "stop")) {
-          return polkit.Result.YES;
-        }
-      });
-    '';
     rtkit.enable = true;
     pam = {
       yubico = {

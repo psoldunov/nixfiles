@@ -222,7 +222,6 @@
       socat
       mangohud
       vulkan-tools
-      bottles
       libva-utils
       cargo
       pop
@@ -317,12 +316,5 @@
       keychain
       expressvpn
       nbd
-    ])
-    ++ (
-      if hostConfig.ollamaDocker
-      then [
-        (pkgs.writeShellScriptBin "ollama" "exec -a $0 docker exec -it ollama ollama $@")
-      ]
-      else []
-    );
+    ]);
 }
