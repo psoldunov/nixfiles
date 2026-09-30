@@ -37,6 +37,7 @@
     ./programs/solaar.nix
     ./programs/token-station.nix
     ./programs/vscode.nix
+    ./programs/wye.nix
   ];
 
   programs.home-manager.enable = true;
