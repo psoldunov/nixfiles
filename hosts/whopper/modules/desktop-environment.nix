@@ -28,6 +28,10 @@
   # kpmcore's D-Bus helper and polkit actions, which a bare package lacks.
   programs.partition-manager.enable = true;
 
+  # KDE Connect (phone integration). The module installs kdeconnect-kde, which
+  # Plasma autostarts, and opens TCP/UDP 1714-1764 for discovery and transfers.
+  programs.kdeconnect.enable = true;
+
   # Flatpak
   services.flatpak = {
     enable = true;

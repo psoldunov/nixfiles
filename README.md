@@ -59,7 +59,7 @@ Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix se
 | Display | DP-1 @ 3840x2160@144 with HDR, reasserted at session start by the `force-refresh-rate` user service |
 | Network | 10 Gbps NIC (`enp10s0`), static IP `10.24.24.5`, Wake-on-LAN, avahi |
 | Filesystem | ext4 root, local `/NVMe` + `/SATA`, 8 NFS mounts under `/mnt` (Media, Files, Documents, Camera, Transmission, SLSKD, Paperless, Games) |
-| Desktop | KDE Plasma 6 + SDDM (Wayland only), configured through plasma-manager, Vapor global theme, KWallet as Secret Service |
+| Desktop | KDE Plasma 6 + SDDM (Wayland only), configured through plasma-manager, Vapor global theme, KWallet as Secret Service, KDE Connect |
 | Auth | PAM Yubikey challenge-response + u2f for sudo/login |
 | Steam | `programs.steam` + gamescope (3840x2160@144, HDR) + steam-presence wired to `STEAM_API_KEY` / `STEAMGRIDDB_API_KEY` sops secrets |
 | Streaming | Sunshine (KMS capture, VA-API encode) for Moonlight clients; switches the monitor to the client's mode per stream — see [hosts/whopper/modules/sunshine](hosts/whopper/modules/sunshine/default.nix) |
@@ -114,7 +114,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | File | Purpose |
 |---|---|
 | `boot.nix` | amdgpu/nfs initrd modules, Plymouth (`nixos-bgrt`), quiet boot, kernel params |
-| `desktop-environment.nix` | Plasma 6 + SDDM (Wayland), XDG + mime defaults, Flatpak, partition-manager, gvfs/udisks2 |
+| `desktop-environment.nix` | Plasma 6 + SDDM (Wayland), XDG + mime defaults, Flatpak, partition-manager, KDE Connect (+ firewall 1714-1764), gvfs/udisks2 |
 | `fonts.nix` | Font packages (incl. apple-fonts) |
 | `hardware.nix` | AMD VA-API/VDPAU packages, OpenCL, Logitech/Solaar, Bluetooth, LibrePods, xone, SANE, printer, Stream Deck udev rule |
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
