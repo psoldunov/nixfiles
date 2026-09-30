@@ -257,6 +257,7 @@ Notable secrets:
 | `SUNSHINE_WEB_PASSWORD` | Whopper system | Sunshine web UI login, written before each start |
 | `EXPRESSVPN_KEY` | Whopper system | Declared only; no consumer in the repo |
 | `SYNCTHING_GUI_PASSWORD` | both (system, `shared.yaml`) | `services.syncthing.guiPasswordFile` |
+| `WIFI_PASSWORD` | BigTasty (system, `shared.yaml`) | wpa_supplicant `secretsFile`, rendered by a sops template (only while `networking.wireless` is enabled) |
 | `SHELL_SECRETS` | both (user) | fish/bash init in shared `shell.nix`; shell-only env exports |
 | `CLAUDE_*`, `PAPERLESS_API_KEY` | both (user, `shared.yaml`) | Claude Code MCP servers ([mcp.nix](modules/home/programs/claude-code/mcp.nix)) |
 | `SPOTIFYD_PASSWORD` | Whopper (user) | spotifyd `password_cmd` |
