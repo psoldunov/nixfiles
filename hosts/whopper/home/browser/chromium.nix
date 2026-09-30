@@ -34,6 +34,9 @@
   };
 
   programs.firefox = {
-    enable = false;
+    enable = true;
+    # Keep the existing profile in ~/.mozilla/firefox rather than the XDG
+    # path home-manager defaults to from stateVersion 26.05.
+    configPath = ".mozilla/firefox";
   };
 }
