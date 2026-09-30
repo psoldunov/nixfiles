@@ -23,7 +23,7 @@ in {
     };
     interfaces = {
       eno2.useDHCP = true;
-      wl01.useDHCP = true;
+      wlo1.useDHCP = true;
       enp8s0.ipv4.addresses = [
         {
           address = "10.24.24.2";
