@@ -9,7 +9,13 @@
 
 Types: feat, fix, refactor, docs, test, chore, perf, ci
 
-Note: Attribution disabled globally via ~/.claude/settings.json.
+## No Attribution
+
+Attribution is disabled globally (`attribution` in
+`~/.nixfiles/modules/home/programs/claude-code/settings.nix`). Never write
+attribution by hand either: no `Co-Authored-By: Claude ...` trailer in commits,
+no "Generated with Claude Code" footer or session link in PR bodies, and none in
+text written for child agents or squash-merge messages.
 
 ## Pull Request Workflow
 
