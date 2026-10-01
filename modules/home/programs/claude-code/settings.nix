@@ -19,6 +19,13 @@
       effortLevel = "xhigh";
       skillListingBudgetFraction = 0.02;
       skillListingMaxDescChars = 2048;
+      # No Co-Authored-By trailer, "Generated with Claude Code" PR footer, or
+      # session link in commits and PRs.
+      attribution = {
+        commit = "";
+        pr = "";
+        sessionUrl = false;
+      };
       statusLine = {
         type = "command";
         command = ''bash "${inputs.caveman}/src/hooks/caveman-statusline.sh"'';
