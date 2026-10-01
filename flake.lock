@@ -181,11 +181,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790837888,
-        "narHash": "sha256-wtGiInHEOKiMkjTEqQbOuFjfpC1BigVM4hWgUt6/mbo=",
+        "lastModified": 1790875853,
+        "narHash": "sha256-Sv0RjuEyC6LKZjEaf3PNNsR0B9aKuqH6TuqDD4vmmVA=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "25854504809cc8e2e00bfa8983165d95332d93d3",
+        "rev": "6bf9a7c742564c6a32429d7fa645dc535e91765c",
         "type": "github"
       },
       "original": {
@@ -439,11 +439,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1790689126,
-        "narHash": "sha256-ilerN1WLSvF+HMjziC/Wv99J5y02maDH+6hZPwsORKg=",
+        "lastModified": 1790822859,
+        "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b4fd65b198c599cbe814fcb9f42d25d021595ec9",
+        "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
         "type": "github"
       },
       "original": {
