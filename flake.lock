@@ -93,11 +93,11 @@
     "caveman": {
       "flake": false,
       "locked": {
-        "lastModified": 1790807522,
-        "narHash": "sha256-0IYoFcUGCH9GgmaaW7ZC6ygnjXHXDUmGjWlr5SqR6xE=",
+        "lastModified": 1790884643,
+        "narHash": "sha256-LTAStlExaZtBhYHGjYQcxXVG4ufb/Ef4KVftYYUUrPE=",
         "owner": "juliusbrussee",
         "repo": "caveman",
-        "rev": "f5d729488caa8f6a5b6c8086fe2cccd3e8a63f91",
+        "rev": "b39c90862855ad2f0813ce775b8bf07a9d6d2a50",
         "type": "github"
       },
       "original": {
@@ -131,11 +131,11 @@
     "context-mode": {
       "flake": false,
       "locked": {
-        "lastModified": 1790856460,
-        "narHash": "sha256-e6Xqw5PnwW/h3twMIHKeomYg56Td/KL0Tf3c9diTT6k=",
+        "lastModified": 1790900010,
+        "narHash": "sha256-POLKRlsr2lVEc9TSPd5jiEcnNsm7lNRh/zk+3GpL+eA=",
         "owner": "mksglu",
         "repo": "context-mode",
-        "rev": "22628d08bc30a30ea2fbb4623481172e508dbdd7",
+        "rev": "928bdf104bca04da977fc6e6095dc3d0328939df",
         "type": "github"
       },
       "original": {
@@ -181,11 +181,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790875853,
-        "narHash": "sha256-Sv0RjuEyC6LKZjEaf3PNNsR0B9aKuqH6TuqDD4vmmVA=",
+        "lastModified": 1790880681,
+        "narHash": "sha256-/4+1e187NM6VgJfTP4ZVe81xBo39fXONQ+x1OUnJm+8=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "6bf9a7c742564c6a32429d7fa645dc535e91765c",
+        "rev": "cfc07653fa87f7972b0f59994a7e85e29c88dcfb",
         "type": "github"
       },
       "original": {
@@ -297,11 +297,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790819692,
-        "narHash": "sha256-rvubAPbh3QCliic3sAK+CXTrPCGgJstY52OTs/5H1J4=",
+        "lastModified": 1790911008,
+        "narHash": "sha256-r7KBcjLlw7LzuvCYUU1V50L81uf+0YgHTCnhymTwwpw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c8ecc29e5175452bee4a2aa1ba2383856d795338",
+        "rev": "a439f71e75b94c88300022045713c790c79ba007",
         "type": "github"
       },
       "original": {
@@ -741,11 +741,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790844533,
-        "narHash": "sha256-xOy6t7kTeim1W88bKRFbGPFg7fXTSoLj1DXy+q5UhmM=",
+        "lastModified": 1790915265,
+        "narHash": "sha256-r4HERzeBpAQ71cZ8IeVeXKzWYmdqhJM4VyiU9M+4YcU=",
         "owner": "psoldunov",
         "repo": "wye",
-        "rev": "0e56cfca35b7f2e6091a99d8164609dfd2ef43c7",
+        "rev": "a946c962fd927b6d5787398cc483b81b0e308912",
         "type": "github"
       },
       "original": {
