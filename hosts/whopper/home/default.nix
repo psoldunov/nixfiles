@@ -20,6 +20,7 @@
     # Dev
     ./dev/neovim.nix
     ./dev/dev.nix
+    ./dev/playwright.nix
     ./dev/swift.nix
 
     # Desktop
