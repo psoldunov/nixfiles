@@ -122,4 +122,5 @@ in
     "x-scheme-handler/discord" = "discord.desktop";
     "x-scheme-handler/slack" = "slack.desktop";
     "x-scheme-handler/abc" = "plexamp.desktop";
+    "x-scheme-handler/figma" = "figma-linux-next.desktop";
   }

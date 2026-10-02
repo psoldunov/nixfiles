@@ -31,6 +31,7 @@
 
     # Programs
     ./programs/deckmaster
+    ./programs/figma-linux-next.nix
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/skrepka.nix
