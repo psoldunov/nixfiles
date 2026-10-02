@@ -96,9 +96,12 @@ independently via Claude Code's own plugin update mechanism.
 
 ## MCP servers
 
-User-level MCP servers are declared in `programs.claude-code.mcpServers` (none
-currently). MCP capabilities for `context7`, `figma`, `notion`, `vercel`,
-`context-mode` come from the corresponding plugins.
+User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`
+(host-specific ones, such as Playwright, live in the host's home config).
+`enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
+`figma-personal` are two remote Figma servers, one per Figma account. Sign in
+to each one separately through `/mcp`. MCP capabilities for `context7`,
+`notion`, `vercel`, `context-mode` come from the corresponding plugins.
 
 ## Hooks
 

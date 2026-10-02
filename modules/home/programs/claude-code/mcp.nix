@@ -88,6 +88,12 @@
         headers.Authorization = "Bearer \${CLAUDE_SANITY_MCP_BEARER}";
       };
 
+      # One remote Figma server per Figma account. Claude Code keeps the
+      # OAuth token per server name, so each one is signed in separately
+      # through /mcp. The acct query parameter only tells the URLs apart.
+      figma-almost-always.url = "https://mcp.figma.com/mcp?acct=almost-always";
+      figma-personal.url = "https://mcp.figma.com/mcp?acct=personal";
+
       obsidian-personal = {
         command = "${pkgs.nodejs_24}/bin/npx";
         args = [
