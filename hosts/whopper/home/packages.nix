@@ -32,7 +32,6 @@
     infisical
     mise
     nodejs_24
-    playwright
     pkgs-stable.obsidian
     mattermost-desktop
     plexamp
