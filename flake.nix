@@ -88,6 +88,13 @@
       url = "github:psoldunov/Solaar/master";
       flake = false;
     };
+
+    # Used by hosts/whopper/home/programs/figma-linux-next.nix. Bump with
+    # `nix flake update figma-linux-next`.
+    figma-linux-next = {
+      url = "github:arximus88/figma-linux-next";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
