@@ -96,6 +96,10 @@
       else
         echo "Update succeeded; nothing to commit."
       fi
+      if ! git push; then
+        echo "update_system: git push failed; commits are local only." >&2
+        exit 1
+      fi
     '';
 
     rebuild_system = pkgs.writeShellScriptBin "rebuild_system" ''
@@ -125,6 +129,10 @@
         git commit -am "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
       else
         echo "Rebuild succeeded; nothing to commit."
+      fi
+      if ! git push; then
+        echo "rebuild_system: git push failed; commits are local only." >&2
+        exit 1
       fi
     '';
 
