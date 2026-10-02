@@ -20,8 +20,14 @@
   # installed by hand in that profile. Each connection opens a connect page
   # in Chrome to approve. `--browser chrome` overrides the wrapper's chromium
   # default, which would launch Chrome with --no-sandbox if it is not running.
+  #
+  # The nixpkgs wrapper exports PLAYWRIGHT_MCP_ISOLATED=1 whenever
+  # PLAYWRIGHT_MCP_USER_DATA_DIR is empty, and Playwright checks isolated mode
+  # before --extension, so without the user data dir it launches a fresh
+  # throwaway profile instead of attaching to the real one.
   chromeProfileServer = profileDir: {
     command = playwrightMcp;
+    env.PLAYWRIGHT_MCP_USER_DATA_DIR = "${config.xdg.configHome}/google-chrome";
     args = [
       "--extension"
       "--browser"
