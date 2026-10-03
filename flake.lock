@@ -181,11 +181,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791039430,
-        "narHash": "sha256-IJFHO92TaesVRoUgGriGw3MMjbVe6hX85FdL71hjIWQ=",
+        "lastModified": 1791044294,
+        "narHash": "sha256-+q8m1Zo4ahFsuFDvJx6NTqWXaA+oKyeyyc1yo4kPgFE=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "bda16819f490e3e66fc87d78a786ea5d43969d6e",
+        "rev": "cd0894c2bcda26f9d1f493dd6f727161ba6ed61b",
         "type": "github"
       },
       "original": {
