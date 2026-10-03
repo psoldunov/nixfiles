@@ -123,4 +123,5 @@ in
     "x-scheme-handler/slack" = "slack.desktop";
     "x-scheme-handler/abc" = "plexamp.desktop";
     "x-scheme-handler/figma" = "figma-linux-next.desktop";
+    "x-scheme-handler/linear" = "linear.desktop";
   }
