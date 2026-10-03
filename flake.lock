@@ -202,11 +202,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791053973,
-        "narHash": "sha256-OxCig73Y41YD/g/v+3vvw7fjI9Hu7na/pWuqT5be6do=",
+        "lastModified": 1791057456,
+        "narHash": "sha256-HAqNENvxxRQ3pPzPT2s260bBzqmgv7mx+X2fewRjpBQ=",
         "owner": "psoldunov",
         "repo": "figma",
-        "rev": "c9222946b1d2b4e61c5159fadae20a7d87edff42",
+        "rev": "aa8f6ee4c5222b8ef9b58283454d5efb2a36c082",
         "type": "github"
       },
       "original": {
