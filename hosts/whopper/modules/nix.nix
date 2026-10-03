@@ -2,9 +2,22 @@
 # throttling so a heavy rebuild doesn't bog down the desktop.
 # The host-agnostic settings (warn-dirty, experimental-features,
 # auto-optimise-store, trusted-users) live in modules/nixos/nix.nix.
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   nix = {
     settings.nix-path = ["nixpkgs=${inputs.nixpkgs}"];
+
+    # GitHub token for private flake inputs, such as psoldunov/linear. It is
+    # the fine-grained PAT "nix-private-flake": read-only Contents, scoped to
+    # the private repos the flake pulls; grant it each new one there.
+    # `!include` skips a missing file, so evaluation still works before
+    # sops-nix has decrypted the secret.
+    extraOptions = ''
+      !include ${config.sops.secrets.NIX_ACCESS_TOKENS.path}
+    '';
 
     # Builds only get CPU time and disk I/O that nothing else wants, so
     # interactive work always preempts them.

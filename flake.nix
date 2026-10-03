@@ -97,9 +97,10 @@
     };
 
     # Linear desktop client. Used by hosts/whopper/home/programs/lunear.nix.
-    # Bump with `nix flake update lunear`.
+    # Bump with `nix flake update lunear`. The repo is private: fetching it
+    # needs the GitHub token wired in hosts/whopper/modules/nix.nix.
     lunear = {
-      url = "github:psoldunov/lunear/master";
+      url = "github:psoldunov/linear/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

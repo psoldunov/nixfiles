@@ -340,14 +340,14 @@
         "lastModified": 1791023272,
         "narHash": "sha256-NvihntgQLvKGI/7V1MpHwbNvOsPpADLMRFrF2uVb+vs=",
         "owner": "psoldunov",
-        "repo": "lunear",
+        "repo": "linear",
         "rev": "f380077c118e807a548a69d92b2275856a910cc2",
         "type": "github"
       },
       "original": {
         "owner": "psoldunov",
         "ref": "master",
-        "repo": "lunear",
+        "repo": "linear",
         "type": "github"
       }
     },
