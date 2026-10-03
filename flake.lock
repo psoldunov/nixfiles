@@ -131,11 +131,11 @@
     "context-mode": {
       "flake": false,
       "locked": {
-        "lastModified": 1790986350,
-        "narHash": "sha256-FPgsF55IFI9+qqIW+vwXhKkDUtCVkI0NJQiCCTq5Wkw=",
+        "lastModified": 1791034557,
+        "narHash": "sha256-ktUTYfdKbOXAvqgvQ9ihhWcQ7+acUhQUa2dYCN8JeWM=",
         "owner": "mksglu",
         "repo": "context-mode",
-        "rev": "9f3ecc8b0aafd25d3592ffc31e4b02b1767f6089",
+        "rev": "dbfa57d50ccaacb37ade53dd226c5b0cf7bea335",
         "type": "github"
       },
       "original": {
@@ -181,11 +181,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791028344,
-        "narHash": "sha256-P8blwOw47bcjNaxcN9o5oovSpoI9Hx8NH94qzBGTVWA=",
+        "lastModified": 1791039430,
+        "narHash": "sha256-IJFHO92TaesVRoUgGriGw3MMjbVe6hX85FdL71hjIWQ=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "df838ec6d0364e7fc5a010477e2227ae570a48ec",
+        "rev": "bda16819f490e3e66fc87d78a786ea5d43969d6e",
         "type": "github"
       },
       "original": {
