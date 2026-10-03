@@ -32,7 +32,7 @@
 
     # Programs
     ./programs/deckmaster
-    ./programs/figma-linux-next.nix
+    ./programs/figma.nix
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/linear.nix

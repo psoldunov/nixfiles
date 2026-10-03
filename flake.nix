@@ -89,10 +89,11 @@
       flake = false;
     };
 
-    # Used by hosts/whopper/home/programs/figma-linux-next.nix. Bump with
-    # `nix flake update figma-linux-next`.
-    figma-linux-next = {
-      url = "github:arximus88/figma-linux-next";
+    # Figma desktop client. Used by hosts/whopper/home/programs/figma.nix.
+    # Bump with `nix flake update figma`. The repo is private: fetching it
+    # needs the GitHub token wired in hosts/whopper/modules/nix.nix.
+    figma = {
+      url = "github:psoldunov/figma/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

@@ -195,23 +195,24 @@
         "type": "github"
       }
     },
-    "figma-linux-next": {
+    "figma": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1790950253,
-        "narHash": "sha256-/ipGiPIecRXzeOoLaRrHb1btDABgu9guz6tuxH23T4o=",
-        "owner": "arximus88",
-        "repo": "figma-linux-next",
-        "rev": "6f8517554dfe8624d010c321bac276421c7bac5e",
+        "lastModified": 1791053973,
+        "narHash": "sha256-OxCig73Y41YD/g/v+3vvw7fjI9Hu7na/pWuqT5be6do=",
+        "owner": "psoldunov",
+        "repo": "figma",
+        "rev": "c9222946b1d2b4e61c5159fadae20a7d87edff42",
         "type": "github"
       },
       "original": {
-        "owner": "arximus88",
-        "repo": "figma-linux-next",
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "figma",
         "type": "github"
       }
     },
@@ -537,7 +538,7 @@
         "caveman": "caveman",
         "context-mode": "context-mode",
         "ensemblr": "ensemblr",
-        "figma-linux-next": "figma-linux-next",
+        "figma": "figma",
         "home-manager": "home-manager",
         "linear": "linear",
         "nix-flatpak": "nix-flatpak",

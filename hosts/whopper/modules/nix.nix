@@ -10,9 +10,10 @@
   nix = {
     settings.nix-path = ["nixpkgs=${inputs.nixpkgs}"];
 
-    # GitHub token for private flake inputs, such as psoldunov/linear. It is
-    # the fine-grained PAT "nix-private-flake": read-only Contents, scoped to
-    # the private repos the flake pulls; grant it each new one there.
+    # GitHub token for private flake inputs, such as psoldunov/linear and
+    # psoldunov/figma. It is the fine-grained PAT "nix-private-flake":
+    # read-only Contents, scoped to the private repos the flake pulls; grant it
+    # each new one there.
     # `!include` skips a missing file, so evaluation still works before
     # sops-nix has decrypted the secret.
     extraOptions = ''
