@@ -93,11 +93,11 @@
     "caveman": {
       "flake": false,
       "locked": {
-        "lastModified": 1790990920,
-        "narHash": "sha256-xrR3AcMOQeaMMEw3oKzykID5MpAw6I5/5Rzl8UJ3ZIE=",
+        "lastModified": 1791009926,
+        "narHash": "sha256-yJuNLbYsGq33/7NaoZRwmmI9t35ALM3aM3obpllnmWM=",
         "owner": "juliusbrussee",
         "repo": "caveman",
-        "rev": "17f574b51221b293c16c8e532bc3bf3fa9f4051c",
+        "rev": "aeb45e2f787c0757a8af383a291a280cb6aeb4c1",
         "type": "github"
       },
       "original": {
@@ -337,11 +337,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790996052,
-        "narHash": "sha256-GkBNKj8do0iyvJuhAmmA2NyHtK2g+46NjQul8eKO0u0=",
+        "lastModified": 1791011574,
+        "narHash": "sha256-0PMs5QvlV7L9JxZYhmnhOywMoAh+rx/pBfqO+aUcj0E=",
         "owner": "psoldunov",
         "repo": "lunear",
-        "rev": "f3751a5efc289b7f9d3e4e25219aea2bf2f3d818",
+        "rev": "70e1742571182dd83c4e3d1695879e9c2d67b1a6",
         "type": "github"
       },
       "original": {
