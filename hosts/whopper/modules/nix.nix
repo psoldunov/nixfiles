@@ -14,6 +14,10 @@
     # psoldunov/figma. It is the fine-grained PAT "nix-private-flake":
     # read-only Contents, scoped to the private repos the flake pulls; grant it
     # each new one there.
+    # The secret binds the token to `github.com/psoldunov`, not all of
+    # github.com, so Nix fetches public inputs anonymously. Orgs that restrict
+    # fine-grained PATs (ensemblr-hq rejects ones that live over 366 days)
+    # answer 403 to any request that carries the token, even for a public repo.
     # `!include` skips a missing file, so evaluation still works before
     # sops-nix has decrypted the secret.
     extraOptions = ''
