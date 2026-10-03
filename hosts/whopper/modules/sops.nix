@@ -21,6 +21,12 @@
       SUNSHINE_WEB_PASSWORD = {
         owner = "psoldunov";
       };
+      # One `access-tokens = github.com=<token>` line, included into nix.conf
+      # (./nix.nix) so Nix can fetch private flake inputs. Owned by psoldunov
+      # so unprivileged `nix flake update` reads it too; root reads it anyway.
+      NIX_ACCESS_TOKENS = {
+        owner = "psoldunov";
+      };
     };
   };
 }
