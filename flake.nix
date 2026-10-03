@@ -95,6 +95,13 @@
       url = "github:arximus88/figma-linux-next";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Linear desktop client. Used by hosts/whopper/home/programs/lunear.nix.
+    # Bump with `nix flake update lunear`.
+    lunear = {
+      url = "github:psoldunov/lunear/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

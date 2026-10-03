@@ -330,6 +330,27 @@
         "type": "github"
       }
     },
+    "lunear": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790994347,
+        "narHash": "sha256-M/4FlIvLLCm8AxiiYXG4LZG4vPFFRUlan7nh8dsTS0c=",
+        "owner": "psoldunov",
+        "repo": "lunear",
+        "rev": "14019e491b313381a2c7c803cfdae751e1f12fb4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "lunear",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1790428548,
@@ -518,6 +539,7 @@
         "ensemblr": "ensemblr",
         "figma-linux-next": "figma-linux-next",
         "home-manager": "home-manager",
+        "lunear": "lunear",
         "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
         "nixpkgs": "nixpkgs_4",
