@@ -337,11 +337,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790994347,
-        "narHash": "sha256-M/4FlIvLLCm8AxiiYXG4LZG4vPFFRUlan7nh8dsTS0c=",
+        "lastModified": 1790995508,
+        "narHash": "sha256-r30s+RX1pVvI59CmhrhLoV9WYvdhhaCP24+WRA3Y3ss=",
         "owner": "psoldunov",
         "repo": "lunear",
-        "rev": "14019e491b313381a2c7c803cfdae751e1f12fb4",
+        "rev": "739b710496322a4863a2e18fbb0a6a968d4d0b70",
         "type": "github"
       },
       "original": {
