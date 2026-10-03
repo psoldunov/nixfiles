@@ -646,11 +646,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791014975,
-        "narHash": "sha256-jYmG3/mDvuu4ejo8kQLqTB7johdEokO1ii8fdXFI3qg=",
+        "lastModified": 1791018850,
+        "narHash": "sha256-ByMpxwOyGtLgjTcEYZkVNdl+/NVFThEXMWptsZ1KOag=",
         "owner": "psoldunov",
         "repo": "skrepka",
-        "rev": "c6d1b9d46c6fed9eb7e3529a44f783cf86318797",
+        "rev": "cbba4c145287d701dd9f6149b0c13199794b0338",
         "type": "github"
       },
       "original": {
