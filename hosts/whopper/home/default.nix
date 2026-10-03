@@ -35,7 +35,7 @@
     ./programs/figma-linux-next.nix
     ./programs/spotifyd.nix
     ./programs/kitty.nix
-    ./programs/lunear.nix
+    ./programs/linear.nix
     ./programs/skrepka.nix
     ./programs/solaar.nix
     ./programs/token-station.nix

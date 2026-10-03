@@ -330,7 +330,7 @@
         "type": "github"
       }
     },
-    "lunear": {
+    "linear": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -539,7 +539,7 @@
         "ensemblr": "ensemblr",
         "figma-linux-next": "figma-linux-next",
         "home-manager": "home-manager",
-        "lunear": "lunear",
+        "linear": "linear",
         "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
         "nixpkgs": "nixpkgs_4",
