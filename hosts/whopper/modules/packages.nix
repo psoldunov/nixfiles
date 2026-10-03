@@ -270,7 +270,7 @@
     evtest
     trigger-control
     localsend
-    pkgs-stable.calibre
+    calibre
     unzip
     woff2
     xdg-utils

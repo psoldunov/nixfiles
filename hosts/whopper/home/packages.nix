@@ -9,7 +9,8 @@
   # KDE-native picks: Plasma already ships Elisa (music) and KFontView (fonts),
   # so no GNOME counterparts here. KDE ISO Image Writer writes install media,
   # Filelight maps disk usage and Tremotesf drives the Transmission daemon on
-  # BigTasty.
+  # BigTasty. LibreOffice is the Qt 6 build so it uses Plasma's dialogs and
+  # theme.
   home.packages = with pkgs; [
     audacity
     ensemblr-master
@@ -29,7 +30,7 @@
     infisical
     mise
     nodejs_24
-    pkgs-stable.obsidian
+    obsidian
     plexamp
     pcsx2
     duckstation
