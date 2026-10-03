@@ -12,7 +12,6 @@
   # BigTasty.
   home.packages = with pkgs; [
     audacity
-    clockify
     ensemblr-master
     zed-editor
     pi-coding-agent
@@ -20,9 +19,7 @@
     ledger-live-desktop
     beets
     bruno
-    yaak
     discord
-    shortwave
     qFlipper
     geekbench
     deno
@@ -33,7 +30,6 @@
     mise
     nodejs_24
     pkgs-stable.obsidian
-    mattermost-desktop
     plexamp
     pcsx2
     duckstation
@@ -41,7 +37,6 @@
     bchunk
     lutris
     shipments
-    ferdium
     steam-rom-manager
     kdePackages.isoimagewriter
     kdePackages.filelight
@@ -55,7 +50,6 @@
     protonup-qt
     protonup-ng
     via
-    gnome-solanum
     ookla-speedtest
     motrix
     tremotesf

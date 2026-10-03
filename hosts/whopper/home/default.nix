@@ -12,7 +12,7 @@
     ./services.nix
     ./packages.nix
     ./scripts
-    ./browser/chromium.nix
+    ./browser/chrome.nix
     ./xdg/desktop-entries.nix
     ./xdg/mimeapps.nix
     ./xdg/autostart.nix

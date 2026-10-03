@@ -281,8 +281,8 @@ in {
   ];
 
   # Icons come from the installed packages the launchers start: ../../packages.nix
-  # (Cider, Plexamp, Shortwave), ../../../modules/packages.nix (Rhythmbox) and
-  # the plasma6 module (Elisa).
+  # (Cider, Plexamp), ../../../modules/packages.nix (Rhythmbox) and the plasma6
+  # module (Elisa).
   music.keys =
     [
       (back 0)
@@ -297,16 +297,11 @@ in {
         action.exec = launch "plexamp";
       })
       (button 3 {
-        label = "Shortwave";
-        icon = appIcon pkgs.shortwave "de.haeckerfelix.Shortwave";
-        action.exec = launch "de.haeckerfelix.Shortwave";
-      })
-      (button 4 {
         label = "Elisa";
         icon = appIcon pkgs.kdePackages.elisa "elisa";
         action.exec = launch "org.kde.elisa";
       })
-      (button 5 {
+      (button 4 {
         label = "Rhythmbox";
         icon = appIcon pkgs.rhythmbox "org.gnome.Rhythmbox3";
         action.exec = launch "org.gnome.Rhythmbox3";

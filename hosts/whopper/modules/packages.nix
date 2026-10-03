@@ -273,7 +273,6 @@
     pkgs-stable.calibre
     unzip
     woff2
-    freetube
     xdg-utils
     xdg-user-dirs
     php
@@ -295,7 +294,6 @@
     hunspellDicts.en_US
     hunspellDicts.en_GB-ise
     lsd
-    yad
     pulseaudio
     logiops
     libnotify
