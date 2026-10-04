@@ -158,6 +158,7 @@
     usbutils
     pciutils
     nixd
+    nil
     nixpkgs-fmt
     lm_sensors
     krename
