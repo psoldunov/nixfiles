@@ -8,7 +8,7 @@
     (import ../../../overlays/mpv-mpris.nix)
     (import ../../../overlays/openldap.nix)
     (import ../../../overlays/vapor-kde.nix)
-    (import ../../../overlays/duckstation.nix)
+    (import ../../../overlays/duckstation)
     (import ../../../overlays/bambu-studio.nix)
     (import ../../../overlays/periphery.nix)
     (import ../../../overlays/solaar.nix {src = inputs.solaar;})

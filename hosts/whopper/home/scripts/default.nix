@@ -36,8 +36,44 @@
     echo "Claude Code pin: $CURRENT -> $VERSION"
   '';
 
+  # Pins overlays/duckstation to the newest versioned `v0.1-NNNNN` release (or
+  # the version given as $1, e.g. 0.1-11894). The rolling `latest` release is
+  # re-uploaded in place, so it can't hold a fixed hash. The AppImage is
+  # prefetched into the store, so the next rebuild reuses it.
+  update_duckstation = pkgs.writeShellScriptBin "update_duckstation" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    REPO="stenzek/duckstation"
+    TARGET="$FLAKE_DIR/overlays/duckstation/pin.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "https://api.github.com/repos/$REPO/releases?per_page=30" \
+      | ${pkgs.jq}/bin/jq -r '[.[] | select((.draft or .prerelease) | not) | .tag_name
+          | select(test("^v0\\.1-[0-9]+$")) | ltrimstr("v")]
+          | max_by(split("-")[1] | tonumber) // empty')}"
+    if ! [[ "$VERSION" =~ ^0\.1-[0-9]+$ ]]; then
+      echo "update_duckstation: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${pkgs.jq}/bin/jq -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "DuckStation already pinned at $VERSION."
+      exit 0
+    fi
+    URL="https://github.com/$REPO/releases/download/v$VERSION/DuckStation-x64.AppImage"
+    HASH="$(nix store prefetch-file --json "$URL" | ${pkgs.jq}/bin/jq -r .hash)"
+    if ! [[ "$HASH" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+      echo "update_duckstation: unexpected hash '$HASH' for $URL" >&2
+      exit 1
+    fi
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${pkgs.jq}/bin/jq -n --arg version "$VERSION" --arg hash "$HASH" \
+      '{version: $version, hash: $hash}' > "$TMP"
+    install -m 644 "$TMP" "$TARGET"
+    echo "DuckStation pin: $CURRENT -> $VERSION"
+  '';
+
   alwaysOn = {
-    inherit update_claude_code;
+    inherit update_claude_code update_duckstation;
 
     shadd = pkgs.writeShellScriptBin "shadd" ''
       ${pkgs.bun}/bin/bunx shadcn@latest add $1
@@ -75,6 +111,7 @@
       git add -A
       sudo nix flake update
       FLAKE_DIR="$FLAKE_DIR" ${update_claude_code}/bin/update_claude_code
+      FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
       LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
       deploy_one() {
         local h="$1"

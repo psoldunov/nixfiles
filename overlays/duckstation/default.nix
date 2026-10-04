@@ -4,19 +4,22 @@
 # release AppImage in an FHS env with appimageTools and lift the desktop entry,
 # icons and metainfo out of it so Plasma lists it like a native app.
 #
-# Pinned to a versioned `v0.1-NNNNN` tag rather than the rolling `latest`
-# release: upstream re-uploads `latest` in place, which breaks the fixed-output
-# hash on the next rebuild. To bump, take the newest tag from
-#   gh release list -R stenzek/duckstation
-# and refresh the hash with
-#   nix store prefetch-file https://github.com/stenzek/duckstation/releases/download/v<version>/DuckStation-x64.AppImage
+# Pinned (version + hash in pin.json next to this file) to a versioned
+# `v0.1-NNNNN` tag rather than the rolling `latest` release: upstream
+# re-uploads `latest` in place, which breaks the fixed-output hash on the next
+# rebuild.
+#
+# `update_system` refreshes the pin to the newest versioned tag before every
+# rebuild. To refresh it on its own, run `update_duckstation` (optionally with
+# a version such as `0.1-11894`) and rebuild.
 self: super: let
   pname = "duckstation";
-  version = "0.1-11826";
+  pin = super.lib.importJSON ./pin.json;
+  inherit (pin) version;
 
   src = super.fetchurl {
     url = "https://github.com/stenzek/duckstation/releases/download/v${version}/DuckStation-x64.AppImage";
-    hash = "sha256-xcip3k38EOeUE33Li6uXYMpXjfKqe+jBIVFxvru6WWU=";
+    inherit (pin) hash;
   };
 
   appimageContents = super.appimageTools.extract {inherit pname version src;};

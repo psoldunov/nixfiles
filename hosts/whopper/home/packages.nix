@@ -1,8 +1,4 @@
-{
-  pkgs,
-  pkgs-stable,
-  ...
-}: {
+{pkgs, ...}: {
   # NOTE: Script packages are managed by modules/home/scripts/default.nix
   # and appended to home.packages there.
   #
