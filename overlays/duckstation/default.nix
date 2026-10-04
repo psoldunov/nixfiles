@@ -32,8 +32,11 @@ in {
     # the bundled Qt then loads and aborts on (Qt_6_PRIVATE_API mismatch).
     # QT_QPA_PLATFORMTHEME=kde names a plugin the bundle lacks; left unset,
     # DuckStation picks its bundled xdgdesktopportal theme (portal dialogs).
+    # LD_LIBRARY_PATH carries /etc/sane-libs and pipewire-jack/lib from the
+    # sane and pipewire.jack NixOS modules; DuckStation warns on startup when
+    # it is set, and the FHS env resolves libraries through ld.so.conf anyway.
     profile = ''
-      unset QT_PLUGIN_PATH QML2_IMPORT_PATH QT_QPA_PLATFORMTHEME
+      unset QT_PLUGIN_PATH QML2_IMPORT_PATH QT_QPA_PLATFORMTHEME LD_LIBRARY_PATH
     '';
 
     # The AppImage's entry runs `duckstation-qt`; the wrapper is `duckstation`.
