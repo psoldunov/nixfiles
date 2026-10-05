@@ -38,6 +38,10 @@
 
     # Figma windows open where KWin's placement policy puts them.
     "figma"
+
+    # 1Password windows open where KWin's placement policy puts them.
+    # The match is case-sensitive, and the window class is "1Password".
+    "1Password"
   ];
 
   rememberWindowPositions = pkgs.stdenvNoCC.mkDerivation rec {
