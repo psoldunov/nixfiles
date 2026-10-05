@@ -4,8 +4,10 @@
   ...
 }: {
   # NOTE: `amdgpu` is loaded in initrd to support early KMS + Plymouth;
-  # the rest of the AMD GPU config lives in ./hardware.nix.
-  boot.initrd.kernelModules = ["amdgpu" "nfs"];
+  # the rest of the AMD GPU config lives in ./hardware.nix. The NFS mounts in
+  # ./mounts.nix come up in stage 2, which loads `nfs` on demand, so the
+  # initrd does not carry it.
+  boot.initrd.kernelModules = ["amdgpu"];
 
   # systemd-boot, EFI vars, and swraid baseline live in modules/nixos/boot.nix.
   boot.loader.systemd-boot.consoleMode = "max";
