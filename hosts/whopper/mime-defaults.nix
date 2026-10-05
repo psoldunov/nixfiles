@@ -114,6 +114,9 @@ in
     "inode/directory" = ["org.kde.dolphin.desktop" "yazi.desktop"];
     "application/pdf" = "okularApplication_pdf.desktop";
     "text/plain" = editor;
+    # Notion's desktop entry claims text/markdown, which would outrank the
+    # text/plain fallback. Keep Markdown files in the editor.
+    "text/markdown" = editor;
     "application/lrf" = "calibre-lrfviewer.desktop";
 
     "x-scheme-handler/vscode" = "code-url-handler.desktop";
@@ -124,4 +127,5 @@ in
     "x-scheme-handler/abc" = "plexamp.desktop";
     "x-scheme-handler/figma" = "figma.desktop";
     "x-scheme-handler/linear" = "linear.desktop";
+    "x-scheme-handler/notion" = "notion.desktop";
   }
