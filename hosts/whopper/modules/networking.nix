@@ -9,9 +9,14 @@
 
   networking.hostName = "Whopper";
 
+  # The only cabled link, enp10s0 below, is static, so DHCP is off. With it on,
+  # dhcpcd waited out its 30s timeout for carrier on the idle enp8s0 and
+  # wlp9s0, which held network-online.target (and with it docker and the NFS
+  # mounts) back by 30s every boot. It also picked up Docker's veth pairs and
+  # gave them IPv4LL addresses and a 169.254 default route.
   networking = {
     defaultGateway = "10.24.24.1";
-    useDHCP = true;
+    useDHCP = false;
     nameservers = [
       "10.24.24.9"
     ];
