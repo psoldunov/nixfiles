@@ -9,6 +9,7 @@
     (import ../../../overlays/openldap.nix)
     (import ../../../overlays/vapor-kde.nix)
     (import ../../../overlays/duckstation)
+    (import ../../../overlays/motrix)
     (import ../../../overlays/bambu-studio.nix)
     (import ../../../overlays/periphery.nix)
     (import ../../../overlays/solaar.nix {src = inputs.solaar;})

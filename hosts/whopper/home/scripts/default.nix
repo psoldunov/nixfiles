@@ -1,10 +1,7 @@
 # Shell scripts exposed on $PATH. This is a proper HM module (not a raw
 # attrset) — every script defined here ends up in home.packages, so
 # callers can use bare binary names instead of Nix store paths.
-{
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   # Pins overlays/claude-code to a release manifest from Anthropic's `latest`
   # channel (or the version given as $1). The manifest carries each
   # platform's sha256, so the pin is a plain file and needs no prefetch.
@@ -72,8 +69,51 @@
     echo "DuckStation pin: $CURRENT -> $VERSION"
   '';
 
+  # Pins overlays/motrix to the highest `vX.Y.Z[-label.N]` release that ships
+  # an x86_64 AppImage (or the version given as $1, e.g. 2.0.0-beta.46).
+  # Prereleases count: the 2.x line ships only as betas, so GitHub's "latest"
+  # release still points at 1.8.19. Releases sort by semver, prereleases
+  # below their release. The AppImage is prefetched into the store, so the
+  # next rebuild reuses it.
+  update_motrix = pkgs.writeShellScriptBin "update_motrix" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    REPO="agalwood/Motrix"
+    TARGET="$FLAKE_DIR/overlays/motrix/pin.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "https://api.github.com/repos/$REPO/releases?per_page=50" \
+      | ${pkgs.jq}/bin/jq -r '[.[] | select(.draft | not)
+          | (.tag_name | ltrimstr("v")) as $v
+          | select(any(.assets[]; .name == "Motrix-\($v)-x86_64.AppImage"))
+          | $v | capture("^(?<maj>[0-9]+)\\.(?<min>[0-9]+)\\.(?<pat>[0-9]+)(-(?<pl>[a-z]+)\\.(?<pn>[0-9]+))?$")
+          | {v: "\(.maj).\(.min).\(.pat)\(if .pl then "-\(.pl).\(.pn)" else "" end)",
+             key: [(.maj | tonumber), (.min | tonumber), (.pat | tonumber),
+                   (if .pl then 0 else 1 end), (.pl // ""), ((.pn // "0") | tonumber)]}]
+          | max_by(.key) | .v // empty')}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-z]+\.[0-9]+)?$ ]]; then
+      echo "update_motrix: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${pkgs.jq}/bin/jq -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "Motrix already pinned at $VERSION."
+      exit 0
+    fi
+    URL="https://github.com/$REPO/releases/download/v$VERSION/Motrix-$VERSION-x86_64.AppImage"
+    HASH="$(nix store prefetch-file --json "$URL" | ${pkgs.jq}/bin/jq -r .hash)"
+    if ! [[ "$HASH" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+      echo "update_motrix: unexpected hash '$HASH' for $URL" >&2
+      exit 1
+    fi
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${pkgs.jq}/bin/jq -n --arg version "$VERSION" --arg hash "$HASH" \
+      '{version: $version, hash: $hash}' > "$TMP"
+    install -m 644 "$TMP" "$TARGET"
+    echo "Motrix pin: $CURRENT -> $VERSION"
+  '';
+
   alwaysOn = {
-    inherit update_claude_code update_duckstation;
+    inherit update_claude_code update_duckstation update_motrix;
 
     shadd = pkgs.writeShellScriptBin "shadd" ''
       ${pkgs.bun}/bin/bunx shadcn@latest add $1
@@ -112,6 +152,7 @@
       sudo nix flake update
       FLAKE_DIR="$FLAKE_DIR" ${update_claude_code}/bin/update_claude_code
       FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
+      FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
       LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
       deploy_one() {
         local h="$1"
