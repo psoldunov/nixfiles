@@ -131,11 +131,11 @@
     "context-mode": {
       "flake": false,
       "locked": {
-        "lastModified": 1791180892,
-        "narHash": "sha256-KAsxmnu6gCcjASGWqE7nOj7aUrq9bJ2l4J8CWurGEfY=",
+        "lastModified": 1791202079,
+        "narHash": "sha256-ZBkI5iHhVVxAAx7UTH+ROlP7d579oGI6Q7/TgjgKU/U=",
         "owner": "mksglu",
         "repo": "context-mode",
-        "rev": "827a5ed2ddfc9725a7840c02b1eba83609da5320",
+        "rev": "e5fcca6802d484db3f4ec04f6d2021938852b2a0",
         "type": "github"
       },
       "original": {
@@ -785,11 +785,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791204696,
-        "narHash": "sha256-+NDY+2H0HSPnPqihde6yadd3TfA5YjluVylfsqeXIU4=",
+        "lastModified": 1791209244,
+        "narHash": "sha256-CeXsKse4Knpdt+5rYzlVUWC65uULqcYpiqrTHTvV+z0=",
         "owner": "psoldunov",
         "repo": "wye",
-        "rev": "defa9e1315997fd44591cf71d2333d8a9086a71d",
+        "rev": "d517dc2f9183734a2b6562b61c48157fde64facc",
         "type": "github"
       },
       "original": {
