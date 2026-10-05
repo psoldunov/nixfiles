@@ -181,11 +181,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791185057,
-        "narHash": "sha256-vi6OdzGuqtykr9JZ3t8BZMUFsF+7yvwtZRQTzgrPfkM=",
+        "lastModified": 1791189092,
+        "narHash": "sha256-9a3L4TurRy3aHj+7OS87HENarODhIiDpgGy5zlArljg=",
         "owner": "ensemblr-hq",
         "repo": "ensemblr",
-        "rev": "61cc60d1edfe554344ba2880b2959a1093c9b452",
+        "rev": "c72073cec995513646bf77b4792569ca1de5116d",
         "type": "github"
       },
       "original": {
@@ -785,11 +785,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791185782,
-        "narHash": "sha256-Lz1s4lUeupbX8AjPG5t9apeNZJORQvO6gMHgU0JZAzY=",
+        "lastModified": 1791189718,
+        "narHash": "sha256-N+lPA7eAcq63RDlR+laJGx2SIcAqcX0hywbfHRxfuMo=",
         "owner": "psoldunov",
         "repo": "wye",
-        "rev": "0a66ef2f04870d48573f2a10d9ce7f06c2cbf607",
+        "rev": "33651b6fbf42f3adda1feda20de6e2f7d1e2ee8b",
         "type": "github"
       },
       "original": {
