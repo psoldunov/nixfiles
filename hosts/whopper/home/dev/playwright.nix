@@ -38,7 +38,27 @@
       profileDir
     ];
   };
+
+  # The extension shows a per-profile token that skips the connect page.
+  # It lives in sops and this wrapper reads it at launch, so the value
+  # never reaches /nix/store or the generated MCP config. Without a
+  # readable token the server still starts and falls back to the page.
+  withExtensionToken = name: secret: let
+    tokenFile = lib.escapeShellArg config.sops.secrets.${secret}.path;
+  in {
+    command = toString (pkgs.writeShellScript "playwright-mcp-${name}" ''
+      if [ -r ${tokenFile} ]; then
+        PLAYWRIGHT_MCP_EXTENSION_TOKEN="$(<${tokenFile})"
+        export PLAYWRIGHT_MCP_EXTENSION_TOKEN
+      else
+        echo "playwright-mcp-${name}: ${tokenFile} unreadable, using the connect page" >&2
+      fi
+      exec ${playwrightMcp} "$@"
+    '');
+  };
 in {
+  sops.secrets.PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN = {};
+
   home.packages = [pkgs.playwright-test];
 
   home.sessionVariables = {
@@ -52,6 +72,8 @@ in {
 
     # Directory names come from ~/.config/google-chrome/Local State.
     playwright-swiss-cheese = chromeProfileServer "Profile 1";
-    playwright-almost-always = chromeProfileServer "Profile 2";
+    playwright-almost-always =
+      chromeProfileServer "Profile 2"
+      // withExtensionToken "almost-always" "PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN";
   };
 }
