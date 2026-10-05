@@ -785,11 +785,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791201133,
-        "narHash": "sha256-8n1mTtxMiwqqTmLh6IJOFbxmhrNiUhYseSOJ07NU98w=",
+        "lastModified": 1791204696,
+        "narHash": "sha256-+NDY+2H0HSPnPqihde6yadd3TfA5YjluVylfsqeXIU4=",
         "owner": "psoldunov",
         "repo": "wye",
-        "rev": "fd8a36afa1695d8d8399c0159ff960436ecfa92a",
+        "rev": "defa9e1315997fd44591cf71d2333d8a9086a71d",
         "type": "github"
       },
       "original": {
