@@ -17,6 +17,18 @@
     ];
   };
 
+  # Local caching stub in front of AdGuard Home (10.24.24.9). AdGuard drops a
+  # client's queries past its per-client rate limit, and with no cache here
+  # glibc stalled every dropped lookup for its full 5s timeout, so a page load
+  # waited 5-15s on DNS. resolved answers repeats from cache, merges duplicate
+  # in-flight queries and retransmits within a second. DNS= defaults to
+  # networking.nameservers above.
+  services.resolved = {
+    enable = true;
+    # Avahi owns mDNS (nssmdns4 below); keep resolved off UDP 5353.
+    settings.Resolve.MulticastDNS = false;
+  };
+
   # 10gbps card
   networking.interfaces.enp10s0 = {
     wakeOnLan.enable = true;
