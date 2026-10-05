@@ -104,6 +104,14 @@
       url = "github:psoldunov/linear/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Notion desktop client. Used by hosts/whopper/home/programs/notion.nix.
+    # Bump with `nix flake update notion`. The repo is private: fetching it
+    # needs the GitHub token wired in hosts/whopper/modules/nix.nix.
+    notion = {
+      url = "github:psoldunov/notion/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
