@@ -331,6 +331,22 @@
         "type": "github"
       }
     },
+    "impeccable": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791262560,
+        "narHash": "sha256-vhexqNaN5L4VD6z1hVpe4nD/upf/fDLxVeRlnqQGyxc=",
+        "owner": "pbakaus",
+        "repo": "impeccable",
+        "rev": "459438175f60feb0443165e0fd6dfb07031ac959",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pbakaus",
+        "repo": "impeccable",
+        "type": "github"
+      }
+    },
     "linear": {
       "inputs": {
         "nixpkgs": [
@@ -561,6 +577,7 @@
         "ensemblr": "ensemblr",
         "figma": "figma",
         "home-manager": "home-manager",
+        "impeccable": "impeccable",
         "linear": "linear",
         "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
