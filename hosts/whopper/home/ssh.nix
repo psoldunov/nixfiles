@@ -14,22 +14,14 @@
     # Keys are upstream ssh_config(5) directive names.
     #
     # ~/.ssh/github is a plain ed25519 key from sops (below), so git and ssh
-    # never wait for a touch. Hosts that don't know it yet fall back to the
-    # older ~/.ssh/git key, which programs.keychain keeps in the agent until it
-    # is retired. ~/.ssh/git_sk, the YubiKey key, is deliberately left out of
-    # both the agent and this file: a FIDO2 key needs a touch for every
-    # connection. It stays authorized on GitHub and Bigtasty as a spare.
+    # never wait for a touch. ~/.ssh/git_sk, the YubiKey key, is deliberately
+    # left out of both the agent and this file: a FIDO2 key needs a touch for
+    # every connection. It stays authorized on GitHub and Bigtasty as a spare.
     settings = {
       "github.com" = {
         HostName = "github.com";
         IdentityFile = "~/.ssh/github";
         User = "git";
-        AddKeysToAgent = "yes";
-      };
-
-      "mynixos.com" = {
-        HostName = "mynixos.com";
-        IdentityFile = "~/.ssh/github";
         AddKeysToAgent = "yes";
       };
 
