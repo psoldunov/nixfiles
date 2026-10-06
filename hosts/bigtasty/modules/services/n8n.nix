@@ -17,8 +17,6 @@
       environment = {
         WEBHOOK_URL = "https://n8n.theswisscheese.com";
         GENERIC_TIMEZONE = "Asia/Nicosia";
-        N8N_AI_ENABLED = "true";
-        N8N_AI_PROVIDER = "openai";
         N8N_EMAIL_MODE = "smtp";
         N8N_SMTP_HOST = "smtp.resend.com";
         N8N_SMTP_PORT = "2465";
