@@ -14,6 +14,7 @@ Take the first row that applies. When the user narrowed the scope themselves ("j
 | Context | Scope | How to read it |
 |---------|-------|----------------|
 | The user named a pull request (number or URL) | that pull request | `gh pr view <n>`, `gh pr diff <n>` |
+| The user asked for uncommitted work only ("review before commit", "what I just did") | the working tree | `git diff --staged`, `git diff`, and each untracked file from `git status --porcelain` |
 | Inside Ensemblr: an `ensemblr_get_workspace_diff` tool exists, under whatever prefix your client gives it | the workspace diff: every commit on the branch plus uncommitted work, against the workspace's base | "Inside Ensemblr" below |
 | Any other git repository | the branch against its base, plus uncommitted work | "Outside Ensemblr" below |
 
@@ -44,11 +45,13 @@ git status --porcelain                                      # untracked files: r
 ```
 
 The scope is `git diff <merge-base>` (tracked changes, committed or not) plus every untracked
-file. For a review of uncommitted work alone, the `diff-review` skill exists.
+file.
 
 ### Scope edge cases
 
-- **Empty scope**: say there is nothing to review. Offer a codebase review, but do not start one.
+- **Empty scope**: say there is nothing to review. Offer the last commit (`git show HEAD`), a
+  named range or a codebase review, but do not start one.
+- **Not a git repository**: ask what to review instead: a file, a directory or pasted code.
 - **On the base branch itself**: there is no branch to review. Review the uncommitted work only.
 - **Detached HEAD outside Ensemblr**: ask which base to compare against. Do not guess.
 - **Branch behind its base**: say so in the report. Never rebase or merge the base in to catch up.
@@ -64,12 +67,19 @@ file. For a review of uncommitted work alone, the `diff-review` skill exists.
 Ground every finding in how the change fits the system. For each changed file, read its
 imports, its call sites and its tests, not only the diff hunks.
 
-- **Small diff** (one reading holds it): review it yourself.
-- **Wide diff** (more files than you can hold with their context): split it by area and hand
-  each slice to one reader. Use the host's delegation mechanism: the `Agent` tool with
-  `subagent_type: "code-reviewer"` where it exists, or the playbook's child conversations
-  inside Ensemblr. Brief each reader with the template in Step 3, its file list, the base and
-  the commit list. Keep the branch-level checks and the verdict yourself.
+Who reads the diff depends on the host:
+
+- **Inside Ensemblr**: review a small diff (one reading holds it) yourself. Split a wide diff
+  by area and hand each slice to a child conversation under the playbook's delegation rules.
+- **Outside Ensemblr, with the `Agent` tool**: hand the diff to the `code-reviewer` subagent
+  (`subagent_type: "code-reviewer"`), even a small one. Its file reading stays out of the main
+  conversation, which gets only the report. For a wide diff, launch one subagent per slice, all
+  in the same message so they run in parallel.
+- **No delegation tool at all**: review it yourself, one slice at a time.
+
+Brief each reader with the template in Step 3, its file list, the base and the commit list.
+Keep the branch-level checks and the verdict yourself. Whatever the host:
+
 - **Massive diff** (hundreds of files): ask the user to narrow it to a directory or a commit
   range. When nobody is there to ask, start with the highest-risk areas and name what you
   skipped.
@@ -175,17 +185,22 @@ The user reads those comments as a list in the Checks panel. Branch-level findin
 report, because they have no line to anchor to. When readers worked slices, they report to you.
 You file the comments once, after you verify each one, so nothing is filed twice.
 
+**Outside Ensemblr, the report is the whole deliverable.** Never post findings to a GitHub pull
+request unless the user asks for that.
+
 ---
 
 ## Step 5: After the report
 
 - **Do not fix, commit, rebase or open a PR unasked.** Fix only when the user, or the workflow
-  driving you, asks for it. Ask before you run `gh pr create`.
+  driving you, asks for it. When CRITICAL or HIGH findings stand, offer to fix them. When the
+  change is READY, offer to open the PR, and ask before you run `gh pr create`.
 - **Ensemblr's Review conversation shares the worktree** with the orchestrator that owns the
   branch. That orchestrator commits. Never commit, rebase or move HEAD from the Review
   conversation.
 - **When asked to fix**: make the fix in the working tree and rerun the repository's checks.
-  Then resolve (`ensemblr_resolve_diff_comments`) only the comments you actually fixed. A comment
-  you deferred or disagree with stays open, and your reply says which ones and why.
+  Inside Ensemblr, then resolve (`ensemblr_resolve_diff_comments`) only the comments you
+  actually fixed. A comment you deferred or disagree with stays open. Either way, your reply
+  says which findings you left and why.
 - **Re-review after fixes** covers the changed lines and anything they touch, not the whole
   diff again. Use a full pass only when the fixes reshaped the change.

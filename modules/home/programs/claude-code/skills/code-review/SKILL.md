@@ -4,13 +4,13 @@ description: >
   Reviews code at the scope the context calls for. By default it reviews the change in front of
   you as a senior pre-merge gate: inside Ensemblr that is the workspace diff the Changes panel
   shows (the Review button lands here), elsewhere the whole branch against its base plus
-  uncommitted work, or a GitHub PR by number. It switches to a codebase-wide architectural review
-  (deep vs shallow modules, coupling, smells, refactoring roadmap) only when the user explicitly
-  asks for the whole codebase, a directory or a module's design. Trigger on "review this",
-  "review my changes", "review the branch", "review before PR", "is this ready for review",
-  "PR-readiness check", "review the workspace diff", "audit the codebase", "is this good
-  architecture", "refactor suggestions", "code quality", "module design", or pasted code with
-  "what do you think?".
+  uncommitted work, uncommitted work alone when asked, or a GitHub PR by number. It switches to a
+  codebase-wide architectural review (deep vs shallow modules, coupling, smells, refactoring
+  roadmap) only when the user explicitly asks for the whole codebase, a directory or a module's
+  design. Trigger on "review this", "review my changes", "review the diff", "review before
+  commit", "review the branch", "review before PR", "is this ready to merge", "PR-readiness
+  check", "audit the codebase", "is this good architecture", "refactor suggestions", "code
+  quality", "module design", or pasted code with "what do you think?".
 ---
 
 # Code Review
@@ -61,4 +61,3 @@ the playbook's delegation rules instead.
 - **`refactor-cleaner`** — once codebase mode has named the targets and the user wants the
   dead-code and duplicate consolidation pass executed.
 - **`database-reviewer`** — for any Postgres or Supabase schema or query findings.
-- **`diff-review` skill** — uncommitted working-tree changes alone, outside Ensemblr.
