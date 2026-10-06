@@ -14,10 +14,12 @@ All Claude Code state that's declaratively managed lives in:
 ├── mcp.nix              # sops secrets, env wiring, programs.mcp servers
 ├── mutable-settings.nix # merges settings.nix into a writable settings.json
 ├── settings.nix         # programs.claude-code settings, plugins, hooks
-├── CLAUDE.md            # this file (rendered to ~/.claude/CLAUDE.md)
+├── global-CLAUDE.md     # rendered to ~/.claude/CLAUDE.md (every project)
+├── CLAUDE.md            # this file (loads only when working in this folder)
 ├── agents/              # symlinked to ~/.claude/agents/
-├── commands/            # symlinked to ~/.claude/commands/
 ├── hooks/               # symlinked to ~/.claude/hooks/
+├── mods/                # local function-hook plugins
+├── rules/               # symlinked to ~/.claude/rules/
 └── skills/              # symlinked to ~/.claude/skills/
 ```
 
@@ -42,7 +44,7 @@ them:
 
 - `~/.claude/projects/` — per-project session memory.
 - `~/.claude/history.jsonl`, `~/.claude/sessions/` — conversation history.
-- `~/.claude/plans/` — generated plans from the `plan` skill.
+- `~/.claude/plans/` — plans written in plan mode.
 - `~/.claude/plugins/cache/` — installed plugin payloads (the *which plugins
   are enabled* lives in nix; the cached payloads themselves don't).
 - `~/.claude/.credentials.json` — auth tokens.
@@ -60,6 +62,7 @@ On each rebuild, `mutable-settings.nix` deep-merges the declared
 
 - Scalar keys declared in nix win over the live file.
 - Arrays (permissions, hooks) are unioned, so entries the CLI added survive.
+  Duplicate entries collapse to their first occurrence.
 - Keys only the CLI set are left alone.
 
 Removing an array entry from nix does not remove it from the live file. Delete
@@ -82,8 +85,9 @@ rebuild_system
 ## Plugins
 
 The `context-mode` plugin is installed via a flake input pinned in
-`~/.nixfiles/flake.nix` and loaded through `programs.claude-code.plugins`.
-Updating it:
+`~/.nixfiles/flake.nix`. The `plugins` set in `settings.nix` links it whole
+into `~/.claude/skills/context-mode/`, where Claude Code loads it as a
+skills-directory plugin. Updating it:
 
 ```bash
 nix flake update context-mode
@@ -92,13 +96,22 @@ rebuild_system
 
 `caveman`, `impeccable` and `taste-skill` are wired the same way. The
 `impeccable` repo is a marketplace, so `settings.nix` points at its `plugin/`
-subdirectory. Its hooks run a launcher that downloads the matching engine
+subdirectory.
+
+The plugins deliberately skip `programs.claude-code.plugins`. That option
+rebuilds each plugin as a directory of per-entry symlinks, and Claude Code
+refuses any manifest path (`./skills/`, a hooks module) whose real location
+falls outside the plugin directory. Check that every plugin loads with
+`claude plugin list`.
+
+Never install a marketplace copy of one of these plugins. An installed
+marketplace plugin takes the name, and the nix copy then does not load. Its hooks run a launcher that downloads the matching engine
 binary into `~/.impeccable/bin/<version>/` on first use; that cache is not
 declarative. `taste-skill` is skills only (frontend design taste, redesign,
 image-to-code, brand kits), with no hooks or MCP servers.
 
 Local mods (Claude Code function-hook plugins) live in `mods/<name>/` and are
-wired through `programs.claude-code.plugins` the same way. Each one has
+linked through the same `plugins` set. Each one has
 `.claude-plugin/plugin.json`, `hooks/hooks.json` naming its module, and tests
 under `tests/`. Check one with `claude plugin validate mods/<name>` and
 `claude plugin test mods/<name>`. `nix-owned-paths` refuses Edit, Write and
@@ -110,26 +123,28 @@ flake input too. `settings.nix` links its `skills/playwright-cli/` directory
 into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it
 with `nix flake update playwright-cli`.
 
-Marketplace-installed plugins (`skill-creator`, `superpowers`, `figma`,
-`Notion`, `vercel`) are enabled via `settings.enabledPlugins` in `default.nix`.
-Their cached payloads live under `~/.claude/plugins/cache/` and update
-independently via Claude Code's own plugin update mechanism.
-
 ## MCP servers
 
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`
 (host-specific ones, such as Playwright, live in the host's home config).
 `enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
 `figma-personal` are two remote Figma servers, one per Figma account. Sign in
-to each one separately through `/mcp`. MCP capabilities for `context7`,
-`notion`, `vercel`, `context-mode` come from the corresponding plugins.
+to each one separately through `/mcp`. The `context-mode` MCP server comes
+from its plugin. Context7, Vercel, Claude Docs and the other `claude.ai`
+servers are connectors on the claude.ai account, managed at claude.ai →
+Settings → Connectors rather than in nix.
 
 ## Hooks
 
-Hook *registration* (which event triggers which command) lives in nix under
-`settings.hooks`. The hook *scripts* themselves currently still live at
-`~/.claude/hooks/*.ts` and `*.mjs` — those will be migrated into the nix repo
-later. They're invoked by absolute path from settings.json.
+Hook scripts live in `hooks/` and are linked into `~/.claude/hooks/` by
+`programs.claude-code.hooks`. Their registration (which event triggers which
+command) lives in `settings.hooks` in `settings.nix`.
+
+`context-mode-cache-heal.mjs` is a vendored copy of the script context-mode
+deploys for its marketplace install. context-mode rewrites the hook's command
+in `settings.json` to the quoted bare-script form on every boot, so
+`settings.nix` declares that exact string. Any other spelling makes the array
+union append a fresh copy on each rebuild.
 
 ## Notes for future Claude sessions
 
