@@ -14,6 +14,8 @@
     plugins = {
       context-mode = inputs.context-mode;
       caveman = inputs.caveman;
+      # The repo is a marketplace; the plugin itself lives in plugin/.
+      impeccable = "${inputs.impeccable}/plugin";
     };
     settings = {
       effortLevel = "xhigh";

@@ -61,6 +61,11 @@
       flake = false;
     };
 
+    impeccable = {
+      url = "github:pbakaus/impeccable";
+      flake = false;
+    };
+
     skrepka = {
       url = "github:psoldunov/skrepka/master";
       inputs.nixpkgs.follows = "nixpkgs";

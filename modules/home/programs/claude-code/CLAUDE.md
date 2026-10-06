@@ -47,6 +47,7 @@ them:
   are enabled* lives in nix; the cached payloads themselves don't).
 - `~/.claude/.credentials.json` — auth tokens.
 - `~/.claude/telemetry/`, `~/.claude/file-history/`, `~/.claude/backups/` — runtime data.
+- `~/.impeccable/` — the Impeccable engine binary cache.
 
 Anything else under `~/.claude/` is fair game to be replaced by nix on next rebuild.
 
@@ -88,6 +89,11 @@ Updating it:
 nix flake update context-mode
 rebuild_system
 ```
+
+`caveman` and `impeccable` are wired the same way. The `impeccable` repo is a
+marketplace, so `settings.nix` points at its `plugin/` subdirectory. Its hooks
+run a launcher that downloads the matching engine binary into
+`~/.impeccable/bin/<version>/` on first use; that cache is not declarative.
 
 Marketplace-installed plugins (`skill-creator`, `superpowers`, `figma`,
 `Notion`, `vercel`) are enabled via `settings.enabledPlugins` in `default.nix`.
