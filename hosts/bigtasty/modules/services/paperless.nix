@@ -27,6 +27,11 @@
         PAPERLESS_ADMIN_USER = "psoldunov";
         PAPERLESS_OCR_LANGUAGE = "eng+ell+rus";
         PAPERLESS_OCR_LANGUAGES = "eng est ell rus";
+        # Office documents (.doc/.docx/.xlsx, ...) are parsed by Tika and
+        # converted to PDF by Gotenberg; without them they fail to consume.
+        PAPERLESS_TIKA_ENABLED = "1";
+        PAPERLESS_TIKA_ENDPOINT = "http://paperless-tika:9998";
+        PAPERLESS_TIKA_GOTENBERG_ENDPOINT = "http://paperless-gotenberg:3000";
       };
       environmentFiles = [
         config.sops.secrets.PAPERLESS_SETTINGS.path
@@ -34,7 +39,30 @@
       extraOptions = [
         "--network=paperless-network"
       ];
-      dependsOn = ["paperless_broker" "paperless_db"];
+      dependsOn = ["paperless_broker" "paperless_db" "paperless_gotenberg" "paperless_tika"];
+      autoStart = true;
+    };
+    paperless_gotenberg = {
+      image = "docker.io/gotenberg/gotenberg:8.37";
+      hostname = "paperless-gotenberg";
+      # The Chromium route converts .eml files; keep it from loading remote
+      # content such as tracking pixels or running JavaScript.
+      cmd = [
+        "gotenberg"
+        "--chromium-disable-javascript=true"
+        "--chromium-allow-list=file:///tmp/.*"
+      ];
+      extraOptions = [
+        "--network=paperless-network"
+      ];
+      autoStart = true;
+    };
+    paperless_tika = {
+      image = "docker.io/apache/tika:3.3.1.0";
+      hostname = "paperless-tika";
+      extraOptions = [
+        "--network=paperless-network"
+      ];
       autoStart = true;
     };
     paperless_broker = {

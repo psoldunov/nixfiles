@@ -86,7 +86,6 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | Field | Type | Meaning |
 |---|---|---|
 | `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/shell.nix` uses it to omit desktop-only env vars (kitty/thunderbird/prisma/deno), aliases (`suspend`), fish functions (`open`, `fzf_kill`), and the `git` keychain key on servers. |
-| `obsidianBase` | path | Root of the Obsidian vaults. Read by the Claude Code MCP config (`modules/home/programs/claude-code/mcp.nix`). |
 | `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules

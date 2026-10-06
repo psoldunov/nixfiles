@@ -97,6 +97,14 @@ binary into `~/.impeccable/bin/<version>/` on first use; that cache is not
 declarative. `taste-skill` is skills only (frontend design taste, redesign,
 image-to-code, brand kits), with no hooks or MCP servers.
 
+Local mods (Claude Code function-hook plugins) live in `mods/<name>/` and are
+wired through `programs.claude-code.plugins` the same way. Each one has
+`.claude-plugin/plugin.json`, `hooks/hooks.json` naming its module, and tests
+under `tests/`. Check one with `claude plugin validate mods/<name>` and
+`claude plugin test mods/<name>`. `nix-owned-paths` refuses Edit, Write and
+NotebookEdit calls on files that resolve into `/nix/store`, and names the
+source under this module to edit instead.
+
 Microsoft's official `playwright-cli` skill comes from the `playwright-cli`
 flake input too. `settings.nix` links its `skills/playwright-cli/` directory
 into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it

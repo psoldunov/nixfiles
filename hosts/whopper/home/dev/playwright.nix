@@ -57,6 +57,7 @@
     '');
   };
 in {
+  sops.secrets.PLAYWRIGHT_SWISS_CHEESE_EXTENSION_TOKEN = {};
   sops.secrets.PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN = {};
 
   home.packages = [pkgs.playwright-test];
@@ -75,7 +76,9 @@ in {
     };
 
     # Directory names come from ~/.config/google-chrome/Local State.
-    playwright-swiss-cheese = chromeProfileServer "Profile 1";
+    playwright-swiss-cheese =
+      chromeProfileServer "Profile 1"
+      // withExtensionToken "swiss-cheese" "PLAYWRIGHT_SWISS_CHEESE_EXTENSION_TOKEN";
     playwright-almost-always =
       chromeProfileServer "Profile 2"
       // withExtensionToken "almost-always" "PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN";
