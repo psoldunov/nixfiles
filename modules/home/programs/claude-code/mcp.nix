@@ -16,6 +16,8 @@
     CLAUDE_NOCODB_MCP_URL.sopsFile = sharedFile;
     CLAUDE_NOCODB_MCP_TOKEN.sopsFile = sharedFile;
     CLAUDE_SANITY_MCP_BEARER.sopsFile = sharedFile;
+    N8N_ACCESS_TOKEN.sopsFile = sharedFile;
+    NOCODB_API_KEY.sopsFile = sharedFile;
     PAPERLESS_API_KEY.sopsFile = sharedFile;
   };
 
@@ -29,6 +31,8 @@
         CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
         CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
+        NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}
       set name (string split -m1 ':' $pair)[1]
       set path (string split -m1 ':' $pair)[2]
@@ -43,6 +47,8 @@
         CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
         CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
+        NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
       name="''${pair%%:*}"
       path="''${pair#*:}"
@@ -74,9 +80,24 @@
         ];
       };
 
+      nocodb-the-connection = {
+        command = "${pkgs.nodejs_24}/bin/npx";
+        args = [
+          "mcp-remote"
+          "https://nocodb.theswisscheese.com/mcp/nc5tvdxynrmu24vo"
+          "--header"
+          "x-api-key: \${NOCODB_API_KEY}"
+        ];
+      };
+
       Sanity = {
         url = "https://mcp.sanity.io";
         headers.Authorization = "Bearer \${CLAUDE_SANITY_MCP_BEARER}";
+      };
+
+      n8n-mcp = {
+        url = "https://n8n.theswisscheese.com/mcp-server/http";
+        headers.Authorization = "Bearer \${N8N_ACCESS_TOKEN}";
       };
 
       # One remote Figma server per Figma account. Claude Code keeps the
