@@ -16,12 +16,8 @@
 #   enableCloudflareTunnels :: bool  (cloudflared tunnels)
 #   enableDyndns            :: bool  (cloudflare-dyndns)
 #   enableDockerOci         :: bool  (virtualisation.oci-containers)
-#
-#   obsidianBase            :: path  (root of Obsidian vaults, host-specific)
 {
   role = "desktop";
-
-  obsidianBase = "/home/psoldunov/Documents/Obsidian";
 
   enableRaid = false;
   enableNfsServer = false;

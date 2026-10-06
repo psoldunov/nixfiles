@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  hostConfig,
   ...
 }: {
   # Secrets live as individual sops entries decrypted to
@@ -12,9 +11,6 @@
   sops.secrets = let
     sharedFile = ../../../../secrets/shared.yaml;
   in {
-    CLAUDE_MAGIC_21ST_API_KEY.sopsFile = sharedFile;
-    CLAUDE_NOCODB_MCP_URL.sopsFile = sharedFile;
-    CLAUDE_NOCODB_MCP_TOKEN.sopsFile = sharedFile;
     CLAUDE_SANITY_MCP_BEARER.sopsFile = sharedFile;
     N8N_ACCESS_TOKEN.sopsFile = sharedFile;
     NOCODB_API_KEY.sopsFile = sharedFile;
@@ -27,9 +23,6 @@
   # the JSON files on disk only ever contain the placeholder text.
   programs.fish.shellInitLast = lib.mkAfter ''
     for pair in \
-        CLAUDE_MAGIC_21ST_API_KEY:${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path} \
-        CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
-        CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
@@ -43,9 +36,6 @@
   '';
   programs.bash.bashrcExtra = lib.mkAfter ''
     for pair in \
-        CLAUDE_MAGIC_21ST_API_KEY:${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path} \
-        CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
-        CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
@@ -61,25 +51,6 @@
   programs.mcp = {
     enable = true;
     servers = {
-      "@21st-dev/magic" = {
-        command = "${pkgs.nodejs_24}/bin/npx";
-        args = [
-          "-y"
-          "@21st-dev/magic@latest"
-          "API_KEY=\${CLAUDE_MAGIC_21ST_API_KEY}"
-        ];
-      };
-
-      nocodb = {
-        command = "${pkgs.nodejs_24}/bin/npx";
-        args = [
-          "mcp-remote"
-          "\${CLAUDE_NOCODB_MCP_URL}"
-          "--header"
-          "xc-mcp-token: \${CLAUDE_NOCODB_MCP_TOKEN}"
-        ];
-      };
-
       nocodb-the-connection = {
         command = "${pkgs.nodejs_24}/bin/npx";
         args = [
@@ -105,22 +76,6 @@
       # through /mcp. The acct query parameter only tells the URLs apart.
       figma-almost-always.url = "https://mcp.figma.com/mcp?acct=almost-always";
       figma-personal.url = "https://mcp.figma.com/mcp?acct=personal";
-
-      obsidian-personal = {
-        command = "${pkgs.nodejs_24}/bin/npx";
-        args = [
-          "@bitbonsai/mcpvault@latest"
-          "${hostConfig.obsidianBase}/Personal"
-        ];
-      };
-
-      obsidian-boundary = {
-        command = "${pkgs.nodejs_24}/bin/npx";
-        args = [
-          "@bitbonsai/mcpvault@latest"
-          "${hostConfig.obsidianBase}/Boundary"
-        ];
-      };
 
       Paperless = {
         command = "${pkgs.bun}/bin/bunx";

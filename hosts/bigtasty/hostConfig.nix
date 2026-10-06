@@ -15,12 +15,8 @@
 #   enableCloudflareTunnels :: bool  (cloudflared tunnels)
 #   enableDyndns            :: bool  (cloudflare-dyndns)
 #   enableDockerOci         :: bool  (virtualisation.oci-containers)
-#
-#   obsidianBase            :: path  (root of Obsidian vaults, host-specific)
 {
   role = "server";
-
-  obsidianBase = "/RAID/apps/syncthing/Obsidian";
 
   enableRaid = true;
   enableNfsServer = true;
