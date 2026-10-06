@@ -11,8 +11,9 @@ paths:
 ---
 # Tailwind CSS
 
-> Applies only to projects that use Tailwind CSS; ignore it elsewhere. Rules 3 and 4 assume
-> Tailwind v4's CSS-first configuration. Where v3 differs, the rule says so.
+> Tailwind is the default styling for web frontends ([web/defaults.md](./defaults.md)). This rule
+> applies wherever Tailwind is in use; skip it only in a project that styles with something else.
+> Rules 3 and 4 assume Tailwind v4's CSS-first configuration. Where v3 differs, the rule says so.
 
 **Use rem for custom lengths. Built-in Tailwind utilities are always allowed, regardless of their
 underlying units. Prefer existing utilities over custom values, and shared theme tokens over
@@ -181,8 +182,9 @@ Arithmetic is not verification. Compile and compare the declarations.
   `theme.extend` in `tailwind.config.*`.
 - Use the right namespace and a meaningful name. A card radius that must differ from the existing
   ones is `--radius-card: 0.875rem` in `@theme`, used as `rounded-card`.
-- **If `cn()` uses `tailwind-merge`, every non-colour token you add needs a matching entry in its
-  `extendTailwindMerge` config, in the same commit.** `tailwind-merge` only knows Tailwind's own
+- **Every non-colour token you add needs a matching `tailwind-merge` entry, in the same commit.**
+  Build `cn()` on `extendTailwindMerge({ extend: { theme: { radius: ['card'] } } })` instead of the
+  plain `twMerge` once the theme has custom tokens. `tailwind-merge` only knows Tailwind's own
   scales. A token it does not recognise lands in no conflict group, so `cn('rounded-lg',
   'rounded-card')` returns *both* and CSS source order decides the winner. The merge key matches
   the CSS namespace: `--radius-*` → `radius`, `--text-*` → `text`, `--spacing-*` → `spacing`, and
@@ -197,10 +199,10 @@ Arithmetic is not verification. Compile and compare the declarations.
 
 ## 5. Compose classes with cn()
 
-- Use the project's `cn()` helper (usually `clsx` plus `tailwind-merge`, at `@/lib/utils` in
-  shadcn/ui projects) when combining base classes, conditional classes, or a caller's `className`.
-  Do not use template literals, string concatenation or array joins for class composition. If the
-  project has no such helper, follow its existing pattern rather than adding dependencies unasked.
+- Use the project's `cn()` helper (`clsx` plus `tailwind-merge`, usually at `@/lib/utils`) when
+  combining base classes, conditional classes, or a caller's `className`. Do not use template
+  literals, string concatenation or array joins for class composition. If the project has no
+  `cn()`, add it as [web/defaults.md](./defaults.md) describes.
 - Use complete, statically detectable class names. Select whole classes rather than building
   fragments such as `bg-${color}-500` — Tailwind scans source text and will not generate a class it
   cannot see.
