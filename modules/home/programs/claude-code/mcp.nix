@@ -77,6 +77,11 @@
       figma-almost-always.url = "https://mcp.figma.com/mcp?acct=almost-always";
       figma-personal.url = "https://mcp.figma.com/mcp?acct=personal";
 
+      # One remote Linear server per Linear workspace, signed in the same
+      # way as Figma above.
+      linear-swiss-cheese.url = "https://mcp.linear.app/mcp?acct=swiss-cheese";
+      linear-almost-always.url = "https://mcp.linear.app/mcp?acct=almost-always";
+
       Paperless = {
         command = "${pkgs.bun}/bin/bunx";
         args = [
