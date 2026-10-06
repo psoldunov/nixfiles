@@ -8,7 +8,8 @@
 # activation, deep-merges the baseline into the live file:
 #   - objects merge key by key,
 #   - scalars from nix win,
-#   - arrays are unioned, so CLI-added permissions and hooks survive.
+#   - arrays are unioned, so CLI-added permissions and hooks survive, and
+#     duplicate entries collapse to their first occurrence.
 # Dropping an array entry from nix does not remove it from the live file; delete
 # it there by hand.
 {
@@ -22,11 +23,12 @@
   jq = lib.getExe pkgs.jq;
 
   mergeFilter = ''
+    def dedupe: reduce .[] as $x ([]; if any(.[]; . == $x) then . else . + [$x] end);
     def merge(a; b):
       if (a | type) == "object" and (b | type) == "object" then
         reduce (b | keys_unsorted[]) as $k (a; .[$k] = merge(a[$k]; b[$k]))
       elif (a | type) == "array" and (b | type) == "array" then
-        reduce b[] as $x (a; if any(.[]; . == $x) then . else . + [$x] end)
+        a + b | dedupe
       elif b == null then a
       else b
       end;
