@@ -1,20 +1,8 @@
 # Agent Orchestration
 
-## Available Agents
-
-Located in `~/.claude/agents/`:
-
-| Agent | Purpose | When to Use |
-|-------|---------|-------------|
-| planner | Implementation planning | Complex features, refactoring |
-| architect | System design | Architectural decisions |
-| tdd-guide | Test-driven development | New features, bug fixes |
-| code-reviewer | Code review | After writing code |
-| security-reviewer | Security analysis | Before commits |
-| build-error-resolver | Fix build errors | When build fails |
-| e2e-runner | E2E testing | Critical user flows |
-| refactor-cleaner | Dead code cleanup | Code maintenance |
-| doc-updater | Documentation | Updating docs |
+Every named agent in these rules (planner, tdd-guide, code-reviewer and the
+rest) applies only when the Agent tool is available. Without it, do the step
+inline or follow the host's own delegation rules.
 
 ## Immediate Agent Usage
 
@@ -26,7 +14,7 @@ No user prompt needed:
 
 ## Parallel Task Execution
 
-ALWAYS use parallel Task execution for independent operations:
+ALWAYS run agents in parallel for independent operations:
 
 ```markdown
 # GOOD: Parallel execution
