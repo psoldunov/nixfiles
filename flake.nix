@@ -71,6 +71,11 @@
       flake = false;
     };
 
+    playwright-cli = {
+      url = "github:microsoft/playwright-cli";
+      flake = false;
+    };
+
     skrepka = {
       url = "github:psoldunov/skrepka/master";
       inputs.nixpkgs.follows = "nixpkgs";

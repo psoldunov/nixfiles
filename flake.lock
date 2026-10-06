@@ -567,6 +567,22 @@
         "type": "github"
       }
     },
+    "playwright-cli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790637751,
+        "narHash": "sha256-80xzHvf7BHGvoKvMdkGeNUsUrpZrpw5eryuQM8NKT/E=",
+        "owner": "microsoft",
+        "repo": "playwright-cli",
+        "rev": "b85c7a736bb473bf55b584e54a09ffa698d6d871",
+        "type": "github"
+      },
+      "original": {
+        "owner": "microsoft",
+        "repo": "playwright-cli",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "apple-fonts": "apple-fonts",
@@ -585,6 +601,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "notion": "notion",
         "plasma-manager": "plasma-manager",
+        "playwright-cli": "playwright-cli",
         "skrepka": "skrepka",
         "solaar": "solaar",
         "sops-nix": "sops-nix",
