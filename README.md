@@ -118,7 +118,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
 | `networking.nix` | hostname, static IP on `enp10s0`, firewall ports, openssh hardening, avahi, Skrepka firewall |
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
-| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, openldap, vapor-kde, duckstation, motrix, bambu-studio, periphery, solaar) |
+| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, openldap, vapor-kde, duckstation, motrix, pi-coding-agent, bambu-studio, periphery, solaar) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
@@ -212,7 +212,7 @@ rebuild_system                # rebuild current host locally
 rebuild_system Whopper        # explicit local
 rebuild_system BigTasty       # remote build + activate via SSH agent
 rebuild_system all            # Whopper then BigTasty
-update_system [host|all]      # same shape; runs `nix flake update` + update_claude_code, update_duckstation, update_motrix first, switches with --upgrade-all
+update_system [host|all]      # same shape; runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pi_coding_agent first, switches with --upgrade-all
 clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune
 ```
 
