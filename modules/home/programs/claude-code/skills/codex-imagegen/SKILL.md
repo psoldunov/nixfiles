@@ -57,8 +57,12 @@ Native output is about 1.6 MP at the requested ratio (a 16:9 prompt gave 1672x94
    - in-image text, letter by letter;
    - the edit invariants, i.e. what had to stay unchanged;
    - the aspect ratio;
-   - for transparent output, `alpha_ok` and the edges, with no halo and no fake checkerboard.
-6. **Iterate deliberately.** Make one targeted change per round. Edit the best result (`--ref <it>`) rather than re-rolling from scratch. Restate every invariant each round. Stop after 2 correction rounds and report what is still off instead of burning quota.
+   - for transparent output, `alpha_ok` and the edges, with no halo and no fake checkerboard;
+   - texture at 2x zoom: crop and enlarge hair, skin, hands and small text, because the full frame hides AI texture.
+6. **Iterate deliberately.** Make one targeted change per round and restate every invariant each round.
+   - For composition-level fixes (an object, the background, lighting, a garment), edit the best result (`--ref <it>`).
+   - For texture fixes ("the hair looks AI"), amend the base prompt and regenerate from the original references. Edits re-render the whole image with no mask, so texture artifacts compound across rounds. Filters do not fix them either. See "Edits degrade texture" in `references/prompting.md`.
+   - Stop after 2 correction rounds and report what is still off instead of burning quota.
 7. **Report:**
    - final path(s), with dimensions;
    - the final prompt;
