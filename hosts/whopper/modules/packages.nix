@@ -166,6 +166,7 @@
     # The YubiKey backup recipient in .sops.yaml is an age plugin key, so
     # `sops updatekeys` and new secret files need the plugin on PATH.
     age-plugin-yubikey
+    glab
     alejandra
     dive
     gperftools

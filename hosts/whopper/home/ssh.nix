@@ -27,12 +27,6 @@
         AddKeysToAgent = "yes";
       };
 
-      "mynixos.com" = {
-        HostName = "mynixos.com";
-        IdentityFile = "~/.ssh/github";
-        AddKeysToAgent = "yes";
-      };
-
       "gitlab.com" = {
         IdentityFile = "~/.ssh/github";
         AddKeysToAgent = "yes";
