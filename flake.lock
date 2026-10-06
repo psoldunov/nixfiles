@@ -589,6 +589,7 @@
         "solaar": "solaar",
         "sops-nix": "sops-nix",
         "steam-presence": "steam-presence",
+        "taste-skill": "taste-skill",
         "token-station": "token-station",
         "vscode-server": "vscode-server",
         "wye": "wye",
@@ -770,6 +771,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "taste-skill": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790413310,
+        "narHash": "sha256-1X7XrXi2mivzmrqa9+zkIHs0uFUoXaqhOXQIHqK8lV0=",
+        "owner": "leonxlnx",
+        "repo": "taste-skill",
+        "rev": "ce26fc25c0e5e8cab638f883de62d9a86ee5e45b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "leonxlnx",
+        "repo": "taste-skill",
         "type": "github"
       }
     },
