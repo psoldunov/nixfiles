@@ -4,6 +4,11 @@
     openFirewall = true;
   };
 
+  # Cloudflare challenges RuTracker's login.php for non-browser clients, so
+  # Prowlarr routes that indexer through FlareSolverr (indexer proxy at
+  # http://localhost:8191/, matched by tag). Local only: firewall stays closed.
+  services.flaresolverr.enable = true;
+
   services.radarr = {
     enable = true;
     openFirewall = true;

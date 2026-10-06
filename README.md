@@ -72,7 +72,7 @@ Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix se
 | GPU | Intel iGPU (intel-media-driver, Quick Sync, VAAPI) |
 | Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup,Games}` |
 | Network | static IP `10.24.24.2` (`enp8s0`), openssh (`AllowUsers psoldunov`) |
-| Services | jellyfin, sonarr/radarr/lidarr/prowlarr/seerr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server |
+| Services | jellyfin, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server |
 | Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com` |
 | Tunnels | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL` (each service module adds its own hostname), `services.cloudflare-dyndns` syncing DNS records |
 | Docker | `oci-containers`: jellyplex-watched, slskd, transmission, homeassistant, portainer-ce, homarr (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
@@ -140,7 +140,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `users.nix` | `psoldunov` extras (`media` group, linger, declarative `openssh.authorizedKeys.keys`), `cloudflared` system user |
 | `nix-locale.nix` | `permittedInsecurePackages` for .NET 6 (locale and base nix settings are shared) |
 | `packages.nix` | Server-side `environment.systemPackages` |
-| `services-media.nix` | jellyfin, uptime-kuma, *arr stack (sonarr/radarr/lidarr/prowlarr/seerr), `programs.chromium` |
+| `services-media.nix` | jellyfin, uptime-kuma, *arr stack (sonarr/radarr/lidarr/prowlarr/seerr), flaresolverr (Prowlarr Cloudflare proxy), `programs.chromium` |
 | `services-web.nix` | nginx vhosts + ACME with Cloudflare DNS-01 |
 | `services-cloudflare.nix` | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL`, `services.cloudflare-dyndns` |
 | `services-shares.nix` | `services.nfs.server`, Samba (workgroup WORKGROUP, MacSamba/fruit), samba-wsdd, netatalk, `systemd.services.sharesSync` (inotify → rsync) |
