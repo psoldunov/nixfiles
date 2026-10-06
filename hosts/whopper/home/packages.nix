@@ -26,6 +26,7 @@
     mise
     nodejs_24
     obsidian
+    anytype
     plexamp
     pcsx2
     duckstation
