@@ -136,8 +136,9 @@ with `nix flake update playwright-cli`.
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`
 (host-specific ones, such as Playwright, live in the host's home config).
 `enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
-`figma-personal` are two remote Figma servers, one per Figma account. Sign in
-to each one separately through `/mcp`. The `context-mode` MCP server comes
+`figma-personal` are two remote Figma servers, one per Figma account.
+`linear-swiss-cheese` and `linear-almost-always` do the same for the two
+Linear workspaces. Sign in to each one separately through `/mcp`. The `context-mode` MCP server comes
 from its plugin. Context7, Vercel, Claude Docs and the other `claude.ai`
 servers are connectors on the claude.ai account, managed at claude.ai →
 Settings → Connectors rather than in nix.
