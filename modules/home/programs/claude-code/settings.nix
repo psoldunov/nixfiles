@@ -15,7 +15,6 @@
     skills = ./skills;
     hooks = {
       "block-rm-rf.sh" = builtins.readFile ./hooks/block-rm-rf.sh;
-      "enforce-bun.sh" = builtins.readFile ./hooks/enforce-bun.sh;
       "context-mode-cache-heal.mjs" = builtins.readFile ./hooks/context-mode-cache-heal.mjs;
     };
     plugins = {
@@ -24,6 +23,8 @@
       # The repo is a marketplace; the plugin itself lives in plugin/.
       impeccable = "${inputs.impeccable}/plugin";
       taste-skill = inputs.taste-skill;
+      # Local mods: function-hook plugins kept in this repo.
+      nix-owned-paths = ./mods/nix-owned-paths;
     };
     settings = {
       effortLevel = "xhigh";
@@ -60,15 +61,6 @@
               {
                 type = "command";
                 command = "bash ~/.claude/hooks/block-rm-rf.sh";
-              }
-            ];
-          }
-          {
-            matcher = "Bash";
-            hooks = [
-              {
-                type = "command";
-                command = "bash ~/.claude/hooks/enforce-bun.sh";
               }
             ];
           }

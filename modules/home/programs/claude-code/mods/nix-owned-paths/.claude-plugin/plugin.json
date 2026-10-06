@@ -1,0 +1,5 @@
+{
+  "name": "nix-owned-paths",
+  "version": "0.1.0",
+  "description": "Refuse edits to files that home-manager links into the Nix store, and name the source to edit instead."
+}
