@@ -13,9 +13,6 @@
       CFDYNDNS_TOKEN = {
         owner = "psoldunov";
       };
-      CFDYNDNS_API_KEY = {
-        owner = "psoldunov";
-      };
       CF_DNS_CREDS = {
         group = "acme";
       };
@@ -32,15 +29,8 @@
         group = "docker";
       };
       IMMICH_SETTINGS = {};
-      KARAKEEP_SETTINGS = {};
       NOCODB_SETTINGS = {
         group = "docker";
-      };
-      TRANSMISSION = {
-        group = "docker";
-      };
-      CLAWDBOT_TELEGRAM_BOT_TOKEN = {
-        owner = "psoldunov";
       };
       VAULTWARDEN_SETTINGS = {
         owner = "vaultwarden";

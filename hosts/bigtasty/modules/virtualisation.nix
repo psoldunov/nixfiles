@@ -82,8 +82,9 @@
         "8000:8000"
         "9443:9443"
       ];
+      # Portainer refuses to start unless each origin carries its scheme.
       environment = {
-        TRUSTED_ORIGINS = "portainer.theswisscheese.com";
+        TRUSTED_ORIGINS = "https://portainer.theswisscheese.com";
       };
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock"
@@ -95,25 +96,22 @@
       ports = [
         "7575:7575"
       ];
+      # The image declares these as volumes; without host paths each
+      # `docker run --rm` started from an empty board and database.
       volumes = [
         "/var/run/docker.sock:/var/run/docker.sock"
-        "./homarr/appdata:/appdata"
+        "/RAID/apps/homarr/configs:/app/data/configs"
+        "/RAID/apps/homarr/data:/data"
+        "/RAID/apps/homarr/icons:/app/public/icons"
       ];
       environmentFiles = [
         config.sops.secrets.HOMARR_SETTINGS.path
       ];
-    };
-    searxng = {
-      image = "searxng/searxng:latest";
-      volumes = [
-        "/RAID/apps/searxng:/etc/searxng"
+      # Next.js listens on the container hostname, not localhost, so the
+      # image's own `wget http://localhost:$PORT` check never succeeds.
+      extraOptions = [
+        "--health-cmd=wget --no-verbose --tries=1 --spider http://$(hostname):7575 || exit 1"
       ];
-      extraOptions = [];
-      ports = ["9080:8080"];
-      environment = {
-        BASE_URL = "https://search.theswisscheese.com/";
-        INSTANCE_NAME = "The Search Cheese";
-      };
     };
   };
 

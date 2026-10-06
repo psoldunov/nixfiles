@@ -1,15 +1,11 @@
 {config, ...}: {
+  # Each service module adds its own hostname to this tunnel's ingress.
   services.cloudflared = {
     enable = true;
     tunnels = {
       "CFD_MAIN_TUNNEL" = {
         credentialsFile = config.sops.secrets.CFD_MAIN_TUNNEL.path;
         default = "http_status:404";
-        ingress = {
-          "search.theswisscheese.com" = {
-            service = "http://localhost:9080";
-          };
-        };
       };
     };
   };
