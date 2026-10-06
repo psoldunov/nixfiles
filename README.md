@@ -72,10 +72,10 @@ Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix se
 | GPU | Intel iGPU (intel-media-driver, Quick Sync, VAAPI) |
 | Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup,Games}` |
 | Network | static IP `10.24.24.2` (`enp8s0`), openssh (`AllowUsers psoldunov`) |
-| Services | jellyfin, sonarr/radarr/lidarr/prowlarr/seerr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, karakeep, syncthing, sotf-server |
+| Services | jellyfin, sonarr/radarr/lidarr/prowlarr/seerr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server |
 | Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com` |
-| Tunnels | `services.cloudflared` for `search.theswisscheese.com`, `services.cloudflare-dyndns` syncing DNS records |
-| Docker | `oci-containers`: jellyplex-watched, slskd, transmission, homeassistant, portainer-ce, homarr, searxng (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
+| Tunnels | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL` (each service module adds its own hostname), `services.cloudflare-dyndns` syncing DNS records |
+| Docker | `oci-containers`: jellyplex-watched, slskd, transmission, homeassistant, portainer-ce, homarr (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
 | File sharing | `services.nfs.server` exports `/export/{transmission,slskd,Paperless,Files,Documents}`, Samba/samba-wsdd + Netatalk for AFP |
 | Passwordless sudo | `pam_ssh_agent_auth` checks forwarded SSH agent against `/etc/ssh/authorized_keys.d/psoldunov` |
 
@@ -147,7 +147,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `services-misc.nix` | gnupg agent |
 | `virtualisation.nix` | Host `oci-containers`, transmission restart policy, `systemd.services.docker-networks` oneshot creating immich-/paperless-/nocodb-/infisical-network |
 | `sops.nix` | sops secrets for env files referenced by docker containers + ACME |
-| `services/` | Pre-extracted service modules: `immich`, `paperless`, `karakeep`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical` |
+| `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical` |
 
 ## Flake inputs
 
@@ -253,11 +253,10 @@ Notable secrets:
 |---|---|---|
 | `STEAM_API_KEY`, `STEAMGRIDDB_API_KEY` | Whopper system | `programs.steam.presence` |
 | `SUNSHINE_WEB_PASSWORD` | Whopper system | Sunshine web UI login, written before each start |
-| `EXPRESSVPN_KEY` | Whopper system | Declared only; no consumer in the repo |
 | `SYNCTHING_GUI_PASSWORD` | both (system, `shared.yaml`) | `services.syncthing.guiPasswordFile` |
 | `WIFI_PASSWORD` | BigTasty (system, `shared.yaml`) | wpa_supplicant `secretsFile`, rendered by a sops template (only while `networking.wireless` is enabled) |
 | `SHELL_SECRETS` | both (user) | fish/bash init in shared `shell.nix`; shell-only env exports |
-| `CLAUDE_*`, `PAPERLESS_API_KEY` | both (user, `shared.yaml`) | Claude Code MCP servers ([mcp.nix](modules/home/programs/claude-code/mcp.nix)) |
+| `CLAUDE_SANITY_MCP_BEARER`, `N8N_ACCESS_TOKEN`, `NOCODB_API_KEY`, `PAPERLESS_API_KEY` | both (user, `shared.yaml`) | Claude Code MCP servers ([mcp.nix](modules/home/programs/claude-code/mcp.nix)) |
 | `SPOTIFYD_PASSWORD` | Whopper (user) | spotifyd `password_cmd` |
 | `CFD_MAIN_TUNNEL`, `CFDYNDNS_TOKEN`, `CF_DNS_CREDS` | BigTasty | cloudflared, cloudflare-dyndns, ACME DNS-01 |
 | `SLSKD_ENV`, `JELLYPLEX_ENV`, `HOMARR_SETTINGS`, `IMMICH_SETTINGS`, ... | BigTasty | `virtualisation.oci-containers.containers.*.environmentFiles` |

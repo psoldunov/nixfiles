@@ -22,7 +22,6 @@
 
     ./services/immich.nix
     ./services/infisical.nix
-    ./services/karakeep.nix
     ./services/n8n.nix
     ./services/nocodb.nix
     ./services/paperless.nix
