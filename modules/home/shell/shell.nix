@@ -81,7 +81,8 @@ in {
     enable = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
-    keys = lib.optionals isDesktop ["git"];
+    # git_sk is the YubiKey key; git is the old file key, kept until retired.
+    keys = lib.optionals isDesktop ["git_sk" "git"];
   };
 
   programs.fzf = {

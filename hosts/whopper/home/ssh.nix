@@ -12,22 +12,27 @@
     enableDefaultConfig = false;
 
     # Keys are upstream ssh_config(5) directive names.
+    #
+    # ~/.ssh/git_sk is a resident ed25519-sk key on YubiKey 19662979: the file
+    # is only a handle, every use needs a touch, and `ssh-keygen -K` restores
+    # the handle on another machine. The older ~/.ssh/git key stays loaded in
+    # the agent (programs.keychain) as a fallback until it is retired.
     settings = {
       "github.com" = {
         HostName = "github.com";
-        IdentityFile = "~/.ssh/git";
+        IdentityFile = "~/.ssh/git_sk";
         User = "git";
         AddKeysToAgent = "yes";
       };
 
       "mynixos.com" = {
         HostName = "mynixos.com";
-        IdentityFile = "~/.ssh/git";
+        IdentityFile = "~/.ssh/git_sk";
         AddKeysToAgent = "yes";
       };
 
       "gitlab.com" = {
-        IdentityFile = "~/.ssh/git";
+        IdentityFile = "~/.ssh/git_sk";
         AddKeysToAgent = "yes";
         PreferredAuthentications = "publickey";
       };
@@ -39,9 +44,18 @@
       "bigtasty" = {
         HostName = "10.24.24.2";
         User = "psoldunov";
+        IdentityFile = "~/.ssh/git_sk";
         ForwardAgent = true;
       };
     };
+  };
+
+  # Private keys kept in secrets/whopper.yaml. The sops-nix user service
+  # decrypts them into $XDG_RUNTIME_DIR at login and links them here,
+  # replacing any plain file at the same path. The .pub files stay as they are.
+  sops.secrets = {
+    SSH_KEY_ID_ED25519.path = "${config.home.homeDirectory}/.ssh/id_ed25519";
+    SSH_KEY_AGENCY_VPS.path = "${config.home.homeDirectory}/.ssh/agency-vps";
   };
 
   # Home Manager links ~/.ssh/config into the store, where the file belongs to
