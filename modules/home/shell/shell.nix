@@ -81,8 +81,11 @@ in {
     enable = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
-    # git_sk is the YubiKey key; git is the old file key, kept until retired.
-    keys = lib.optionals isDesktop ["git_sk" "git"];
+    # github and agency-vps come from sops (hosts/whopper/home/ssh.nix) and
+    # have no passphrase, so they load without a prompt. git is the old file
+    # key, kept until retired. The YubiKey key git_sk is left out on purpose:
+    # anything in the agent can be offered, and each use of it needs a touch.
+    keys = lib.optionals isDesktop ["github" "git" "agency-vps"];
   };
 
   programs.fzf = {
