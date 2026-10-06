@@ -1,15 +1,22 @@
 keys:
   - &primary age107gznxytzq70laud5d2t2qj8sn4d74rjf72nacj4ulv3tn3ltv9sgh4gzm
+  # Offline backup: age-plugin-yubikey identity in PIV slot 82 of YubiKey
+  # 19662979 (PIN once, touch always). Encrypting to it needs
+  # age-plugin-yubikey on PATH; decrypting with it also needs the key plugged in.
+  - &yubikey age1yubikey1qg3tf97qgx55yr6y5tqcr46093fupctdgkjmus8udhymcfrwgm2xsnzpzgp
 creation_rules:
   - path_regex: secrets/shared\.yaml$
     key_groups:
       - age:
           - *primary
+          - *yubikey
   - path_regex: secrets/whopper\.yaml$
     key_groups:
       - age:
           - *primary
+          - *yubikey
   - path_regex: secrets/bigtasty\.yaml$
     key_groups:
       - age:
           - *primary
+          - *yubikey
