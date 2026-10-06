@@ -12,7 +12,6 @@
   sops.secrets = let
     sharedFile = ../../../../secrets/shared.yaml;
   in {
-    CLAUDE_GEMINI_API_KEY.sopsFile = sharedFile;
     CLAUDE_MAGIC_21ST_API_KEY.sopsFile = sharedFile;
     CLAUDE_NOCODB_MCP_URL.sopsFile = sharedFile;
     CLAUDE_NOCODB_MCP_TOKEN.sopsFile = sharedFile;
@@ -26,7 +25,6 @@
   # the JSON files on disk only ever contain the placeholder text.
   programs.fish.shellInitLast = lib.mkAfter ''
     for pair in \
-        CLAUDE_GEMINI_API_KEY:${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path} \
         CLAUDE_MAGIC_21ST_API_KEY:${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path} \
         CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
         CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
@@ -41,7 +39,6 @@
   '';
   programs.bash.bashrcExtra = lib.mkAfter ''
     for pair in \
-        CLAUDE_GEMINI_API_KEY:${config.sops.secrets.CLAUDE_GEMINI_API_KEY.path} \
         CLAUDE_MAGIC_21ST_API_KEY:${config.sops.secrets.CLAUDE_MAGIC_21ST_API_KEY.path} \
         CLAUDE_NOCODB_MCP_URL:${config.sops.secrets.CLAUDE_NOCODB_MCP_URL.path} \
         CLAUDE_NOCODB_MCP_TOKEN:${config.sops.secrets.CLAUDE_NOCODB_MCP_TOKEN.path} \
@@ -58,12 +55,6 @@
   programs.mcp = {
     enable = true;
     servers = {
-      nanobanana = {
-        command = "${pkgs.uv}/bin/uvx";
-        args = ["nanobanana-mcp-server@latest"];
-        env.GEMINI_API_KEY = "\${CLAUDE_GEMINI_API_KEY}";
-      };
-
       "@21st-dev/magic" = {
         command = "${pkgs.nodejs_24}/bin/npx";
         args = [
