@@ -10,7 +10,8 @@ description: >
   diff", or otherwise wants a quality gate before committing or pushing. Also trigger when the
   user wants a brutal/honest/senior/principal-level review of their working tree. Prefer this
   skill over inline ad-hoc review whenever a diff exists — a structured senior review is almost
-  always more valuable than a casual glance.
+  always more valuable than a casual glance. Inside Ensemblr, or for a whole branch before a PR,
+  use the code-review skill instead.
 ---
 
 # Diff Reviewer
@@ -34,12 +35,13 @@ Trigger this skill when the user wants any of the following:
 - A pre-commit / pre-push quality gate
 - A "brutal", "honest", "principal-level", "staff-level", or "senior" review
 - A second opinion on work the user (or you) just finished
-- A check before opening a pull request
+- A check of uncommitted work before it joins the branch
 
 Do **not** trigger this skill for:
-- Reviewing an entire existing codebase with no recent changes — use the `code-review` skill
-  instead, which does architectural review of static code
-- Reviewing a specific PR by number on GitHub — use `gh pr view` workflows
+- Reviewing an Ensemblr workspace diff, a whole branch against its base, or a specific PR by
+  number — use the `code-review` skill, whose change mode covers all three
+- Reviewing an entire existing codebase with no recent changes — use the `code-review` skill,
+  whose codebase mode does architectural review of static code
 - Reviewing a single file the user pastes — just read it directly
 
 ## How to invoke
