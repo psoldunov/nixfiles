@@ -67,8 +67,12 @@ in {
   };
 
   programs.mcp.servers = {
-    # Nix Chromium with a fresh in-memory profile per session.
-    playwright.command = playwrightMcp;
+    # Nix Chromium with a fresh in-memory profile per session, headless so
+    # it never opens a window. playwright-mcp runs headed by default.
+    playwright = {
+      command = playwrightMcp;
+      args = ["--headless"];
+    };
 
     # Directory names come from ~/.config/google-chrome/Local State.
     playwright-swiss-cheese = chromeProfileServer "Profile 1";

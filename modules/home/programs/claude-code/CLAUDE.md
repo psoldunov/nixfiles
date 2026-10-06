@@ -97,6 +97,11 @@ binary into `~/.impeccable/bin/<version>/` on first use; that cache is not
 declarative. `taste-skill` is skills only (frontend design taste, redesign,
 image-to-code, brand kits), with no hooks or MCP servers.
 
+Microsoft's official `playwright-cli` skill comes from the `playwright-cli`
+flake input too. `settings.nix` links its `skills/playwright-cli/` directory
+into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it
+with `nix flake update playwright-cli`.
+
 Marketplace-installed plugins (`skill-creator`, `superpowers`, `figma`,
 `Notion`, `vercel`) are enabled via `settings.enabledPlugins` in `default.nix`.
 Their cached payloads live under `~/.claude/plugins/cache/` and update

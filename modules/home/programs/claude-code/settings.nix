@@ -1,4 +1,11 @@
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
+  # Microsoft's official playwright-cli skill, linked next to ./skills.
+  home.file."${config.programs.claude-code.configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
+
   programs.claude-code = {
     enable = true;
     enableMcpIntegration = true;
