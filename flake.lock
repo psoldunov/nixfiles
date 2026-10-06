@@ -331,6 +331,22 @@
         "type": "github"
       }
     },
+    "i-have-adhd": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789836285,
+        "narHash": "sha256-UExi0k71MOtLwqVaFRGhgvqq6+jxwbQxZZVZxceHGrw=",
+        "owner": "ayghri",
+        "repo": "i-have-adhd",
+        "rev": "839872f9d1cd634fed642b4589ce7226199cc15f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ayghri",
+        "repo": "i-have-adhd",
+        "type": "github"
+      }
+    },
     "impeccable": {
       "flake": false,
       "locked": {
@@ -593,6 +609,7 @@
         "ensemblr": "ensemblr",
         "figma": "figma",
         "home-manager": "home-manager",
+        "i-have-adhd": "i-have-adhd",
         "impeccable": "impeccable",
         "linear": "linear",
         "nix-flatpak": "nix-flatpak",

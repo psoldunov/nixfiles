@@ -94,7 +94,7 @@ nix flake update context-mode
 rebuild_system
 ```
 
-`caveman`, `impeccable` and `taste-skill` are wired the same way. The
+`caveman`, `impeccable`, `taste-skill` and `i-have-adhd` are wired the same way. The
 `impeccable` repo is a marketplace, so `settings.nix` points at its `plugin/`
 subdirectory.
 
@@ -109,6 +109,14 @@ marketplace plugin takes the name, and the nix copy then does not load. Its hook
 binary into `~/.impeccable/bin/<version>/` on first use; that cache is not
 declarative. `taste-skill` is skills only (frontend design taste, redesign,
 image-to-code, brand kits), with no hooks or MCP servers.
+
+`i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
+steps, one closing next action. Its SessionStart hook injects the full ruleset
+only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares
+that flag file. `hooks/adhd-final-response.sh` re-asserts the rules on every
+prompt so they shape each turn's final message, and takes precedence over
+caveman on structure. Delete the flag entry in `settings.nix` to switch both
+hooks off; "stop adhd mode" switches it off for one session.
 
 Local mods (Claude Code function-hook plugins) live in `mods/<name>/` and are
 linked through the same `plugins` set. Each one has
@@ -139,6 +147,9 @@ Settings → Connectors rather than in nix.
 Hook scripts live in `hooks/` and are linked into `~/.claude/hooks/` by
 `programs.claude-code.hooks`. Their registration (which event triggers which
 command) lives in `settings.hooks` in `settings.nix`.
+
+`adhd-final-response.sh` (UserPromptSubmit) prints the i-have-adhd reminder
+when the plugin's opt-in flag exists, and stays silent otherwise.
 
 `context-mode-cache-heal.mjs` is a vendored copy of the script context-mode
 deploys for its marketplace install. context-mode rewrites the hook's command
