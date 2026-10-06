@@ -9,9 +9,12 @@
   #   };
   # };
 
+  # Server and ML track the same major version, as upstream's example.env
+  # does (IMMICH_VERSION=v3). The floating `release` tag jumps majors on its
+  # own, which is how v3 dropping pgvecto.rs took Immich down unnoticed.
   virtualisation.oci-containers.containers = {
     immich_server = {
-      image = "ghcr.io/immich-app/immich-server:release";
+      image = "ghcr.io/immich-app/immich-server:v3";
       volumes = [
         "/RAID/apps/immich/uploads:/usr/src/app/upload:rw"
         "/etc/localtime:/etc/localtime:ro"
@@ -29,7 +32,7 @@
       autoStart = true;
     };
     immich_machine_learning = {
-      image = "ghcr.io/immich-app/immich-machine-learning:release-openvino";
+      image = "ghcr.io/immich-app/immich-machine-learning:v3-openvino";
       volumes = [
         "model-cache:/cache"
         "/dev/bus/usb:/dev/bus/usb"
@@ -47,17 +50,24 @@
       ];
       autoStart = true;
     };
+    # Upstream replaced Redis with Valkey. It only holds the job queues and has
+    # no volume, so nothing carries over between containers anyway.
     immich_redis = {
-      image = "docker.io/redis:6.2-alpine@sha256:e3b17ba9479deec4b7d1eeec1548a253acc5374d68d3b27937fcfe4df8d18c7e";
+      image = "docker.io/valkey/valkey:9@sha256:70739f85ad2ee01a726a965584a0f94895f01b0c60b3cc8b0aeef11eaa6888cf";
       autoStart = true;
       extraOptions = [
+        "--health-cmd=redis-cli ping | grep -q PONG || exit 1"
         "--net-alias=redis"
         "--net-alias=immich_redis"
         "--network=immich-network"
       ];
     };
+    # Immich v3 dropped pgvecto.rs. This upstream image ships both VectorChord
+    # and pgvecto.rs, so the server can migrate the old `vectors` indexes on
+    # startup. Its entrypoint renders postgresql.conf (shared_preload_libraries
+    # included), so don't override `cmd`.
     immich_postgres = {
-      image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
+      image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23";
       environment = {
         POSTGRES_INITDB_ARGS = "--data-checksums";
       };
@@ -66,6 +76,7 @@
       ];
       hostname = "postgres";
       extraOptions = [
+        "--shm-size=128m"
         "--network=immich-network"
         "--net-alias=database"
         "--net-alias=immich_postgres"
@@ -73,21 +84,6 @@
       ];
       volumes = [
         "/RAID/apps/immich/postgres:/var/lib/postgresql/data"
-      ];
-      cmd = [
-        "postgres"
-        "-c"
-        "shared_preload_libraries=vectors.so"
-        "-c"
-        ''search_path="$$user", public, vectors''
-        "-c"
-        "logging_collector=on"
-        "-c"
-        "max_wal_size=2GB"
-        "-c"
-        "shared_buffers=512MB"
-        "-c"
-        "wal_compression=on"
       ];
       autoStart = true;
     };
