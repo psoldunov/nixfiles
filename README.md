@@ -24,7 +24,8 @@ Both hosts share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix se
 │       ├── shell/shell.nix         # fish/bash/starship/atuin/zoxide/yazi (desktop bits gated)
 │       ├── nix-index.nix           # nix-index + shell integrations
 │       ├── sops.nix                # HM sops preamble + SHELL_SECRETS
-│       └── programs/claude-code/   # Declarative Claude Code (agents/hooks/skills/rules/MCP/settings)
+│       ├── programs/claude-code/   # Declarative Claude Code (agents/hooks/skills/rules/MCP/settings)
+│       └── programs/pi/            # Pi coding agent + claude-bridge extension (Claude rules/skills/agents in pi)
 ├── hosts/
 │   ├── whopper/
 │   │   ├── default.nix             # Imports ./hardware.nix + ./modules

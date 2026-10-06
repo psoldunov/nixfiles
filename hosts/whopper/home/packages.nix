@@ -1,4 +1,8 @@
 {pkgs, ...}: {
+  # Installs pi and, through modules/home/programs/pi, its claude-bridge
+  # extension.
+  programs.pi-coding-agent.enable = true;
+
   # NOTE: Script packages are managed by modules/home/scripts/default.nix
   # and appended to home.packages there.
   #
@@ -10,7 +14,6 @@
     audacity
     ensemblr-master
     zed-editor
-    pi-coding-agent
     cider-2
     ledger-live-desktop
     beets

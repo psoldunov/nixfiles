@@ -6,5 +6,6 @@
     ./nix-index.nix
     ./sops.nix
     ./programs/claude-code
+    ./programs/pi
   ];
 }

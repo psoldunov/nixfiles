@@ -157,6 +157,13 @@ in `settings.json` to the quoted bare-script form on every boot, so
 `settings.nix` declares that exact string. Any other spelling makes the array
 union append a fresh copy on each rebuild.
 
+## Shared with pi
+
+pi reads the same `CLAUDE.md`, rules, skills and agents through its
+claude-bridge extension (`../pi/`). A change here reaches pi after the same
+rebuild. Skills and agents that need Claude-only features (hooks, MCP tools)
+are excluded or tuned in `../pi/default.nix`.
+
 ## Notes for future Claude sessions
 
 If you're editing Claude Code config: edit the nix module, not `~/.claude/`.
