@@ -49,6 +49,12 @@
         IdentityFile = "~/.ssh/github";
         ForwardAgent = true;
       };
+
+      "bigmac" = {
+        HostName = "bigmac.local";
+        User = "psoldunov";
+        IdentityFile = "~/.ssh/github";
+      };
     };
   };
 
