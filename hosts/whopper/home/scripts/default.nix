@@ -112,8 +112,55 @@
     echo "Motrix pin: $CURRENT -> $VERSION"
   '';
 
+  # Pins overlays/pi-coding-agent to the newest GitHub release (or the version
+  # given as $1, e.g. 1.0.4). A release needs three hashes: the source
+  # tarball, its npm dependency cache (prefetch-npm-deps over the tagged
+  # package-lock.json) and the matching @earendil-works/pi-ai tarball that
+  # carries the model catalog. The source and pi-ai tarballs are prefetched
+  # into the store, so the next rebuild reuses them.
+  update_pi_coding_agent = pkgs.writeShellScriptBin "update_pi_coding_agent" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    REPO="earendil-works/pi"
+    TARGET="$FLAKE_DIR/overlays/pi-coding-agent/pin.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+      | ${pkgs.jq}/bin/jq -r '.tag_name // empty | ltrimstr("v")')}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "update_pi_coding_agent: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${pkgs.jq}/bin/jq -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "Pi coding agent already pinned at $VERSION."
+      exit 0
+    fi
+    SRC="$(nix store prefetch-file --json --unpack \
+      "https://github.com/$REPO/archive/refs/tags/v$VERSION.tar.gz")"
+    HASH="$(${pkgs.jq}/bin/jq -r .hash <<<"$SRC")"
+    SRC_PATH="$(${pkgs.jq}/bin/jq -r .storePath <<<"$SRC")"
+    NPM_DEPS_HASH="$(${pkgs.prefetch-npm-deps}/bin/prefetch-npm-deps \
+      "$SRC_PATH/package-lock.json" | tail -n1)"
+    MODEL_DATA_HASH="$(nix store prefetch-file --json \
+      "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-$VERSION.tgz" \
+      | ${pkgs.jq}/bin/jq -r .hash)"
+    for h in "$HASH" "$NPM_DEPS_HASH" "$MODEL_DATA_HASH"; do
+      if ! [[ "$h" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+        echo "update_pi_coding_agent: unexpected hash '$h' for $VERSION" >&2
+        exit 1
+      fi
+    done
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${pkgs.jq}/bin/jq -n --arg version "$VERSION" --arg hash "$HASH" \
+      --arg npmDepsHash "$NPM_DEPS_HASH" --arg modelDataHash "$MODEL_DATA_HASH" \
+      '{version: $version, hash: $hash, npmDepsHash: $npmDepsHash, modelDataHash: $modelDataHash}' \
+      > "$TMP"
+    install -m 644 "$TMP" "$TARGET"
+    echo "Pi coding agent pin: $CURRENT -> $VERSION"
+  '';
+
   alwaysOn = {
-    inherit update_claude_code update_duckstation update_motrix;
+    inherit update_claude_code update_duckstation update_motrix update_pi_coding_agent;
 
     shadd = pkgs.writeShellScriptBin "shadd" ''
       ${pkgs.bun}/bin/bunx shadcn@latest add $1
@@ -153,6 +200,7 @@
       FLAKE_DIR="$FLAKE_DIR" ${update_claude_code}/bin/update_claude_code
       FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
       FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
+      FLAKE_DIR="$FLAKE_DIR" ${update_pi_coding_agent}/bin/update_pi_coding_agent
       LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
       deploy_one() {
         local h="$1"
