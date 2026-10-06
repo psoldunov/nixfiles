@@ -17,6 +17,7 @@
     # The repo is a marketplace; the plugin itself lives in plugin/.
     impeccable = "${inputs.impeccable}/plugin";
     taste-skill = inputs.taste-skill;
+    i-have-adhd = inputs.i-have-adhd;
     # Local mods: function-hook plugins kept in this repo.
     nix-owned-paths = ./mods/nix-owned-paths;
   };
@@ -25,6 +26,10 @@ in {
     {
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
+      # Opts in to i-have-adhd's always-on mode: its SessionStart hook injects
+      # the full ruleset, and hooks/adhd-final-response.sh re-asserts it on
+      # every prompt. Remove this entry to switch both off.
+      "${configDir}/.i-have-adhd-always".text = "";
     }
     // lib.mapAttrs' (name: source: lib.nameValuePair "${configDir}/skills/${name}" {inherit source;}) plugins;
 
@@ -37,6 +42,7 @@ in {
     context = ./global-CLAUDE.md;
     skills = ./skills;
     hooks = {
+      "adhd-final-response.sh" = builtins.readFile ./hooks/adhd-final-response.sh;
       "block-rm-rf.sh" = builtins.readFile ./hooks/block-rm-rf.sh;
       "context-mode-cache-heal.mjs" = builtins.readFile ./hooks/context-mode-cache-heal.mjs;
     };
@@ -73,6 +79,16 @@ in {
               {
                 type = "command";
                 command = "bash ~/.claude/hooks/block-rm-rf.sh";
+              }
+            ];
+          }
+        ];
+        UserPromptSubmit = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "bash ~/.claude/hooks/adhd-final-response.sh";
               }
             ];
           }

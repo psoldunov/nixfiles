@@ -71,6 +71,11 @@
       flake = false;
     };
 
+    i-have-adhd = {
+      url = "github:ayghri/i-have-adhd";
+      flake = false;
+    };
+
     playwright-cli = {
       url = "github:microsoft/playwright-cli";
       flake = false;
