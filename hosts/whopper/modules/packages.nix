@@ -196,7 +196,6 @@
     joypixels
     radeontop
     pkg-config
-    thunderbird
     tesseract
     hwdata
     kdiskmark
