@@ -18,7 +18,7 @@ in {
       PATH = "$HOME/.local/bin:/usr/sbin:$HOME/.local/podman/bin:$HOME/.cargo/bin:$DENO_INSTALL/bin:${config.home.homeDirectory}/.bun/bin:$PATH";
       TERMINAL = "${pkgs.kitty}/bin/kitty";
       TERM = "xterm-256color";
-      MAILER = "${pkgs.thunderbird}/bin/thunderbird";
+      MAILER = "${pkgs.kdePackages.kmail}/bin/kmail";
       PRISMA_QUERY_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/query-engine";
       PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/schema-engine";
       PRISMA_FMT_BINARY = "${pkgs-stable.prisma-engines}/bin/prisma-fmt";
