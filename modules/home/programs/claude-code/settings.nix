@@ -20,6 +20,8 @@
     i-have-adhd = inputs.i-have-adhd;
     # Local mods: function-hook plugins kept in this repo.
     nix-owned-paths = ./mods/nix-owned-paths;
+    # Also pi's extension of the same name (../pi/default.nix).
+    humanizer-gate = ./mods/humanizer-gate;
   };
 in {
   home.file =

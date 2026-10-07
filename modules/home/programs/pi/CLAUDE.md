@@ -5,10 +5,13 @@ owns there; the rest stays pi's own.
 
 ```
 ~/.nixfiles/modules/home/programs/pi/
-├── default.nix                  # claude-bridge link + claude-bridge.json
+├── default.nix                  # extension links + claude-bridge.json
 ├── CLAUDE.md                    # this file
 └── extensions/claude-bridge/    # linked to ~/.pi/agent/extensions/claude-bridge/
 ```
+
+`default.nix` also links `../claude-code/mods/humanizer-gate/` to
+`~/.pi/agent/extensions/humanizer-gate/` (see "humanizer-gate" below).
 
 Hosts opt in with `programs.pi-coding-agent.enable = true;` (Whopper sets it
 in `hosts/whopper/home/packages.nix`). home-manager's own module installs the
@@ -53,6 +56,19 @@ would load it, so nothing floods the context up front:
 Not bridged yet: Claude Code hooks (caveman, i-have-adhd, block-rm-rf,
 impeccable), MCP servers, plugin slash commands, and settings such as
 `effortLevel`.
+
+## humanizer-gate
+
+pi's half of the Claude Code mod of the same name
+(`../claude-code/mods/humanizer-gate/`). Its root `index.ts` blocks a `write`,
+`edit`, `bash` or tool call that produces human-facing text (see
+`../claude-code/rules/common/human-facing-text.md`) until the humanizer skill
+is in context. That means a `read` of its `SKILL.md`, or the
+`<skill name="humanizer">` block that `/skill:humanizer` and `/humanizer`
+send. The check reads the live context on every call, so after a compaction
+the skill has to be loaded again. What counts as human-facing lives in
+`hooks/policy.ts`, which the Claude Code hooks share. Test the pi glue with
+`node --test modules/home/programs/claude-code/mods/humanizer-gate/tests/pi-extension.node.ts`.
 
 ## Working on the extension
 
