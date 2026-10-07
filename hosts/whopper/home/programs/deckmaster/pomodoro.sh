@@ -8,9 +8,9 @@
 #
 # A focus phase runs FOCUS_MINUTES. When it ends, a break starts on its own:
 # LONG_BREAK_MINUTES after every SESSIONS-th focus phase, BREAK_MINUTES
-# otherwise. When a break ends, the timer waits for a tap to start the next
-# focus phase. Every phase end posts a notification and plays a sound from
-# SOUNDS.
+# otherwise. When a break ends, the next focus phase starts on its own too, so
+# the phases cycle until a hold stops the timer. Every phase end posts a
+# notification and plays a sound from SOUNDS.
 #
 # A running focus phase turns on Plasma's Do Not Disturb until the phase's
 # end, so it lifts on time even if nothing clears it. Pausing, stopping or
@@ -155,6 +155,9 @@ start() {
   local next=$1 seconds=$2 end self at
   # A calendar time already past would never elapse.
   ((seconds >= 2)) || seconds=2
+  # The clock is read again, as a phase end can spend seconds on a sound or on
+  # Do Not Disturb before the next phase starts.
+  printf -v now '%(%s)T' -1
   end=$((now + seconds))
   self=$(readlink --canonicalize "$0")
   at=$(date --utc --date="@$end" '+%Y-%m-%d %H:%M:%S UTC')
@@ -231,10 +234,14 @@ elapse() {
     return 0
   fi
 
+  # The break is over and the next focus phase starts. It is announced first:
+  # the Do Not Disturb the phase turns on would hold the notification back.
   [[ $phase != long ]] || finished=0
+  announce bell "Break over" "Focus session $((finished + 1)) of $SESSIONS starts now. $FOCUS_MINUTES minutes."
+  start focus $((FOCUS_MINUTES * 60)) && return 0
+  # The focus phase could not start, so the timer waits for a tap.
   status=idle phase=focus value=0
   save
-  announce bell "Break over" "Tap the pomodoro key to start the next focus session."
 }
 
 # Draws the key for the current state with `left` of `total` seconds to go
