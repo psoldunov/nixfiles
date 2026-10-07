@@ -37,6 +37,7 @@
     ./programs/linear.nix
     ./programs/mailspring.nix
     ./programs/notion.nix
+    ./programs/notion-calendar.nix
     ./programs/skrepka.nix
     ./programs/solaar.nix
     ./programs/token-station.nix

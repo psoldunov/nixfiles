@@ -23,6 +23,8 @@ let
   torrentClient = "org.equeim.Tremotesf.desktop";
   cider = "cider-2.desktop";
   telegram = "org.telegram.desktop.desktop";
+  # Notion Calendar comes from home/programs/notion-calendar.nix.
+  calendar = "notion-calendar.desktop";
 
   # Map every MIME type in `types` to the same handler.
   handledBy = handler: types:
@@ -48,10 +50,17 @@ in
     "x-scheme-handler/http"
     "x-scheme-handler/https"
   ]
-  # Mailspring takes only the mailto scheme. Single .eml and .ics files, feeds
-  # and the news and webcal schemes have no default.
+  # Mailspring takes only the mailto scheme. Single .eml files, feeds and the
+  # news and webcal schemes have no default.
   // handledBy mail [
     "x-scheme-handler/mailto"
+  ]
+  # .ics and .vcs files open in Notion Calendar. cron:// carries its sign-in
+  # back from the browser.
+  // handledBy calendar [
+    "text/calendar"
+    "text/x-vcalendar"
+    "x-scheme-handler/cron"
   ]
   // handledBy imageViewer [
     "image/jpeg"
