@@ -35,6 +35,7 @@
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/linear.nix
+    ./programs/mailspring.nix
     ./programs/notion.nix
     ./programs/skrepka.nix
     ./programs/solaar.nix

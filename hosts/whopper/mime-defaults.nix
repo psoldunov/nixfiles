@@ -13,13 +13,8 @@ let
   # desktop entry claims only the http and https schemes, so local HTML files
   # and the other browser schemes stay with Zen.
   linkPicker = "dev.soldunov.wye.desktop";
-  # KMail, Akregator and Merkuro come from programs.kde-pim and the Akregator
-  # package in modules/desktop-environment.nix. kmail_view opens a single .eml
-  # file in KMail's viewer instead of the main window.
-  mail = "org.kde.kmail2.desktop";
-  mailViewer = "kmail_view.desktop";
-  feedReader = "org.kde.akregator.desktop";
-  calendar = "org.kde.merkuro.calendar.desktop";
+  # Mailspring comes from modules/desktop-environment.nix.
+  mail = "Mailspring.desktop";
   editor = "code.desktop";
   imageViewer = "org.kde.gwenview.desktop";
   videoPlayer = "mpv.desktop";
@@ -53,23 +48,10 @@ in
     "x-scheme-handler/http"
     "x-scheme-handler/https"
   ]
-  # Thunderbird also claimed the news (nntp, snews, mid) and webcal schemes.
-  # No KDE app here handles them, so they have no default.
+  # Mailspring takes only the mailto scheme. Single .eml and .ics files, feeds
+  # and the news and webcal schemes have no default.
   // handledBy mail [
     "x-scheme-handler/mailto"
-  ]
-  // handledBy mailViewer [
-    "message/rfc822"
-  ]
-  // handledBy feedReader [
-    "x-scheme-handler/feed"
-    "application/rss+xml"
-    "application/atom+xml"
-    "application/x-extension-rss"
-  ]
-  // handledBy calendar [
-    "text/calendar"
-    "application/x-extension-ics"
   ]
   // handledBy imageViewer [
     "image/jpeg"

@@ -32,16 +32,9 @@
   # Plasma autostarts, and opens TCP/UDP 1714-1764 for discovery and transfers.
   programs.kdeconnect.enable = true;
 
-  # KDE PIM (replaces Thunderbird). The module installs Akonadi and
-  # kdepim-runtime, the storage and account backends, plus KMail with its
-  # account wizard and Merkuro, which opens calendar files. The module has no
-  # option for Akregator, the feed reader, so it is added as a package.
-  programs.kde-pim = {
-    enable = true;
-    kmail = true;
-    merkuro = true;
-  };
-  environment.systemPackages = [pkgs.kdePackages.akregator];
+  # Mailspring handles mail and calendar (replaces KDE PIM). It keeps account
+  # secrets in the Secret Service, which KWallet provides here (see below).
+  environment.systemPackages = [pkgs.mailspring];
 
   # Flatpak
   services.flatpak = {
