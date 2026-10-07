@@ -555,11 +555,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791375586,
-        "narHash": "sha256-eAPReHwXI8RysviaFOmL541IsRCGYDyHIF9oaXWrrts=",
+        "lastModified": 1791379694,
+        "narHash": "sha256-HZzNcYJj3zeC+fnq2xv2LLHerlBZ7DrK9lfr0cc40y0=",
         "owner": "psoldunov",
         "repo": "notion-calendar",
-        "rev": "cf75472ba4ad441380608a4db143dbaf6f00b1c3",
+        "rev": "1e3ac453408feff42c509f0df24edf40a371c7d0",
         "type": "github"
       },
       "original": {
