@@ -10,7 +10,8 @@
 # LONG_BREAK_MINUTES after every SESSIONS-th focus phase, BREAK_MINUTES
 # otherwise. When a break ends, the next focus phase starts on its own too, so
 # the phases cycle until a hold stops the timer. Every phase end posts a
-# notification and plays a sound from SOUNDS.
+# notification and plays a sound from SOUNDS. A stop or a reset posts one
+# too, without a sound.
 #
 # A running focus phase turns on Plasma's Do Not Disturb until the phase's
 # end, so it lifts on time even if nothing clears it. Pausing, stopping or
@@ -213,6 +214,9 @@ stop() {
   load
   unschedule
   unquiet || echo "Can't lift Do Not Disturb" >&2
+  # A stop on a stopped timer is a reset.
+  local summary="${phase_labels[$phase]} stopped" body
+  [[ $status != idle ]] || summary="Timer reset"
   # A second stop clears the count, and so does leaving the long break, which
   # closes the round.
   if [[ $status == idle || $phase == long ]]; then
@@ -220,6 +224,10 @@ stop() {
   fi
   status=idle phase=focus value=0
   save
+
+  body="Focus session $((finished + 1)) of $SESSIONS is next."
+  ((finished == 0)) || body+=" Hold again to start the round over."
+  announce "" "$summary" "$body"
 }
 
 elapse() {

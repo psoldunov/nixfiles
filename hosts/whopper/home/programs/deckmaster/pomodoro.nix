@@ -3,9 +3,9 @@
 # down, and a dot for each focus session finished in the round. A tap starts,
 # pauses or resumes the phase; holding the key stops it, and holding it again
 # clears the finished sessions. Every phase end posts a notification and plays
-# a sound, whichever page the deck shows and even while it sleeps. A running
-# focus phase turns on Plasma's Do Not Disturb, and the timer's own popups show
-# through it.
+# a sound, whichever page the deck shows and even while it sleeps; a stop or a
+# reset posts a silent notification. A running focus phase turns on Plasma's
+# Do Not Disturb, and the timer's own popups show through it.
 #
 # Evaluates to `key`, the key at an index, and `notifyrc`, the plasmanotifyrc
 # settings that let the popups through, for programs.plasma.configFile.
