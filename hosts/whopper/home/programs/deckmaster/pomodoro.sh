@@ -14,7 +14,11 @@
 #
 # A running focus phase turns on Plasma's Do Not Disturb until the phase's
 # end, so it lifts on time even if nothing clears it. Pausing, stopping or
-# finishing the phase lifts it early.
+# finishing the phase lifts it early. Plasma takes a popup down the moment Do
+# Not Disturb turns on, so a focus phase that follows a break turns it on only
+# once the "Break over" popup has timed out. The pomodoro's own popups show
+# through Do Not Disturb anyway: they go out under NOTIFY_SERVICE, which
+# plasmanotifyrc lets through (./pomodoro.nix).
 #
 # deckmaster repaints only the page on screen and stops while the deck sleeps,
 # so the key cannot be what notices a phase end. Each running phase gets a
@@ -80,7 +84,8 @@ lock() {
 # change over, so a failure only reaches the journal.
 announce() {
   local sound=$1 summary=$2 body=$3
-  notify-send --app-name=Pomodoro --icon=chronometer "$summary" "$body" ||
+  notify-send --app-name=Pomodoro --icon=chronometer \
+    --hint="string:x-kde-appname:$NOTIFY_SERVICE" "$summary" "$body" ||
     echo "Can't post the notification: $summary" >&2
   if [[ -n $sound ]]; then
     pw-play "$SOUNDS/$sound.oga" || echo "Can't play $sound" >&2
@@ -144,6 +149,21 @@ await_unquiet() {
   done
 }
 
+# Turns on Do Not Disturb until the end of the running focus phase.
+silence() {
+  if [[ $status == running && $phase == focus ]]; then
+    quiet "$value" || echo "Can't turn on Do Not Disturb" >&2
+  fi
+}
+
+# Seconds a Plasma popup stays up: its popup timeout, rounded up, plus one.
+popup_seconds() {
+  local ms
+  ms=$(kreadconfig6 --file plasmanotifyrc --group Notifications --key PopupTimeout --default 5000) || ms=5000
+  [[ $ms =~ ^[0-9]+$ ]] || ms=5000
+  echo $(((ms + 999) / 1000 + 1))
+}
+
 # Removes the timer of the running phase, if there is one.
 unschedule() {
   systemctl --user stop "$unit-*.timer"
@@ -171,17 +191,14 @@ start() {
   fi
   status=running phase=$next value=$end
   save
-  if [[ $next == focus ]]; then
-    quiet "$end" || echo "Can't turn on Do Not Disturb" >&2
-  fi
 }
 
 toggle() {
   lock
   load
   case $status in
-    idle) start "$phase" $((phase_minutes[$phase] * 60)) ;;
-    paused) start "$phase" "$value" ;;
+    idle) start "$phase" $((phase_minutes[$phase] * 60)) && silence ;;
+    paused) start "$phase" "$value" && silence ;;
     running)
       unschedule
       unquiet || echo "Can't lift Do Not Disturb" >&2
@@ -234,14 +251,23 @@ elapse() {
     return 0
   fi
 
-  # The break is over and the next focus phase starts. It is announced first:
-  # the Do Not Disturb the phase turns on would hold the notification back.
+  # The break is over and the next focus phase starts. It is announced first,
+  # and its Do Not Disturb waits until the popup has timed out.
   [[ $phase != long ]] || finished=0
   announce bell "Break over" "Focus session $((finished + 1)) of $SESSIONS starts now. $FOCUS_MINUTES minutes."
-  start focus $((FOCUS_MINUTES * 60)) && return 0
-  # The focus phase could not start, so the timer waits for a tap.
-  status=idle phase=focus value=0
-  save
+  if ! start focus $((FOCUS_MINUTES * 60)); then
+    # The focus phase could not start, so the timer waits for a tap.
+    status=idle phase=focus value=0
+    save
+    return 0
+  fi
+  # A tap or a hold may pause or stop the phase meanwhile, so the lock is let
+  # go and the state read again.
+  flock --unlock 9
+  sleep "$(popup_seconds)"
+  lock
+  load
+  silence
 }
 
 # Draws the key for the current state with `left` of `total` seconds to go
