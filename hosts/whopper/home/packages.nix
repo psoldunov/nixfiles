@@ -31,9 +31,9 @@
     obsidian
     anytype
     plexamp
+    jellyfin-desktop
     pcsx2
     duckstation
-    quiver-launcher
     heroic
     bchunk
     lutris
