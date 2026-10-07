@@ -20,8 +20,10 @@
   appIcon,
   launch,
   playerIcon,
+  muteIcon,
   usageKey,
   weatherKey,
+  pomodoroKey,
 }: let
   back = index:
     button index {
@@ -45,8 +47,8 @@
       };
     };
 
-  # The bottom row of every page that plays music.
-  mediaKeys = [
+  # Track controls, on the bottom row of the Media page.
+  playerKeys = [
     (button 10 {
       label = "Previous";
       icon = icon "actions/32/media-skip-backward";
@@ -67,7 +69,11 @@
       icon = icon "actions/32/media-skip-forward";
       action.keycode = "Nextsong";
     })
-    # A tap steps the volume once; holding keeps stepping every 150 ms.
+  ];
+
+  # Volume steps, at the right end of the bottom row on the main and Media
+  # pages. A tap steps the volume once; holding keeps stepping every 150 ms.
+  volumeKeys = [
     (button 13 {
       label = "Vol -";
       icon = icon "status/24/audio-volume-low";
@@ -213,17 +219,31 @@ in {
         action.deck = "apps.deck";
       })
       (button 8 {
-        label = "Music";
-        icon = icon "places/64/folder-music";
-        action.deck = "music.deck";
+        label = "Media";
+        icon = icon "categories/32/applications-multimedia";
+        action.deck = "media.deck";
       })
       (button 9 {
         label = "System";
         icon = icon "apps/48/preferences-system";
         action.deck = "system.deck";
       })
+
+      # The pomodoro timer from ./pomodoro.nix. A tap starts, pauses or
+      # resumes it; holding the key stops it.
+      (pomodoroKey 10)
+      # Shows the muted speaker while the default output is muted.
+      (button 12 {
+        label = "Mute";
+        icon = icon "status/24/audio-volume-medium";
+        iconCommand = muteIcon {
+          muted = icon "status/24/audio-volume-muted";
+          unmuted = icon "status/24/audio-volume-medium";
+        };
+        action.keycode = "Mute";
+      })
     ]
-    ++ mediaKeys;
+    ++ volumeKeys;
 
   apps.keys = [
     (back 0)
@@ -283,7 +303,7 @@ in {
   # Icons come from the installed packages the launchers start: ../../packages.nix
   # (Cider, Plexamp), ../../../modules/packages.nix (Rhythmbox) and the plasma6
   # module (Elisa).
-  music.keys =
+  media.keys =
     [
       (back 0)
       (button 1 {
@@ -307,7 +327,8 @@ in {
         action.exec = launch "org.gnome.Rhythmbox3";
       })
     ]
-    ++ mediaKeys;
+    ++ playerKeys
+    ++ volumeKeys;
 
   system.keys = [
     (back 0)
