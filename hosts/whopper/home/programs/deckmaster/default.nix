@@ -100,6 +100,21 @@
       fi
     '';
 
+  # An `iconCommand` that shows `muted` while the default output is muted and
+  # `unmuted` otherwise. Plasma's mute key acts on the default output, so the
+  # icon shows the state a Mute press toggles.
+  muteIcon = {
+    muted,
+    unmuted,
+  }:
+    run "mute-icon" ''
+      if [[ $(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null) == *MUTED* ]]; then
+        echo ${muted}
+      else
+        echo ${unmuted}
+      fi
+    '';
+
   # A labelled button. `hold` fires once the key is held for 350 ms. With
   # `iconCommand`, `icon` is only the first frame and the key is repainted
   # every `interval` ms.
@@ -133,7 +148,10 @@
   # A key showing the weather from Open-Meteo.
   weatherKey = import ./weather.nix {inherit lib pkgs button icon breeze;};
 
-  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon usageKey weatherKey;};
+  # A key running a pomodoro timer.
+  pomodoroKey = import ./pomodoro.nix {inherit lib pkgs button icon;};
+
+  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon muteIcon usageKey weatherKey pomodoroKey;};
 
   toml = pkgs.formats.toml {};
   deckDir = pkgs.linkFarm "deckmaster-decks" (lib.mapAttrsToList (name: deck: {
@@ -169,7 +187,9 @@ in {
       # SIGHUP makes deckmaster re-read the current deck file.
       ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       # The usage and weather keys keep the images they draw in
-      # $RUNTIME_DIRECTORY, which systemd removes when the daemon stops.
+      # $RUNTIME_DIRECTORY, which systemd removes when the daemon stops. The
+      # pomodoro key keeps its own under $XDG_RUNTIME_DIR, so a running timer
+      # outlives a restart.
       RuntimeDirectory = "deckmaster";
       Restart = "on-failure";
       RestartSec = 2;
