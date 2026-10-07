@@ -132,6 +132,15 @@
       url = "github:psoldunov/notion/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Notion Calendar desktop client. Used by
+    # hosts/whopper/home/programs/notion-calendar.nix. Bump with
+    # `nix flake update notion-calendar`. The repo is private: fetching it
+    # needs the GitHub token wired in hosts/whopper/modules/nix.nix.
+    notion-calendar = {
+      url = "github:psoldunov/notion-calendar/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

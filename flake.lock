@@ -548,6 +548,27 @@
         "type": "github"
       }
     },
+    "notion-calendar": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791375586,
+        "narHash": "sha256-eAPReHwXI8RysviaFOmL541IsRCGYDyHIF9oaXWrrts=",
+        "owner": "psoldunov",
+        "repo": "notion-calendar",
+        "rev": "cf75472ba4ad441380608a4db143dbaf6f00b1c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "notion-calendar",
+        "type": "github"
+      }
+    },
     "ny": {
       "flake": false,
       "locked": {
@@ -617,6 +638,7 @@
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-stable": "nixpkgs-stable",
         "notion": "notion",
+        "notion-calendar": "notion-calendar",
         "plasma-manager": "plasma-manager",
         "playwright-cli": "playwright-cli",
         "skrepka": "skrepka",
