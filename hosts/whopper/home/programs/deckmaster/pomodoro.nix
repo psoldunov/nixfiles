@@ -3,7 +3,8 @@
 # down, and a dot for each focus session finished in the round. A tap starts,
 # pauses or resumes the phase; holding the key stops it, and holding it again
 # clears the finished sessions. Every phase end posts a notification and plays
-# a sound, whichever page the deck shows and even while it sleeps.
+# a sound, whichever page the deck shows and even while it sleeps. A running
+# focus phase turns on Plasma's Do Not Disturb.
 {
   lib,
   pkgs,
@@ -14,6 +15,7 @@
     name = "deckmaster-pomodoro";
     runtimeInputs = [
       pkgs.coreutils
+      pkgs.kdePackages.kconfig
       pkgs.libnotify
       pkgs.librsvg
       pkgs.pipewire
@@ -21,9 +23,9 @@
       pkgs.util-linux
     ];
     runtimeEnv = {
-      FOCUS_MINUTES = 25;
-      BREAK_MINUTES = 5;
-      LONG_BREAK_MINUTES = 15;
+      FOCUS_MINUTES = 40;
+      BREAK_MINUTES = 7;
+      LONG_BREAK_MINUTES = 30;
       # Focus sessions in a round. The last one is followed by the long break.
       SESSIONS = 4;
       SOUNDS = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";

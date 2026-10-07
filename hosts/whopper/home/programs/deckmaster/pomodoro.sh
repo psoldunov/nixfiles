@@ -12,6 +12,10 @@
 # focus phase. Every phase end posts a notification and plays a sound from
 # SOUNDS.
 #
+# A running focus phase turns on Plasma's Do Not Disturb until the phase's
+# end, so it lifts on time even if nothing clears it. Pausing, stopping or
+# finishing the phase lifts it early.
+#
 # deckmaster repaints only the page on screen and stops while the deck sleeps,
 # so the key cannot be what notices a phase end. Each running phase gets a
 # transient systemd timer instead (deckmaster-pomodoro-*.timer) that runs
@@ -83,6 +87,63 @@ announce() {
   fi
 }
 
+# Do Not Disturb, set the way Plasma's notifications applet sets it: an end
+# time in plasmanotifyrc, which plasmashell reloads on --notify. The value
+# written is kept in $dir/dnd, so only that one is ever cleared and a Do Not
+# Disturb the user set stays.
+readonly dnd_key=(--file plasmanotifyrc --group DoNotDisturb --key Until)
+
+# Seconds since the epoch for a KConfig date-time, stored either as a list
+# ("2026,10,7,14,48,16") or in ISO 8601.
+kconfig_time() {
+  local year month day hour minute second
+  if [[ $1 == *T* ]]; then
+    date --date="$1" +%s
+  else
+    IFS=, read -r year month day hour minute second _ <<<"$1"
+    date --date="$year-$month-$day $hour:$minute:${second:-0}" +%s
+  fi
+}
+
+# Turns Do Not Disturb on until `end`, unless one the user set lasts longer.
+quiet() {
+  local end=$1 current ours theirs
+  current=$(kreadconfig6 "${dnd_key[@]}")
+  read -r ours 2>/dev/null <"$dir/dnd" || ours=""
+  if [[ -n $current && $current != "$ours" ]]; then
+    theirs=$(kconfig_time "$current" 2>/dev/null) || theirs=0
+    if ((theirs >= end)); then
+      return 0
+    fi
+  fi
+  ours=$(date --date="@$end" '+%Y,%-m,%-d,%-H,%-M,%-S')
+  kwriteconfig6 --notify "${dnd_key[@]}" "$ours"
+  printf '%s\n' "$ours" >"$dir/dnd"
+}
+
+# Lifts the Do Not Disturb that `quiet` set, if it is still in place.
+unquiet() {
+  local ours current
+  read -r ours 2>/dev/null <"$dir/dnd" || return 0
+  rm --force -- "$dir/dnd"
+  current=$(kreadconfig6 "${dnd_key[@]}")
+  if [[ $current == "$ours" ]]; then
+    kwriteconfig6 --notify --delete "${dnd_key[@]}"
+  fi
+}
+
+# Waits up to 2 s for plasmashell to act on `unquiet`, so the notification
+# that ends a focus phase is not held back by the Do Not Disturb it lifts.
+await_unquiet() {
+  local i inhibited
+  for ((i = 0; i < 10; i++)); do
+    inhibited=$(busctl --user get-property org.freedesktop.Notifications \
+      /org/freedesktop/Notifications org.freedesktop.Notifications Inhibited 2>/dev/null) || return 0
+    [[ $inhibited == 'b true' ]] || return 0
+    sleep 0.2
+  done
+}
+
 # Removes the timer of the running phase, if there is one.
 unschedule() {
   systemctl --user stop "$unit-*.timer"
@@ -107,6 +168,9 @@ start() {
   fi
   status=running phase=$next value=$end
   save
+  if [[ $next == focus ]]; then
+    quiet "$end" || echo "Can't turn on Do Not Disturb" >&2
+  fi
 }
 
 toggle() {
@@ -117,6 +181,7 @@ toggle() {
     paused) start "$phase" "$value" ;;
     running)
       unschedule
+      unquiet || echo "Can't lift Do Not Disturb" >&2
       status=paused value=$((value > now ? value - now : 0))
       save
       ;;
@@ -127,6 +192,7 @@ stop() {
   lock
   load
   unschedule
+  unquiet || echo "Can't lift Do Not Disturb" >&2
   # A second stop clears the count, and so does leaving the long break, which
   # closes the round.
   if [[ $status == idle || $phase == long ]]; then
@@ -145,6 +211,8 @@ elapse() {
   fi
 
   if [[ $phase == focus ]]; then
+    unquiet || echo "Can't lift Do Not Disturb" >&2
+    await_unquiet
     finished=$((finished + 1))
     if ((finished >= SESSIONS)); then
       if start long $((LONG_BREAK_MINUTES * 60)); then
