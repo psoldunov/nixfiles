@@ -1,7 +1,8 @@
 # Pi coding agent (~/.pi/agent). Hosts opt in with
 # `programs.pi-coding-agent.enable`; home-manager's own module installs the
 # package, and this one adds the claude-bridge extension, which gives pi the
-# rules, CLAUDE.md files, skills and agents Claude Code already has (see
+# rules, CLAUDE.md files, skills and agents Claude Code already has, and the
+# humanizer-gate extension, the pi half of Claude Code's mod of that name (see
 # ./CLAUDE.md).
 #
 # programs.pi-coding-agent.settings stays unset on purpose: home-manager would
@@ -52,6 +53,9 @@ in {
   config = lib.mkIf cfg.enable {
     home.file = {
       "${cfg.configDir}/extensions/claude-bridge".source = ./extensions/claude-bridge;
+      # One folder serves both agents: Claude Code loads hooks/register.ts, pi
+      # loads index.ts. Linked whole so index.ts can import ./hooks/policy.ts.
+      "${cfg.configDir}/extensions/humanizer-gate".source = ../claude-code/mods/humanizer-gate;
       "${cfg.configDir}/claude-bridge.json".text = builtins.toJSON claudeBridge;
     };
   };

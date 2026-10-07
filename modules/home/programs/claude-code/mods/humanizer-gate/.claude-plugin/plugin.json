@@ -1,0 +1,6 @@
+{
+  "name": "humanizer-gate",
+  "version": "0.1.0",
+  "description": "Refuse human-facing writes and sends (docs, READMEs, PRs, issues, messages) until the humanizer skill is loaded.",
+  "types": "./types/index.d.ts"
+}

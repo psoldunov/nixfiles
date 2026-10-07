@@ -126,6 +126,16 @@ under `tests/`. Check one with `claude plugin validate mods/<name>` and
 NotebookEdit calls on files that resolve into `/nix/store`, and names the
 source under this module to edit instead.
 
+`humanizer-gate` enforces `rules/common/human-facing-text.md`. It refuses the
+first human-facing write or send in each loop (the main conversation and each
+subagent) until the `humanizer` skill is loaded, and again after a compaction
+drops the skill. That covers docs, READMEs, `gh pr`/`gh issue` bodies, and
+Slack, Linear and Sanity calls. `hooks/policy.ts` decides what counts. The
+same folder is also pi's `humanizer-gate` extension: pi loads its root
+`index.ts`, which imports the same policy. `claude plugin test` skips the pi
+side; test that with
+`node --test modules/home/programs/claude-code/mods/humanizer-gate/tests/pi-extension.node.ts`.
+
 Microsoft's official `playwright-cli` skill comes from the `playwright-cli`
 flake input too. `settings.nix` links its `skills/playwright-cli/` directory
 into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it
