@@ -112,6 +112,40 @@
     echo "Motrix pin: $CURRENT -> $VERSION"
   '';
 
+  # Pins overlays/quiver-launcher to GitHub's latest release (or the version
+  # given as $1, e.g. 3.4.5). `releases/latest` skips the `-rc.N`
+  # prereleases. The AppImage is prefetched into the store, so the next
+  # rebuild reuses it.
+  update_quiver_launcher = pkgs.writeShellScriptBin "update_quiver_launcher" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    REPO="tgeorgiadis/quiver-launcher"
+    TARGET="$FLAKE_DIR/overlays/quiver-launcher/pin.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+      | ${pkgs.jq}/bin/jq -r '.tag_name // empty | ltrimstr("v")')}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "update_quiver_launcher: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${pkgs.jq}/bin/jq -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "Quiver Launcher already pinned at $VERSION."
+      exit 0
+    fi
+    URL="https://github.com/$REPO/releases/download/v$VERSION/QuiverLauncher-linux-x64.AppImage"
+    HASH="$(nix store prefetch-file --json "$URL" | ${pkgs.jq}/bin/jq -r .hash)"
+    if ! [[ "$HASH" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+      echo "update_quiver_launcher: unexpected hash '$HASH' for $URL" >&2
+      exit 1
+    fi
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${pkgs.jq}/bin/jq -n --arg version "$VERSION" --arg hash "$HASH" \
+      '{version: $version, hash: $hash}' > "$TMP"
+    install -m 644 "$TMP" "$TARGET"
+    echo "Quiver Launcher pin: $CURRENT -> $VERSION"
+  '';
+
   # Pins overlays/pi-coding-agent to the newest GitHub release (or the version
   # given as $1, e.g. 1.0.4). A release needs three hashes: the source
   # tarball, its npm dependency cache (prefetch-npm-deps over the tagged
@@ -160,7 +194,7 @@
   '';
 
   alwaysOn = {
-    inherit update_claude_code update_duckstation update_motrix update_pi_coding_agent;
+    inherit update_claude_code update_duckstation update_motrix update_pi_coding_agent update_quiver_launcher;
 
     shadd = pkgs.writeShellScriptBin "shadd" ''
       ${pkgs.bun}/bin/bunx shadcn@latest add $1
@@ -201,6 +235,7 @@
       FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
       FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
       FLAKE_DIR="$FLAKE_DIR" ${update_pi_coding_agent}/bin/update_pi_coding_agent
+      FLAKE_DIR="$FLAKE_DIR" ${update_quiver_launcher}/bin/update_quiver_launcher
       LOCAL_HOST="$(${pkgs.inetutils}/bin/hostname)"
       deploy_one() {
         local h="$1"

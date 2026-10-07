@@ -33,6 +33,7 @@
     plexamp
     pcsx2
     duckstation
+    quiver-launcher
     heroic
     bchunk
     lutris
