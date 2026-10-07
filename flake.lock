@@ -534,11 +534,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791226948,
-        "narHash": "sha256-kWFVNA4tBVHyunPEmHiSPRGvSNgT/O0yQbKB5hF2iSQ=",
+        "lastModified": 1791377939,
+        "narHash": "sha256-ruPOXlzJAdj99Ntd16isGwwYjy3NVKcwHg1LP8WQoWc=",
         "owner": "psoldunov",
         "repo": "notion",
-        "rev": "b9e703cf58ca8cdc1f3ca38bc984dc081152ac8f",
+        "rev": "93097822c38313c3459cddb359d9d873ea75ee87",
         "type": "github"
       },
       "original": {
