@@ -144,7 +144,8 @@ with `nix flake update playwright-cli`.
 ## MCP servers
 
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`
-(host-specific ones, such as Playwright, live in the host's home config).
+(host-specific ones, such as Playwright and Whopper's Mailspring server, live
+in the host's home config).
 `enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
 `figma-personal` are two remote Figma servers, one per Figma account.
 `linear-swiss-cheese` and `linear-almost-always` do the same for the two
