@@ -148,8 +148,9 @@
   # A key showing the weather from Open-Meteo.
   weatherKey = import ./weather.nix {inherit lib pkgs button icon breeze;};
 
-  # A key running a pomodoro timer.
-  pomodoroKey = import ./pomodoro.nix {inherit lib pkgs button icon;};
+  # A key running a pomodoro timer, and the Plasma settings it needs.
+  pomodoro = import ./pomodoro.nix {inherit lib pkgs button icon;};
+  pomodoroKey = pomodoro.key;
 
   decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon muteIcon usageKey weatherKey pomodoroKey;};
 
@@ -161,6 +162,8 @@
     decks);
 in {
   home.packages = [deckmaster];
+
+  programs.plasma.configFile.plasmanotifyrc = pomodoro.notifyrc;
 
   systemd.user.services.deckmaster = {
     Unit = {
