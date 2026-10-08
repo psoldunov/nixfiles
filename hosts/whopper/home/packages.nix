@@ -56,5 +56,7 @@
     tremotesf
     uv
     bambu-studio-bin
+    # The ROCm build adds HIP, so Cycles renders on the 7900 XTX.
+    pkgsRocm.blender
   ];
 }
