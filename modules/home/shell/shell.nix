@@ -115,6 +115,9 @@ in {
       deno = {
         format = "via [🦕 $version](green bold) ";
       };
+      gcloud = {
+        disabled = true;
+      };
       nix_shell = {
         format = "[$symbol$state( \($name\))]($style) ";
         impure_msg = "";
