@@ -301,8 +301,8 @@ in {
   ];
 
   # Icons come from the installed packages the launchers start: ../../packages.nix
-  # (Cider, Plexamp), ../../../modules/packages.nix (Rhythmbox) and the plasma6
-  # module (Elisa).
+  # (Cider, Plexamp, Fladder, Nocturne), ../../../modules/packages.nix
+  # (Rhythmbox) and the plasma6 module (Elisa).
   media.keys =
     [
       (back 0)
@@ -325,6 +325,17 @@ in {
         label = "Rhythmbox";
         icon = appIcon pkgs.rhythmbox "org.gnome.Rhythmbox3";
         action.exec = launch "org.gnome.Rhythmbox3";
+      })
+
+      (button 5 {
+        label = "Fladder";
+        icon = appIcon pkgs.fladder "fladder";
+        action.exec = launch "fladder";
+      })
+      (button 6 {
+        label = "Nocturne";
+        icon = appIcon pkgs.nocturne "com.jeffser.Nocturne";
+        action.exec = launch "com.jeffser.Nocturne";
       })
     ]
     ++ playerKeys
