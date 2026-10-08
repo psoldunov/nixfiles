@@ -32,6 +32,8 @@
     anytype
     plexamp
     jellyfin-desktop
+    fladder
+    nocturne
     pcsx2
     duckstation
     heroic
