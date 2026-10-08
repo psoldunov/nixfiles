@@ -141,6 +141,13 @@ flake input too. `settings.nix` links its `skills/playwright-cli/` directory
 into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it
 with `nix flake update playwright-cli`.
 
+Matt Pocock's `grill-me` and `grill-with-docs` come from the
+`mattpocock-skills` input, linked the same way. Each is a one-line wrapper
+that calls the Skill tool, so their targets `grilling` and `domain-modeling`
+are linked too. Skip the repo's marketplace plugin: it pulls in every skill,
+and its `code-review` collides with the local one. Update with
+`nix flake update mattpocock-skills`.
+
 ## MCP servers
 
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`

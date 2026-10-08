@@ -384,6 +384,22 @@
         "type": "github"
       }
     },
+    "mattpocock-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791449074,
+        "narHash": "sha256-1QwFBwG+gORvDvW4HM0LrZlHZKmKtWr7pUHU0MAXF2Y=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "b0618bc436ad893b3c5e84e55fba86586d34a404",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1790428548,
@@ -633,6 +649,7 @@
         "i-have-adhd": "i-have-adhd",
         "impeccable": "impeccable",
         "linear": "linear",
+        "mattpocock-skills": "mattpocock-skills",
         "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
         "nixpkgs": "nixpkgs_4",

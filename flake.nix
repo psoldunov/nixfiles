@@ -81,6 +81,11 @@
       flake = false;
     };
 
+    mattpocock-skills = {
+      url = "github:mattpocock/skills";
+      flake = false;
+    };
+
     skrepka = {
       url = "github:psoldunov/skrepka/master";
       inputs.nixpkgs.follows = "nixpkgs";
