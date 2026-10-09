@@ -146,6 +146,15 @@
       url = "github:psoldunov/notion-calendar/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Concierge: Claude for work outside code repositories. Used by
+    # hosts/whopper/home/programs/concierge.nix. Bump with
+    # `nix flake update concierge`. The repo is private: fetching it needs the
+    # GitHub token wired in hosts/whopper/modules/nix.nix.
+    concierge = {
+      url = "github:psoldunov/concierge/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

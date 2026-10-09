@@ -10,8 +10,8 @@
   nix = {
     settings.nix-path = ["nixpkgs=${inputs.nixpkgs}"];
 
-    # GitHub token for private flake inputs, such as psoldunov/linear and
-    # psoldunov/figma. It is the fine-grained PAT "nix-private-flake":
+    # GitHub token for private flake inputs, such as psoldunov/linear,
+    # psoldunov/figma and psoldunov/concierge. It is the fine-grained PAT "nix-private-flake":
     # read-only Contents, scoped to the private repos the flake pulls; grant it
     # each new one there.
     # The secret binds the token to `github.com/psoldunov`, not all of
