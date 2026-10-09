@@ -30,6 +30,7 @@
     ./desktop/plasma-shortcuts.nix
 
     # Programs
+    ./programs/concierge.nix
     ./programs/deckmaster
     ./programs/figma.nix
     ./programs/spotifyd.nix

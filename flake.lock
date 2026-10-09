@@ -128,6 +128,28 @@
         "type": "github"
       }
     },
+    "concierge": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1791524572,
+        "narHash": "sha256-+NHjIGMBefrCEFpu+DA/FQM/lMG7ZrkEQBRvj34wG5Y=",
+        "owner": "psoldunov",
+        "repo": "concierge",
+        "rev": "954f62532b6c00b1fa2fea7240ec35a8c941c847",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "concierge",
+        "type": "github"
+      }
+    },
     "context-mode": {
       "flake": false,
       "locked": {
@@ -642,6 +664,7 @@
         "catppuccin": "catppuccin",
         "catppuccin-vsc": "catppuccin-vsc",
         "caveman": "caveman",
+        "concierge": "concierge",
         "context-mode": "context-mode",
         "ensemblr": "ensemblr",
         "figma": "figma",
@@ -667,6 +690,27 @@
         "vscode-server": "vscode-server",
         "wye": "wye",
         "zen-browser": "zen-browser"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "concierge",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791448976,
+        "narHash": "sha256-HJ4TEF3j7HmLYeEP/PtqjeiBX/6TppXB2qY53HcrWbs=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "f91010a5c1b6125b715eb78a84fb5dd8fb74a2b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "sf-arabic": {
