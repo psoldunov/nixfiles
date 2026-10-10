@@ -138,8 +138,16 @@
       "https://github.com/$REPO/archive/refs/tags/v$VERSION.tar.gz")"
     HASH="$(${pkgs.jq}/bin/jq -r .hash <<<"$SRC")"
     SRC_PATH="$(${pkgs.jq}/bin/jq -r .storePath <<<"$SRC")"
-    NPM_DEPS_HASH="$(${pkgs.prefetch-npm-deps}/bin/prefetch-npm-deps \
-      "$SRC_PATH/package-lock.json" | tail -n1)"
+    # prefetch-npm-deps prints nothing while it downloads ~360 tarballs and
+    # sets no network timeout, so a stalled download would block forever.
+    # Runs take 30 s to several minutes; 15 min matches its own retry window.
+    echo "Prefetching pi $VERSION npm dependencies (30 s to a few minutes, no progress output)..." >&2
+    if ! NPM_DEPS_HASH="$(${pkgs.coreutils}/bin/timeout 900 \
+      ${pkgs.prefetch-npm-deps}/bin/prefetch-npm-deps \
+      "$SRC_PATH/package-lock.json" | tail -n1)"; then
+      echo "update_pi_coding_agent: npm dependency prefetch failed or stalled (15 min limit); rerun to retry" >&2
+      exit 1
+    fi
     MODEL_DATA_HASH="$(nix store prefetch-file --json \
       "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-$VERSION.tgz" \
       | ${pkgs.jq}/bin/jq -r .hash)"

@@ -51,14 +51,11 @@
   programs.mcp = {
     enable = true;
     servers = {
+      # Native HTTP rather than an `npx mcp-remote` bridge: a bridge gets
+      # the expanded key in its argv, where `ps` shows it to every user.
       nocodb-the-connection = {
-        command = "${pkgs.nodejs_24}/bin/npx";
-        args = [
-          "mcp-remote"
-          "https://nocodb.theswisscheese.com/mcp/nc5tvdxynrmu24vo"
-          "--header"
-          "x-api-key: \${NOCODB_API_KEY}"
-        ];
+        url = "https://nocodb.theswisscheese.com/mcp/nc5tvdxynrmu24vo";
+        headers.x-api-key = "\${NOCODB_API_KEY}";
       };
 
       Sanity = {
