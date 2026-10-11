@@ -658,6 +658,23 @@
         "type": "github"
       }
     },
+    "rea": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791691049,
+        "narHash": "sha256-aAbOYpsT6QhlLAZDtVHZ1Acz6uIqrVEd4p49s/2FJgc=",
+        "owner": "morluto",
+        "repo": "rea",
+        "rev": "a56f7bb668ab23fec8d33f7af353ac7ed2fe1895",
+        "type": "github"
+      },
+      "original": {
+        "owner": "morluto",
+        "ref": "rea-agents-6.4.0",
+        "repo": "rea",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "apple-fonts": "apple-fonts",
@@ -681,6 +698,7 @@
         "notion-calendar": "notion-calendar",
         "plasma-manager": "plasma-manager",
         "playwright-cli": "playwright-cli",
+        "rea": "rea",
         "skrepka": "skrepka",
         "solaar": "solaar",
         "sops-nix": "sops-nix",

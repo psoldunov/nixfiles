@@ -34,6 +34,8 @@ in {
       "${configDir}/skills/grilling".source = "${inputs.mattpocock-skills}/skills/productivity/grilling";
       "${configDir}/skills/grill-with-docs".source = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs";
       "${configDir}/skills/domain-modeling".source = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling";
+      # REA's workflow skill for its rea MCP server (mcp.nix), same release.
+      "${configDir}/skills/reverse-engineer-anything".source = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
       # Opts in to i-have-adhd's always-on mode: its SessionStart hook injects
       # the full ruleset, and hooks/adhd-final-response.sh re-asserts it on
       # every prompt. Remove this entry to switch both off.
