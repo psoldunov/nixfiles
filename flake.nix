@@ -86,6 +86,15 @@
       flake = false;
     };
 
+    # REA's reverse-engineer-anything skill, pinned to a release tag. The rea
+    # MCP server in modules/home/programs/claude-code/mcp.nix runs the npm
+    # release named by this checkout's package.json, so both move together.
+    # Bump: edit the tag, then `nix flake update rea`.
+    rea = {
+      url = "github:morluto/rea/rea-agents-6.4.0";
+      flake = false;
+    };
+
     skrepka = {
       url = "github:psoldunov/skrepka/master";
       inputs.nixpkgs.follows = "nixpkgs";

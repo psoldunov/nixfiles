@@ -156,7 +156,25 @@ in the host's home config).
 `enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
 `figma-personal` are two remote Figma servers, one per Figma account.
 `linear-swiss-cheese` and `linear-almost-always` do the same for the two
-Linear workspaces. Sign in to each one separately through `/mcp`. The `context-mode` MCP server comes
+Linear workspaces. Sign in to each one separately through `/mcp`.
+
+`rea` is REA (github.com/morluto/rea), a reverse-engineering server. It runs
+`npx -y rea-agents@<version> mcp` on Node 24, where `<version>` comes from the
+`package.json` of the `rea` flake input, and that same checkout supplies the
+`reverse-engineer-anything` skill (linked in `settings.nix`). Server and skill
+therefore stay on one release. Bump both by editing the tag in `flake.nix`'s
+`rea` input, then `nix flake update rea` and `rebuild_system`. Native targets
+use nixpkgs' Ghidra (`GHIDRA_INSTALL_DIR`, JDK 21 as `JAVA_HOME`); REA accepts
+Ghidra 12.1.x only, so check `pkgs.ghidra.version` after a nixpkgs bump.
+Hopper is not wired: its Linux installer only handles deb, rpm and Arch
+packages. Never run `rea setup` or `rea uninstall`: they rewrite agent
+configs and skills that nix owns. `npx -y rea-agents@<version> doctor
+--provider ghidra --json`, run with the same two variables set, is safe. The
+first start downloads the package into `~/.npm/_npx`; a cold cache can outlast
+Claude Code's MCP startup timeout, so reconnect through `/mcp` if it fails
+once. The skill is excluded from pi, which has no MCP.
+
+The `context-mode` MCP server comes
 from its plugin. Context7, Vercel, Claude Docs and the other `claude.ai`
 servers are connectors on the claude.ai account, managed at claude.ai →
 Settings → Connectors rather than in nix.

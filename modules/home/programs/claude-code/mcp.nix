@@ -1,9 +1,19 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
-}: {
+}: let
+  # The npm release that matches the rea flake input's skill (settings.nix).
+  reaVersion = (lib.importJSON "${inputs.rea}/package.json").version;
+  # rea's bin starts with `#!/usr/bin/env node`, so node has to be on the
+  # server's PATH, not only behind npx.
+  reaMcp = pkgs.writeShellScript "rea-mcp" ''
+    export PATH=${lib.makeBinPath [pkgs.nodejs_24]}:$PATH
+    exec npx -y rea-agents@${reaVersion} mcp
+  '';
+in {
   # Secrets live as individual sops entries decrypted to
   # /run/user/$UID/secrets/<NAME>; their values never enter /nix/store.
   # These secrets are shared across hosts, so they're sourced from
@@ -89,6 +99,18 @@
           PAPERLESS_URL = "http://10.24.24.2:28981";
           PAPERLESS_API_KEY = "\${PAPERLESS_API_KEY}";
           PAPERLESS_PUBLIC_URL = "https://paperless.theswisscheese.com";
+        };
+      };
+
+      # REA, reverse engineering over MCP. JavaScript, Electron and .NET
+      # targets need no engine; native binaries go through nixpkgs' Ghidra,
+      # which rea runs headless on the JDK below. Hopper is left out: its
+      # Linux installer only knows deb, rpm and Arch packages.
+      rea = {
+        command = "${reaMcp}";
+        env = {
+          GHIDRA_INSTALL_DIR = "${pkgs.ghidra}/lib/ghidra";
+          JAVA_HOME = pkgs.jdk21.home;
         };
       };
     };
