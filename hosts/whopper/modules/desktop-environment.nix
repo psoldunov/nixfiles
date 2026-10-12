@@ -36,6 +36,11 @@
   # secrets in the Secret Service, which KWallet provides here (see below).
   environment.systemPackages = [pkgs.mailspring];
 
+  # The plasma6 module turns programs.kde-pim on with mkDefault, which installs
+  # Akonadi, kdepim-runtime, KMail, Kontact and Merkuro. Switch it off so none
+  # of KDE PIM ships alongside Mailspring.
+  programs.kde-pim.enable = false;
+
   # Flatpak
   services.flatpak = {
     enable = true;
