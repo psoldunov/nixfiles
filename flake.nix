@@ -157,7 +157,8 @@
     };
 
     # Concierge: Claude for work outside code repositories. Used by
-    # hosts/whopper/home/programs/concierge.nix. Bump with
+    # hosts/whopper/home/programs/concierge.nix (app + daemon) and
+    # hosts/bigtasty/modules/services/concierge-server.nix (Sync server). Bump with
     # `nix flake update concierge`. The repo is private: fetching it needs the
     # GitHub token wired in hosts/whopper/modules/nix.nix.
     concierge = {
