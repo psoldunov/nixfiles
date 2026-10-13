@@ -38,6 +38,8 @@
       INFISICAL_SETTINGS = {
         group = "docker";
       };
+      # Resend API key; concierge-server reads it via LoadCredential, as root.
+      CONCIERGE_SMTP_PASSWORD = {};
       SYNCTHING_GUI_PASSWORD = {
         owner = "psoldunov";
         sopsFile = ../../../secrets/shared.yaml;

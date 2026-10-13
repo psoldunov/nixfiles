@@ -20,6 +20,7 @@
     ./users.nix
     ./virtualisation.nix
 
+    ./services/concierge-server.nix
     ./services/immich.nix
     ./services/infisical.nix
     ./services/n8n.nix
