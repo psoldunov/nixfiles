@@ -158,6 +158,14 @@ in the host's home config).
 `linear-swiss-cheese` and `linear-almost-always` do the same for the two
 Linear workspaces. Sign in to each one separately through `/mcp`.
 
+`cloudflare-api` is Cloudflare's remote API server
+(`https://mcp.cloudflare.com/mcp`). It has three tools: `search()` and
+`execute()` run code against the whole Cloudflare API, Zero Trust tunnels
+included, and `docs()` searches the developer docs. Sign in through `/mcp`;
+the OAuth screen chooses which permissions the agent gets.
+`CFD_MAIN_TUNNEL`'s public hostnames are managed in the dashboard, so add
+them there or through this server; Nix `ingress` entries have no effect.
+
 `rea` is REA (github.com/morluto/rea), a reverse-engineering server. It runs
 `npx -y rea-agents@<version> mcp` on Node 24, where `<version>` comes from the
 `package.json` of the `rea` flake input, and that same checkout supplies the

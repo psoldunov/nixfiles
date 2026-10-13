@@ -89,6 +89,11 @@ in {
       linear-swiss-cheese.url = "https://mcp.linear.app/mcp?acct=swiss-cheese";
       linear-almost-always.url = "https://mcp.linear.app/mcp?acct=almost-always";
 
+      # Cloudflare's API server: search() and execute() over the whole
+      # Cloudflare API (DNS, Zero Trust tunnels, Workers and the rest), plus
+      # docs(). Sign in through /mcp; the OAuth grant picks the permissions.
+      cloudflare-api.url = "https://mcp.cloudflare.com/mcp";
+
       Paperless = {
         command = "${pkgs.bun}/bin/bunx";
         args = [
