@@ -2,7 +2,11 @@
 # it and TLS ends at Cloudflare. The hostname's DNS record is not managed
 # here: it is routed once, by hand on BigTasty (~/.cloudflared/cert.pem), with
 # `cloudflared tunnel route dns c6f55ee4-168e-4343-8df7-74810ef99d5b concierge.theswisscheese.com`.
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   imports = [inputs.concierge.nixosModules.concierge-server];
 
   services.cloudflared.tunnels."CFD_MAIN_TUNNEL".ingress = {
@@ -23,19 +27,17 @@
         sign_ups = true;
         allowed_domains = ["theswisscheese.com"];
       };
-      # Codes go to the journal until CONCIERGE_SMTP_PASSWORD (a Resend API
-      # key) is in secrets/bigtasty.yaml. Then replace this with Resend SMTP,
-      # like Vaultwarden's:
-      #   mail.smtp = {
-      #     host = "smtp.resend.com";
-      #     port = 2465;
-      #     security = "tls"; # implicit TLS, like Vaultwarden's force_tls
-      #     username = "resend";
-      #     from = "Concierge <concierge@theswisscheese.com>";
-      #   };
-      # plus `smtpPasswordFile = config.sops.secrets.CONCIERGE_SMTP_PASSWORD.path;`
-      # and the secret's declaration in ../sops.nix.
-      mail.transport = "log";
+      mail.smtp = {
+        host = "smtp.resend.com";
+        port = 2465;
+        # Implicit TLS, like Vaultwarden's force_tls.
+        security = "tls";
+        username = "resend";
+        from = "Concierge <concierge@theswisscheese.com>";
+      };
     };
+    # A Resend API key. systemd's LoadCredential copies it, so only root
+    # needs to read the sops file.
+    smtpPasswordFile = config.sops.secrets.CONCIERGE_SMTP_PASSWORD.path;
   };
 }
