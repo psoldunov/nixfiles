@@ -40,6 +40,32 @@ self: super: let
       url = "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-${version}.tgz";
       hash = pin.modelDataHash;
     };
+
+    # Same as nixpkgs' postInstall, except the workspace packages copied into
+    # the output come from runtime-workspaces.js instead of a hardcoded list
+    # (1.2.0 dropped pi-client and pi-protocol, which broke the nixpkgs list).
+    postInstall =
+      ''
+        local nm="$out/lib/node_modules/pi-monorepo/node_modules"
+
+        # Replace workspace deps needed at runtime with real copies
+        node ${./runtime-workspaces.js} > runtime-workspaces.txt
+        while IFS=: read -r pkg src; do
+          rm "$nm/$pkg"
+          cp -r "$src" "$nm/$pkg"
+        done < runtime-workspaces.txt
+
+        # Delete remaining workspace symlinks
+        find "$nm" -type l -lname '*/packages/*' -delete
+
+        # Clean up now-dangling .bin symlinks
+        find "$nm/.bin" -xtype l -delete
+      ''
+      + super.lib.optionalString super.stdenvNoCC.hostPlatform.isDarwin ''
+        rm -rf \
+          "$nm/@anthropic-ai/sandbox-runtime/dist/vendor/seccomp" \
+          "$nm/@anthropic-ai/sandbox-runtime/vendor/seccomp"
+      '';
   });
 in {
   pi-coding-agent =
