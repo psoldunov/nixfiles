@@ -1,10 +1,6 @@
 {pkgs, ...}: {
-  # Installs pi and, through modules/home/programs/pi, its claude-bridge
-  # extension.
-  programs.pi-coding-agent.enable = true;
-
-  # NOTE: Script packages are managed by modules/home/scripts/default.nix
-  # and appended to home.packages there.
+  # pi, the shared CLI set and the system scripts come from
+  # modules/home/workstation; Whopper-only scripts from ./scripts.
   #
   # KDE-native picks: Plasma already ships Elisa (music) and KFontView (fonts),
   # so no GNOME counterparts here. KDE ISO Image Writer writes install media,
@@ -21,15 +17,12 @@
     discord
     qFlipper
     geekbench
-    deno
-    biome
-    neovim
     zoom-us
-    infisical
     mise
     nodejs_24
+    deno
+    cargo
     obsidian
-    anytype
     plexamp
     jellyfin-desktop
     fladder
@@ -56,7 +49,6 @@
     ookla-speedtest
     motrix
     tremotesf
-    uv
     bambu-studio-bin
     # The ROCm build adds HIP, so Cycles renders on the 7900 XTX.
     pkgsRocm.blender

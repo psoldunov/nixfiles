@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }: let
   inherit (config.programs.claude-code) configDir;
@@ -34,12 +35,15 @@ in {
       "${configDir}/skills/grilling".source = "${inputs.mattpocock-skills}/skills/productivity/grilling";
       "${configDir}/skills/grill-with-docs".source = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs";
       "${configDir}/skills/domain-modeling".source = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling";
-      # REA's workflow skill for its rea MCP server (mcp.nix), same release.
-      "${configDir}/skills/reverse-engineer-anything".source = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
       # Opts in to i-have-adhd's always-on mode: its SessionStart hook injects
       # the full ruleset, and hooks/adhd-final-response.sh re-asserts it on
       # every prompt. Remove this entry to switch both off.
       "${configDir}/.i-have-adhd-always".text = "";
+    }
+    // lib.optionalAttrs (!pkgs.stdenv.hostPlatform.isDarwin) {
+      # REA's workflow skill for its rea MCP server (mcp.nix), same release.
+      # Linux only, like the server.
+      "${configDir}/skills/reverse-engineer-anything".source = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
     }
     // lib.mapAttrs' (name: source: lib.nameValuePair "${configDir}/skills/${name}" {inherit source;}) plugins;
 

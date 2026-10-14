@@ -44,6 +44,21 @@ in {
       end
     end
   '';
+  # zsh ties $path to $PATH, so this copy names the file variable differently.
+  programs.zsh.initContent = lib.mkAfter ''
+    for pair in \
+        CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
+        NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
+        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
+      name="''${pair%%:*}"
+      secret_file="''${pair#*:}"
+      if [ -r "$secret_file" ]; then
+        export "$name"="$(<"$secret_file")"
+      fi
+    done
+    unset pair name secret_file
+  '';
   programs.bash.bashrcExtra = lib.mkAfter ''
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
@@ -60,64 +75,68 @@ in {
 
   programs.mcp = {
     enable = true;
-    servers = {
-      # Native HTTP rather than an `npx mcp-remote` bridge: a bridge gets
-      # the expanded key in its argv, where `ps` shows it to every user.
-      nocodb-the-connection = {
-        url = "https://nocodb.theswisscheese.com/mcp/nc5tvdxynrmu24vo";
-        headers.x-api-key = "\${NOCODB_API_KEY}";
-      };
-
-      Sanity = {
-        url = "https://mcp.sanity.io";
-        headers.Authorization = "Bearer \${CLAUDE_SANITY_MCP_BEARER}";
-      };
-
-      n8n-mcp = {
-        url = "https://n8n.theswisscheese.com/mcp-server/http";
-        headers.Authorization = "Bearer \${N8N_ACCESS_TOKEN}";
-      };
-
-      # One remote Figma server per Figma account. Claude Code keeps the
-      # OAuth token per server name, so each one is signed in separately
-      # through /mcp. The acct query parameter only tells the URLs apart.
-      figma-almost-always.url = "https://mcp.figma.com/mcp?acct=almost-always";
-      figma-personal.url = "https://mcp.figma.com/mcp?acct=personal";
-
-      # One remote Linear server per Linear workspace, signed in the same
-      # way as Figma above.
-      linear-swiss-cheese.url = "https://mcp.linear.app/mcp?acct=swiss-cheese";
-      linear-almost-always.url = "https://mcp.linear.app/mcp?acct=almost-always";
-
-      # Cloudflare's API server: search() and execute() over the whole
-      # Cloudflare API (DNS, Zero Trust tunnels, Workers and the rest), plus
-      # docs(). Sign in through /mcp; the OAuth grant picks the permissions.
-      cloudflare-api.url = "https://mcp.cloudflare.com/mcp";
-
-      Paperless = {
-        command = "${pkgs.bun}/bin/bunx";
-        args = [
-          "-y"
-          "@psoldunov/paperless-mcp@0.4.2"
-        ];
-        env = {
-          PAPERLESS_URL = "http://10.24.24.2:28981";
-          PAPERLESS_API_KEY = "\${PAPERLESS_API_KEY}";
-          PAPERLESS_PUBLIC_URL = "https://paperless.theswisscheese.com";
+    servers =
+      {
+        # Native HTTP rather than an `npx mcp-remote` bridge: a bridge gets
+        # the expanded key in its argv, where `ps` shows it to every user.
+        nocodb-the-connection = {
+          url = "https://nocodb.theswisscheese.com/mcp/nc5tvdxynrmu24vo";
+          headers.x-api-key = "\${NOCODB_API_KEY}";
         };
-      };
 
+        Sanity = {
+          url = "https://mcp.sanity.io";
+          headers.Authorization = "Bearer \${CLAUDE_SANITY_MCP_BEARER}";
+        };
+
+        n8n-mcp = {
+          url = "https://n8n.theswisscheese.com/mcp-server/http";
+          headers.Authorization = "Bearer \${N8N_ACCESS_TOKEN}";
+        };
+
+        # One remote Figma server per Figma account. Claude Code keeps the
+        # OAuth token per server name, so each one is signed in separately
+        # through /mcp. The acct query parameter only tells the URLs apart.
+        figma-almost-always.url = "https://mcp.figma.com/mcp?acct=almost-always";
+        figma-personal.url = "https://mcp.figma.com/mcp?acct=personal";
+
+        # One remote Linear server per Linear workspace, signed in the same
+        # way as Figma above.
+        linear-swiss-cheese.url = "https://mcp.linear.app/mcp?acct=swiss-cheese";
+        linear-almost-always.url = "https://mcp.linear.app/mcp?acct=almost-always";
+
+        # Cloudflare's API server: search() and execute() over the whole
+        # Cloudflare API (DNS, Zero Trust tunnels, Workers and the rest), plus
+        # docs(). Sign in through /mcp; the OAuth grant picks the permissions.
+        cloudflare-api.url = "https://mcp.cloudflare.com/mcp";
+
+        Paperless = {
+          command = "${pkgs.bun}/bin/bunx";
+          args = [
+            "-y"
+            "@psoldunov/paperless-mcp@0.4.2"
+          ];
+          env = {
+            PAPERLESS_URL = "http://10.24.24.2:28981";
+            PAPERLESS_API_KEY = "\${PAPERLESS_API_KEY}";
+            PAPERLESS_PUBLIC_URL = "https://paperless.theswisscheese.com";
+          };
+        };
+      }
       # REA, reverse engineering over MCP. JavaScript, Electron and .NET
       # targets need no engine; native binaries go through nixpkgs' Ghidra,
       # which rea runs headless on the JDK below. Hopper is left out: its
-      # Linux installer only knows deb, rpm and Arch packages.
-      rea = {
-        command = "${reaMcp}";
-        env = {
-          GHIDRA_INSTALL_DIR = "${pkgs.ghidra}/lib/ghidra";
-          JAVA_HOME = pkgs.jdk21.home;
+      # Linux installer only knows deb, rpm and Arch packages. Linux only:
+      # Hydra has no current aarch64-darwin Ghidra, and building it on BigMac
+      # crashes (NixOS/nixpkgs#570561).
+      // lib.optionalAttrs (!pkgs.stdenv.hostPlatform.isDarwin) {
+        rea = {
+          command = "${reaMcp}";
+          env = {
+            GHIDRA_INSTALL_DIR = "${pkgs.ghidra}/lib/ghidra";
+            JAVA_HOME = pkgs.jdk21.home;
+          };
         };
       };
-    };
   };
 }
