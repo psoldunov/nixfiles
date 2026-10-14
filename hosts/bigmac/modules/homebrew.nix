@@ -132,6 +132,7 @@
       "raycast"
       "rectangle"
       "renamer"
+      "screen-studio"
       "psoldunov/tap/skrepka"
       "slack"
       "soundsource"
