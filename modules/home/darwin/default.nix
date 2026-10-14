@@ -7,6 +7,9 @@
   ...
 }: let
   cavemanStatusline = ''bash "${inputs.caveman}/src/hooks/caveman-statusline.sh"'';
+  # The cask installs only the app, with no link in /opt/homebrew/bin, so
+  # the CLI is called inside the bundle.
+  tokenStation = "/Applications/Token Station.app/Contents/MacOS/token-station";
 in {
   imports = [
     ./mise.nix
@@ -25,7 +28,7 @@ in {
   # Same priority as that module, so it outranks settings.nix's statusLine.
   programs.claude-code.settings.statusLine = lib.mkOverride 90 {
     type = "command";
-    command = "/opt/homebrew/bin/token-station statusline --wrap ${lib.escapeShellArg cavemanStatusline}";
+    command = "${lib.escapeShellArg tokenStation} statusline --wrap ${lib.escapeShellArg cavemanStatusline}";
   };
 
   programs.home-manager.enable = true;

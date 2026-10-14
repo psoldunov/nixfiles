@@ -90,10 +90,17 @@ on_mac() {
   local sys
   sys="$("${nixcmd[@]}" build --keep-going --no-link --print-out-paths "$src#darwinConfigurations.$host.system")"
 
-  for f in /etc/nix/nix.conf /etc/bashrc /etc/zshrc /etc/shells; do
+  # macOS ships only sudo_local.template, but a Mac where Touch ID for sudo
+  # was turned on by hand has a real sudo_local. nix-darwin writes its own,
+  # Touch ID included.
+  local aside
+  for f in /etc/nix/nix.conf /etc/bashrc /etc/zshrc /etc/shells /etc/pam.d/sudo_local; do
     if [ -f "$f" ] && [ ! -L "$f" ]; then
-      sudo mv "$f" "$f.before-nix-darwin"
-      echo "Moved $f to $f.before-nix-darwin"
+      # A rerun after a failed activation keeps the first run's copy.
+      aside="$f.before-nix-darwin"
+      if [ -e "$aside" ]; then aside="$aside-$(date +%Y%m%d-%H%M%S)"; fi
+      sudo mv "$f" "$aside"
+      echo "Moved $f to $aside"
     fi
   done
 

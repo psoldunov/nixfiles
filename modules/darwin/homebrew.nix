@@ -87,7 +87,6 @@
       "balenaetcher"
       "bambu-studio"
       "bitwarden"
-      "claude"
       "cleanshot"
       "cyberduck"
       "discord"
@@ -99,7 +98,6 @@
       "google-chrome"
       "iina"
       "linear"
-      "linear-linear"
       "localsend"
       # Mail client whose built-in MCP server Claude Code uses
       # (modules/home/workstation/mailspring.nix).
