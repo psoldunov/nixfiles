@@ -3,7 +3,7 @@
 # a less see-through background. The Macs keep the shared values.
 {lib, ...}: {
   programs.ghostty.settings = {
-    font-size = lib.mkForce 11.5;
+    font-size = lib.mkForce 10;
     background-opacity = lib.mkForce 0.8;
   };
 }
