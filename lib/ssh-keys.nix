@@ -1,4 +1,4 @@
-# Public halves of the SSH keys Whopper and BigMac share. Each identity is a
+# Public halves of the SSH keys the workstations share. Each identity is a
 # sops secret in secrets/shared.yaml named SSH_KEY_<NAME> (upper-cased, `-`
 # as `_`), which modules/home/workstation/ssh.nix links to ~/.ssh/<name> and
 # pairs with ~/.ssh/<name>.pub written from this file.
@@ -19,11 +19,12 @@ rec {
     # agent and the ssh config: every use needs a touch.
     git_sk = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINUPStKGRvJ7CQqdjeOvaU/RcMvqfnXzpBoKW6CXH1aBAAAAB3NzaDpnaXQ= philipp@theswisscheese.com yubikey-19662979";
     # sudo over a forwarded agent (pam_ssh_agent_auth): each host's sudo
-    # accepts only its own key, and only the other workstation loads it, by
+    # accepts only its own key, and only the other workstations load it, by
     # logging in with it (modules/home/workstation/ssh.nix). A host never
     # holds its own sudo key in its agent, so local sudo keeps asking.
     "sudo-whopper" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGcGQNj2vpu3jexJbmwhyYfOuCI7Bb3oJfq6nLDEra28 philipp@theswisscheese.com sudo-whopper";
     "sudo-bigmac" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9m7qk1/y4UpHjmg9ZFcnnVbpXoXBDyUvRD7u2iagfi philipp@theswisscheese.com sudo-bigmac";
+    "sudo-macflurry" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+9b6ob4ksmE9jYezzQBTy+Ro6slA5QoQOpqtQvCbVl philipp@theswisscheese.com sudo-macflurry";
   };
 
   # Keys every managed host accepts for psoldunov.
@@ -32,11 +33,14 @@ rec {
     identities.id_rsa
     identities."sudo-whopper"
     identities."sudo-bigmac"
+    identities."sudo-macflurry"
   ];
 
-  # The one key each host's sudo accepts from a forwarded agent.
+  # The one key each host's sudo accepts from a forwarded agent, by
+  # lower-cased host name (modules/darwin/system.nix looks Macs up by it).
   sudo = {
     whopper = identities."sudo-whopper";
     bigmac = identities."sudo-bigmac";
+    macflurry = identities."sudo-macflurry";
   };
 }

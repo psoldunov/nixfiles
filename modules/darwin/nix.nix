@@ -1,4 +1,4 @@
-# Nix itself on BigMac: upstream Nix, owned by nix-darwin (`nix.enable`), so
+# Nix itself on every Mac: upstream Nix, owned by nix-darwin (`nix.enable`), so
 # nix.conf is declared here the same way modules/nixos/nix.nix and
 # hosts/whopper/modules/nix.nix declare it on NixOS.
 {

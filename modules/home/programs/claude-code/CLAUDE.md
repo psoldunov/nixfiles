@@ -1,7 +1,7 @@
 # Claude Code — Declarative Configuration
 
 This installation is managed **declaratively** via home-manager, on NixOS
-(Whopper, BigTasty) and nix-darwin (BigMac). Do not
+(Whopper, BigTasty) and nix-darwin (BigMac, MacFlurry). Do not
 hand-edit files under `~/.claude/` that this setup owns — your changes will be
 overwritten on the next system rebuild.
 
@@ -33,7 +33,7 @@ To change anything Claude Code-related:
 
 1. Edit files under `~/.nixfiles/modules/home/programs/claude-code/`.
 2. Rebuild: `rebuild_system` (or `sudo nixos-rebuild switch --flake ~/.nixfiles#Whopper`;
-   on BigMac `sudo darwin-rebuild switch --flake ~/.nixfiles#BigMac`).
+   on a Mac `sudo darwin-rebuild switch --flake ~/.nixfiles#<BigMac|MacFlurry>`).
 3. On conflict with an existing real file at `~/.claude/<path>`, home-manager
    renames it to `<path>.hm-backup` (configured via
    `home-manager.backupFileExtension = "hm-backup"` in `~/.nixfiles/flake.nix`)
@@ -153,8 +153,8 @@ and its `code-review` collides with the local one. Update with
 ## MCP servers
 
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`.
-Playwright and Mailspring live in `../../workstation/` (Whopper and BigMac,
-not BigTasty), with macOS paths for Chrome and Mailspring on BigMac.
+Playwright and Mailspring live in `../../workstation/` (Whopper and the Macs,
+not BigTasty), with macOS paths for Chrome and Mailspring on the Macs.
 `enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
 `figma-personal` are two remote Figma servers, one per Figma account.
 `linear-swiss-cheese` and `linear-almost-always` do the same for the two

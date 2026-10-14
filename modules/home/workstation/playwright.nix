@@ -13,25 +13,33 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
 }: let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   playwrightMcp = lib.getExe pkgs.playwright-mcp;
 
-  # Directory names come from Chrome's `Local State` (profile.info_cache).
-  # BigMac has no Swiss Cheese profile yet; one added there is created as
-  # "Profile 2".
+  # Directory names come from Chrome's `Local State` (profile.info_cache),
+  # and each Mac's Chrome numbers its own. BigMac has no Swiss Cheese
+  # profile yet; one added there is created as "Profile 2".
+  macProfiles = {
+    BigMac = {
+      swiss-cheese = "Profile 2";
+      almost-always = "Profile 1";
+    };
+    MacFlurry = {
+      swiss-cheese = "Profile 2";
+      almost-always = "Profile 4";
+    };
+  };
   chrome =
     if isDarwin
     then {
       userDataDir = "${config.home.homeDirectory}/Library/Application Support/Google/Chrome";
       # The google-chrome cask.
       executable = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-      profiles = {
-        swiss-cheese = "Profile 2";
-        almost-always = "Profile 1";
-      };
+      profiles = macProfiles.${osConfig.networking.hostName};
     }
     else {
       userDataDir = "${config.xdg.configHome}/google-chrome";
@@ -71,7 +79,7 @@
   # never reaches /nix/store or the generated MCP config. Without a
   # readable token the server still starts and falls back to the page.
   # The tokens belong to one Chrome install, so only Whopper's are in sops
-  # (secrets/whopper.yaml); BigMac uses the connect page.
+  # (secrets/whopper.yaml); the Macs use the connect page.
   withExtensionToken = name: secret: let
     tokenFile = lib.escapeShellArg config.sops.secrets.${secret}.path;
   in

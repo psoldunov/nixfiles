@@ -7,7 +7,7 @@
     description = "Philipp Soldunov";
     shell = pkgs.fish;
     extraGroups = ["wheel" "docker" "libvirtd" "video"];
-    # The same list BigMac accepts (hosts/bigmac/modules/system.nix).
+    # The same list the Macs accept (modules/darwin/system.nix).
     openssh.authorizedKeys.keys = (import ../../lib/ssh-keys.nix).authorized;
   };
 }

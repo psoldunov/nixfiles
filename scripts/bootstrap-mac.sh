@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# First nix-darwin switch on BigMac. Later switches go through
-# `rebuild_system BigMac` (or `rebuild_system` on the Mac itself).
+# First nix-darwin switch on a Mac (BigMac, MacFlurry). Later switches go
+# through `rebuild_system <Host>` (or `rebuild_system` on the Mac itself).
 #
 # Order:
 #   1. On the Mac: sudo /nix/nix-installer uninstall
 #      (removes Determinate Nix; Homebrew and its apps are untouched)
 #   2. On the Mac: sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
 #      (upstream Nix, multi-user)
-#   3. On Whopper, in a checkout of this repo: scripts/bootstrap-bigmac.sh
+#   3. On Whopper, in a checkout of this repo: scripts/bootstrap-mac.sh <Host>
 #
 # Step 3 runs everything on the Mac over `ssh -t`, so sudo asks for the Mac's
 # password there. On the Mac it:
@@ -18,14 +18,19 @@
 #   - moves ~/.claude/settings.json aside, so Claude Code's settings start
 #     from settings.nix instead of merging with the old file,
 #   - moves the /etc files nix-darwin takes over to <file>.before-nix-darwin,
-#   - builds and activates darwinConfigurations.BigMac.
+#   - builds and activates darwinConfigurations.<Host>.
 #
-# hosts/bigmac/modules/homebrew.nix sets Homebrew cleanup to "uninstall", so
-# the switch removes every formula and cask it doesn't list. For a fresh Mac
-# with an existing Homebrew setup, set it to "none" for the first switch.
+# Homebrew cleanup is "uninstall" (modules/darwin/homebrew.nix), so the
+# switch removes every formula and cask that neither the shared list nor
+# hosts/<host>/modules/homebrew.nix names. Check both lists against the Mac
+# first, or set cleanup to "none" for the first switch.
 set -euo pipefail
 
-target=psoldunov@bigmac
+host="${1:?usage: scripts/bootstrap-mac.sh <BigMac|MacFlurry>}"
+# By mDNS name rather than the ssh config's host block: that block logs in
+# with the Mac's sudo key, which the Mac accepts only after this switch.
+# tr, not ${host,,}: the --on-mac half runs under macOS's bash 3.2.
+target="psoldunov@$(printf '%s' "$host" | tr '[:upper:]' '[:lower:]').local"
 nixbin=/nix/var/nix/profiles/default/bin
 nixcmd=("$nixbin/nix" --extra-experimental-features "nix-command flakes")
 
@@ -81,9 +86,9 @@ on_mac() {
     echo "Moved ~/.claude/settings.json to $aside"
   fi
 
-  echo "Building darwinConfigurations.BigMac (first run downloads a lot)..."
+  echo "Building darwinConfigurations.$host (first run downloads a lot)..."
   local sys
-  sys="$("${nixcmd[@]}" build --keep-going --no-link --print-out-paths "$src#darwinConfigurations.BigMac.system")"
+  sys="$("${nixcmd[@]}" build --keep-going --no-link --print-out-paths "$src#darwinConfigurations.$host.system")"
 
   for f in /etc/nix/nix.conf /etc/bashrc /etc/zshrc /etc/shells; do
     if [ -f "$f" ] && [ ! -L "$f" ]; then
@@ -92,12 +97,12 @@ on_mac() {
     fi
   done
 
-  sudo "$sys/sw/bin/darwin-rebuild" switch --flake "$src#BigMac"
-  echo "BigMac switched. Open a new terminal: the login shell is now Nix's fish."
+  sudo "$sys/sw/bin/darwin-rebuild" switch --flake "$src#$host"
+  echo "$host switched. Open a new terminal: the login shell is now Nix's fish."
 }
 
-if [ "${1:-}" = "--on-mac" ]; then
-  on_mac "$2"
+if [ "${2:-}" = "--on-mac" ]; then
+  on_mac "$3"
   exit 0
 fi
 
@@ -138,4 +143,4 @@ src="$(nix flake archive --json --to "ssh-ng://$target?remote-program=$nixbin/ni
 echo "Flake source on the Mac: $src"
 
 echo "== Switching the Mac"
-ssh -t "$target" "/bin/bash $src/scripts/bootstrap-bigmac.sh --on-mac $src"
+ssh -t "$target" "/bin/bash $src/scripts/bootstrap-mac.sh $host --on-mac $src"

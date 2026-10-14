@@ -3,8 +3,8 @@
 in {
   services.pcscd.enable = true;
 
-  # sudo accepts BigMac's forwarded agent when it holds Whopper's sudo key,
-  # so rebuilds from BigMac need no password. Whopper never loads that key
+  # sudo accepts a Mac's forwarded agent when it holds Whopper's sudo key,
+  # so rebuilds from the Macs need no password. Whopper never loads that key
   # itself, so local sudo still wants the YubiKey (lib/ssh-keys.nix).
   environment.etc."ssh/sudo_authorized_keys" = {
     text = sshKeys.sudo.whopper + "\n";
