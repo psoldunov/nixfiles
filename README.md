@@ -293,6 +293,11 @@ The script appends the sops age identity to the Mac's `keys.txt` and copies the 
 
 Bootstrap: if the very first deploy needs a sudo password (no NOPASSWD yet on a fresh box), drop `%wheel ALL=(ALL) NOPASSWD: ALL` into `/etc/sudoers.d/99-bootstrap` once, deploy, then remove.
 
+Whopper and BigMac work the same way in both directions, with one difference: each one's sudo accepts only its own dedicated key (`sudo-whopper`, `sudo-bigmac` in [lib/ssh-keys.nix](lib/ssh-keys.nix)), never the GitHub key. The `whopper` and `bigmac` host blocks log in with that key, so `AddKeysToAgent` puts it in the other machine's agent and `ForwardAgent` hands it over. A machine never loads its own sudo key, so sudo at the machine itself still asks for the YubiKey (Whopper) or Touch ID (BigMac).
+
+- Whopper: `security.pam.sshAgentAuth` with `/etc/ssh/sudo_authorized_keys`, in [security.nix](hosts/whopper/modules/security.nix).
+- BigMac: nixpkgs builds `pam_ssh_agent_auth` for Linux only, so [overlays.nix](hosts/bigmac/modules/overlays.nix) builds it for macOS. [system.nix](hosts/bigmac/modules/system.nix) puts it ahead of Touch ID in `/etc/pam.d/sudo_local` and installs `/etc/ssh/sudo_authorized_keys` as a real root-owned file, since the module rejects key files under `/nix/store`.
+
 ## Secrets
 
 - **Backend**: sops-nix + age. Primary recipient declared in [.sops.yaml](.sops.yaml).
