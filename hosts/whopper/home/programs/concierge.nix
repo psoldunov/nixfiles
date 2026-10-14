@@ -6,7 +6,9 @@
 # Rust workspace. The module installs the package (daemon, `concierge` CLI and
 # the `concierge-linux` app), runs the daemon as the systemd user unit
 # `concierge-daemon.service` from login, and starts the app hidden with the
-# graphical session as `concierge-ui.service`.
+# graphical session as `concierge-ui.service`. `ui.autostart` defaults to on;
+# it is set here anyway so an upstream default change can't drop the tray
+# icon and global hotkey at login.
 #
 # A switch restarts neither unit, so running Tasks and open windows survive
 # it; the new build takes over at the next login, or after
@@ -19,5 +21,8 @@
     inputs.concierge.homeManagerModules.default
   ];
 
-  programs.concierge.enable = true;
+  programs.concierge = {
+    enable = true;
+    ui.autostart = true;
+  };
 }
