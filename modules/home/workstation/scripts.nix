@@ -180,10 +180,20 @@
 
   # BigMac's bleeding-edge layer: Homebrew (the agent CLIs and every cask)
   # and mise's runtimes. update_system runs it after switching BigMac.
+  #
+  # Casks that ship a .pkg or a privileged helper make brew call sudo part-way
+  # through. sudo -v asks once, or reuses the ticket of the switch that ran
+  # just before it in the same session, and the loop keeps that ticket fresh
+  # until the script exits.
   update_bleeding_edge = pkgs.writeShellScriptBin "update_bleeding_edge" ''
     set -euo pipefail
+    sudo -v
+    while true; do sudo -n true; sleep 50; done 2>/dev/null &
+    # shellcheck disable=SC2064 # the loop's pid, expanded now
+    trap "kill $! 2>/dev/null" EXIT
     /opt/homebrew/bin/brew update
-    /opt/homebrew/bin/brew upgrade
+    # Homebrew 7 asks before upgrading; this runs unattended.
+    /opt/homebrew/bin/brew upgrade --yes
     ${lib.getExe config.programs.mise.package} upgrade
   '';
 
@@ -201,6 +211,20 @@
     declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigMac]=darwin)
 
     target_of() { echo "psoldunov@''${1,,}"; }
+
+    # keep_sudo: ask for the password once and keep sudo's ticket fresh
+    # until the script exits, so later sudo calls (Homebrew's .pkg installs
+    # during activation, update_bleeding_edge) reuse it instead of asking.
+    keep_sudo() {
+      [ -n "''${SUDO_KEEPALIVE:-}" ] && return 0
+      sudo -v
+      while true; do sudo -n true; sleep 50; done 2>/dev/null &
+      SUDO_KEEPALIVE=$!
+      trap 'kill "$SUDO_KEEPALIVE" 2>/dev/null' EXIT
+    }
+
+    # The same for the remote side, as POSIX sh run before the switch.
+    REMOTE_KEEP_SUDO='sudo -v || exit 1; while true; do sudo -n true; sleep 50; done 2>/dev/null & k=$!; trap "kill $k 2>/dev/null" EXIT'
 
     # hosts_for <host|all>: the hosts an argument stands for.
     hosts_for() {
@@ -237,6 +261,7 @@
       local th
       th="$(target_of "$h")"
       if [ "$h" = "$LOCAL_HOST" ]; then
+        keep_sudo
         if [ "$kind" = darwin ]; then
           sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ".#$h" --show-trace "$@"
         else
@@ -247,14 +272,17 @@
       else
         # macOS on either end: copy the flake and every input, the private
         # ones included, into the target's store, then build and activate
-        # there. sudo asks for the target's password over ssh -t.
+        # there. sudo asks for the target's password once over ssh -t, and
+        # $AFTER_SWITCH (update_bleeding_edge for update_system) runs in the
+        # same session on that ticket.
         local src
         src="$(nix flake archive --json \
           --to "ssh-ng://$th?remote-program=/run/current-system/sw/bin/nix-daemon" \
           | ${jq} -r .path)"
         # An ssh session has no LANG, and nixpkgs bash can crash on macOS 27
         # without one (NixOS/nixpkgs#570561); macOS sudo keeps LANG.
-        ssh -t "$th" "env LANG=en_US.UTF-8 sudo /run/current-system/sw/bin/$kind-rebuild switch --flake '$src#$h' --show-trace $*"
+        local after="''${AFTER_SWITCH:+ && $AFTER_SWITCH}"
+        ssh -t "$th" "/bin/sh -c '$REMOTE_KEEP_SUDO; export LANG=en_US.UTF-8; sudo /run/current-system/sw/bin/$kind-rebuild switch --flake $src#$h --show-trace $*$after'"
       fi
     }
 
@@ -301,11 +329,11 @@
     for h in $HOSTS; do
       echo "===== Updating $h ====="
       if [ "''${KIND[$h]}" = darwin ]; then
-        switch_host "$h"
         if [ "$h" = "$LOCAL_HOST" ]; then
+          switch_host "$h"
           update_bleeding_edge
         else
-          ssh -t "$(target_of "$h")" env LANG=en_US.UTF-8 /etc/profiles/per-user/psoldunov/bin/update_bleeding_edge
+          AFTER_SWITCH=/etc/profiles/per-user/psoldunov/bin/update_bleeding_edge switch_host "$h"
         fi
       else
         switch_host "$h" --upgrade-all

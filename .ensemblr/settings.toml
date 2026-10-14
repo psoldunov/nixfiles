@@ -33,9 +33,9 @@ command = "nix eval --raw .#darwinConfigurations.BigMac.system.drvPath"
 icon = "search"
 
 # rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.
-# Builds run as the user; --sudo elevates only activation. BigMac's copy the
-# flake and every input into the Mac's store and build and activate there;
-# sudo asks for the Mac's password.
+# Builds run as the user; --sudo elevates only activation. BigMac's go
+# through scripts/switch-bigmac.sh: the flake is copied into the Mac's store
+# and built and activated there, and sudo asks for the Mac's password once.
 [scripts.run.rebuild-whopper]
 command = "nixos-rebuild switch --flake .#Whopper --sudo --show-trace"
 icon = "rocket"
@@ -45,11 +45,11 @@ command = "nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigta
 icon = "server"
 
 [scripts.run.rebuild-bigmac]
-command = '''bash -c 'src=$(nix flake archive --json --to "ssh-ng://psoldunov@bigmac?remote-program=/run/current-system/sw/bin/nix-daemon" | jq -r .path) && ssh -t psoldunov@bigmac "env LANG=en_US.UTF-8 sudo /run/current-system/sw/bin/darwin-rebuild switch --flake $src#BigMac --show-trace"''''
+command = '''scripts/switch-bigmac.sh'''
 icon = "monitor"
 
 [scripts.run.rebuild-all]
-command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && bash -c 'src=$(nix flake archive --json --to "ssh-ng://psoldunov@bigmac?remote-program=/run/current-system/sw/bin/nix-daemon" | jq -r .path) && ssh -t psoldunov@bigmac "env LANG=en_US.UTF-8 sudo /run/current-system/sw/bin/darwin-rebuild switch --flake $src#BigMac --show-trace"''''
+command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-bigmac.sh'''
 icon = "layers"
 
 # One-time: the first nix-darwin switch on BigMac. Needs upstream Nix on the
@@ -73,9 +73,9 @@ command = "nix flake update && nixos-rebuild switch --flake .#BigTasty --target-
 icon = "cloud"
 
 [scripts.run.update-bigmac]
-command = '''nix flake update && bash -c 'src=$(nix flake archive --json --to "ssh-ng://psoldunov@bigmac?remote-program=/run/current-system/sw/bin/nix-daemon" | jq -r .path) && ssh -t psoldunov@bigmac "env LANG=en_US.UTF-8 sudo /run/current-system/sw/bin/darwin-rebuild switch --flake $src#BigMac --show-trace"' && ssh -t psoldunov@bigmac env LANG=en_US.UTF-8 /etc/profiles/per-user/psoldunov/bin/update_bleeding_edge'''
+command = '''nix flake update && scripts/switch-bigmac.sh --update'''
 icon = "upload"
 
 [scripts.run.update-all]
-command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && bash -c 'src=$(nix flake archive --json --to "ssh-ng://psoldunov@bigmac?remote-program=/run/current-system/sw/bin/nix-daemon" | jq -r .path) && ssh -t psoldunov@bigmac "env LANG=en_US.UTF-8 sudo /run/current-system/sw/bin/darwin-rebuild switch --flake $src#BigMac --show-trace"' && ssh -t psoldunov@bigmac env LANG=en_US.UTF-8 /etc/profiles/per-user/psoldunov/bin/update_bleeding_edge'''
+command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-bigmac.sh --update'''
 icon = "zap"

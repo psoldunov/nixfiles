@@ -180,4 +180,10 @@
   # both, but ahead of macOS's own /usr/bin. The homebrew module's
   # enable*Integration would prepend them instead.
   environment.systemPath = lib.mkOrder 1100 ["/opt/homebrew/bin" "/opt/homebrew/sbin"];
+
+  environment.variables = {
+    # Homebrew 7 asks for confirmation before every install and upgrade.
+    HOMEBREW_NO_ASK = "1";
+    HOMEBREW_NO_ENV_HINTS = "1";
+  };
 }
