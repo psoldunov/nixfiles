@@ -249,8 +249,8 @@ in {
     (back 0)
     (app 1 {
       label = "Terminal";
-      icon = appIcon config.programs.kitty.package "kitty";
-      desktopId = "kitty";
+      icon = appIcon config.programs.ghostty.package "com.mitchellh.ghostty";
+      desktopId = "com.mitchellh.ghostty";
     })
     (app 2 {
       label = "Browser";

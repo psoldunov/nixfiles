@@ -24,7 +24,7 @@ in {
       TERM = "xterm-256color";
     }
     // lib.optionalAttrs isLinuxDesktop {
-      TERMINAL = "${pkgs.kitty}/bin/kitty";
+      TERMINAL = "${pkgs.ghostty}/bin/ghostty";
       MAILER = "${pkgs.mailspring}/bin/mailspring";
       PRISMA_QUERY_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/query-engine";
       PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/schema-engine";

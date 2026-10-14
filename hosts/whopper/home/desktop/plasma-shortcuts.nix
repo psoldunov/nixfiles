@@ -21,7 +21,7 @@
       "KDE Keyboard Layout Switcher"."Switch to Next Keyboard Layout" = ["Alt+Space" "Meta+Alt+K"];
 
       # New terminal window.
-      "services/kitty.desktop"._launch = "Meta+Return";
+      "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Return";
 
       kwin = {
         # Cmd+Q. Plasma's stock Meta+Q (activity switcher) is freed below.
@@ -71,6 +71,10 @@
 
       plasmashell."manage activities" = [];
     };
+
+    # kitty held Meta+Return before Ghostty. Deleting its entry keeps the key
+    # from having two owners in kglobalshortcutsrc.
+    configFile.kglobalshortcutsrc."services/kitty.desktop"._launch = null;
 
     # Cmd+Shift+3/4/5. Each is also bound by its US-layout symbol (Shift+3 is
     # "#"), since a shifted digit can reach kglobalaccel in either form.

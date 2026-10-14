@@ -1,12 +1,13 @@
 # What the workstations (Whopper, BigMac, MacFlurry) share on top of ../
 # (which BigTasty imports too): the same SSH keys and hosts, CLI tools,
-# system scripts, Claude Code MCP servers and pi. Imported by
+# system scripts, Ghostty config, Claude Code MCP servers and pi. Imported by
 # hosts/whopper/home, hosts/bigmac/home and hosts/macflurry/home.
 # Platform differences are handled inside each module with
 # `pkgs.stdenv.hostPlatform.isDarwin`.
 {...}: {
   imports = [
     ./cli.nix
+    ./ghostty.nix
     ./mailspring.nix
     ./playwright.nix
     ./scripts.nix
