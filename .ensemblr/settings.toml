@@ -27,15 +27,17 @@ command = "nix build .#nixosConfigurations.Whopper.config.system.build.toplevel 
 icon = "hammer"
 
 # Evaluation only: Whopper cannot build aarch64-darwin, so this is how a
-# BigMac change gets checked here before it reaches the Mac.
-[scripts.run.eval-bigmac]
-command = "nix eval --raw .#darwinConfigurations.BigMac.system.drvPath"
+# Mac change gets checked here before it reaches the Mac.
+[scripts.run.eval-macs]
+command = "nix eval --raw .#darwinConfigurations.BigMac.system.drvPath && echo && nix eval --raw .#darwinConfigurations.MacFlurry.system.drvPath"
 icon = "search"
 
 # rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.
-# Builds run as the user; --sudo elevates only activation. BigMac's go
-# through scripts/switch-bigmac.sh: the flake is copied into the Mac's store
+# Builds run as the user; --sudo elevates only activation. The Macs' go
+# through scripts/switch-mac.sh: the flake is copied into the Mac's store
 # and built and activated there, and sudo asks for the Mac's password once.
+# MacFlurry is the laptop: when it is asleep or away its step fails, and the
+# -all scripts run it last so the other hosts are already done.
 [scripts.run.rebuild-whopper]
 command = "nixos-rebuild switch --flake .#Whopper --sudo --show-trace"
 icon = "rocket"
@@ -45,17 +47,21 @@ command = "nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigta
 icon = "server"
 
 [scripts.run.rebuild-bigmac]
-command = '''scripts/switch-bigmac.sh'''
+command = '''scripts/switch-mac.sh BigMac'''
 icon = "monitor"
 
+[scripts.run.rebuild-macflurry]
+command = '''scripts/switch-mac.sh MacFlurry'''
+icon = "laptop"
+
 [scripts.run.rebuild-all]
-command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-bigmac.sh'''
+command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-mac.sh BigMac && scripts/switch-mac.sh MacFlurry'''
 icon = "layers"
 
-# One-time: the first nix-darwin switch on BigMac. Needs upstream Nix on the
-# Mac first; see the header of scripts/bootstrap-bigmac.sh.
-[scripts.run.bootstrap-bigmac]
-command = "scripts/bootstrap-bigmac.sh"
+# One-time: the first nix-darwin switch on a Mac. Needs upstream Nix on the
+# Mac first; see the header of scripts/bootstrap-mac.sh.
+[scripts.run.bootstrap-macflurry]
+command = "scripts/bootstrap-mac.sh MacFlurry"
 icon = "rocket"
 
 # Bump flake.lock only, so the input changes can be reviewed before a rebuild.
@@ -73,9 +79,13 @@ command = "nix flake update && nixos-rebuild switch --flake .#BigTasty --target-
 icon = "cloud"
 
 [scripts.run.update-bigmac]
-command = '''nix flake update && scripts/switch-bigmac.sh --update'''
+command = '''nix flake update && scripts/switch-mac.sh BigMac --update'''
+icon = "upload"
+
+[scripts.run.update-macflurry]
+command = '''nix flake update && scripts/switch-mac.sh MacFlurry --update'''
 icon = "upload"
 
 [scripts.run.update-all]
-command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-bigmac.sh --update'''
+command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-mac.sh BigMac --update && scripts/switch-mac.sh MacFlurry --update'''
 icon = "zap"

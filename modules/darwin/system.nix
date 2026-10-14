@@ -1,15 +1,20 @@
 # macOS system basics: names, the psoldunov account, login shell, sudo.
+# Each host sets `networking.hostName` (hosts/<host>/modules); the other
+# names and the sudo key follow from it.
 {
+  config,
   lib,
   pkgs,
   ...
 }: let
-  sshKeys = import ../../../lib/ssh-keys.nix;
+  sshKeys = import ../../lib/ssh-keys.nix;
+  hostName = config.networking.hostName;
+  # BigMac -> sudo-bigmac, MacFlurry -> sudo-macflurry.
+  sudoKey = sshKeys.sudo.${lib.toLower hostName};
 in {
   networking = {
-    hostName = "BigMac";
-    computerName = "BigMac";
-    localHostName = "BigMac";
+    computerName = hostName;
+    localHostName = hostName;
   };
 
   # The user the homebrew module and user-level defaults act for.
@@ -44,14 +49,14 @@ in {
 
     # pam_ssh_agent_auth refuses key files under a group-writable directory
     # such as /nix/store, so this is a real root-owned file, not an /etc link.
-    install -m 444 -o root -g wheel ${pkgs.writeText "sudo_authorized_keys" (sshKeys.sudo.bigmac + "\n")} /etc/ssh/sudo_authorized_keys
+    install -m 444 -o root -g wheel ${pkgs.writeText "sudo_authorized_keys" (sudoKey + "\n")} /etc/ssh/sudo_authorized_keys
   '';
 
   # Touch ID for sudo at the Mac. Over SSH, where there is no sensor, sudo
-  # instead accepts Whopper's forwarded agent when it holds BigMac's sudo key
-  # (pam_ssh_agent_auth, built for macOS in ./overlays.nix), so rebuilds from
-  # Whopper need no password. BigMac never loads that key itself, so local
-  # sudo still asks for Touch ID (lib/ssh-keys.nix).
+  # instead accepts another workstation's forwarded agent when it holds this
+  # Mac's sudo key (pam_ssh_agent_auth, built for macOS in ./overlays.nix),
+  # so rebuilds from there need no password. A Mac never loads its own sudo
+  # key, so local sudo still asks for Touch ID (lib/ssh-keys.nix).
   security.pam.services.sudo_local = {
     touchIdAuth = true;
     text = lib.mkBefore "auth       sufficient     ${pkgs.pam_ssh_agent_auth}/libexec/pam_ssh_agent_auth.so file=/etc/ssh/sudo_authorized_keys";
@@ -59,6 +64,4 @@ in {
   security.sudo.extraConfig = ''
     Defaults env_keep += "SSH_AUTH_SOCK"
   '';
-
-  system.stateVersion = 7;
 }

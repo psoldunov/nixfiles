@@ -1,4 +1,4 @@
-# Language runtimes on BigMac come from mise rather than nixpkgs, so they
+# Language runtimes on the Macs come from mise rather than nixpkgs, so they
 # can track upstream releases. mise itself is from nixpkgs; `update_system`
 # runs `mise upgrade` (through update_bleeding_edge). Projects pin their own
 # versions in mise.toml; these are the global defaults.

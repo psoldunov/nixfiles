@@ -1,7 +1,7 @@
 # Mailspring's built-in MCP server (Preferences > MCP), which gives Claude
 # Code access to mail and calendar while Mailspring runs. The app itself is
 # installed by hosts/whopper/modules/desktop-environment.nix on Whopper and
-# by the `mailspring` cask on BigMac.
+# by the `mailspring` cask on the Macs (modules/darwin/homebrew.nix).
 #
 # Mailspring generates the bearer token and keeps it in its own config, so
 # the shells read it from there at startup instead of from sops. A token

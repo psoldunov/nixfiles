@@ -178,8 +178,8 @@
     echo "Pi coding agent pin: $CURRENT -> $VERSION"
   '';
 
-  # BigMac's bleeding-edge layer: Homebrew (the agent CLIs and every cask)
-  # and mise's runtimes. update_system runs it after switching BigMac.
+  # The Macs' bleeding-edge layer: Homebrew (the agent CLIs and every cask)
+  # and mise's runtimes. update_system runs it after switching a Mac.
   #
   # Casks that ship a .pkg or a privileged helper make brew call sudo part-way
   # through. sudo -v asks once, or reuses the ticket of the switch that ran
@@ -207,10 +207,19 @@
       then "darwin"
       else "nixos"
     }
-    ALL_HOSTS=(Whopper BigTasty BigMac)
-    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigMac]=darwin)
+    ALL_HOSTS=(Whopper BigTasty BigMac MacFlurry)
+    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigMac]=darwin [MacFlurry]=darwin)
+    # Hosts that are often asleep or away (the laptop). `all` skips them
+    # with a warning when they don't answer, instead of failing the run.
+    ROAMING_HOSTS=(MacFlurry)
 
     target_of() { echo "psoldunov@''${1,,}"; }
+
+    # reachable <host>: whether ssh gets in within a few seconds, without
+    # prompting for anything.
+    reachable() {
+      ssh -o ConnectTimeout=5 -o BatchMode=yes "$(target_of "$1")" true >/dev/null 2>&1
+    }
 
     # keep_sudo: ask for the password once and keep sudo's ticket fresh
     # until the script exits, so later sudo calls (Homebrew's .pkg installs
@@ -226,10 +235,21 @@
     # The same for the remote side, as POSIX sh run before the switch.
     REMOTE_KEEP_SUDO='sudo -v || exit 1; while true; do sudo -n true; sleep 50; done 2>/dev/null & k=$!; trap "kill $k 2>/dev/null" EXIT'
 
-    # hosts_for <host|all>: the hosts an argument stands for.
+    # hosts_for <host|all>: the hosts an argument stands for. A roaming host
+    # that is not this one and doesn't answer is left out of `all`.
     hosts_for() {
       if [ "$1" = "all" ]; then
-        echo "''${ALL_HOSTS[@]}"
+        local h r hosts=()
+        for h in "''${ALL_HOSTS[@]}"; do
+          for r in "''${ROAMING_HOSTS[@]}"; do
+            if [ "$h" = "$r" ] && [ "$h" != "$LOCAL_HOST" ] && ! reachable "$h"; then
+              echo "$PROG: $h is not reachable; skipping it." >&2
+              continue 2
+            fi
+          done
+          hosts+=("$h")
+        done
+        echo "''${hosts[@]}"
       elif [ -n "''${KIND[$1]:-}" ]; then
         echo "$1"
       else
@@ -238,8 +258,8 @@
       fi
     }
 
-    # sync_repo: Whopper and BigMac both commit here, so start from the
-    # other's latest push. --autostash carries uncommitted edits across.
+    # sync_repo: every workstation commits here, so start from the others'
+    # latest push. --autostash carries uncommitted edits across.
     sync_repo() {
       if ! git pull --rebase --autostash --quiet; then
         if [ -d "$(git rev-parse --git-path rebase-merge)" ] \

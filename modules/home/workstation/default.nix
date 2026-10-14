@@ -1,6 +1,7 @@
-# What Whopper and BigMac share on top of ../ (which BigTasty imports too):
-# the same SSH keys and hosts, CLI tools, system scripts, Claude Code MCP
-# servers and pi. Imported by hosts/whopper/home and hosts/bigmac/home.
+# What the workstations (Whopper, BigMac, MacFlurry) share on top of ../
+# (which BigTasty imports too): the same SSH keys and hosts, CLI tools,
+# system scripts, Claude Code MCP servers and pi. Imported by
+# hosts/whopper/home, hosts/bigmac/home and hosts/macflurry/home.
 # Platform differences are handled inside each module with
 # `pkgs.stdenv.hostPlatform.isDarwin`.
 {...}: {
@@ -12,7 +13,7 @@
     ./ssh.nix
   ];
 
-  # Same SHELL_SECRETS on both workstations. BigTasty keeps its own, from
+  # Same SHELL_SECRETS on every workstation. BigTasty keeps its own, from
   # its default sops file (modules/home/sops.nix).
   sops.secrets.SHELL_SECRETS.sopsFile = ../../../secrets/shared.yaml;
 

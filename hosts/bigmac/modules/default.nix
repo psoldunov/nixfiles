@@ -1,11 +1,12 @@
-# BigMac's nix-darwin modules. There is no shared darwin baseline yet:
-# with one Mac, everything system-level lives here.
+# BigMac's nix-darwin modules: the shared Mac baseline (modules/darwin)
+# plus what only BigMac has.
 {...}: {
   imports = [
+    ../../../modules/darwin
     ./homebrew.nix
-    ./nix.nix
-    ./overlays.nix
-    ./sops.nix
-    ./system.nix
   ];
+
+  networking.hostName = "BigMac";
+
+  system.stateVersion = 7;
 }

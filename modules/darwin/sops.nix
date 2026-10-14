@@ -1,8 +1,8 @@
-# System-level sops on BigMac. Only the Nix access token lives here; the
+# System-level sops on every Mac. Only the Nix access token lives here; the
 # user's secrets come through home-manager (modules/home/workstation).
 {...}: {
   sops = {
-    defaultSopsFile = ../../../secrets/shared.yaml;
+    defaultSopsFile = ../../secrets/shared.yaml;
     defaultSopsFormat = "yaml";
     age = {
       keyFile = "/Users/psoldunov/.config/sops/age/keys.txt";

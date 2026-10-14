@@ -1,9 +1,9 @@
-# Command-line tools both workstations get from nixpkgs. The shared shell
+# Command-line tools every workstation gets from nixpkgs. The shared shell
 # config leans on some of them (lsd and bat back the `ls` and `cat`
-# aliases). Linux-only tools stay in hosts/whopper; BigMac's extras are in
-# hosts/bigmac/home/packages.nix. Runtimes and toolchains are per host:
-# Whopper takes node, bun, deno and cargo from nixpkgs, BigMac from mise and
-# rustup.
+# aliases). Linux-only tools stay in hosts/whopper; the Macs' extras are in
+# modules/home/darwin/packages.nix. Runtimes and toolchains are per host:
+# Whopper takes node, bun, deno and cargo from nixpkgs, the Macs from mise
+# and rustup.
 {pkgs, ...}: {
   home.packages = with pkgs; [
     # Shell

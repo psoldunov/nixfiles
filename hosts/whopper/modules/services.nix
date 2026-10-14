@@ -94,12 +94,13 @@
       BigTasty.id = "GJTMGVV-ZBUNMER-CJRQLQS-CYPIVBO-UDLPMIZ-UW76NMG-YKEBQWH-IIMH5AY";
       SteamDeck.id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
       BigMac.id = "SDLAT7V-MXGQHXG-W2QIP3S-OUS6232-LJ4QF36-IUR4QJ7-C32QKGO-BVJOXQS";
+      MacFlurry.id = "KURK5RF-HZKBXEU-OBBUQ6E-D3PC723-I2ZPRII-54R5ENX-VMALIIA-WOII4QJ";
     };
     settings.folders.Obsidian = {
       id = "Obsidian";
       path = "/home/psoldunov/Documents/Obsidian";
       label = "Obsidian";
-      devices = ["BigTasty" "BigMac"];
+      devices = ["BigTasty" "BigMac" "MacFlurry"];
     };
     settings.folders.Emulation = {
       id = "ycvsf-athpn";
@@ -111,7 +112,7 @@
       id = "default";
       path = "/home/psoldunov/Sync";
       label = "Sync Folder";
-      devices = ["BigTasty" "SteamDeck" "BigMac"];
+      devices = ["BigTasty" "SteamDeck" "BigMac" "MacFlurry"];
     };
     overrideFolders = true;
     overrideDevices = true;

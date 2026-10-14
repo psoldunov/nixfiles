@@ -1,6 +1,6 @@
-# BigMac's CLI tools on top of modules/home/workstation/cli.nix: the ones it
-# used to take from Homebrew, now from nixpkgs. Agent CLIs and tap-only
-# formulae stay in Homebrew (hosts/bigmac/modules/homebrew.nix).
+# The Macs' CLI tools on top of modules/home/workstation/cli.nix: the ones
+# they used to take from Homebrew, now from nixpkgs. Agent CLIs and tap-only
+# formulae stay in Homebrew (modules/darwin/homebrew.nix).
 {pkgs, ...}: {
   home.packages = with pkgs; [
     _7zz

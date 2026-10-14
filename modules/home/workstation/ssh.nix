@@ -93,6 +93,15 @@ in {
           ForwardAgent = true;
         };
 
+        # The laptop is on Wi-Fi with a DHCP address, so it goes by mDNS.
+        "macflurry" = {
+          HostName = "macflurry.local";
+          User = "psoldunov";
+          IdentityFile = "~/.ssh/sudo-macflurry";
+          AddKeysToAgent = "yes";
+          ForwardAgent = true;
+        };
+
         "whopper" = {
           HostName = "10.24.24.5";
           User = "psoldunov";

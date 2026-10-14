@@ -40,7 +40,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # macOS system layer for BigMac (darwinConfigurations.BigMac).
+    # macOS system layer for the Macs (darwinConfigurations.{BigMac,MacFlurry}).
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -208,6 +208,50 @@
 
     mkHost = import ./lib/mkHost.nix {inherit nixpkgs;};
     mkDarwinHost = import ./lib/mkDarwinHost.nix {inherit nix-darwin;};
+
+    # Every Mac is wired the same way; only its hosts/<dir> differs.
+    mkMac = dir: let
+      hostConfig = import ./hosts/${dir}/hostConfig.nix;
+      pkgs-stable = mkPkgsStable darwinSystem;
+    in
+      mkDarwinHost {
+        specialArgs = {
+          inherit
+            inputs
+            outputs
+            hostConfig
+            pkgs-stable
+            ;
+        };
+        modules = [
+          ./hosts/${dir}/default.nix
+          sops-nix.darwinModules.sops
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              extraSpecialArgs = {
+                inherit
+                  inputs
+                  outputs
+                  hostConfig
+                  pkgs-stable
+                  ;
+              };
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              backupFileExtension = "hm-backup";
+              # Same reason as on Whopper: apps rewrite some HM-owned files.
+              overwriteBackup = true;
+              users = {
+                psoldunov = import ./hosts/${dir}/home;
+              };
+              sharedModules = [
+                sops-nix.homeManagerModules.sops
+              ];
+            };
+          }
+        ];
+      };
   in {
     formatter = nixpkgs.lib.genAttrs [system darwinSystem] (
       s: nixpkgs.legacyPackages.${s}.alejandra
@@ -319,45 +363,12 @@
       ];
     };
 
-    # Apply on BigMac with `sudo darwin-rebuild switch --flake .#BigMac`, or
-    # from another host with `rebuild_system BigMac`.
-    darwinConfigurations.BigMac = mkDarwinHost {
-      specialArgs = {
-        inherit
-          inputs
-          outputs
-          ;
-        pkgs-stable = mkPkgsStable darwinSystem;
-        hostConfig = import ./hosts/bigmac/hostConfig.nix;
-      };
-      modules = [
-        ./hosts/bigmac/default.nix
-        sops-nix.darwinModules.sops
-        home-manager.darwinModules.home-manager
-        {
-          home-manager = {
-            extraSpecialArgs = {
-              inherit
-                inputs
-                outputs
-                ;
-              pkgs-stable = mkPkgsStable darwinSystem;
-              hostConfig = import ./hosts/bigmac/hostConfig.nix;
-            };
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "hm-backup";
-            # Same reason as on Whopper: apps rewrite some HM-owned files.
-            overwriteBackup = true;
-            users = {
-              psoldunov = import ./hosts/bigmac/home;
-            };
-            sharedModules = [
-              sops-nix.homeManagerModules.sops
-            ];
-          };
-        }
-      ];
+    # Apply on a Mac with `sudo darwin-rebuild switch --flake .#<Host>`, or
+    # from another host with `rebuild_system <Host>`.
+    darwinConfigurations = {
+      BigMac = mkMac "bigmac";
+      # MacBook Pro on Wi-Fi.
+      MacFlurry = mkMac "macflurry";
     };
   };
 }
