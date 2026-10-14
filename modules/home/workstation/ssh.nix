@@ -82,16 +82,23 @@ in {
           ForwardAgent = true;
         };
 
+        # Logging in with the host's sudo key puts it in the local agent, and
+        # forwarding that agent lets the host's sudo accept it, so remote
+        # rebuilds need no password (lib/ssh-keys.nix).
         "bigmac" = {
           HostName = "bigmac.local";
           User = "psoldunov";
-          IdentityFile = "~/.ssh/github";
+          IdentityFile = "~/.ssh/sudo-bigmac";
+          AddKeysToAgent = "yes";
+          ForwardAgent = true;
         };
 
         "whopper" = {
           HostName = "10.24.24.5";
           User = "psoldunov";
-          IdentityFile = "~/.ssh/github";
+          IdentityFile = "~/.ssh/sudo-whopper";
+          AddKeysToAgent = "yes";
+          ForwardAgent = true;
         };
       }
       // lib.optionalAttrs isDarwin {

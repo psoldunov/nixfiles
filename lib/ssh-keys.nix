@@ -18,11 +18,25 @@ rec {
     # works on either machine with the YubiKey plugged in. Kept out of the
     # agent and the ssh config: every use needs a touch.
     git_sk = "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINUPStKGRvJ7CQqdjeOvaU/RcMvqfnXzpBoKW6CXH1aBAAAAB3NzaDpnaXQ= philipp@theswisscheese.com yubikey-19662979";
+    # sudo over a forwarded agent (pam_ssh_agent_auth): each host's sudo
+    # accepts only its own key, and only the other workstation loads it, by
+    # logging in with it (modules/home/workstation/ssh.nix). A host never
+    # holds its own sudo key in its agent, so local sudo keeps asking.
+    "sudo-whopper" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGcGQNj2vpu3jexJbmwhyYfOuCI7Bb3oJfq6nLDEra28 philipp@theswisscheese.com sudo-whopper";
+    "sudo-bigmac" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9m7qk1/y4UpHjmg9ZFcnnVbpXoXBDyUvRD7u2iagfi philipp@theswisscheese.com sudo-bigmac";
   };
 
   # Keys every managed host accepts for psoldunov.
   authorized = [
     identities.github
     identities.id_rsa
+    identities."sudo-whopper"
+    identities."sudo-bigmac"
   ];
+
+  # The one key each host's sudo accepts from a forwarded agent.
+  sudo = {
+    whopper = identities."sudo-whopper";
+    bigmac = identities."sudo-bigmac";
+  };
 }
