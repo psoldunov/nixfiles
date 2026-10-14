@@ -84,11 +84,16 @@ in {
 
         # Logging in with the host's sudo key puts it in the local agent, and
         # forwarding that agent lets the host's sudo accept it, so remote
-        # rebuilds need no password (lib/ssh-keys.nix).
+        # rebuilds need no password (lib/ssh-keys.nix). IdentitiesOnly makes
+        # that login use the sudo key: otherwise ssh offers the agent's keys
+        # first, the GitHub key (authorized on every host) gets in, and the
+        # sudo key never reaches the agent, so a remote sudo with no terminal
+        # fails.
         "bigmac" = {
           HostName = "bigmac.local";
           User = "psoldunov";
           IdentityFile = "~/.ssh/sudo-bigmac";
+          IdentitiesOnly = true;
           AddKeysToAgent = "yes";
           ForwardAgent = true;
         };
@@ -98,6 +103,7 @@ in {
           HostName = "macflurry.local";
           User = "psoldunov";
           IdentityFile = "~/.ssh/sudo-macflurry";
+          IdentitiesOnly = true;
           AddKeysToAgent = "yes";
           ForwardAgent = true;
         };
@@ -106,6 +112,7 @@ in {
           HostName = "10.24.24.5";
           User = "psoldunov";
           IdentityFile = "~/.ssh/sudo-whopper";
+          IdentitiesOnly = true;
           AddKeysToAgent = "yes";
           ForwardAgent = true;
         };
