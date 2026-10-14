@@ -19,11 +19,10 @@ in {
     # explicitly under `settings."*"` if needed.
     enableDefaultConfig = false;
 
-    # OrbStack and Conductor maintain these files themselves. An Include
-    # only works above the first Host block, which is where HM puts it.
+    # OrbStack maintains this file itself. An Include only works above the
+    # first Host block, which is where HM puts it.
     includes = lib.optionals isDarwin [
       "~/.orbstack/ssh/config"
-      "~/.ssh/conductor_config"
     ];
 
     # macOS's ssh knows UseKeychain; nixpkgs' openssh would reject it.

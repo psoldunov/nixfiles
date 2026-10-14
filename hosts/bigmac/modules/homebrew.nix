@@ -36,7 +36,6 @@
       }) [
         "antoniorodr/memo"
         "browsh-org/browsh"
-        "danielmarbach/mnemonic-mcp"
         "ensemblr-hq/tap"
         "mongodb/brew"
         "nubjs/tap"
@@ -58,7 +57,6 @@
       "vercel"
 
       # macOS-specific, or absent from nixpkgs.
-      "apfel"
       "libpq"
       "openai-whisper"
       "summarize"
@@ -69,7 +67,6 @@
       # Third-party taps.
       "antoniorodr/memo/memo"
       "browsh-org/browsh/browsh"
-      "danielmarbach/mnemonic-mcp/mnemonic-mcp"
       "mongodb/brew/mongodb-database-tools"
       "nubjs/tap/nub"
       "openclaw/tap/gogcli"
@@ -82,24 +79,19 @@
     casks = [
       # Agent CLI, upstream ships it as a cask.
       "codex"
-
       "1password"
       "1password-cli"
-      "adobe-acrobat-reader"
       "affinity-designer"
       "affinity-photo"
       "affinity-publisher"
-      "anytype"
       "asana"
       "atuin-desktop"
       "balenaetcher"
-      "bambu-connect"
       "bambu-studio"
       "bitwarden"
       "chatgpt"
       "claude"
       "cleanshot"
-      "conductor"
       "cyberduck"
       "discord"
       "downie"
@@ -144,7 +136,6 @@
       "slack"
       "soundsource"
       "steermouse"
-      "swinsian"
       "telegram-desktop"
       "tg-pro"
       # Also feeds Claude Code's statusline (hosts/bigmac/home/default.nix).

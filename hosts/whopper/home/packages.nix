@@ -23,7 +23,6 @@
     deno
     cargo
     obsidian
-    anytype
     plexamp
     jellyfin-desktop
     fladder
