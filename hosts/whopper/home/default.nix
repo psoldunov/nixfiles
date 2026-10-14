@@ -33,6 +33,7 @@
     ./programs/concierge.nix
     ./programs/deckmaster
     ./programs/figma.nix
+    ./programs/ghostty.nix
     ./programs/spotifyd.nix
     ./programs/linear.nix
     ./programs/notion.nix

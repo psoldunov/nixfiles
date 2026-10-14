@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   pkgs,
   osConfig,
@@ -52,8 +53,19 @@ in {
       icon = "org.telegram.desktop";
       exec = "${pkgs.telegram-desktop}/bin/Telegram -startintray";
     })
-    # Solaar's entry lives in ../programs/solaar.nix, which launches it
-    # through a wrapper.
+    # --open-at-login loads Notion's window without showing it. The tray icon
+    # is Notion's own setting: it shows while both the menu bar icon and
+    # Command Search are on. Notion's "Open at login" writes this same file
+    # name; leave it on, since switching it off deletes this entry.
+    (autostart {
+      name = "notion";
+      desktopName = "Notion";
+      icon = "notion-desktop";
+      exec = "${lib.getExe inputs.notion.packages.${pkgs.stdenv.hostPlatform.system}.default} --open-at-login";
+    })
+    # Solaar's and Notion Calendar's entries live in ../programs/solaar.nix
+    # and ../programs/notion-calendar.nix, which launch them through a
+    # wrapper.
     #
     # The package comes from the system module: programs._1password-gui
     # overrides its package with the polkit policy owners, so pkgs._1password-gui
