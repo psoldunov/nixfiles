@@ -54,12 +54,18 @@ in {
 
     # System Settings > Default Applications keeps the terminal and browser in
     # kdeglobals, not mimeapps.list. Dolphin's "Open Terminal Here" and KIO's
-    # URL handling read these, so point them at kitty and Wye (which then picks
-    # the browser) rather than the Konsole default. Everything else lives in
-    # hosts/whopper/mime-defaults.nix.
+    # URL handling read these, so point them at Ghostty and Wye (which then
+    # picks the browser) rather than the Konsole default. Everything else lives
+    # in hosts/whopper/mime-defaults.nix.
+    #
+    # The terminal is a command, not Ghostty's desktop file: that one launches
+    # with --gtk-single-instance=true, which hands the window to the running
+    # instance and loses the folder "Open Terminal Here" asked for. A separate
+    # process starts in KIO's working directory. TerminalService takes
+    # precedence over TerminalApplication, so null deletes it.
     configFile.kdeglobals.General = {
-      TerminalApplication = "kitty";
-      TerminalService = "kitty.desktop";
+      TerminalApplication = "ghostty --gtk-single-instance=false";
+      TerminalService = null;
       BrowserApplication = "dev.soldunov.wye.desktop";
     };
 
@@ -108,7 +114,7 @@ in {
                 "applications:zen.desktop"
                 "applications:org.kde.dolphin.desktop"
                 "applications:code.desktop"
-                "applications:kitty.desktop"
+                "applications:com.mitchellh.ghostty.desktop"
               ];
             };
           }

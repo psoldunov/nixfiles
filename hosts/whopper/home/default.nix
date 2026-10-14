@@ -34,7 +34,6 @@
     ./programs/deckmaster
     ./programs/figma.nix
     ./programs/spotifyd.nix
-    ./programs/kitty.nix
     ./programs/linear.nix
     ./programs/notion.nix
     ./programs/notion-calendar.nix

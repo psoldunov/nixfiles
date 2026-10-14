@@ -8,7 +8,7 @@
   # Only ~/.config/mimeapps.list is reachable through the bind-mounted
   # home directory, so any defaults we want Steam etc. to honor must live
   # here too. Without this, Steam's "Browse local files" falls back to
-  # $TERMINAL (kitty) because no inode/directory handler is found.
+  # $TERMINAL (Ghostty) because no inode/directory handler is found.
   #
   # Plasma's "Default Applications" KCM and several GTK apps rewrite
   # ~/.config/mimeapps.list in place, which turns the home-manager symlink into
