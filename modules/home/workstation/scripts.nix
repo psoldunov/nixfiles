@@ -274,16 +274,75 @@
         # ones included, into the target's store, then build and activate
         # there. sudo asks for the target's password once over ssh -t, and
         # $AFTER_SWITCH (update_bleeding_edge for update_system) runs in the
-        # same session on that ticket.
-        local src
+        # same session on that ticket. A job run_hosts starts in the
+        # background has no terminal to pass on, so it goes without -t.
+        local src tty=-T
         src="$(nix flake archive --json \
           --to "ssh-ng://$th?remote-program=/run/current-system/sw/bin/nix-daemon" \
           | ${jq} -r .path)"
+        if [ -t 0 ]; then tty=-t; fi
         # An ssh session has no LANG, and nixpkgs bash can crash on macOS 27
         # without one (NixOS/nixpkgs#570561); macOS sudo keeps LANG.
         local after="''${AFTER_SWITCH:+ && $AFTER_SWITCH}"
-        ssh -t "$th" "/bin/sh -c '$REMOTE_KEEP_SUDO; export LANG=en_US.UTF-8; sudo /run/current-system/sw/bin/$kind-rebuild switch --flake $src#$h --show-trace $*$after'"
+        ssh "$tty" "$th" "/bin/sh -c '$REMOTE_KEEP_SUDO; export LANG=en_US.UTF-8; sudo /run/current-system/sw/bin/$kind-rebuild switch --flake $src#$h --show-trace $*$after'"
       fi
+    }
+
+    # label <host>: prefix each line of stdin with [<host>].
+    label() {
+      local line
+      while IFS= read -r line || [ -n "$line" ]; do
+        printf '%-11s%s\n' "[$1]" "$line"
+      done
+    }
+
+    # run_hosts <verb> <job> <host>...: run `<job> <host>` for each host.
+    # A single host runs in the foreground on the terminal. Several run at
+    # once, since each builds on its own machine: lines are tagged with the
+    # host and copied to <logs>/<host>.log, and the call fails once all of
+    # them have finished if any one failed.
+    #
+    # Remote sudo authenticates with the forwarded agent, so the only
+    # password is the local host's, asked here before any job starts.
+    # Background jobs read /dev/null, so a remote sudo that falls back to a
+    # password fails instead of waiting. They also ignore SIGINT, so Ctrl-C
+    # sends SIGTERM to the whole process group to stop every job.
+    run_hosts() {
+      local verb="$1" job="$2"
+      shift 2
+      if [ "$#" -eq 1 ]; then
+        echo "===== $verb $1 ====="
+        "$job" "$1"
+        return
+      fi
+      local h logs i
+      local -a hosts=("$@") pids=() failed=()
+      for h in "$@"; do
+        if [ "$h" = "$LOCAL_HOST" ]; then keep_sudo; fi
+      done
+      logs="$(mktemp -d "''${TMPDIR:-/tmp}/$PROG.XXXXXX")"
+      echo "===== $verb $* at once (logs in $logs) ====="
+      trap 'trap - INT TERM; kill 0' INT TERM
+      for h in "$@"; do
+        (
+          set -o pipefail
+          trap '[ $? -eq 0 ] || echo "===== $h FAILED, see $logs/$h.log =====" >&2' EXIT
+          "$job" "$h" 2>&1 | tee "$logs/$h.log" | label "$h"
+          echo "===== $h done ====="
+        ) &
+        pids+=("$!")
+      done
+      for i in "''${!pids[@]}"; do
+        if ! wait "''${pids[$i]}"; then
+          failed+=("''${hosts[$i]}")
+        fi
+      done
+      trap - INT TERM
+      if [ "''${#failed[@]}" -gt 0 ]; then
+        echo "$PROG: failed on ''${failed[*]}; logs in $logs" >&2
+        return 1
+      fi
+      rm -rf "$logs"
     }
 
     commit_and_push() {
@@ -306,10 +365,8 @@
     HOSTS="$(hosts_for "''${1:-$LOCAL_HOST}")"
     cd "''${FLAKE_DIR:-''${HOME}/.nixfiles}"
     sync_repo
-    for h in $HOSTS; do
-      echo "===== Rebuilding $h ====="
-      switch_host "$h"
-    done
+    # shellcheck disable=SC2086 # $HOSTS is a list of host names
+    run_hosts Rebuilding switch_host $HOSTS
     commit_and_push "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
   '';
 
@@ -326,19 +383,20 @@
     FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
     FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
     FLAKE_DIR="$FLAKE_DIR" ${update_pi_coding_agent}/bin/update_pi_coding_agent
-    for h in $HOSTS; do
-      echo "===== Updating $h ====="
-      if [ "''${KIND[$h]}" = darwin ]; then
-        if [ "$h" = "$LOCAL_HOST" ]; then
-          switch_host "$h"
+    update_host() {
+      if [ "''${KIND[$1]}" = darwin ]; then
+        if [ "$1" = "$LOCAL_HOST" ]; then
+          switch_host "$1"
           update_bleeding_edge
         else
-          AFTER_SWITCH=/etc/profiles/per-user/psoldunov/bin/update_bleeding_edge switch_host "$h"
+          AFTER_SWITCH=/etc/profiles/per-user/psoldunov/bin/update_bleeding_edge switch_host "$1"
         fi
       else
-        switch_host "$h" --upgrade-all
+        switch_host "$1" --upgrade-all
       fi
-    done
+    }
+    # shellcheck disable=SC2086 # $HOSTS is a list of host names
+    run_hosts Updating update_host $HOSTS
     commit_and_push "update commit $(date '+%d/%m/%Y %H:%M:%S')"
   '';
 
