@@ -40,6 +40,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # macOS system layer for BigMac (darwinConfigurations.BigMac).
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -178,6 +184,7 @@
     nix-flatpak,
     sops-nix,
     home-manager,
+    nix-darwin,
     apple-fonts,
     plasma-manager,
     ...
@@ -185,19 +192,26 @@
     inherit (self) outputs;
 
     system = "x86_64-linux";
+    darwinSystem = "aarch64-darwin";
 
-    pkgs-stable = import nixpkgs-stable {
-      inherit system;
-      config = {
-        allowUnfree = true;
+    mkPkgsStable = system:
+      import nixpkgs-stable {
+        inherit system;
+        config = {
+          allowUnfree = true;
+        };
       };
-    };
+
+    pkgs-stable = mkPkgsStable system;
 
     appleFonts = apple-fonts.packages.${system};
 
     mkHost = import ./lib/mkHost.nix {inherit nixpkgs;};
+    mkDarwinHost = import ./lib/mkDarwinHost.nix {inherit nix-darwin;};
   in {
-    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
+    formatter = nixpkgs.lib.genAttrs [system darwinSystem] (
+      s: nixpkgs.legacyPackages.${s}.alejandra
+    );
 
     nixosConfigurations.Whopper = mkHost {
       inherit system;
@@ -296,6 +310,47 @@
             overwriteBackup = true;
             users = {
               psoldunov = import ./hosts/bigtasty/home/home.nix;
+            };
+            sharedModules = [
+              sops-nix.homeManagerModules.sops
+            ];
+          };
+        }
+      ];
+    };
+
+    # Apply on BigMac with `sudo darwin-rebuild switch --flake .#BigMac`, or
+    # from another host with `rebuild_system BigMac`.
+    darwinConfigurations.BigMac = mkDarwinHost {
+      specialArgs = {
+        inherit
+          inputs
+          outputs
+          ;
+        pkgs-stable = mkPkgsStable darwinSystem;
+        hostConfig = import ./hosts/bigmac/hostConfig.nix;
+      };
+      modules = [
+        ./hosts/bigmac/default.nix
+        sops-nix.darwinModules.sops
+        home-manager.darwinModules.home-manager
+        {
+          home-manager = {
+            extraSpecialArgs = {
+              inherit
+                inputs
+                outputs
+                ;
+              pkgs-stable = mkPkgsStable darwinSystem;
+              hostConfig = import ./hosts/bigmac/hostConfig.nix;
+            };
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-backup";
+            # Same reason as on Whopper: apps rewrite some HM-owned files.
+            overwriteBackup = true;
+            users = {
+              psoldunov = import ./hosts/bigmac/home;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops

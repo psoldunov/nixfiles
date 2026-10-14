@@ -1,6 +1,7 @@
 # Mailspring's built-in MCP server (Preferences > MCP), which gives Claude
 # Code access to mail and calendar while Mailspring runs. The app itself is
-# installed in hosts/whopper/modules/desktop-environment.nix.
+# installed by hosts/whopper/modules/desktop-environment.nix on Whopper and
+# by the `mailspring` cask on BigMac.
 #
 # Mailspring generates the bearer token and keeps it in its own config, so
 # the shells read it from there at startup instead of from sops. A token
@@ -13,20 +14,27 @@
   ...
 }: let
   jq = lib.getExe pkgs.jq;
-  mailspringConfig = "${config.xdg.configHome}/Mailspring/config.json";
+  mailspringConfig = lib.escapeShellArg (
+    if pkgs.stdenv.hostPlatform.isDarwin
+    then "${config.home.homeDirectory}/Library/Application Support/Mailspring/config.json"
+    else "${config.xdg.configHome}/Mailspring/config.json"
+  );
   tokenQuery = ''."*".core.mcp.token // empty'';
+  posixExport = ''
+    if [ -r ${mailspringConfig} ]; then
+      MAILSPRING_MCP_TOKEN="$(${jq} -r '${tokenQuery}' ${mailspringConfig})"
+      export MAILSPRING_MCP_TOKEN
+    fi
+  '';
 in {
   programs.fish.shellInitLast = lib.mkAfter ''
     if test -r ${mailspringConfig}
       set -gx MAILSPRING_MCP_TOKEN (${jq} -r '${tokenQuery}' ${mailspringConfig})
     end
   '';
-  programs.bash.bashrcExtra = lib.mkAfter ''
-    if [ -r ${mailspringConfig} ]; then
-      MAILSPRING_MCP_TOKEN="$(${jq} -r '${tokenQuery}' ${mailspringConfig})"
-      export MAILSPRING_MCP_TOKEN
-    fi
-  '';
+  programs.bash.bashrcExtra = lib.mkAfter posixExport;
+  # zsh is only enabled on macOS (../shell/shell.nix).
+  programs.zsh.initContent = lib.mkAfter posixExport;
 
   # The `:-` default keeps Claude Code's config valid when Mailspring has not
   # created a token yet; the server then answers 401 until it has one.

@@ -44,8 +44,8 @@
     };
   };
 
-  # nix-ld, fish, mtr, git baseline live in modules/nixos.
-  programs.direnv.enable = true;
+  # nix-ld, fish, mtr, git baseline live in modules/nixos; direnv in
+  # modules/home/workstation.
   # Wallet GUI is kdePackages.kwalletmanager, installed by the plasma6 module.
 
   programs = {
@@ -145,7 +145,6 @@
   environment.systemPackages = with pkgs; [
     codex
     puppeteer-cli
-    typescript
     kdePackages.breeze-gtk
     abcde
     cddiscid
@@ -157,18 +156,8 @@
     wev
     usbutils
     pciutils
-    nixd
-    nil
-    nixpkgs-fmt
     lm_sensors
     krename
-    sops
-    # The YubiKey backup recipient in .sops.yaml is an age plugin key, so
-    # `sops updatekeys` and new secret files need the plugin on PATH.
-    age-plugin-yubikey
-    glab
-    alejandra
-    dive
     gperftools
     libsecret
     ddcutil
@@ -177,8 +166,6 @@
     grilo
     grilo-plugins
     sg3_utils
-    bat
-    cloudflared
     boxbuddy
     distrobox
     distroshelf
@@ -186,28 +173,18 @@
     run
     libdrm
     hwinfo
-    iperf
     yubioath-flutter
-    yubikey-manager
     adwaita-icon-theme
-    p7zip
     virtio-win
     zenity
     joypixels
     radeontop
-    pkg-config
-    tesseract
     hwdata
     kdiskmark
-    libwebp
     wl-clipboard
     speedcrunch
     dracut
-    openssl
     openssl.dev
-    imagemagick
-    devenv
-    cachix
     (python3.withPackages (p:
       with p; [
         discid
@@ -221,27 +198,14 @@
     protontricks
     ydotool
     desktop-file-utils
-    socat
     mangohud
     vulkan-tools
     libva-utils
-    cargo
-    pop
-    wishlist
     nvtopPackages.amd
-    vhs
-    soft-serve
-    glow
-    skate
-    gum
     rhythmbox
     libgpod
     hfsprogs
-    translate-shell
     clang
-    cmake
-    cmake-format
-    cmake-lint
     ccd2iso
     nss
     mkinitcpio-nfs-utils
@@ -249,15 +213,11 @@
     libgccjit
     libclang
     gdb
-    clang-tools
-    mkcert
-    dig
     winetricks
     cabextract
     idevicerestore
     killall
     sbctl
-    ffmpeg-full
     mpv
     (wrapOBS {
       plugins = with pkgs.obs-studio-plugins; [
@@ -266,29 +226,21 @@
         obs-pipewire-audio-capture
       ];
     })
-    go
-    ripgrep
-    nix-prefetch-scripts
     pamixer
     dualsensectl
     evtest
     trigger-control
     localsend
     calibre
-    unzip
-    woff2
     xdg-utils
     xdg-user-dirs
-    php
     libxcrypt
     i2c-tools
     cifs-utils
-    tldr
     playerctl
     qdigidoc
     libdigidocpp
     logitech-udev-rules
-    tmux
     fastfetch
     kdePackages.breeze-icons
     vapor-kde-theme
@@ -297,7 +249,6 @@
     hunspellDicts.ru_RU
     hunspellDicts.en_US
     hunspellDicts.en_GB-ise
-    lsd
     pulseaudio
     logiops
     libnotify
@@ -310,8 +261,6 @@
     kdePackages.qtwayland
     qt6.qmake
     qt6.qtwayland
-    jq
-    wget
     mpc
     keychain
     expressvpn

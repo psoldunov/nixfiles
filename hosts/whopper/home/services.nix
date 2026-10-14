@@ -25,9 +25,4 @@
     json.enable = false;
     manpages.enable = false;
   };
-
-  programs = {
-    btop.enable = true;
-    htop.enable = true;
-  };
 }

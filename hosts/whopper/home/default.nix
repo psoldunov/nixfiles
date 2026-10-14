@@ -1,13 +1,14 @@
 # Whopper-local home-manager aggregator. Pulls the shared modules at
-# ../../../modules/home plus all desktop-only modules.
+# ../../../modules/home, the workstation layer it shares with BigMac, and
+# all desktop-only modules.
 {...}: {
   imports = [
     # Shared modules
     ../../../modules/home
+    ../../../modules/home/workstation
 
     # Whopper-local modules
     ./sops.nix
-    ./ssh.nix
     ./dconf.nix
     ./services.nix
     ./packages.nix
@@ -20,7 +21,6 @@
     # Dev
     ./dev/neovim.nix
     ./dev/dev.nix
-    ./dev/playwright.nix
     ./dev/swift.nix
 
     # Desktop
@@ -36,7 +36,6 @@
     ./programs/spotifyd.nix
     ./programs/kitty.nix
     ./programs/linear.nix
-    ./programs/mailspring.nix
     ./programs/notion.nix
     ./programs/notion-calendar.nix
     ./programs/skrepka.nix
