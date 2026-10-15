@@ -214,6 +214,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `virtualisation.nix` | Host `oci-containers`, transmission restart policy, `systemd.services.docker-networks` oneshot creating immich-/paperless-/nocodb-/infisical-network |
 | `sops.nix` | sops secrets for env files referenced by docker containers + ACME |
 | `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server` |
+| `services/media-audio-fix/` | Nightly job (01:00) that rewrites audio in `/mnt/Media` for the LG C2, which can't decode DTS. DTS tracks become AC3, and audio that isn't English, Russian or the title's original language (from Sonarr/Radarr) is dropped. It only touches files that need a change and starts no new file after 07:30. Preview with `media-audio-fix --dry-run`; add `--sonarr-config` and `--radarr-config` to include the language drops |
 
 ## BigKing modules
 
