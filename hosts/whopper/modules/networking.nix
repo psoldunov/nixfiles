@@ -17,8 +17,11 @@
   networking = {
     defaultGateway = "10.24.24.1";
     useDHCP = false;
+    # PiHome, then BigTasty's standby; resolved moves to the next server
+    # when one stops answering.
     nameservers = [
       "10.24.24.9"
+      "10.24.24.2"
     ];
   };
 

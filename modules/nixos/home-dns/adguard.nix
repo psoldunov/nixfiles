@@ -6,7 +6,7 @@
   policy = import ./adguard-settings.nix;
 in
   lib.recursiveUpdate policy {
-    http = {address = "127.0.0.1:3000";};
+    http = {address = "127.0.0.1:${toString config.homeDns.uiPort}";};
     users = [
       {
         name = "psoldunov";

@@ -212,13 +212,15 @@
       then "darwin"
       else "nixos"
     }
-    # Critical DNS is explicit-only: don't switch it while the fleet is
-    # building against it, or accidentally include a not-yet-migrated Pi.
-    ALL_HOSTS=(Whopper BigTasty BigKing BigMac MacFlurry)
+    ALL_HOSTS=(Whopper BigTasty BigKing BigMac MacFlurry PiHome)
     declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [BigMac]=darwin [MacFlurry]=darwin [PiHome]=nixos)
     # Hosts that are often asleep or away (the laptop). `all` skips them
     # with a warning when they don't answer, instead of failing the run.
     ROAMING_HOSTS=(MacFlurry)
+    # Hosts run_hosts switches alone, after every other host has finished.
+    # The rest of the fleet resolves names through PiHome, and a switch that
+    # restarts AdGuard or Unbound would break their downloads mid-build.
+    LAST_HOSTS=(PiHome)
 
     target_of() { echo "psoldunov@''${1,,}"; }
 
@@ -260,7 +262,7 @@
       elif [ -n "''${KIND[$1]:-}" ]; then
         echo "$1"
       else
-        echo "$PROG: unknown host '$1' (known: ''${ALL_HOSTS[*]} PiHome all)" >&2
+        echo "$PROG: unknown host '$1' (known: ''${ALL_HOSTS[*]} all)" >&2
         exit 1
       fi
     }
@@ -323,11 +325,24 @@
       done
     }
 
+    # run_logged <job> <host> <logs>: run `<job> <host>` with its lines
+    # tagged with the host and copied to <logs>/<host>.log.
+    run_logged() {
+      local job="$1" h="$2" logs="$3"
+      (
+        set -o pipefail
+        trap '[ $? -eq 0 ] || echo "===== $h FAILED, see $logs/$h.log =====" >&2' EXIT
+        "$job" "$h" 2>&1 | tee "$logs/$h.log" | label "$h"
+        echo "===== $h done ====="
+      )
+    }
+
     # run_hosts <verb> <job> <host>...: run `<job> <host>` for each host.
     # A single host runs in the foreground on the terminal. Several run at
-    # once, since each builds on its own machine: lines are tagged with the
-    # host and copied to <logs>/<host>.log, and the call fails once all of
-    # them have finished if any one failed.
+    # once, since each builds on its own machine, through run_logged, and
+    # the call fails once all of them have finished if any one failed. The
+    # LAST_HOSTS among them run one at a time after the others are done,
+    # whether or not those succeeded.
     #
     # Remote sudo authenticates with the forwarded agent, so the only
     # password is the local host's, asked here before any job starts.
@@ -342,26 +357,35 @@
         "$job" "$1"
         return
       fi
-      local h logs i
-      local -a hosts=("$@") pids=() failed=()
+      local h l logs i
+      local -a first=() last=() pids=() failed=()
       for h in "$@"; do
         if [ "$h" = "$LOCAL_HOST" ]; then keep_sudo; fi
+        for l in "''${LAST_HOSTS[@]}"; do
+          if [ "$h" = "$l" ]; then
+            last+=("$h")
+            continue 2
+          fi
+        done
+        first+=("$h")
       done
       logs="$(mktemp -d "''${TMPDIR:-/tmp}/$PROG.XXXXXX")"
-      echo "===== $verb $* at once (logs in $logs) ====="
+      echo "===== $verb ''${first[*]} at once (logs in $logs) ====="
       trap 'trap - INT TERM; kill 0' INT TERM
-      for h in "$@"; do
-        (
-          set -o pipefail
-          trap '[ $? -eq 0 ] || echo "===== $h FAILED, see $logs/$h.log =====" >&2' EXIT
-          "$job" "$h" 2>&1 | tee "$logs/$h.log" | label "$h"
-          echo "===== $h done ====="
-        ) &
+      for h in "''${first[@]}"; do
+        run_logged "$job" "$h" "$logs" &
         pids+=("$!")
       done
       for i in "''${!pids[@]}"; do
         if ! wait "''${pids[$i]}"; then
-          failed+=("''${hosts[$i]}")
+          failed+=("''${first[$i]}")
+        fi
+      done
+      for h in "''${last[@]}"; do
+        echo "===== $verb $h now that the others are done ====="
+        run_logged "$job" "$h" "$logs" &
+        if ! wait "$!"; then
+          failed+=("$h")
         fi
       done
       trap - INT TERM

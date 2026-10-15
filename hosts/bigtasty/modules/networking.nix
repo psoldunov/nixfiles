@@ -8,9 +8,13 @@ in {
   networking = {
     hostName = "BigTasty";
     defaultGateway = "10.24.24.1";
+    # PiHome, then this host's own standby (../../../modules/nixos/home-dns).
+    # glibc waits 5s on a server before the next; 1s keeps a Pi outage cheap.
     nameservers = [
       "10.24.24.9"
+      "10.24.24.2"
     ];
+    resolvconf.extraOptions = ["timeout:1"];
     wireless = {
       enable = false;
       # PSKs come from the sops-rendered secrets file below, not the store.
@@ -68,4 +72,7 @@ in {
   security.sudo.extraConfig = ''
     Defaults env_keep += "SSH_AUTH_SOCK"
   '';
+
+  # The standby DNS server's AdGuard UI; Grafana holds 3000.
+  homeDns.uiPort = 3003;
 }

@@ -189,6 +189,22 @@ class CliTests(unittest.TestCase):
         with mock.patch.object(adguard.os, "stat", side_effect=AssertionError("secret accessed")), mock.patch.object(adguard.subprocess, "run", side_effect=AssertionError("ssh accessed")):
             self.assertEqual(adguard.parse_args(["--help"])[0], "help")
 
+    def test_remote_targets_run_each_and_report_failures(self):
+        config = {"mode": "remote", "ssh": "/nix/store/openssh/bin/ssh", "targets": ["pihome", "bigtasty"]}
+        results = [mock.Mock(returncode=2), mock.Mock(returncode=0)]
+        with mock.patch.object(adguard.subprocess, "run", side_effect=results) as run, \
+                mock.patch("sys.stdout"), mock.patch("sys.stderr"):
+            with self.assertRaisesRegex(adguard.CliError, "failed on pihome$"):
+                adguard.run(config, adguard.parse_args(["pause", "15m"]))
+        self.assertEqual([c.args[0][4] for c in run.call_args_list], ["pihome", "bigtasty"])
+        for c in run.call_args_list:
+            self.assertEqual(shlex.split(c.args[0][-1]), ["sudo", "-n", "/run/current-system/sw/bin/adguard", "pause", "15m"])
+        with mock.patch.object(adguard.subprocess, "run", return_value=mock.Mock(returncode=0)), mock.patch("sys.stdout"):
+            adguard.run(config, ("resume", []))
+        for bad in ([], ["pihome", "bad host"], "pihome"):
+            with self.assertRaisesRegex(adguard.CliError, "invalid remote configuration"):
+                adguard.run(dict(config, targets=bad), ("status", []))
+
 
 if __name__ == "__main__":
     unittest.main()

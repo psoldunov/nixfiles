@@ -26,6 +26,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   └── ssh-keys.nix                # Public SSH keys: the shared identities and the authorized list
 ├── modules/                        # SHARED ONLY
 │   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty and BigKing — see "Shared NixOS modules"
+│   │   └── home-dns/               # AdGuard + Unbound + policy, imported by PiHome and BigTasty only
 │   ├── darwin/                     # nix-darwin baseline imported by both Macs, shared Homebrew list included — see "Macs"
 │   └── home/
 │       ├── default.nix             # Imports all shared HM modules
@@ -63,8 +64,6 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   ├── pihome/
 │   │   ├── default.nix             # PiHome system configuration
 │   │   ├── INSTALL.md              # Spare-card migration and rollback steps
-│   │   ├── adguard-settings.nix    # Declarative AdGuard policy
-│   │   ├── adguard.nix             # AdGuard service and credential settings
 │   │   └── hardware.nix            # Raspberry Pi SD-card hardware settings
 │   ├── bigmac/
 │   │   ├── default.nix             # Imports ./modules (nix-darwin)
@@ -75,7 +74,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 ├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-mac.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
-│   ├── pihome.yaml                 # SOPS-encrypted AdGuard credentials
+│   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (PiHome and BigTasty)
 │   ├── whopper.yaml                # SOPS-encrypted (age, primary recipient)
 │   ├── bigtasty.yaml
 │   └── shared.yaml                 # Secrets more than one host reads, SSH keys included
@@ -111,6 +110,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | Docker | `oci-containers`: slskd, transmission, homeassistant, portainer-ce, homarr (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
 | File sharing | `services.nfs.server` exports `/export/{transmission,slskd,Paperless,Files,Documents}`, Samba/samba-wsdd + Netatalk for AFP |
 | Passwordless sudo | `pam_ssh_agent_auth` checks forwarded SSH agent against `/etc/ssh/authorized_keys.d/psoldunov` |
+| DNS | Standby twin of PiHome from [modules/nixos/home-dns](modules/nixos/home-dns/default.nix), AdGuard UI on `127.0.0.1:3003` (see [PiHome](#pihome-dns-appliance)) |
 
 ### BigKing (NAS)
 
@@ -130,11 +130,13 @@ An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/b
 
 PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/8` on `eth0` with gateway `10.24.24.1`. The `/8` prefix intentionally preserves the current Pi's network configuration rather than changing it to `/24`.
 
-DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [hosts/pihome/adguard-settings.nix](hosts/pihome/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), 15 local rewrites including `*.local.theswisscheese.com`, blocked services, Safe Search, and the existing admin login hash. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`; the complete effective settings are rendered from SOPS credentials at each service restart. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`; the former BigTasty UI proxy does not apply. DNS rewrites still target `10.24.24.2`.
+DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [modules/nixos/home-dns/adguard-settings.nix](modules/nixos/home-dns/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), 14 local rewrites including `*.local.theswisscheese.com`, blocked services, Safe Search, and the existing admin login hash. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`; the complete effective settings are rendered from SOPS credentials at each service restart. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`. Nothing proxies it, because the policy is managed in Nix, so the old `adguard.theswisscheese.com` vhost and rewrite are gone. DNS rewrites still target `10.24.24.2`.
 
-The CLI package provides `adguard status`, `adguard pause` (default five minutes), `adguard pause 15m`, `adguard resume`, and `adguard flush`. Pause leaves DNS available. Flush clears Unbound before AdGuard to avoid repopulating stale cache. Workstations get the remote wrapper from [modules/home/workstation/adguard.nix](modules/home/workstation/adguard.nix); it connects over `pihome` SSH and uses forwarded-agent sudo. The alias loads PiHome's dedicated `sudo-pihome` identity. The normal GitHub and `id_ed25519` login keys can SSH in, but cannot authorize PiHome sudo. For a fresh installation, rebuild the workstation configuration before cutover so the identity, alias, and CLI are available. On the Pi, run `sudo adguard ...`. Credentials are root-only SOPS-rendered files, not command-line arguments or Nix store content.
+The CLI package provides `adguard status`, `adguard pause` (default five minutes), `adguard pause 15m`, `adguard resume`, and `adguard flush`. Pause leaves DNS available. Flush clears Unbound before AdGuard to avoid repopulating stale cache. Workstations get the remote wrapper from [modules/home/workstation/adguard.nix](modules/home/workstation/adguard.nix). It runs each command on `pihome` and then on `bigtasty` over SSH, using forwarded-agent sudo, and reports which server failed if one does. The alias loads PiHome's dedicated `sudo-pihome` identity. The normal GitHub and `id_ed25519` login keys can SSH in, but cannot authorize PiHome sudo. For a fresh installation, rebuild the workstation configuration before cutover so the identity, alias, and CLI are available. On the Pi, run `sudo adguard ...`. Credentials are root-only SOPS-rendered files, not command-line arguments or Nix store content.
 
-PiHome now serves live DNS on NixOS from the spare card. The initial ARM image was built, flashed, and booted; subsequent boot fixes were built and activated in place. Verification covered external DNS, DNSSEC validation, filtering, all 15 rewrites, NTP synchronization, and forwarded-key CLI access. Whopper, BigTasty, BigKing, and BigMac use `10.24.24.9` for active DNS. The original Debian 12 / AdGuard Home 0.107.54 card is retained intact for rollback; its old query logs and mutable data were not migrated. Before recreating the original Debian container, back up its active config and work data from the container's writable layer, not the stale `/opt/AdGuardHome/conf/AdGuardHome.yaml` bind mount. Follow [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations, SOPS age-key staging, verification, and rollback. The conventional primary age key must be staged before first boot. PiHome stays out of `all` so DNS maintenance is separate from its dependents.
+BigTasty runs a standby copy, so DNS keeps working when the Pi is down. The AdGuard and Unbound setup, the policy and the CLI live in [modules/nixos/home-dns](modules/nixos/home-dns/default.nix), which PiHome and BigTasty both import, so the two servers give the same answers and read the same credentials from `secrets/dns.yaml`. BigTasty's UI and API listen on `127.0.0.1:3003` because Grafana already has port 3000. Each server keeps its own query log and statistics. Whopper, BigTasty and BigKing list `10.24.24.9` first and `10.24.24.2` second. Whopper's resolved moves to the second server when the first stops answering; BigTasty and BigKing set glibc's `timeout:1`, so a Pi outage costs each lookup one second instead of five. Devices that get DNS from the UniFi DHCP server use the standby only once the network's DHCP settings list both addresses.
+
+PiHome now serves live DNS on NixOS from the spare card. The initial ARM image was built, flashed, and booted; subsequent boot fixes were built and activated in place. Verification covered external DNS, DNSSEC validation, filtering, all 15 rewrites, NTP synchronization, and forwarded-key CLI access. The original Debian 12 / AdGuard Home 0.107.54 card is retained intact for rollback; its old query logs and mutable data were not migrated. Before recreating the original Debian container, back up its active config and work data from the container's writable layer, not the stale `/opt/AdGuardHome/conf/AdGuardHome.yaml` bind mount. Follow [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations, SOPS age-key staging, verification, and rollback. The conventional primary age key must be staged before first boot. `all` includes PiHome but switches it last, once every other host has finished building (see [Deploy](#deploy)).
 
 ### Macs (BigMac, MacFlurry)
 
@@ -188,6 +190,8 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `virtualisation.nix` | docker + libvirtd + containerd, `oci-containers` backend, watchtower |
 | `hardware.nix` | `hardware.graphics` (+32-bit), fwupd, Apple SuperDrive udev rule |
 | `programs.nix` | fish, mtr, git + lfs, iperf3 |
+
+[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves (see [PiHome](#pihome-dns-appliance)).
 
 ## Whopper modules
 
@@ -253,6 +257,8 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24`). First add a local DNS override: `dashboard.theswisscheese.com → 10.24.24.2`. Do not add a Cloudflare Tunnel for it. The existing Cloudflare DNS-01 credentials issue its TLS certificate; nginx checks the socket peer's address, not a supplied `X-Forwarded-For` header. Remote and VPN access are not enabled.
 
 The default Grafana home dashboard covers BigTasty and BigKing: readiness, CPU/RAM histories, local disk capacity and required mounts, temperatures, Intel engine busy, systemd unit states, HTTP reachability and launch links. [services.nix](hosts/bigtasty/modules/monitoring/services.nix) defines the launch catalog and probe targets together. Homarr and Uptime Kuma are unchanged.
+
+It also watches both DNS servers. Blackbox on BigTasty queries PiHome (`10.24.24.9`) and the BigTasty standby (`10.24.24.2`) at the LAN addresses clients use, with two checks each: a public name (`example.org`) proves recursion works, and the `portainer.theswisscheese.com` rewrite returning `10.24.24.2` proves AdGuard's policy is loaded. The DNS panel shows ANSWERING, FAILING or NO DATA per server and check, next to a lookup-time history. [dns.nix](hosts/bigtasty/modules/monitoring/dns.nix) lists the servers and checks. On BigTasty, `adguardhome` and `unbound` are expected units in the unit-state table. PiHome itself runs no exporter, so its CPU, memory and temperatures are not on the dashboard.
 
 ### Architecture and first deployment
 
@@ -388,7 +394,7 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
    };
    ```
 3. Create `secrets/<name>.yaml` and add a matching `creation_rules` entry to [.sops.yaml](.sops.yaml).
-4. Add `<Name>` to `ALL_HOSTS` and `KIND` in [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) so `rebuild_system <Name>` and `all` know it. PiHome is a deliberate exception: deployment helpers recognize `PiHome` explicitly, but it stays out of `all` so DNS maintenance is always explicit.
+4. Add `<Name>` to `ALL_HOSTS` and `KIND` in [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) so `rebuild_system <Name>` and `all` know it. A host the others depend on while they build, like PiHome for DNS, also goes in `LAST_HOSTS`.
 
 A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its directory, add `<Name> = mkMac "<name>";` to `darwinConfigurations` in [flake.nix](flake.nix), and use `KIND=darwin`. Remote sudo also needs a `sudo-<name>` key: its public half in [lib/ssh-keys.nix](lib/ssh-keys.nix) (`identities`, `authorized` and `sudo`), its private half as `SSH_KEY_SUDO_<NAME>` in `secrets/shared.yaml`, and a host block in [workstation/ssh.nix](modules/home/workstation/ssh.nix). Then bootstrap it (see [Bootstrapping a Mac](#bootstrapping-a-mac)).
 
@@ -404,21 +410,23 @@ rebuild_system                # rebuild current host locally
 rebuild_system Whopper        # explicit local
 rebuild_system BigTasty       # remote build + activate via SSH agent
 rebuild_system BigKing        # same for the NAS
-rebuild_system PiHome        # explicit only; not included in `all`
+rebuild_system PiHome         # same for the DNS Pi
 rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
 rebuild_system MacFlurry      # same for the laptop
-rebuild_system all            # Whopper, BigTasty, BigKing, BigMac, MacFlurry, in parallel; skips MacFlurry when it doesn't answer
-update_system [host|all]      # PiHome is explicit only, not included in `all`; runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
-clean_system [host|all]       # PiHome is explicit only, not included in `all`; nix-collect-garbage -d (sudo + user) + docker image prune, + brew cleanup on the Macs
+rebuild_system all            # Whopper, BigTasty, BigKing, BigMac, MacFlurry in parallel, then PiHome; skips MacFlurry when it doesn't answer
+update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
+clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune, + brew cleanup on the Macs
 ```
 
 `rebuild_system` and `update_system` work in `~/.nixfiles` (or `$FLAKE_DIR`). Every workstation commits there, so they first run `git pull --rebase --autostash`. A conflict stops the script. Then they `git add -A`, and after a successful switch they commit everything (`rebuild commit <date>` / `update commit <date>`) and push.
 
 `all` switches the hosts in parallel, after `update_system` has run `nix flake update` and the pin scripts. If the local host is one of them, sudo asks for its password first. The remote hosts authenticate with the forwarded agent, so nothing prompts once the builds start. Each output line starts with `[Host]`, and each host's output also goes to its own log under `$TMPDIR`. The script waits for every host and commits only if all of them succeeded. When one fails, it names the host and keeps the logs. Ctrl-C stops every host.
 
+PiHome is the exception to "in parallel". Every other host resolves names through it, and a switch that restarts AdGuard or Unbound would break their downloads mid-build. So `all` switches PiHome on its own after the others have finished, and does so even when one of them failed. `LAST_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts handled this way.
+
 MacFlurry is a laptop, so it is often asleep or away. `all` checks it first with a 5-second `ssh` that can't prompt. If it doesn't answer, the script prints a warning and runs the other hosts without it. The other hosts are not checked this way: when one of them is down, `all` fails. `ROAMING_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts that get the check. The check runs in batch mode, so it also skips the laptop until the machine running `all` has its host key in `known_hosts`.
 
-Inside an Ensemblr worktree, use the run scripts in [.ensemblr/settings.toml](.ensemblr/settings.toml) instead. They target the worktree's flake (`.#<Host>`) and leave staging and committing to you. PiHome has explicit `rebuild-pihome`, `eval-pihome`, `build-pihome-image`, and `test-adguard-cli` scripts; the general `rebuild_system`, `update_system`, and `clean_system` helpers also recognize `PiHome` explicitly, but `all` intentionally skips it. Evaluation and `nix flake check --no-build` passed. The initial ARM image was built and booted, and subsequent system updates were built and verified on the Pi; see [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations and rollback.
+Inside an Ensemblr worktree, use the run scripts in [.ensemblr/settings.toml](.ensemblr/settings.toml) instead. They target the worktree's flake (`.#<Host>`) and leave staging and committing to you. PiHome has `rebuild-pihome` and `update-pihome` like the other hosts, plus `eval-pihome`, `build-pihome-image` and `test-adguard-cli`. `rebuild-all` and `update-all` switch one host at a time, so PiHome never restarts DNS while another host builds. Evaluation and `nix flake check --no-build` passed. The initial ARM image was built and booted, and subsequent system updates were built and verified on the Pi; see [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations and rollback.
 
 When deploying from a machine that is not managed by this flake, the helper scripts
 and `nixos-rebuild` may not exist on `$PATH`. Use the full command from a checkout

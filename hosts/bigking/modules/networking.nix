@@ -16,9 +16,13 @@
     hostName = "BigKing";
     useDHCP = false;
     defaultGateway = "10.24.24.1";
+    # PiHome, then BigTasty's standby. glibc waits 5s on a server before the
+    # next; 1s keeps a Pi outage cheap.
     nameservers = [
       "10.24.24.9"
+      "10.24.24.2"
     ];
+    resolvconf.extraOptions = ["timeout:1"];
 
     # The LACP bond ADM ran: 802.3ad, fast LACP rate, layer2+3 hashing.
     bonds.bond0 = {

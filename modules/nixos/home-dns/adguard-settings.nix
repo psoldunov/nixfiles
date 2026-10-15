@@ -114,11 +114,6 @@
       }
       {
         answer = "10.24.24.2";
-        domain = "adguard.theswisscheese.com";
-        enabled = true;
-      }
-      {
-        answer = "10.24.24.2";
         domain = "jellyfin.theswisscheese.com";
         enabled = true;
       }

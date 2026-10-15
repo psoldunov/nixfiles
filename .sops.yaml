@@ -20,7 +20,8 @@ creation_rules:
       - age:
           - *primary
           - *yubikey
-  - path_regex: secrets/pihome\.yaml$
+  # AdGuard credentials for both DNS servers (modules/nixos/home-dns).
+  - path_regex: secrets/dns\.yaml$
     key_groups:
       - age:
           - *primary

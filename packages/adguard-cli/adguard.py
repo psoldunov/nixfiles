@@ -98,22 +98,44 @@ def request(config, method, path, payload=None):
         return None
 
 
+def run_on(ssh, target, remote):
+    try:
+        result = subprocess.run([ssh, "-oBatchMode=yes", "-oConnectTimeout=5", "--", target, shlex.join(remote)],
+                                timeout=30, check=False)
+    except subprocess.TimeoutExpired:
+        raise CliError("remote AdGuard command timed out")
+    except Exception:
+        raise CliError("SSH transport failure")
+    if result.returncode:
+        raise CliError("remote AdGuard command failed")
+
+
+def run_remote(config, command):
+    """Run the command on each target; one that fails does not stop the rest."""
+    ssh = config.get("ssh")
+    targets = config.get("targets", [config.get("target")])
+    if not isinstance(ssh, str) or not os.path.isabs(ssh) or not isinstance(targets, list) or not targets \
+            or not all(isinstance(t, str) and re.fullmatch(r"[A-Za-z0-9_.@-]+", t) for t in targets):
+        raise CliError("invalid remote configuration")
+    remote = ["sudo", "-n", "/run/current-system/sw/bin/adguard", command[0]] + command[1]
+    if len(targets) == 1:
+        run_on(ssh, targets[0], remote)
+        return
+    failures = []
+    for target in targets:
+        print("== " + target + " ==", flush=True)
+        try:
+            run_on(ssh, target, remote)
+        except CliError as e:
+            print("adguard: " + target + ": " + str(e), file=sys.stderr, flush=True)
+            failures.append(target)
+    if failures:
+        raise CliError("remote AdGuard command failed on " + ", ".join(failures))
+
+
 def run(config, command):
     if config.get("mode", "local") == "remote":
-        ssh = config.get("ssh")
-        target = config.get("target")
-        if not isinstance(ssh, str) or not os.path.isabs(ssh) or not isinstance(target, str) or not re.fullmatch(r"[A-Za-z0-9_.@-]+", target):
-            raise CliError("invalid remote configuration")
-        remote = ["sudo", "-n", "/run/current-system/sw/bin/adguard", command[0]] + command[1]
-        try:
-            result = subprocess.run([ssh, "-oBatchMode=yes", "-oConnectTimeout=5", "--", target, shlex.join(remote)],
-                                    timeout=30, check=False)
-        except subprocess.TimeoutExpired:
-            raise CliError("remote AdGuard command timed out")
-        except Exception:
-            raise CliError("SSH transport failure")
-        if result.returncode:
-            raise CliError("remote AdGuard command failed")
+        run_remote(config, command)
         return
     if config.get("mode", "local") != "local":
         raise CliError("invalid mode")
