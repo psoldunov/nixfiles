@@ -12,8 +12,10 @@
 
   # Proxied A records for the WAN IP, which forwards 443 to nginx from
   # Cloudflare's ranges only. Syncthing, Prowlarr and Portainer were dropped
-  # from this list and are LAN-only (./services-web.nix); removing a name here
-  # does not delete its record in Cloudflare.
+  # from this list and are LAN-only (./services-web.nix). SotF was dropped too:
+  # its server is UDP-only, which the proxy cannot carry, and nginx has no
+  # vhost for it. Removing a name here does not delete its record in
+  # Cloudflare.
   services.cloudflare-dyndns = {
     enable = true;
     proxied = true;
@@ -23,7 +25,6 @@
       "jellyfin.theswisscheese.com"
       "immich.theswisscheese.com"
       "homeassistant.theswisscheese.com"
-      "sotf.theswisscheese.com"
     ];
   };
 }
