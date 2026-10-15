@@ -128,4 +128,5 @@ in
     "x-scheme-handler/figma" = "figma.desktop";
     "x-scheme-handler/linear" = "linear.desktop";
     "x-scheme-handler/notion" = "notion.desktop";
+    "x-scheme-handler/numero" = "dev.soldunov.numero.desktop";
   }

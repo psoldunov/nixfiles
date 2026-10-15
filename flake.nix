@@ -171,6 +171,14 @@
       url = "github:psoldunov/concierge/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Numero, the Numi-style text calculator. Used by
+    # hosts/whopper/home/programs/numero.nix. Bump with
+    # `nix flake update numero`. Its flake packages Linux only.
+    numero = {
+      url = "github:psoldunov/numero/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

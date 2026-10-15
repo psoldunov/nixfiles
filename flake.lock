@@ -628,6 +628,28 @@
         "type": "github"
       }
     },
+    "numero": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1792040115,
+        "narHash": "sha256-AHtQgCpbp1XbXDi0YUKfgFztA+2+ElyknrD7E27E02Y=",
+        "owner": "psoldunov",
+        "repo": "numero",
+        "rev": "cc39cbb5ed7d00a30ff1245e35398fa775ccf7f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "numero",
+        "type": "github"
+      }
+    },
     "ny": {
       "flake": false,
       "locked": {
@@ -718,6 +740,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "notion": "notion",
         "notion-calendar": "notion-calendar",
+        "numero": "numero",
         "plasma-manager": "plasma-manager",
         "playwright-cli": "playwright-cli",
         "rea": "rea",
@@ -745,6 +768,27 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "f91010a5c1b6125b715eb78a84fb5dd8fb74a2b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "numero",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791962566,
+        "narHash": "sha256-rEB0dvSZw1niBVJvt0AiWygNS/OMdA81lquTzLIWuvo=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "8111d2b45adcbaeaff037f996643f1ac43f944e6",
         "type": "github"
       },
       "original": {
