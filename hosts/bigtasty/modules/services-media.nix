@@ -80,6 +80,26 @@
     forceEncodingConfig = true;
   };
 
+  # Plex, with the library ADM's Plex app had on BigKing (copied once from
+  # /volume1/Plex/Library, then deleted there; /share/Media paths rewritten
+  # to /mnt/Media). Libraries are BigKing's Media share over NFS, as for
+  # Jellyfin. Transcoding settings live in Preferences.xml, not here.
+  services.plex = {
+    enable = true;
+    openFirewall = true;
+    # Quick Sync on the same render node as Jellyfin. Plex brings its own
+    # VA-API driver and ffmpeg, so the host's intel-media-driver is unused.
+    accelerationDevices = ["/dev/dri/renderD128"];
+  };
+
+  users.users.plex.extraGroups = ["video" "render"];
+
+  systemd.services.plex = {
+    # With the NFS mount missing, Plex would find every item gone and empty
+    # its trash after the next scan.
+    unitConfig.RequiresMountsFor = ["/mnt/Media"];
+  };
+
   services.uptime-kuma = {
     enable = true;
     settings = {

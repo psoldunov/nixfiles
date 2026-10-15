@@ -50,7 +50,6 @@ in {
       "Camera" = smbShare "/volume1/Camera";
       "Games" = smbShare "/volume1/Games";
       "Backup" = smbShare "/volume1/Backup";
-      "Plex" = smbShare "/volume1/Plex";
       "Time Machine" =
         smbShare "/volume1/Time Machine"
         // {
