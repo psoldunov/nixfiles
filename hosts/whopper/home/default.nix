@@ -38,6 +38,7 @@
     ./programs/linear.nix
     ./programs/notion.nix
     ./programs/notion-calendar.nix
+    ./programs/numero.nix
     ./programs/skrepka.nix
     ./programs/solaar.nix
     ./programs/token-station.nix
