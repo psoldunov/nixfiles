@@ -185,12 +185,17 @@
   # through. sudo -v asks once, or reuses the ticket of the switch that ran
   # just before it in the same session, and the loop keeps that ticket fresh
   # until the script exits.
+  #
+  # Without a tty (update_system all runs ssh -T), sudo keys the ticket to
+  # the parent process, so the loop's `sudo -n` fails and set -e ends the
+  # loop at once. The trap's kill then finds nothing, and `|| true` stops
+  # that failure from becoming the script's exit status.
   update_bleeding_edge = pkgs.writeShellScriptBin "update_bleeding_edge" ''
     set -euo pipefail
     sudo -v
     while true; do sudo -n true; sleep 50; done 2>/dev/null &
     # shellcheck disable=SC2064 # the loop's pid, expanded now
-    trap "kill $! 2>/dev/null" EXIT
+    trap "kill $! 2>/dev/null || true" EXIT
     /opt/homebrew/bin/brew update
     # Homebrew 7 asks before upgrading; this runs unattended.
     /opt/homebrew/bin/brew upgrade --yes

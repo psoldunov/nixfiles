@@ -340,11 +340,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791940130,
-        "narHash": "sha256-hRCCi4fp5IjLz4cA8+RkUsaYAHzbd7M5FSAjKOq4E+k=",
+        "lastModified": 1792000010,
+        "narHash": "sha256-4jtkwQlReQdXsKJJfB9yT7nIf0TlwgZOk2XtxjUgDS8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "92a0ed1be12f1e20093faf8af63bae2c74ad521e",
+        "rev": "5a9d300bd619c03857521b50c8877a19dbad7078",
         "type": "github"
       },
       "original": {
@@ -372,11 +372,11 @@
     "impeccable": {
       "flake": false,
       "locked": {
-        "lastModified": 1791907265,
-        "narHash": "sha256-5/MtMKfDqxS3skhIaHI96g8kE5qmJ4tfDybUKQvLhxE=",
+        "lastModified": 1792037122,
+        "narHash": "sha256-0YpQdCPELaP7JlxQ68rLtZwACRFEqwkilywz6pmlBN0=",
         "owner": "pbakaus",
         "repo": "impeccable",
-        "rev": "2f98774f86bc05563876643db37e6c37c322850f",
+        "rev": "a231cc5b30ac7747f8088d076ece12518f2d839d",
         "type": "github"
       },
       "original": {
@@ -978,11 +978,11 @@
     "taste-skill": {
       "flake": false,
       "locked": {
-        "lastModified": 1791928232,
-        "narHash": "sha256-3ggZ+1nUIGZpzm8KPd8MDVVoSdGEsXmGlk7vPLsJtAE=",
+        "lastModified": 1791990049,
+        "narHash": "sha256-Az0uKXlv0Gv+yEcftnB4mdBYJKr9Mj7iSXG+2RzOQ9I=",
         "owner": "leonxlnx",
         "repo": "taste-skill",
-        "rev": "a60a36dc2bb3bb77ccf17f2f62041f5ca8a458b9",
+        "rev": "f624f37a8c650b9cc550253104925efe4c8de246",
         "type": "github"
       },
       "original": {
