@@ -230,6 +230,91 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `services-shares.nix` | `services.nfs.server`, Samba, samba-wsdd, avahi Time Machine advert; NFS and Samba require the `/volume1` mount |
 | `users.nix` | `psoldunov` pinned to uid 1000, ADM's `admin` (uid 999) and `administrators` (gid 999) declared so the ids stay theirs |
 
+## Home-server monitoring
+
+Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24`). First add a local DNS override: `dashboard.theswisscheese.com → 10.24.24.2`. Do not add a Cloudflare Tunnel for it. The existing Cloudflare DNS-01 credentials issue its TLS certificate; nginx checks the socket peer's address, not a supplied `X-Forwarded-For` header. Remote and VPN access are not enabled.
+
+The default Grafana home dashboard covers BigTasty and BigKing: readiness, CPU/RAM histories, local disk capacity and required mounts, temperatures, Intel engine busy, systemd unit states, HTTP reachability and launch links. [services.nix](hosts/bigtasty/modules/monitoring/services.nix) defines the launch catalog and probe targets together. Homarr and Uptime Kuma are unchanged.
+
+### Architecture and first deployment
+
+[server-monitoring](modules/nixos/server-monitoring/default.nix) is explicitly imported by these two servers, not the desktop baseline. Native node exporters collect CPU, memory, filesystem, hwmon, systemd and textfile metrics. Expected units include OCI `serviceName` values, covering support databases and Redis containers too.
+
+| Host | Listener | Access |
+|---|---|---|
+| BigTasty | Grafana `127.0.0.1:3000` | nginx HTTPS, LAN plus loopback, Grafana login required |
+| BigTasty | Prometheus `127.0.0.1:9090`, blackbox `127.0.0.1:9115`, node `127.0.0.1:9100` | Loopback only; no metric API nginx routes |
+| BigKing | Node `10.24.24.3:9100` | Firewall accepts only `10.24.24.2` on `bond0`; rule lifecycle managed by NixOS; no global port opening |
+
+The NAS scrape is unencrypted and unauthenticated, so keep the home network trusted. Existing application exposures are unchanged. Metrics stay on BigTasty. Grafana's reporting/update checks are disabled; only its required official Prometheus datasource is installed, without optional apps. Monitoring does not collect logs, read Docker sockets or add an alerting stack.
+
+Scrapes run every 15 seconds; Grafana refreshes every 30 seconds. Prometheus retains up to 7 days / 1 GB of samples, whichever limit it reaches first. Its WAL, head and compaction need additional disk space.
+
+Deploy **BigKing first, then BigTasty**, after reviewing the diff:
+
+```sh
+nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo
+nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo
+```
+
+These are deployment instructions; this change does not run them. Unlike `rebuild_system`, these commands do not pull/rebase/commit automatically. Wait for the NAS exporter before starting its central scraper.
+
+### Login and persistent credentials
+
+Grafana requires login, with anonymous access and sign-up disabled. Before its first start, the root `grafana-bootstrap` oneshot generates independent random admin and encryption secrets on BigTasty. `/var/lib/grafana-bootstrap` is `root:grafana`, directory `0750`, files `0640`. The generator does not put secrets in the Nix store or logs and needs no new SOPS entry.
+
+On BigTasty, retrieve the initial password privately:
+
+```sh
+sudo cat /var/lib/grafana-bootstrap/admin-password
+```
+
+Log in as **admin**, then change the password in Grafana. That file is only the initial bootstrap: rebuilds do not reset the database's password. `/var/lib/grafana-bootstrap/secret-key` is Grafana's persistent encryption key, not a password; do not delete or casually rotate it. Back up `/var/lib/grafana` and `/var/lib/grafana-bootstrap` together, privately. Use Grafana's supported admin reset procedure for password recovery rather than deleting the database or bootstrap files.
+
+### Verify after deployment
+
+On BigKing:
+
+```sh
+systemctl status prometheus-node-exporter server-intel-gpu-sample.timer
+journalctl -u server-intel-gpu-sample --since '10 minutes ago'
+findmnt --mountpoint /volume1
+```
+
+On BigTasty:
+
+```sh
+systemctl status grafana-bootstrap grafana prometheus prometheus-blackbox-exporter prometheus-node-exporter
+curl --fail http://127.0.0.1:9100/metrics
+curl --fail http://10.24.24.3:9100/metrics
+curl --fail http://127.0.0.1:9090/api/v1/targets
+curl --get --data-urlencode 'query=up{job="node"}' http://127.0.0.1:9090/api/v1/query
+curl --get --data-urlencode 'query=probe_success{job="web-reachability"}' http://127.0.0.1:9090/api/v1/query
+curl --get --data-urlencode 'query=time()-server_intel_gpu_last_success_timestamp_seconds' http://127.0.0.1:9090/api/v1/query
+curl --get --data-urlencode 'query=node_systemd_unit_state{state="failed"} == 1' http://127.0.0.1:9090/api/v1/query
+```
+
+Both node targets should be `up=1`, expected units should be present, and successful GPU samples should be less than 60 seconds old. In a LAN browser check TLS, login, the default dashboard, sensor/storage legends and launch links. From another LAN client, check that `10.24.24.3:9100` is blocked. From outside the allowed subnet, check that the dashboard is denied even with `X-Forwarded-For: 10.24.24.2`. Only BigTasty should be able to scrape the NAS.
+
+### Health semantics and limits
+
+- Unit state and HTTP responding are separate checks. Authentication challenges (`401`/`403`), redirects and Transmission's `409` challenge count as reachable. Probes do not sign in or check application correctness. They test loopback origins, not public DNS, nginx or Cloudflare. Only Portainer's self-signed loopback origin skips TLS verification. Launch links are configured URLs, not evidence of a live response.
+- Scheduled jobs can be `inactive` (idle). Missing expected units show `MISSING / NO DATA`; an exporter outage leaves no data and a down readiness indicator. NFS/Samba and integration-only APIs have process checks, not web UI probes. AdGuard is on another host and outside this dashboard.
+- `/volume1` has `nofail`: an absent mount shows `NOT MOUNTED`, never the root directory's capacity. Disk panels include only `/`, `/RAID` and `/volume1` ext4/btrfs mounts, excluding NFS/binds/Docker overlays. They do not measure RAID redundancy or full SMART health.
+- hwmon supplies CPU, NVMe and HDD temperatures where available, labelled by chip/device/sensor. BigTasty loads `drivetemp`; BigKing's drivers and fans are untouched. Some sensors may be absent. A separate Intel GPU temperature may be N/A; the dashboard does not invent one.
+- Intel utilization is real `intel_gpu_top` per-engine busy, not Glances frequency/max and not a sum of engines. The bounded sampler discovers Intel DRM cards by vendor, discards the startup sample and atomically writes metrics. Failures remove previous utilization; the dashboard also hides samples older than 60 seconds. Only the sampler receives `CAP_PERFMON` and DRM access; global perf restrictions stay unchanged. Each live kernel/driver still needs a successful sampling check.
+- slskd's existing mapping exposes 5030 while `ASPNETCORE_HTTP_PORTS=7080`. Its configured link/probe may fail until that separate service issue is fixed. This change leaves it alone.
+
+Focused checks, without deployment or a full system build:
+
+```sh
+python3 -m unittest discover -s modules/nixos/server-monitoring -p 'test_*.py' -v
+nix eval --no-write-lock-file --raw .#nixosConfigurations.BigTasty.config.system.build.toplevel.drvPath
+nix eval --no-write-lock-file --raw .#nixosConfigurations.BigKing.config.system.build.toplevel.drvPath
+```
+
+Inside Ensemblr, run tests and evaluations through its compute queue.
+
 ## Flake inputs
 
 | Input | Purpose |
