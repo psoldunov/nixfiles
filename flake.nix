@@ -28,6 +28,24 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Declarative partitioning. BigKing's NVMe layout (hosts/bigking/disko.nix),
+    # which nixos-anywhere creates when installing it.
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # BigKing's ASUSTOR hardware (hosts/bigking/modules/asustor): kernel
+    # drivers for the fan, LEDs and buttons, and the LCD daemon's source.
+    asustor-platform-driver = {
+      url = "github:mafredri/asustor-platform-driver";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    lcm = {
+      url = "github:mafredri/lcm";
+      flake = false;
+    };
+
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     apple-fonts = {
@@ -191,6 +209,7 @@
     nix-gaming,
     nix-flatpak,
     sops-nix,
+    disko,
     home-manager,
     nix-darwin,
     apple-fonts,
@@ -362,6 +381,49 @@
             overwriteBackup = true;
             users = {
               psoldunov = import ./hosts/bigtasty/home/home.nix;
+            };
+            sharedModules = [
+              sops-nix.homeManagerModules.sops
+            ];
+          };
+        }
+      ];
+    };
+
+    # The NAS (ASUSTOR AS6604T). First installed over ADM with nixos-anywhere,
+    # see hosts/bigking/INSTALL.md.
+    nixosConfigurations.BigKing = mkHost {
+      inherit system;
+      specialArgs = {
+        inherit
+          inputs
+          outputs
+          pkgs-stable
+          ;
+        hostConfig = import ./hosts/bigking/hostConfig.nix;
+      };
+      modules = [
+        ./hosts/bigking/default.nix
+        disko.nixosModules.disko
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            extraSpecialArgs = {
+              inherit
+                inputs
+                outputs
+                pkgs-stable
+                ;
+              hostConfig = import ./hosts/bigking/hostConfig.nix;
+            };
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-backup";
+            # Same reason as on Whopper: apps rewrite some HM-owned files.
+            overwriteBackup = true;
+            users = {
+              psoldunov = import ./hosts/bigking/home/home.nix;
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
