@@ -142,6 +142,12 @@
         domain = "homarr.theswisscheese.com";
         enabled = true;
       }
+      # LAN-only in nginx; without this it resolved to Cloudflare and got 403.
+      {
+        answer = "10.24.24.2";
+        domain = "syncthing.theswisscheese.com";
+        enabled = true;
+      }
       {
         answer = "10.24.24.2";
         domain = "prowlarr.theswisscheese.com";
@@ -257,6 +263,9 @@
   user_rules = [
     "@@||webflow.grsm.io^"
     "@@||analytics.google.com^"
+    # Firefox's DoH canary: NXDOMAIN keeps Firefox's default-on DNS over
+    # HTTPS off, so its lookups stay on this resolver.
+    "||use-application-dns.net^$dnsrewrite=NXDOMAIN"
   ];
   whitelist_filters = [];
 }

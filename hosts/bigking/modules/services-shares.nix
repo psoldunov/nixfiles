@@ -22,7 +22,7 @@ in {
       (nfsExport "/volume1/Media" ["10.24.24.2" "10.24.24.5"])
       (nfsExport "/volume1/Camera" ["10.24.24.2" "10.24.24.5"])
       (nfsExport "/volume1/Backup" ["10.24.24.2" "10.24.24.5"])
-      # .7 is the HTPC. It is below UniFi's DHCP pool (.10 up), so it needs a
+      # .7 is the HTPC. It is below UniFi's DHCP pool (.34 up), so it needs a
       # static address or a UniFi Fixed IP to keep it.
       (nfsExport "/volume1/Games" ["10.24.24.2" "10.24.24.5" "10.24.24.7"])
     ];
