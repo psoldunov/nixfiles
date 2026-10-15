@@ -412,11 +412,11 @@
     "impeccable": {
       "flake": false,
       "locked": {
-        "lastModified": 1792037122,
-        "narHash": "sha256-0YpQdCPELaP7JlxQ68rLtZwACRFEqwkilywz6pmlBN0=",
+        "lastModified": 1792046761,
+        "narHash": "sha256-zmbE3f7Xn2x6ODkDYMx5avQ4we19Wlk9MD9iBZrxhrU=",
         "owner": "pbakaus",
         "repo": "impeccable",
-        "rev": "a231cc5b30ac7747f8088d076ece12518f2d839d",
+        "rev": "abf5779cabc20147fd9c013fa4705088c200bf8a",
         "type": "github"
       },
       "original": {
@@ -628,11 +628,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1791734076,
-        "narHash": "sha256-i5qk1kLiit98rRbh1AXmWBNT9QXC/y4l5Wk/u5EdpDQ=",
+        "lastModified": 1791956154,
+        "narHash": "sha256-jBYGPi4udQ9uo4KQp9m2J0546nJVQitG15gvZSaVVAs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
+        "rev": "55bfb4d7437bd4e09ab7cba58a43bd68eb310044",
         "type": "github"
       },
       "original": {
