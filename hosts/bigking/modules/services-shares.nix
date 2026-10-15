@@ -39,7 +39,8 @@ in {
         "workgroup" = "WORKGROUP";
         "netbios name" = "BigKing";
         "security" = "user";
-        "hosts allow" = "10.24.24. 127.0.0.1 localhost";
+        # The LAN plus WireGuard clients of the UniFi VPN server.
+        "hosts allow" = "10.24.24. 192.168.77. 127.0.0.1 localhost";
         "hosts deny" = "0.0.0.0/0";
         "map to guest" = "never";
         # ADM's Apple settings, unchanged, so the metadata and resource forks

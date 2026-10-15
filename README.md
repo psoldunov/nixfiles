@@ -253,7 +253,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 
 ## Home-server monitoring
 
-Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24`). First add a local DNS override: `dashboard.theswisscheese.com → 10.24.24.2`. Do not add a Cloudflare Tunnel for it. The existing Cloudflare DNS-01 credentials issue its TLS certificate; nginx checks the socket peer's address, not a supplied `X-Forwarded-For` header. Remote and VPN access are not enabled.
+Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24`). First add a local DNS override: `dashboard.theswisscheese.com → 10.24.24.2`. Do not add a Cloudflare Tunnel for it. The existing Cloudflare DNS-01 credentials issue its TLS certificate; nginx checks the socket peer's address, not a supplied `X-Forwarded-For` header. Away from home it is reachable only over the UniFi WireGuard VPN (`192.168.77.0/24`), which the same access list admits.
 
 The default Grafana home dashboard covers BigTasty and BigKing: readiness, CPU/RAM histories, local disk capacity and required mounts, temperatures, Intel engine busy, systemd unit states, HTTP reachability and launch links. [services.nix](hosts/bigtasty/modules/monitoring/services.nix) defines the launch catalog and probe targets together. Homarr and Uptime Kuma are unchanged.
 
