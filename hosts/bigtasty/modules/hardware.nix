@@ -6,7 +6,11 @@
       intel-media-driver
       intel-vaapi-driver
       libvdpau-va-gl
-      intel-compute-runtime
+      # OpenCL for Jellyfin's HDR tone mapping. The current runtime is 12th
+      # Gen and newer; legacy1 (24.35) is the last with the P630 (Gen 9.5).
+      intel-compute-runtime-legacy1
+      # Quick Sync runtime (libmfxhw64) for Jellyfin. vpl-gpu-rt is Gen 12+.
+      intel-media-sdk
     ];
     extraPackages32 = with pkgs.pkgsi686Linux; [
       intel-vaapi-driver
