@@ -6,6 +6,7 @@
 # `pkgs.stdenv.hostPlatform.isDarwin`.
 {...}: {
   imports = [
+    ./adguard.nix
     ./cli.nix
     ./ghostty.nix
     ./mailspring.nix

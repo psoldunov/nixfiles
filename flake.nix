@@ -433,6 +433,30 @@
       ];
     };
 
+    # Independent household DNS appliance; deliberately omits the full server
+    # baseline and Home Manager. Build its SD image on aarch64-linux.
+    nixosConfigurations.PiHome = mkHost {
+      system = "aarch64-linux";
+      modules = [
+        ./hosts/pihome
+        sops-nix.nixosModules.sops
+      ];
+    };
+
+    checks.${system}.adguard-cli = let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+      pkgs.runCommand "adguard-cli-tests" {
+        nativeBuildInputs = [pkgs.python3 pkgs.adguardhome pkgs.unbound];
+      } ''
+        export PYTHONDONTWRITEBYTECODE=1
+        export ADGUARDHOME_BIN=${pkgs.adguardhome}
+        export UNBOUND_BIN=${pkgs.unbound}
+        export AGH_BASE_CONFIG=${pkgs.writeText "pihome-adguard-settings.json" (builtins.toJSON self.nixosConfigurations.PiHome.config.services.adguardhome.settings)}
+        python3 -m unittest discover -s ${./packages/adguard-cli} -v
+        touch "$out"
+      '';
+
     # Apply on a Mac with `sudo darwin-rebuild switch --flake .#<Host>`, or
     # from another host with `rebuild_system <Host>`.
     darwinConfigurations = {

@@ -20,3 +20,8 @@ creation_rules:
       - age:
           - *primary
           - *yubikey
+  - path_regex: secrets/pihome\.yaml$
+    key_groups:
+      - age:
+          - *primary
+          - *yubikey
