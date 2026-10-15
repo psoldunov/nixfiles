@@ -23,6 +23,7 @@
     ./services/concierge-server.nix
     ./services/immich.nix
     ./services/infisical.nix
+    ./services/media-audio-fix
     ./services/n8n.nix
     ./services/nocodb.nix
     ./services/paperless.nix
