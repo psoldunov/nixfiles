@@ -41,6 +41,16 @@
   # of KDE PIM ships alongside Mailspring.
   programs.kde-pim.enable = false;
 
+  # Ghostty and VS Code replace Konsole and Kate (KWrite ships with Kate).
+  # ktexteditor is only listed for Kate's save-as-root helper. Without Konsole,
+  # Dolphin's embedded F4 terminal panel is unavailable; "Open Terminal Here"
+  # still goes to Ghostty through kdeglobals (home/desktop/plasma.nix).
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    konsole
+    kate
+    ktexteditor
+  ];
+
   # Flatpak
   services.flatpak = {
     enable = true;
