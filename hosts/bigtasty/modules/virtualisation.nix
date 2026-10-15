@@ -7,21 +7,6 @@
   ...
 }: {
   virtualisation.oci-containers.containers = {
-    JellyPlex-Watched = {
-      image = "luigi311/jellyplex-watched:latest";
-      environmentFiles = [
-        config.sops.secrets.JELLYPLEX_ENV.path
-      ];
-      environment = {
-        SYNC_FROM_PLEX_TO_JELLYFIN = "True";
-        SYNC_FROM_JELLYFIN_TO_PLEX = "True";
-        PLEX_BASEURL = "http://10.24.24.3:32400";
-        JELLYFIN_BASEURL = "http://10.24.24.2:8096";
-        USER_MAPPING = ''{ "psoldunov": "Philipp Soldunov" }'';
-        LIBRARY_MAPPING = ''{ "Shows": "TV Shows" }'';
-        WHITELIST_USERS = "psoldunov,Philipp Soldunov";
-      };
-    };
     slskd = {
       image = "slskd/slskd";
       volumes = [
