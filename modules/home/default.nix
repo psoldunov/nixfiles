@@ -7,5 +7,9 @@
     ./sops.nix
     ./programs/claude-code
     ./programs/pi
+    ./programs/unifi
   ];
+
+  programs.unifi-readonly.enable = true;
+  programs.unifi-readonly.pinnedCertificate = ./programs/unifi/udm-cert.pem;
 }
