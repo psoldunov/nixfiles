@@ -82,9 +82,9 @@ in {
           ForwardAgent = true;
         };
 
-        # DNS is a separate appliance, with explicit maintenance rather than
-        # joining fleet-wide parallel rebuilds.  Its dedicated sudo key is
-        # loaded and forwarded so ordinary login keys cannot authorize sudo.
+        # The DNS appliance. `all` switches it after the other hosts finish
+        # (LAST_HOSTS in ./scripts.nix). Its dedicated sudo key is loaded and
+        # forwarded so ordinary login keys cannot authorize sudo.
         "pihome" = {
           HostName = "10.24.24.9";
           User = "psoldunov";

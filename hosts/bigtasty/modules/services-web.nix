@@ -89,14 +89,6 @@
           proxyWebsockets = true;
         };
       };
-      "adguard.theswisscheese.com" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://10.24.24.9:80";
-          proxyWebsockets = true;
-        };
-      };
       "jellyfin.theswisscheese.com" = {
         forceSSL = true;
         enableACME = true;
@@ -189,10 +181,6 @@
         dnsProvider = "cloudflare";
       };
       "portainer.theswisscheese.com" = {
-        webroot = null;
-        dnsProvider = "cloudflare";
-      };
-      "adguard.theswisscheese.com" = {
         webroot = null;
         dnsProvider = "cloudflare";
       };

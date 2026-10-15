@@ -1,10 +1,11 @@
-# Workstations operate the Pi over SSH; API credentials stay on the Pi.
+# Workstations operate both DNS servers over SSH, PiHome first, then
+# BigTasty's standby; API credentials stay on the servers.
 {pkgs, ...}: {
   home.packages = [
     (pkgs.callPackage ../../../packages/adguard-cli {
       config = {
         mode = "remote";
-        target = "pihome";
+        targets = ["pihome" "bigtasty"];
       };
     })
   ];
