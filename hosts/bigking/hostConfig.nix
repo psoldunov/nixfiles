@@ -8,7 +8,7 @@
   enableNfsServer = true;
   enableSambaShares = true;
   enableNetatalk = false;
-  enableMediaStack = true;
+  enableMediaStack = false;
   enableArrStack = false;
   enableNginxVhosts = false;
   enableCloudflareTunnels = false;

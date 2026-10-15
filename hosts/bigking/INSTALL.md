@@ -73,15 +73,6 @@ Samba keeps its own password database:
 sudo smbpasswd -a psoldunov
 ```
 
-Copy Plex's library from ADM's location to the NVMe (2.7 GB). The copy at `/volume1/Plex/Library` stays as a backup. Plex keeps its server ID and claim, and the media paths are the same `/volume1` paths as before.
-
-```sh
-sudo systemctl stop plex
-sudo rsync -a --delete "/volume1/Plex/Library/Plex Media Server/" "/var/lib/plex/Plex Media Server/"
-sudo chown -R plex:plex /var/lib/plex
-sudo systemctl start plex
-```
-
 Home-manager decrypts `SHELL_SECRETS` with the age key, which has to be copied over once, from Whopper:
 
 ```sh

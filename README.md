@@ -6,7 +6,7 @@ Personal NixOS, nix-darwin and home-manager configuration. Multi-host flake, sin
 |---|---|---|
 | **Whopper** | Desktop | AMD Radeon RX 7900 XTX (ROCm, VA-API, gamescope), DP-1 @ 3840x2160@144 HDR, 10 Gbps NIC, KDE Plasma 6 on Wayland |
 | **BigTasty** | Home server | Intel iGPU (Quick Sync), mdadm RAID, static IP `10.24.24.2`, NFS + Samba + Netatalk exports, nginx vhosts behind Cloudflare DNS-01 |
-| **BigKing** | NAS | ASUSTOR Lockerstor 4 (AS6604T, Celeron J4125), NixOS on an NVMe mirror, ADM's RAID 0 data volume kept as `/volume1`, static IP `10.24.24.3` on an LACP bond, NFS + Samba + Time Machine, Plex |
+| **BigKing** | NAS | ASUSTOR Lockerstor 4 (AS6604T, Celeron J4125), NixOS on an NVMe mirror, ADM's RAID 0 data volume kept as `/volume1`, static IP `10.24.24.3` on an LACP bond, NFS + Samba + Time Machine |
 | **BigMac** | Workstation | Apple silicon Mac on macOS, managed by nix-darwin, GUI apps from Homebrew |
 | **MacFlurry** | Laptop | MacBook Pro (M1 Pro) on Wi-Fi, managed by nix-darwin like BigMac, with a smaller app set |
 
@@ -114,7 +114,7 @@ An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/b
 | Storage | ADM's data volume as it was: mdadm RAID 0 over the four WD Reds, btrfs subvolume `base` mounted at `/volume1`. ADM itself stays on the eMMC as a fallback |
 | Network | static IP `10.24.24.3` on `bond0`, an 802.3ad bond of the two RTL8125 ports (renamed `lan0`/`lan1` by MAC address) |
 | File sharing | NFS exports `/volume1/{Media,Camera,Backup,Games}` to the same clients as ADM did, Samba (ADM's fruit settings) with a Time Machine share, samba-wsdd, avahi |
-| Services | Plex (library in `/var/lib/plex`, Quick Sync through `/dev/dri`), smartd with temperature warnings |
+| Services | smartd with temperature warnings |
 | Front panel | ASUSTOR kernel drivers (mafredri/asustor-platform-driver), fan control from disk and CPU temperatures, LED triggers, `openlcmd` on the LCD |
 | Passwordless sudo | Same as BigTasty |
 
@@ -152,7 +152,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | Field | Type | Meaning |
 |---|---|---|
 | `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/shell.nix` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish functions (`open`, `fzf_kill`), and the `git` keychain key on servers. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
-| `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage and media ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
+| `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
 
@@ -224,10 +224,9 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `asustor/` | `hardware.asustor` drivers (it87 mainline drivers blacklisted, `acpi_enforce_resources=lax`), `asustor-fan` (pwm1 from drivetemp and coretemp), `asustor-leds` (disk, LAN and status LED triggers), `openlcmd` built from `lcm` |
 | `boot.nix` | Copies `/boot` to `/boot-fallback` after each bootloader install, zram swap, `stateVersion` 26.11 |
 | `filesystems.nix` | `/volume1`: ADM's btrfs on the RAID 0, `subvol=base`, `nofail` |
-| `hardware.nix` | intel-media-driver, smartd (self-tests, warns above 45 °C), lm_sensors, mdmonitor to syslog |
+| `hardware.nix` | smartd (self-tests, warns above 45 °C), lm_sensors, mdmonitor to syslog |
 | `networking.nix` | hostname, `lan0`/`lan1` link names, `bond0`, static IP, NFS firewall ports, openssh, `pam_ssh_agent_auth` |
 | `services-shares.nix` | `services.nfs.server`, Samba, samba-wsdd, avahi Time Machine advert; NFS and Samba require the `/volume1` mount |
-| `services-media.nix` | Plex, its user in `video`/`render`, requires the `/volume1` mount |
 | `users.nix` | `psoldunov` pinned to uid 1000, ADM's `admin` (uid 999) and `administrators` (gid 999) declared so the ids stay theirs |
 
 ## Flake inputs

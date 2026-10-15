@@ -1,10 +1,5 @@
 # hardware.graphics enable and fwupd live in modules/nixos/hardware.nix.
 {pkgs, ...}: {
-  # UHD Graphics 600: VA-API for Plex hardware transcoding.
-  hardware.graphics.extraPackages = with pkgs; [
-    intel-media-driver
-  ];
-
   # Warn when a disk passes 45 °C, in case the fan control (./asustor) is
   # not keeping up. Short self-test daily at 02:00, long one Saturdays at 03:00.
   services.smartd = {

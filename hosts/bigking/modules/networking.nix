@@ -41,7 +41,7 @@
       enable = true;
       allowPing = true;
       # NFS: rpcbind, nfsd, and the statd/lockd/mountd ports pinned in
-      # ./services-shares.nix. Samba, wsdd, avahi and Plex open their own.
+      # ./services-shares.nix. Samba, wsdd and avahi open their own.
       allowedTCPPorts = [111 2049 4000 4001 4002];
       allowedUDPPorts = [111 2049 4000 4001 4002];
     };
