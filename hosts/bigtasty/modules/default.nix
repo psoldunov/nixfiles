@@ -4,6 +4,8 @@
 {...}: {
   imports = [
     ../../../modules/nixos
+    ../../../modules/nixos/server-monitoring
+    ./monitoring
 
     ./boot.nix
     ./filesystems.nix
