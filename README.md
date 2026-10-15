@@ -258,6 +258,8 @@ Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24
 
 The default Grafana home dashboard covers BigTasty and BigKing: readiness, CPU/RAM histories, local disk capacity and required mounts, temperatures, Intel engine busy, systemd unit states, HTTP reachability and launch links. [services.nix](hosts/bigtasty/modules/monitoring/services.nix) defines the launch catalog and probe targets together. Homarr and Uptime Kuma are unchanged.
 
+It also watches both DNS servers. Blackbox on BigTasty queries PiHome (`10.24.24.9`) and the BigTasty standby (`10.24.24.2`) at the LAN addresses clients use, with two checks each: a public name (`example.org`) proves recursion works, and the `portainer.theswisscheese.com` rewrite returning `10.24.24.2` proves AdGuard's policy is loaded. The DNS panel shows ANSWERING, FAILING or NO DATA per server and check, next to a lookup-time history. [dns.nix](hosts/bigtasty/modules/monitoring/dns.nix) lists the servers and checks. On BigTasty, `adguardhome` and `unbound` are expected units in the unit-state table. PiHome itself runs no exporter, so its CPU, memory and temperatures are not on the dashboard.
+
 ### Architecture and first deployment
 
 [server-monitoring](modules/nixos/server-monitoring/default.nix) is explicitly imported by these two servers, not the desktop baseline. Native node exporters collect CPU, memory, filesystem, hwmon, systemd and textfile metrics. Expected units include OCI `serviceName` values, covering support databases and Redis containers too.

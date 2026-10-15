@@ -44,9 +44,11 @@ in {
   tunnels = lib.mapAttrs (_: s: builtins.attrNames s.ingress) t.services.cloudflared.tunnels;
   bootstrap = { inherit (t.systemd.services.grafana-bootstrap) before serviceConfig script; };
   services = import ./hosts/bigtasty/modules/monitoring/services.nix;
+  dns = import ./hosts/bigtasty/modules/monitoring/dns.nix;
   dashboard = import ./hosts/bigtasty/modules/monitoring/dashboard.nix {
     inherit lib;
     services = import ./hosts/bigtasty/modules/monitoring/services.nix;
+    dns = import ./hosts/bigtasty/modules/monitoring/dns.nix;
   };
   homarr.volumes = t.virtualisation.oci-containers.containers.homarr.volumes;
   kuma = t.services.uptime-kuma.enable;
@@ -147,6 +149,23 @@ class MonitoringConfigurationTests(unittest.TestCase):
                 self.assertEqual(c["unitTypes"]["immichSync"], "simple")
             for s in self.c["services"] if host == "tasty" else []:
                 self.assertIn(s["unit"] + ".service", units)
+            for unit in ("adguardhome.service", "unbound.service"):
+                (self.assertIn if host == "tasty" else self.assertNotIn)(unit, units)
+
+    def test_dns_probes_cover_every_server_and_check(self):
+        scrape = self.c["prometheus"]["scrapeConfigs"]
+        job = next(s for s in scrape if s["job_name"] == "dns")
+        self.assertEqual(job["metrics_path"], "/probe")
+        dns = self.c["dns"]
+        expected = [(s["target"], s["host"], c["name"], c["module"]) for s in dns["servers"] for c in dns["checks"]]
+        got = [(t["targets"][0], t["labels"]["host"], t["labels"]["check"], t["labels"]["probe_module"]) for t in job["static_configs"]]
+        self.assertEqual(got, expected)
+        self.assertEqual({s["target"] for s in dns["servers"]}, {"10.24.24.9:53", "10.24.24.2:53"})
+        status = next(p for p in self.c["dashboard"]["panels"] if p["id"] == 16)
+        self.assertEqual(len(status["targets"]), len(expected))
+        for t in status["targets"]:
+            self.assertIn('job="dns"', t["expr"])
+            self.assertIn("or vector(-1)", t["expr"])
 
     def test_local_probe_targets_bound_to_catalog_and_units(self):
         scrape = self.c["prometheus"]["scrapeConfigs"]

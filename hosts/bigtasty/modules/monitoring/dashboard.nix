@@ -2,6 +2,7 @@
 {
   lib,
   services,
+  dns,
 }: let
   ds = {
     type = "prometheus";
@@ -88,7 +89,7 @@
   ];
   unitExpr = host: ''(node_systemd_unit_state{state=~"active|activating|deactivating|failed|inactive",host="${host}"} == 1) * on(host,name) group_left(mode) server_expected_unit_info or on(host,name) label_replace(server_expected_unit_info{host="${host}"} unless on(host,name) node_systemd_unit_state{host="${host}"}, "state", "MISSING / NO DATA", "name", ".*")'';
   unitTable = id: host: x:
-    (table id "${host} · service unit states" x 52 12 18 (unitExpr host))
+    (table id "${host} · service unit states" x 60 12 18 (unitExpr host))
     // {
       description = "Process state only, separate from HTTP. Expected units remain listed if missing. For scheduled jobs inactive means idle, not broken. An exporter outage means NO DATA, never healthy.";
       transformations = [
@@ -150,10 +151,49 @@
         };
       };
     };
+  # One stat per server and check. A probe Prometheus has no sample for
+  # shows NO DATA instead of vanishing from the panel.
+  dnsStatus = id: x: y:
+    (panel id "DNS · ${lib.concatMapStringsSep ", " (s: "${s.host} ${s.role}") dns.servers}" "stat" x y 12 8)
+    // {
+      description = "Blackbox queries from BigTasty to each server's LAN address, as clients do. The public name proves recursion works; the local rewrite proves AdGuard's policy is loaded.";
+      targets = lib.concatMap (s:
+        map (c:
+          target ''max(probe_success{job="dns",host="${s.host}",check="${c.name}"}) or vector(-1)''
+          "${s.host} · ${c.name}")
+        dns.checks)
+      dns.servers;
+      fieldConfig.defaults = {
+        noValue = "NO DATA";
+        mappings = statusMapping {
+          "-1" = {
+            text = "NO DATA / PROBE DOWN";
+            color = "orange";
+          };
+          "0" = {
+            text = "FAILING";
+            color = "red";
+          };
+          "1" = {
+            text = "ANSWERING";
+            color = "green";
+          };
+        };
+      };
+      options = {
+        colorMode = "value";
+        graphMode = "none";
+        textMode = "value_and_name";
+        reduceOptions = {
+          calcs = ["last"];
+          values = false;
+        };
+      };
+    };
 in {
   uid = "home-servers";
   title = "Home servers";
-  description = "BigTasty + BigKing · home-network telemetry and local service reachability";
+  description = "BigTasty + BigKing · home-network telemetry, local service reachability and DNS";
   schemaVersion = 39;
   version = 1;
   editable = false;
@@ -204,7 +244,7 @@ in {
           options = {
             mode = "markdown";
             content = ''
-              **Telemetry → capacity → services.** Refreshes every 30s; metrics every 15s. Home LAN only; Grafana login required.
+              **Telemetry → capacity → DNS → services.** Refreshes every 30s; metrics every 15s. Home LAN only; Grafana login required.
 
               **READY** means a recent scrape/sample, **DOWN / STALE** needs investigation, **NO DATA** is unknown, not healthy. Unit state and HTTP response are separate checks. HTTP authentication/redirect responses count as responding; no app credentials are tested. Native Grafana time controls apply to all histories.
             '';
@@ -345,9 +385,16 @@ in {
         "{{device}} · {{engine}}"
         "percent"
       )
+      (dnsStatus 16 0 40)
+      (
+        history 17 "DNS · lookup time from BigTasty" 12 40
+        ''probe_dns_lookup_time_seconds{job="dns"}''
+        "{{host}} · {{check}}"
+        "s"
+      )
       (
         (
-          table 12 "Web origins · responding ≠ authenticated app health" 0 40 24 12
+          table 12 "Web origins · responding ≠ authenticated app health" 0 48 24 12
           ''max by(host,service,name,url) (probe_success{job="web-reachability"}) or on(host,service,name,url) (-1 * server_expected_web_info)''
         )
         // {
@@ -425,7 +472,7 @@ in {
       (unitTable 13 "BigTasty" 0)
       (unitTable 14 "BigKing" 12)
       (
-        (panel 15 "Launch catalog · configured links, not live verification" "text" 0 70 24 16)
+        (panel 15 "Launch catalog · configured links, not live verification" "text" 0 78 24 16)
         // {
           options = {
             mode = "markdown";
@@ -437,7 +484,7 @@ in {
                 )
                 services}
 
-              **No invented admin pages:** Concierge sync, FlareSolverr integration API and Sons of the Forest UDP server appear in process inventory only. NFS and Samba are checked by their service units, not fake UI probes. AdGuard runs on another host and is outside this two-server overview. Existing Homarr and Uptime Kuma remain unchanged.
+              **No invented admin pages:** Concierge sync, FlareSolverr integration API and Sons of the Forest UDP server appear in process inventory only. NFS and Samba are checked by their service units, not fake UI probes. AdGuard has no web link: its policy lives in Nix, and the DNS panels query PiHome and BigTasty directly. Existing Homarr and Uptime Kuma remain unchanged.
             '';
           };
         }

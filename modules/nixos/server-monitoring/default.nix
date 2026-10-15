@@ -52,6 +52,11 @@
       "sharesSync"
       "immichSync"
     ];
+  # A host running the household DNS server (modules/nixos/home-dns).
+  dnsUnits = lib.optionals config.services.adguardhome.enable [
+    "adguardhome"
+    "unbound"
+  ];
   containerUnits = map (c: c.serviceName) (
     builtins.attrValues config.virtualisation.oci-containers.containers
   );
@@ -64,7 +69,7 @@
       "server-intel-gpu-sample"
     ]
     ++ lib.optionals (!isNas) ["media-audio-fix"];
-  units = lib.unique (commonUnits ++ hostUnits ++ containerUnits ++ tunnelUnits ++ scheduled);
+  units = lib.unique (commonUnits ++ hostUnits ++ dnsUnits ++ containerUnits ++ tunnelUnits ++ scheduled);
   inventory = pkgs.writeText "server-monitoring-inventory.prom" (
     lib.concatMapStrings (name: ''
       server_expected_unit_info{name="${name}.service",mode="${

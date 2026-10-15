@@ -25,6 +25,12 @@ in {
       allowedUDPPorts = [53];
     };
 
+    # The workstation adguard CLI runs `sudo -n` over SSH. Without this,
+    # sudo -n gives up before pam_ssh_agent_auth can accept the forwarded key.
+    security.sudo.extraConfig = ''
+      Defaults:psoldunov noninteractive_auth
+    '';
+
     systemd = {
       services.adguardhome = {
         after = sopsUnit ++ ["unbound.service"];

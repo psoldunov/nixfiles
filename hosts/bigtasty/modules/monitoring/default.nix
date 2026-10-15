@@ -5,7 +5,8 @@
   ...
 }: let
   services = import ./services.nix;
-  dashboard = import ./dashboard.nix {inherit lib services;};
+  dns = import ./dns.nix;
+  dashboard = import ./dashboard.nix {inherit lib services dns;};
   dashboardDir = pkgs.writeTextDir "home.json" (builtins.toJSON dashboard);
   secretDir = "/var/lib/grafana-bootstrap";
   http = {
@@ -33,6 +34,37 @@
       ];
     };
   };
+  # A non-empty answer of the right type, so an empty NOERROR fails too.
+  dnsProbe = name: answer: {
+    prober = "dns";
+    timeout = "5s";
+    dns = {
+      query_name = name;
+      query_type = "A";
+      transport_protocol = "udp";
+      preferred_ip_protocol = "ip4";
+      valid_rcodes = ["NOERROR"];
+      validate_answer_rrs.fail_if_none_matches_regexp = [answer];
+    };
+  };
+  probeRelabel = [
+    {
+      source_labels = ["__address__"];
+      target_label = "__param_target";
+    }
+    {
+      source_labels = ["probe_module"];
+      target_label = "__param_module";
+    }
+    {
+      source_labels = ["__param_target"];
+      target_label = "instance";
+    }
+    {
+      target_label = "__address__";
+      replacement = "127.0.0.1:9115";
+    }
+  ];
   webInventory = pkgs.writeText "server-web-inventory.prom" (
     lib.concatMapStrings (s: ''
       server_expected_web_info{service="${s.name}",name="${s.unit}.service",url="${s.url}"} 1
@@ -82,24 +114,24 @@ in {
             };
           })
           services;
-        relabel_configs = [
-          {
-            source_labels = ["__address__"];
-            target_label = "__param_target";
-          }
-          {
-            source_labels = ["probe_module"];
-            target_label = "__param_module";
-          }
-          {
-            source_labels = ["__param_target"];
-            target_label = "instance";
-          }
-          {
-            target_label = "__address__";
-            replacement = "127.0.0.1:9115";
-          }
-        ];
+        relabel_configs = probeRelabel;
+      }
+      {
+        job_name = "dns";
+        metrics_path = "/probe";
+        scrape_timeout = "8s";
+        static_configs = lib.concatMap (s:
+          map (c: {
+            targets = [s.target];
+            labels = {
+              inherit (s) host role;
+              check = c.name;
+              probe_module = c.module;
+            };
+          })
+          dns.checks)
+        dns.servers;
+        relabel_configs = probeRelabel;
       }
     ];
     exporters.blackbox = {
@@ -119,11 +151,13 @@ in {
                   tls_config.insecure_skip_verify = true;
                 };
             };
+          dns_resolves = dnsProbe "example.org" "\\sIN\\s+A\\s+[0-9.]+$";
+          dns_rewrite = dnsProbe "portainer.theswisscheese.com" "\\sIN\\s+A\\s+10\\.24\\.24\\.2$";
         };
       };
     };
   };
-  # Blackbox performs HTTP only; the native module's ICMP capability is unnecessary.
+  # Blackbox performs HTTP and DNS only; the native module's ICMP capability is unnecessary.
   systemd.services.prometheus-blackbox-exporter.serviceConfig.AmbientCapabilities = lib.mkForce [];
   systemd.services.server-monitoring-inventory.script = lib.mkAfter ''
     install -m 0644 ${webInventory} /var/lib/server-monitoring/.web-inventory.tmp

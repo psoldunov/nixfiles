@@ -81,7 +81,6 @@ in {
   security.pam.services.sudo.sshAgentAuth = true;
   security.sudo.extraConfig = ''
     Defaults env_keep += "SSH_AUTH_SOCK"
-    Defaults:psoldunov noninteractive_auth
   '';
 
   nix.settings = {
