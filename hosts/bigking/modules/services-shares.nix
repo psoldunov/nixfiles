@@ -1,5 +1,5 @@
-# The shares ADM served, with the same paths, clients and options, so
-# BigTasty, Whopper and the Macs keep their mounts as they are.
+# The shares ADM served, with the same paths and options, so BigTasty,
+# Whopper and the HTPC keep their NFS mounts as they are. The Macs use Samba.
 {lib, ...}: let
   nfsOptions = "rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure";
   nfsExport = path: clients:
@@ -20,9 +20,11 @@ in {
     enable = true;
     exports = lib.concatLines [
       (nfsExport "/volume1/Media" ["10.24.24.2" "10.24.24.5"])
-      (nfsExport "/volume1/Camera" ["10.24.24.2" "10.24.24.5" "10.24.24.6"])
-      (nfsExport "/volume1/Backup" ["10.24.24.2" "10.24.24.5" "10.24.24.6"])
-      (nfsExport "/volume1/Games" ["10.24.24.2" "10.24.24.5" "10.24.24.7" "10.24.24.12"])
+      (nfsExport "/volume1/Camera" ["10.24.24.2" "10.24.24.5"])
+      (nfsExport "/volume1/Backup" ["10.24.24.2" "10.24.24.5"])
+      # .7 is the HTPC. It is below UniFi's DHCP pool (.10 up), so it needs a
+      # static address or a UniFi Fixed IP to keep it.
+      (nfsExport "/volume1/Games" ["10.24.24.2" "10.24.24.5" "10.24.24.7"])
     ];
     lockdPort = 4001;
     mountdPort = 4002;

@@ -1,12 +1,13 @@
 {pkgs, ...}: {
   services.nfs.server = {
     enable = true;
+    # Whopper is the only NFS client. The Macs use the Samba shares below.
     exports = ''
-      /export/transmission 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.6(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.88(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
-      /export/slskd 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.6(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.88(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
-      /export/Files 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.6(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.88(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
+      /export/transmission 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
+      /export/slskd 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
+      /export/Files 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
       /export/Documents 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
-      /export/Paperless 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.6(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure) 10.24.24.88(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
+      /export/Paperless 10.24.24.5(rw,async,no_root_squash,anonuid=0,anongid=0,subtree_check,no_wdelay,secure)
     '';
     lockdPort = 4001;
     mountdPort = 4002;
