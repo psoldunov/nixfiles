@@ -11,9 +11,20 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.programs.pi-coding-agent;
+  piCommand =
+    if cfg.package == null
+    then "${pkgs.coreutils}/bin/false"
+    else "${cfg.package}/bin/pi";
+  piPackages = [
+    "npm:pi-mcp-adapter"
+    "npm:pi-lens"
+    "npm:pi-web-access"
+    "npm:@sting8k/pi-vcc"
+  ];
 
   # Read by extensions/claude-bridge/config.ts. Every key is optional there;
   # these values match its defaults and are spelled out to be tuned here.
@@ -52,6 +63,47 @@
   };
 in {
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.package != null;
+        message = "Pi package activation requires programs.pi-coding-agent.package to be non-null.";
+      }
+    ];
+
+    # npm is needed both during activation and by Pi's package commands later.
+    programs.pi-coding-agent.extraPackages = [pkgs.nodejs];
+
+    home.activation.piPackages = lib.hm.dag.entryAfter ["linkGeneration"] ''
+      if [[ -n "''${DRY_RUN_CMD:-}" ]]; then
+        echo "Would ensure Pi packages: ${lib.concatStringsSep " " piPackages}"
+      else
+        (
+          export PI_CODING_AGENT_DIR=${lib.escapeShellArg cfg.configDir}
+          export PATH=${lib.makeBinPath ([pkgs.nodejs] ++ cfg.extraPackages)}:"$PATH"
+          # Do not let the activation working directory supply project settings.
+          cd ${lib.escapeShellArg config.home.homeDirectory}
+          settings="$PI_CODING_AGENT_DIR/settings.json"
+          if [[ -e "$settings" ]]; then
+            ${lib.getExe pkgs.jq} -e 'type == "object" and ((.packages // []) | type == "array")' "$settings" >/dev/null
+          fi
+          for source in ${lib.escapeShellArgs piPackages}; do
+            installedSource=""
+            if [[ -e "$settings" ]]; then
+              # Keep user version pins and object entries with resource filters.
+              installedSource=$(${lib.getExe pkgs.jq} -r --arg source "$source" '
+                first((.packages // [])[] | if type == "string" then . else .source end
+                  | select(. == $source or startswith($source + "@"))) // empty
+              ' "$settings")
+            fi
+            name="''${source#npm:}"
+            if [[ -z "$installedSource" || ! -f "$PI_CODING_AGENT_DIR/npm/node_modules/$name/package.json" ]]; then
+              ${piCommand} install "''${installedSource:-$source}" --no-approve
+            fi
+          done
+        )
+      fi
+    '';
+
     home.file = {
       "${cfg.configDir}/extensions/claude-bridge".source = ./extensions/claude-bridge;
       # One folder serves both agents: Claude Code loads hooks/register.ts, pi
