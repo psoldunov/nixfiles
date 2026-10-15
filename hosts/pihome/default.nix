@@ -19,10 +19,12 @@ in {
     usePredictableInterfaceNames = false;
     interfaces.eth0 = {
       useDHCP = false;
+      # /24 like every other host. The old card's /8 made the Pi treat all of
+      # 10.x as on-link, so it never routed DNS replies to other VLANs.
       ipv4.addresses = [
         {
           address = "10.24.24.9";
-          prefixLength = 8;
+          prefixLength = 24;
         }
       ];
     };

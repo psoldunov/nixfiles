@@ -23,7 +23,8 @@
         "server string" = "the_server";
         "netbios name" = "BigTasty";
         "security" = "user";
-        "hosts allow" = "10.24.24. 127.0.0.1 localhost";
+        # The LAN plus WireGuard clients of the UniFi VPN server.
+        "hosts allow" = "10.24.24. 192.168.77. 127.0.0.1 localhost";
         "hosts deny" = "0.0.0.0/0";
         "guest account" = "nobody";
         "map to guest" = "bad user";

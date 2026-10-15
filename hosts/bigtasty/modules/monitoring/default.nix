@@ -271,13 +271,7 @@ in {
   services.nginx.virtualHosts."dashboard.theswisscheese.com" = {
     forceSSL = true;
     enableACME = true;
-    # Nginx's access module checks the socket peer. No real_ip/X-Forwarded-For trust.
-    extraConfig = ''
-      allow 10.24.24.0/24;
-      allow 127.0.0.1;
-      allow ::1;
-      deny all;
-    '';
+    extraConfig = import ../nginx-lan-only.nix;
     locations."/" = {
       proxyPass = "http://127.0.0.1:3000";
       # Preserve the public Host and HTTPS scheme for Grafana's domain enforcement.

@@ -94,7 +94,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | Desktop | KDE Plasma 6 + SDDM (Wayland only), configured through plasma-manager, Vapor global theme, KWallet as Secret Service, KDE Connect |
 | Auth | PAM Yubikey challenge-response + u2f for sudo/login |
 | Steam | `programs.steam` + gamescope (3840x2160@144, HDR) + steam-presence wired to `STEAM_API_KEY` / `STEAMGRIDDB_API_KEY` sops secrets |
-| Streaming | Sunshine (KMS capture, VA-API encode) for Moonlight clients; switches the monitor to the client's mode per stream — see [hosts/whopper/modules/sunshine](hosts/whopper/modules/sunshine/default.nix) |
+| Streaming | Steam Remote Play (`programs.steam.remotePlay`) |
 | Peripherals | Stream Deck via deckmaster, Solaar (built from the psoldunov/Solaar fork), LibrePods, ZSA/QMK keyboards, HP LaserJet printer |
 
 ### BigTasty (server)
@@ -105,7 +105,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup,Games}` |
 | Network | static IP `10.24.24.2` (`enp8s0`), openssh (`AllowUsers psoldunov`) |
 | Services | jellyfin, plex, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server, concierge-server (Concierge's Sync server) |
-| Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com` |
+| Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com`. The UniFi port forward sends WAN 80/443 here from Cloudflare's IP ranges only. Kuma, Jellyfin, Immich and Home Assistant are public through Cloudflare. The \*arr apps, Jellyseerr, Homarr, Portainer, Syncthing and the dashboard take LAN, loopback and Docker peers only ([nginx-lan-only.nix](hosts/bigtasty/modules/nginx-lan-only.nix)). A catch-all vhost refuses the bare IP and unknown names |
 | Tunnels | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL` (each service module adds its own hostname), `services.cloudflare-dyndns` syncing DNS records |
 | Docker | `oci-containers`: slskd, transmission, homeassistant, portainer-ce, homarr (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
 | File sharing | `services.nfs.server` exports `/export/{transmission,slskd,Paperless,Files,Documents}`, Samba/samba-wsdd + Netatalk for AFP |
@@ -128,9 +128,9 @@ An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/b
 
 ### PiHome (DNS appliance)
 
-PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/8` on `eth0` with gateway `10.24.24.1`. The `/8` prefix intentionally preserves the current Pi's network configuration rather than changing it to `/24`.
+PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/24` on `eth0` with gateway `10.24.24.1`. It was `/8` on the old Debian card, which made the Pi treat every 10.x address as local, so DNS replies to clients on other VLANs never reached them.
 
-DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [modules/nixos/home-dns/adguard-settings.nix](modules/nixos/home-dns/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), 14 local rewrites including `*.local.theswisscheese.com`, blocked services, Safe Search, and the existing admin login hash. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`; the complete effective settings are rendered from SOPS credentials at each service restart. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`. Nothing proxies it, because the policy is managed in Nix, so the old `adguard.theswisscheese.com` vhost and rewrite are gone. DNS rewrites still target `10.24.24.2`.
+DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [modules/nixos/home-dns/adguard-settings.nix](modules/nixos/home-dns/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), one rule that answers Firefox's DoH canary `use-application-dns.net` with NXDOMAIN so Firefox keeps using this resolver, 15 local rewrites including `*.local.theswisscheese.com`, blocked services, Safe Search, and the existing admin login hash. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`; the complete effective settings are rendered from SOPS credentials at each service restart. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`. Nothing proxies it, because the policy is managed in Nix, so the old `adguard.theswisscheese.com` vhost and rewrite are gone. DNS rewrites still target `10.24.24.2`.
 
 The CLI package provides `adguard status`, `adguard pause` (default five minutes), `adguard pause 15m`, `adguard resume`, and `adguard flush`. Pause leaves DNS available. Flush clears Unbound before AdGuard to avoid repopulating stale cache. Workstations get the remote wrapper from [modules/home/workstation/adguard.nix](modules/home/workstation/adguard.nix). It runs each command on `pihome` and then on `bigtasty` over SSH, using forwarded-agent sudo, and reports which server failed if one does. The alias loads PiHome's dedicated `sudo-pihome` identity. The normal GitHub and `id_ed25519` login keys can SSH in, but cannot authorize PiHome sudo. For a fresh installation, rebuild the workstation configuration before cutover so the identity, alias, and CLI are available. On the Pi, run `sudo adguard ...`. Credentials are root-only SOPS-rendered files, not command-line arguments or Nix store content.
 
@@ -211,7 +211,6 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
 | `sops.nix` | Whopper system secrets |
-| `sunshine/` | Sunshine game streaming + per-stream display mode script |
 | `users.nix` | Extra groups for `psoldunov` (disk, i2c, input, uinput, scanner, lp, librepods, ...) |
 | `virtualisation.nix` | Whopper containers (portainer agent) |
 
@@ -229,7 +228,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `nix-locale.nix` | `permittedInsecurePackages` for .NET 6 (locale and base nix settings are shared) |
 | `packages.nix` | Server-side `environment.systemPackages` |
 | `services-media.nix` | jellyfin, plex (library in `/var/lib/plex`, copied from ADM's Plex on BigKing; Quick Sync through `/dev/dri/renderD128`; requires the `/mnt/Media` mount), uptime-kuma, *arr stack (sonarr/radarr/lidarr/prowlarr/seerr), flaresolverr (Prowlarr Cloudflare proxy), `programs.chromium` |
-| `services-web.nix` | nginx vhosts + ACME with Cloudflare DNS-01 |
+| `services-web.nix` | nginx vhosts + ACME with Cloudflare DNS-01, catch-all default vhost, LAN-only access lists from `nginx-lan-only.nix` |
 | `services-cloudflare.nix` | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL`, `services.cloudflare-dyndns` |
 | `services-shares.nix` | `services.nfs.server`, Samba (workgroup WORKGROUP, MacSamba/fruit), samba-wsdd, netatalk, `systemd.services.sharesSync` (inotify → rsync) |
 | `services-misc.nix` | gnupg agent |
@@ -254,7 +253,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 
 ## Home-server monitoring
 
-Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24`). First add a local DNS override: `dashboard.theswisscheese.com → 10.24.24.2`. Do not add a Cloudflare Tunnel for it. The existing Cloudflare DNS-01 credentials issue its TLS certificate; nginx checks the socket peer's address, not a supplied `X-Forwarded-For` header. Remote and VPN access are not enabled.
+Open **https://dashboard.theswisscheese.com/** from the home LAN (`10.24.24.0/24`). First add a local DNS override: `dashboard.theswisscheese.com → 10.24.24.2`. Do not add a Cloudflare Tunnel for it. The existing Cloudflare DNS-01 credentials issue its TLS certificate; nginx checks the socket peer's address, not a supplied `X-Forwarded-For` header. Away from home it is reachable only over the UniFi WireGuard VPN (`192.168.77.0/24`), which the same access list admits.
 
 The default Grafana home dashboard covers BigTasty and BigKing: readiness, CPU/RAM histories, local disk capacity and required mounts, temperatures, Intel engine busy, systemd unit states, HTTP reachability and launch links. [services.nix](hosts/bigtasty/modules/monitoring/services.nix) defines the launch catalog and probe targets together. Homarr and Uptime Kuma are unchanged.
 
@@ -475,7 +474,6 @@ Notable secrets:
 | Secret | Host | Consumer |
 |---|---|---|
 | `STEAM_API_KEY`, `STEAMGRIDDB_API_KEY` | Whopper system | `programs.steam.presence` |
-| `SUNSHINE_WEB_PASSWORD` | Whopper system | Sunshine web UI login, written before each start |
 | `SYNCTHING_GUI_PASSWORD` | both (system, `shared.yaml`) | `services.syncthing.guiPasswordFile` |
 | `WIFI_PASSWORD` | BigTasty (system, `shared.yaml`) | wpa_supplicant `secretsFile`, rendered by a sops template (only while `networking.wireless` is enabled) |
 | `SHELL_SECRETS` | Whopper, BigKing + the Macs (user, `shared.yaml`); BigTasty has its own | fish/bash init in shared `shell.nix`; shell-only env exports |
