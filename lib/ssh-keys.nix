@@ -25,6 +25,7 @@ rec {
     "sudo-whopper" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGcGQNj2vpu3jexJbmwhyYfOuCI7Bb3oJfq6nLDEra28 philipp@theswisscheese.com sudo-whopper";
     "sudo-bigmac" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9m7qk1/y4UpHjmg9ZFcnnVbpXoXBDyUvRD7u2iagfi philipp@theswisscheese.com sudo-bigmac";
     "sudo-macflurry" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+9b6ob4ksmE9jYezzQBTy+Ro6slA5QoQOpqtQvCbVl philipp@theswisscheese.com sudo-macflurry";
+    "sudo-pihome" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4ZQLZBZMtORJDun82kOV5zsLhtx5MaLTNPIJoSdpx0 philipp@theswisscheese.com sudo-pihome";
   };
 
   # Keys every managed host accepts for psoldunov.
@@ -42,5 +43,6 @@ rec {
     whopper = identities."sudo-whopper";
     bigmac = identities."sudo-bigmac";
     macflurry = identities."sudo-macflurry";
+    pihome = identities."sudo-pihome";
   };
 }

@@ -212,8 +212,10 @@
       then "darwin"
       else "nixos"
     }
+    # Critical DNS is explicit-only: don't switch it while the fleet is
+    # building against it, or accidentally include a not-yet-migrated Pi.
     ALL_HOSTS=(Whopper BigTasty BigKing BigMac MacFlurry)
-    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [BigMac]=darwin [MacFlurry]=darwin)
+    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [BigMac]=darwin [MacFlurry]=darwin [PiHome]=nixos)
     # Hosts that are often asleep or away (the laptop). `all` skips them
     # with a warning when they don't answer, instead of failing the run.
     ROAMING_HOSTS=(MacFlurry)
@@ -258,7 +260,7 @@
       elif [ -n "''${KIND[$1]:-}" ]; then
         echo "$1"
       else
-        echo "$PROG: unknown host '$1' (known: ''${ALL_HOSTS[*]} all)" >&2
+        echo "$PROG: unknown host '$1' (known: ''${ALL_HOSTS[*]} PiHome all)" >&2
         exit 1
       fi
     }

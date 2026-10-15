@@ -15,11 +15,11 @@ icon = "shield-check"
 default = true
 
 [scripts.run.lint]
-command = "nix fmt -- --check flake.nix lib hosts modules overlays"
+command = "nix fmt -- --check flake.nix lib hosts modules overlays packages"
 icon = "list-checks"
 
 [scripts.run.format]
-command = "nix fmt -- flake.nix lib hosts modules overlays"
+command = "nix fmt -- flake.nix lib hosts modules overlays packages"
 icon = "paintbrush"
 
 [scripts.run.build-whopper]
@@ -31,6 +31,23 @@ icon = "hammer"
 [scripts.run.eval-macs]
 command = "nix eval --raw .#darwinConfigurations.BigMac.system.drvPath && echo && nix eval --raw .#darwinConfigurations.MacFlurry.system.drvPath"
 icon = "search"
+
+# PiHome is intentionally explicit-only, not part of rebuild-all/update-all.
+[scripts.run.eval-pihome]
+command = "nix eval --raw .#nixosConfigurations.PiHome.config.system.build.toplevel.drvPath"
+icon = "search"
+
+[scripts.run.build-pihome-image]
+command = "nix build .#nixosConfigurations.PiHome.config.system.build.sdImage --out-link result-pihome-image --print-out-paths"
+icon = "hard-drive"
+
+[scripts.run.test-adguard-cli]
+command = "nix build .#checks.x86_64-linux.adguard-cli --no-link"
+icon = "test-tube"
+
+[scripts.run.rebuild-pihome]
+command = "nixos-rebuild switch --flake .#PiHome --target-host psoldunov@pihome --build-host psoldunov@pihome --sudo --show-trace"
+icon = "network"
 
 # rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.
 # Builds run as the user; --sudo elevates only activation. The Macs' go
