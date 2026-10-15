@@ -20,6 +20,9 @@
   programs.nix-ld.libraries = with pkgs; [
     stdenv.cc.cc.lib
     zlib
+    # pi-lens downloads Marksman's .NET binary, which aborts without ICU.
+    # That release finds ICU 77 but does not discover the default ICU 78.
+    icu77
   ];
 
   system.stateVersion = "23.11";
