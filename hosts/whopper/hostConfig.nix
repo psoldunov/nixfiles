@@ -10,7 +10,7 @@
 #   enableNfsServer         :: bool  (NFS server exports)
 #   enableSambaShares       :: bool  (Samba + samba-wsdd)
 #   enableNetatalk          :: bool  (AFP shares)
-#   enableMediaStack        :: bool  (jellyfin + uptime-kuma)
+#   enableMediaStack        :: bool  (jellyfin + plex + uptime-kuma)
 #   enableArrStack          :: bool  (sonarr/radarr/lidarr/prowlarr/jellyseerr)
 #   enableNginxVhosts       :: bool  (nginx + ACME)
 #   enableCloudflareTunnels :: bool  (cloudflared tunnels)
