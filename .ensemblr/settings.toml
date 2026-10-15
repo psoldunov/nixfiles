@@ -46,6 +46,10 @@ icon = "rocket"
 command = "nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
 icon = "server"
 
+[scripts.run.rebuild-bigking]
+command = "nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace"
+icon = "hard-drive"
+
 [scripts.run.rebuild-bigmac]
 command = '''scripts/switch-mac.sh BigMac'''
 icon = "monitor"
@@ -55,7 +59,7 @@ command = '''scripts/switch-mac.sh MacFlurry'''
 icon = "laptop"
 
 [scripts.run.rebuild-all]
-command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-mac.sh BigMac && scripts/switch-mac.sh MacFlurry'''
+command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace && scripts/switch-mac.sh BigMac && scripts/switch-mac.sh MacFlurry'''
 icon = "layers"
 
 # One-time: the first nix-darwin switch on a Mac. Needs upstream Nix on the
@@ -78,6 +82,10 @@ icon = "download"
 command = "nix flake update && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
 icon = "cloud"
 
+[scripts.run.update-bigking]
+command = "nix flake update && nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace"
+icon = "database"
+
 [scripts.run.update-bigmac]
 command = '''nix flake update && scripts/switch-mac.sh BigMac --update'''
 icon = "upload"
@@ -87,5 +95,5 @@ command = '''nix flake update && scripts/switch-mac.sh MacFlurry --update'''
 icon = "upload"
 
 [scripts.run.update-all]
-command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && scripts/switch-mac.sh BigMac --update && scripts/switch-mac.sh MacFlurry --update'''
+command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace && scripts/switch-mac.sh BigMac --update && scripts/switch-mac.sh MacFlurry --update'''
 icon = "zap"

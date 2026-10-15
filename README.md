@@ -6,10 +6,11 @@ Personal NixOS, nix-darwin and home-manager configuration. Multi-host flake, sin
 |---|---|---|
 | **Whopper** | Desktop | AMD Radeon RX 7900 XTX (ROCm, VA-API, gamescope), DP-1 @ 3840x2160@144 HDR, 10 Gbps NIC, KDE Plasma 6 on Wayland |
 | **BigTasty** | Home server | Intel iGPU (Quick Sync), mdadm RAID, static IP `10.24.24.2`, NFS + Samba + Netatalk exports, nginx vhosts behind Cloudflare DNS-01 |
+| **BigKing** | NAS | ASUSTOR Lockerstor 4 (AS6604T, Celeron J4125), NixOS on an NVMe mirror, ADM's RAID 0 data volume kept as `/volume1`, static IP `10.24.24.3` on an LACP bond, NFS + Samba + Time Machine, Plex |
 | **BigMac** | Workstation | Apple silicon Mac on macOS, managed by nix-darwin, GUI apps from Homebrew |
 | **MacFlurry** | Laptop | MacBook Pro (M1 Pro) on Wi-Fi, managed by nix-darwin like BigMac, with a smaller app set |
 
-Whopper and BigTasty share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, openssh, sops, docker/libvirt). BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config). Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
+Whopper, BigTasty and BigKing share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, openssh, sops, docker/libvirt). BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config). Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
 
 A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them can rebuild any host (see [Deploy](#deploy)).
 
@@ -17,13 +18,13 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 
 ```
 .
-├── flake.nix                       # Inputs + nixosConfigurations.{Whopper,BigTasty} + darwinConfigurations.{BigMac,MacFlurry} + alejandra formatter
+├── flake.nix                       # Inputs + nixosConfigurations.{Whopper,BigTasty,BigKing} + darwinConfigurations.{BigMac,MacFlurry} + alejandra formatter
 ├── lib/
 │   ├── mkHost.nix                  # Thin nixpkgs.lib.nixosSystem wrapper
 │   ├── mkDarwinHost.nix            # Same for nix-darwin's darwinSystem
 │   └── ssh-keys.nix                # Public SSH keys: the shared identities and the authorized list
 ├── modules/                        # SHARED ONLY
-│   ├── nixos/                      # NixOS baseline imported by Whopper and BigTasty — see "Shared NixOS modules"
+│   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty and BigKing — see "Shared NixOS modules"
 │   ├── darwin/                     # nix-darwin baseline imported by both Macs, shared Homebrew list included — see "Macs"
 │   └── home/
 │       ├── default.nix             # Imports all shared HM modules
@@ -50,6 +51,14 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # NixOS modules — see "BigTasty modules"
 │   │   │   └── services/           # Pre-extracted service stacks
 │   │   └── home/                   # home.nix (shared HM + minimal server bits) + scripts/
+│   ├── bigking/
+│   │   ├── default.nix             # Imports ./disko.nix + ./hardware.nix + ./modules
+│   │   ├── disko.nix               # NVMe layout nixos-anywhere creates: ESP on each drive, mdadm RAID1 root
+│   │   ├── hardware.nix
+│   │   ├── hostConfig.nix          # role=server
+│   │   ├── INSTALL.md              # One-off install over ADM with nixos-anywhere
+│   │   ├── modules/                # NixOS modules — see "BigKing modules"
+│   │   └── home/                   # home.nix (shared HM only)
 │   ├── bigmac/
 │   │   ├── default.nix             # Imports ./modules (nix-darwin)
 │   │   ├── hostConfig.nix          # role=desktop + server flags=false
@@ -95,6 +104,20 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | File sharing | `services.nfs.server` exports `/export/{transmission,slskd,Paperless,Files,Documents}`, Samba/samba-wsdd + Netatalk for AFP |
 | Passwordless sudo | `pam_ssh_agent_auth` checks forwarded SSH agent against `/etc/ssh/authorized_keys.d/psoldunov` |
 
+### BigKing (NAS)
+
+An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/bigking/INSTALL.md](hosts/bigking/INSTALL.md) has the install steps.
+
+| | |
+|---|---|
+| Boot | Two Crucial P5 NVMe drives (ADM's old SSD cache): an ESP on each, kept in step by `extraInstallCommands`, and an mdadm RAID1 holding `/` |
+| Storage | ADM's data volume as it was: mdadm RAID 0 over the four WD Reds, btrfs subvolume `base` mounted at `/volume1`. ADM itself stays on the eMMC as a fallback |
+| Network | static IP `10.24.24.3` on `bond0`, an 802.3ad bond of the two RTL8125 ports (renamed `lan0`/`lan1` by MAC address) |
+| File sharing | NFS exports `/volume1/{Media,Camera,Backup,Games}` to the same clients as ADM did, Samba (ADM's fruit settings) with a Time Machine share, samba-wsdd, avahi |
+| Services | Plex (library in `/var/lib/plex`, Quick Sync through `/dev/dri`), smartd with temperature warnings |
+| Front panel | ASUSTOR kernel drivers (mafredri/asustor-platform-driver), fan control from disk and CPU temperatures, LED triggers, `openlcmd` on the LCD |
+| Passwordless sudo | Same as BigTasty |
+
 ### Macs (BigMac, MacFlurry)
 
 Both Macs import the same baseline from [modules/darwin](modules/darwin) and the same home-manager layer from [modules/home/darwin](modules/home/darwin). A host's own directory sets its name, its state version and the Homebrew apps only it gets.
@@ -124,12 +147,12 @@ Homebrew's `bin` comes after the Nix profiles on `PATH`, so the Nix copy wins wh
 
 ## `hostConfig`
 
-Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
+Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
 
 | Field | Type | Meaning |
 |---|---|---|
 | `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/shell.nix` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish functions (`open`, `fzf_kill`), and the `git` keychain key on servers. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
-| `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
+| `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage and media ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
 
@@ -192,13 +215,30 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `sops.nix` | sops secrets for env files referenced by docker containers + ACME |
 | `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server` |
 
+## BigKing modules
+
+[hosts/bigking/modules/default.nix](hosts/bigking/modules/default.nix) imports:
+
+| File | Purpose |
+|---|---|
+| `asustor/` | `hardware.asustor` drivers (it87 mainline drivers blacklisted, `acpi_enforce_resources=lax`), `asustor-fan` (pwm1 from drivetemp and coretemp), `asustor-leds` (disk, LAN and status LED triggers), `openlcmd` built from `lcm` |
+| `boot.nix` | Copies `/boot` to `/boot-fallback` after each bootloader install, zram swap, `stateVersion` 26.11 |
+| `filesystems.nix` | `/volume1`: ADM's btrfs on the RAID 0, `subvol=base`, `nofail` |
+| `hardware.nix` | intel-media-driver, smartd (self-tests, warns above 45 °C), lm_sensors, mdmonitor to syslog |
+| `networking.nix` | hostname, `lan0`/`lan1` link names, `bond0`, static IP, NFS firewall ports, openssh, `pam_ssh_agent_auth` |
+| `services-shares.nix` | `services.nfs.server`, Samba, samba-wsdd, avahi Time Machine advert; NFS and Samba require the `/volume1` mount |
+| `services-media.nix` | Plex, its user in `video`/`render`, requires the `/volume1` mount |
+| `users.nix` | `psoldunov` pinned to uid 1000, ADM's `admin` (uid 999) and `administrators` (gid 999) declared so the ids stay theirs |
+
 ## Flake inputs
 
 | Input | Purpose |
 |---|---|
 | `nixpkgs` | nixos-unstable — default package set |
 | `nixpkgs-stable` | nixos-25.05 — calibre, Obsidian, prisma-engines |
-| `home-manager` | NixOS module on Whopper and BigTasty, nix-darwin module on the Macs |
+| `home-manager` | NixOS module on Whopper, BigTasty and BigKing, nix-darwin module on the Macs |
+| `disko` | BigKing's NVMe partitioning, used by nixos-anywhere at install time |
+| `asustor-platform-driver`, `lcm` | BigKing's ASUSTOR kernel drivers (NixOS module) and the source of its LCD daemon |
 | `nix-darwin` | The Macs' system layer |
 | `plasma-manager` | Whopper declarative KDE Plasma config |
 | `sops-nix` | NixOS + HM secret management |
@@ -253,16 +293,17 @@ A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its direct
 
 `rebuild_system` is host-aware. It lives in the workstation scripts ([modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix)), so Whopper and the Macs have it and BigTasty doesn't. It runs locally when the argument is the current host (`nixos-rebuild` or `darwin-rebuild`). Otherwise it works on `psoldunov@<host>`:
 
-- Linux to Linux (Whopper to BigTasty): `nixos-rebuild --target-host --build-host --sudo`, as before.
+- Linux to Linux (Whopper to BigTasty or BigKing): `nixos-rebuild --target-host --build-host --sudo`, as before.
 - Anything involving macOS: `nix flake archive --to ssh-ng://<host>` copies the flake and every input, private ones included, into the target's store. Then `ssh -t <host> sudo <nixos|darwin>-rebuild switch` builds and activates it there. sudo asks for the target's password once, and the session keeps that ticket alive for Homebrew's `.pkg` installs and, under `update_system`, for `update_bleeding_edge`. Like `--target-host`, this deploys the local working tree.
 
 ```fish
 rebuild_system                # rebuild current host locally
 rebuild_system Whopper        # explicit local
 rebuild_system BigTasty       # remote build + activate via SSH agent
+rebuild_system BigKing        # same for the NAS
 rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
 rebuild_system MacFlurry      # same for the laptop
-rebuild_system all            # Whopper, BigTasty, BigMac, MacFlurry, in parallel; skips MacFlurry when it doesn't answer
+rebuild_system all            # Whopper, BigTasty, BigKing, BigMac, MacFlurry, in parallel; skips MacFlurry when it doesn't answer
 update_system [host|all]      # same shape; runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
 clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune, + brew cleanup on the Macs
 ```
@@ -297,7 +338,7 @@ The script reaches the Mac as `<host>.local` with your usual keys, because the M
 
 ### Silent remote sudo
 
-`rebuild_system BigTasty` runs without prompting because:
+`rebuild_system BigTasty` runs without prompting because of the four settings below. BigKing has the same ones (its `bigking` host block, [networking.nix](hosts/bigking/modules/networking.nix), and the baseline's authorized keys).
 
 1. The `bigtasty` host block in [modules/home/workstation/ssh.nix](modules/home/workstation/ssh.nix) (Whopper and the Macs): `ForwardAgent = true`.
 2. BigTasty's [networking.nix](hosts/bigtasty/modules/networking.nix) enables `security.pam.sshAgentAuth` and adds `security.pam.services.sudo.sshAgentAuth = true`.
@@ -314,7 +355,7 @@ Whopper and the two Macs work the same way in every direction, with one differen
 ## Secrets
 
 - **Backend**: sops-nix + age. Primary recipient declared in [.sops.yaml](.sops.yaml).
-- **Files**: `secrets/whopper.yaml`, `secrets/bigtasty.yaml`, `secrets/shared.yaml`. Each host pins its own `sops.defaultSopsFile` (`hosts/<host>/modules/sops.nix` + its home module). Entries more than one host needs point at `shared.yaml` with a per-secret `sopsFile`. The Macs have no file of their own and read `shared.yaml`.
+- **Files**: `secrets/whopper.yaml`, `secrets/bigtasty.yaml`, `secrets/shared.yaml`. Each host pins its own `sops.defaultSopsFile` (`hosts/<host>/modules/sops.nix` + its home module). Entries more than one host needs point at `shared.yaml` with a per-secret `sopsFile`. The Macs and BigKing have no file of their own and read `shared.yaml`.
 - **Age key path on each host**: `~/.config/sops/age/keys.txt`. It must hold the primary identity; `scripts/bootstrap-mac.sh` adds it on a Mac.
 
 Notable secrets:
@@ -325,7 +366,7 @@ Notable secrets:
 | `SUNSHINE_WEB_PASSWORD` | Whopper system | Sunshine web UI login, written before each start |
 | `SYNCTHING_GUI_PASSWORD` | both (system, `shared.yaml`) | `services.syncthing.guiPasswordFile` |
 | `WIFI_PASSWORD` | BigTasty (system, `shared.yaml`) | wpa_supplicant `secretsFile`, rendered by a sops template (only while `networking.wireless` is enabled) |
-| `SHELL_SECRETS` | Whopper + the Macs (user, `shared.yaml`); BigTasty has its own | fish/bash init in shared `shell.nix`; shell-only env exports |
+| `SHELL_SECRETS` | Whopper, BigKing + the Macs (user, `shared.yaml`); BigTasty has its own | fish/bash init in shared `shell.nix`; shell-only env exports |
 | `SSH_KEY_GITHUB`, `SSH_KEY_ID_ED25519`, `SSH_KEY_ID_RSA`, `SSH_KEY_AGENCY_VPS`, `SSH_KEY_FLYWHEEL`, `SSH_KEY_SECRETS`, `SSH_KEY_GIT_SK`, `SSH_KEY_SUDO_*` | Whopper + the Macs (user, `shared.yaml`) | linked to `~/.ssh/<name>` by [workstation/ssh.nix](modules/home/workstation/ssh.nix); public halves in [lib/ssh-keys.nix](lib/ssh-keys.nix) |
 | `NIX_ACCESS_TOKENS` | Whopper + the Macs (system, `shared.yaml`) | GitHub token for the private flake inputs, included into nix.conf |
 | `CLAUDE_SANITY_MCP_BEARER`, `N8N_ACCESS_TOKEN`, `NOCODB_API_KEY`, `PAPERLESS_API_KEY` | all hosts (user, `shared.yaml`) | Claude Code MCP servers ([mcp.nix](modules/home/programs/claude-code/mcp.nix)) |

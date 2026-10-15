@@ -212,8 +212,8 @@
       then "darwin"
       else "nixos"
     }
-    ALL_HOSTS=(Whopper BigTasty BigMac MacFlurry)
-    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigMac]=darwin [MacFlurry]=darwin)
+    ALL_HOSTS=(Whopper BigTasty BigKing BigMac MacFlurry)
+    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [BigMac]=darwin [MacFlurry]=darwin)
     # Hosts that are often asleep or away (the laptop). `all` skips them
     # with a warning when they don't answer, instead of failing the run.
     ROAMING_HOSTS=(MacFlurry)

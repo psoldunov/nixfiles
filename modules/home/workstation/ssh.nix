@@ -82,6 +82,15 @@ in {
           ForwardAgent = true;
         };
 
+        # The NAS, set up like BigTasty.
+        "bigking" = {
+          HostName = "10.24.24.3";
+          User = "psoldunov";
+          IdentityFile = "~/.ssh/github";
+          AddKeysToAgent = "yes";
+          ForwardAgent = true;
+        };
+
         # Logging in with the host's sudo key puts it in the local agent, and
         # forwarding that agent lets the host's sudo accept it, so remote
         # rebuilds need no password (lib/ssh-keys.nix). IdentitiesOnly makes

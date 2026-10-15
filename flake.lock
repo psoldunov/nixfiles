@@ -29,6 +29,26 @@
         "type": "github"
       }
     },
+    "asustor-platform-driver": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1765104919,
+        "narHash": "sha256-VtoRwAm2y8KsythdN23SqPr89ayzttXHk3ptRJkh6Kk=",
+        "owner": "mafredri",
+        "repo": "asustor-platform-driver",
+        "rev": "cb392fc2fe60362b53147f7b3b4eac2616122301",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mafredri",
+        "repo": "asustor-platform-driver",
+        "type": "github"
+      }
+    },
     "blueprint": {
       "inputs": {
         "nixpkgs": [
@@ -193,6 +213,26 @@
       "original": {
         "owner": "ipetkov",
         "repo": "crane",
+        "type": "github"
+      }
+    },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789770686,
+        "narHash": "sha256-uZkBR7yHdIKUFB5SZdfgh1qkGfI3XmYmI/lTiquxbck=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "725ea35e410ad83be4931d1bff7e090eacaf3563",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
         "type": "github"
       }
     },
@@ -382,6 +422,22 @@
       "original": {
         "owner": "pbakaus",
         "repo": "impeccable",
+        "type": "github"
+      }
+    },
+    "lcm": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1672327820,
+        "narHash": "sha256-ekEtwM+Bc5pKHZznPuqHo0KJOrlYYT83ckiQfT4mfks=",
+        "owner": "mafredri",
+        "repo": "lcm",
+        "rev": "ee3b3743b24fc35b216a9682968b522cc42c0359",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mafredri",
+        "repo": "lcm",
         "type": "github"
       }
     },
@@ -721,16 +777,19 @@
     "root": {
       "inputs": {
         "apple-fonts": "apple-fonts",
+        "asustor-platform-driver": "asustor-platform-driver",
         "catppuccin": "catppuccin",
         "catppuccin-vsc": "catppuccin-vsc",
         "caveman": "caveman",
         "concierge": "concierge",
         "context-mode": "context-mode",
+        "disko": "disko",
         "ensemblr": "ensemblr",
         "figma": "figma",
         "home-manager": "home-manager",
         "i-have-adhd": "i-have-adhd",
         "impeccable": "impeccable",
+        "lcm": "lcm",
         "linear": "linear",
         "mattpocock-skills": "mattpocock-skills",
         "nix-darwin": "nix-darwin",
