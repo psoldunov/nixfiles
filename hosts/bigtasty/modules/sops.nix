@@ -7,9 +7,6 @@
       SLSKD_ENV = {
         group = "docker";
       };
-      JELLYPLEX_ENV = {
-        group = "docker";
-      };
       CFDYNDNS_TOKEN = {
         owner = "psoldunov";
       };
