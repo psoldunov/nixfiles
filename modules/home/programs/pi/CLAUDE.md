@@ -5,7 +5,7 @@ owns there; the rest stays pi's own.
 
 ```
 ~/.nixfiles/modules/home/programs/pi/
-├── default.nix                  # extension links + claude-bridge.json
+├── default.nix                  # extension links, bridge config, package activation
 ├── CLAUDE.md                    # this file
 └── extensions/claude-bridge/    # linked to ~/.pi/agent/extensions/claude-bridge/
 ```
@@ -13,9 +13,10 @@ owns there; the rest stays pi's own.
 `default.nix` also links `../claude-code/mods/humanizer-gate/` to
 `~/.pi/agent/extensions/humanizer-gate/` (see "humanizer-gate" below).
 
-Hosts opt in with `programs.pi-coding-agent.enable = true;` (Whopper sets it
-in `hosts/whopper/home/packages.nix`). home-manager's own module installs the
-package; `overlays/pi-coding-agent` pins the release it builds.
+Hosts opt in with `programs.pi-coding-agent.enable = true;` through
+`modules/home/workstation/default.nix` (Whopper, BigMac and MacFlurry).
+Home Manager's own module installs the executable;
+`overlays/pi-coding-agent` pins the release it builds.
 
 ## What stays mutable
 
@@ -23,6 +24,33 @@ package; `overlays/pi-coding-agent` pins the release it builds.
   `pi install`). `programs.pi-coding-agent.settings` is left unset because it
   would replace the file with a read-only store symlink.
 - `auth.json`, `sessions/`, `models-store.json`: credentials and runtime data.
+
+## Pi packages
+
+After linking files, Home Manager activation ensures these global packages are
+installed with `pi install --no-approve`:
+
+- `npm:pi-mcp-adapter`
+- `npm:pi-lens`
+- `npm:pi-web-access`
+- `npm:@sting8k/pi-vcc`
+
+The hook uses `programs.pi-coding-agent.configDir` through
+`PI_CODING_AGENT_DIR`. It checks both the mutable settings entry and the
+package's `npm/node_modules/<name>/package.json` before skipping an install.
+If an entry already exists, activation keeps its version pin and resource
+filters. Pi adds missing entries without replacing model/theme preferences or
+extra user packages. Removing an entry or its installed directory makes the
+next activation install it again. Removing a package from the Nix list does
+not uninstall it.
+
+A missing package requires network access during activation; installation
+failure fails activation. These are npm installs, not Nix-pinned artifacts.
+Activation does not update packages that pass the local check; use `pi update --extensions`
+for updates. A Home Manager dry run only prints the intended package list and
+does not invoke Pi or npm. Nix supplies Node/npm on Linux and macOS, including
+in Pi's runtime PATH. `programs.pi-coding-agent.package` must not be null.
+This hook does not configure MCP servers or account credentials.
 
 ## claude-bridge
 
