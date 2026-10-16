@@ -13,6 +13,7 @@
     (import ../../../overlays/vapor-kde.nix)
     (import ../../../overlays/duckstation)
     (import ../../../overlays/motrix)
+    (import ../../../overlays/pt-pc)
     (import ../../../overlays/pi-coding-agent)
     (import ../../../overlays/bambu-studio.nix)
     (import ../../../overlays/periphery.nix)
