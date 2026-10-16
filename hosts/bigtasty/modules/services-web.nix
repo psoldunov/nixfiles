@@ -154,6 +154,29 @@ in {
           proxyWebsockets = true;
         };
       };
+      # Public, so people can book. 127.0.0.1: the container publishes on
+      # IPv4 loopback only.
+      "cal.theswisscheese.com" = {
+        forceSSL = true;
+        enableACME = true;
+        extraConfig = ''
+          client_max_body_size 10M;
+        '';
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3010";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+        };
+        # The first-admin wizard: on an instance with no users, whoever submits
+        # it becomes admin. cal-diy-bootstrap submits it on loopback
+        # (./services/cal-diy.nix). Case-insensitive, so /Auth/Setup can't
+        # get round it.
+        locations."~* ^/(api/)?auth/setup" = {
+          proxyPass = "http://127.0.0.1:3010";
+          recommendedProxySettings = true;
+          extraConfig = lanOnly;
+        };
+      };
     };
   };
 
@@ -212,6 +235,17 @@ in {
       "portainer.theswisscheese.com" = {
         webroot = null;
         dnsProvider = "cloudflare";
+      };
+      "cal.theswisscheese.com" = {
+        webroot = null;
+        dnsProvider = "cloudflare";
+        # lego polls the home resolvers the moment it creates the TXT record,
+        # before Cloudflare serves it, and Unbound then caches the NXDOMAIN
+        # for the zone's 30-minute negative TTL, past lego's 2-minute wait.
+        # Wait on Cloudflare's own nameservers instead, which are what Let's
+        # Encrypt checks. Not in `defaults`: lego flags are part of each
+        # cert's state hash, so that would reissue every certificate.
+        extraLegoFlags = ["--dns.propagation.disable-rns"];
       };
     };
   };

@@ -116,6 +116,7 @@
       "paperless-network"
       "nocodb-network"
       "infisical-network"
+      "cal-diy-network"
     ];
     networks_str = lib.concatStringsSep " " networks;
     script = pkgs.writeShellScript "docker-networks" ''

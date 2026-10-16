@@ -24,6 +24,7 @@
     ./users.nix
     ./virtualisation.nix
 
+    ./services/cal-diy.nix
     ./services/concierge-server.nix
     ./services/immich.nix
     ./services/infisical.nix

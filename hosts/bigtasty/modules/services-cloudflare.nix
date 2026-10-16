@@ -25,6 +25,7 @@
       "jellyfin.theswisscheese.com"
       "immich.theswisscheese.com"
       "homeassistant.theswisscheese.com"
+      "cal.theswisscheese.com"
     ];
   };
 }
