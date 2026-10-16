@@ -42,6 +42,11 @@ in {
       Nice = 19;
       IOSchedulingClass = "idle";
       CPUSchedulingPolicy = "batch";
+      # A runaway ffmpeg is OOM-killed at 4G inside this unit instead of
+      # starving the host. OOMPolicy keeps the unit running, so the script
+      # logs that file as failed and goes on to the next one.
+      MemoryMax = "4G";
+      OOMPolicy = "continue";
     };
   };
 
