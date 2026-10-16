@@ -13,6 +13,12 @@ owns there; the rest stays pi's own.
 `default.nix` also links `../claude-code/mods/humanizer-gate/` to
 `~/.pi/agent/extensions/humanizer-gate/` (see "humanizer-gate" below).
 
+On Whopper, `hosts/whopper/home/programs/strata.nix` writes
+`~/.pi/agent/models.json` (read-only): the `strata` provider for the local
+Strata server. pi only reads that file, so a store symlink is fine. Add any
+other custom provider there too, or move the file here first if a Mac needs
+one, because two modules cannot both own it.
+
 Hosts opt in with `programs.pi-coding-agent.enable = true;` through
 `modules/home/workstation/default.nix` (Whopper, BigMac and MacFlurry).
 Home Manager's own module installs the executable;

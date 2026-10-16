@@ -49,6 +49,13 @@
     };
   };
 
+  # Lets a user unit lock memory past systemd's 8 MiB default: the user
+  # manager's hard memlock limit goes to infinity, while its units keep 8 MiB
+  # unless they ask for more. strata.service (../home/programs/strata.nix)
+  # asks with LimitMEMLOCK=infinity, since the model mlock()s its experts.
+  systemd.services."user@".serviceConfig.LimitMEMLOCK = "infinity";
+  systemd.user.settings.Manager.DefaultLimitMEMLOCK = "8M:infinity";
+
   # Apple Superdrive udev rule lives in modules/nixos/hardware.nix.
   services.udev.packages = [pkgs.yubikey-personalization];
 

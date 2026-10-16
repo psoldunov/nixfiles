@@ -96,6 +96,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | Steam | `programs.steam` + gamescope (3840x2160@144, HDR) + steam-presence wired to `STEAM_API_KEY` / `STEAMGRIDDB_API_KEY` sops secrets |
 | Streaming | Steam Remote Play (`programs.steam.remotePlay`) |
 | Peripherals | Stream Deck via deckmaster, Solaar (built from the psoldunov/Solaar fork), LibrePods, ZSA/QMK keyboards, HP LaserJet printer |
+| Local LLM | [Strata](https://github.com/Niko1221/Strata) runs Qwen3.8-Flash-Next IQ2_XS on the 7900 XTX plus system RAM. It does not start at login: `strata start` / `strata stop`. OpenAI and Anthropic APIs on `127.0.0.1:8080`; pi lists it as the `strata` provider. See [hosts/whopper/home/programs/strata.nix](hosts/whopper/home/programs/strata.nix) |
 
 ### BigTasty (server)
 
@@ -209,7 +210,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pt-pc, pi-coding-agent, bambu-studio, periphery, solaar) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
-| `services.nix` | vscode-server, syncthing, and other desktop services |
+| `services.nix` | vscode-server, syncthing, the memlock limit Strata's user unit raises, and other desktop services |
 | `sops.nix` | Whopper system secrets |
 | `users.nix` | Extra groups for `psoldunov` (disk, i2c, input, uinput, scanner, lp, librepods, ...) |
 | `virtualisation.nix` | Whopper containers (portainer agent) |
