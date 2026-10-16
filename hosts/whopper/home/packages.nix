@@ -29,6 +29,9 @@
     nocturne
     pcsx2
     duckstation
+    # P.T. from the PS4 PKG; the game files and saves live in
+    # ~/.local/share/pt-pc (overlays/pt-pc).
+    pt-pc
     heroic
     bchunk
     lutris
