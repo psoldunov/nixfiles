@@ -104,8 +104,8 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | GPU | Intel iGPU (intel-media-driver, Quick Sync, VAAPI) |
 | Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup,Games}` |
 | Network | static IP `10.24.24.2` (`enp8s0`), openssh (`AllowUsers psoldunov`) |
-| Services | jellyfin, plex, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server, concierge-server (Concierge's Sync server) |
-| Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com`. The UniFi port forward sends WAN 80/443 here from Cloudflare's IP ranges only. Kuma, Jellyfin, Immich and Home Assistant are public through Cloudflare. The \*arr apps, Jellyseerr, Homarr, Portainer, Syncthing and the dashboard take LAN, loopback and Docker peers only ([nginx-lan-only.nix](hosts/bigtasty/modules/nginx-lan-only.nix)). A catch-all vhost refuses the bare IP and unknown names |
+| Services | jellyfin, plex, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server, concierge-server (Concierge's Sync server), cal-diy (scheduling, see [cal.diy](#caldiy)) |
+| Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com`. The UniFi port forward sends WAN 80/443 here from Cloudflare's IP ranges only. Kuma, Jellyfin, Immich, Home Assistant and cal.diy are public through Cloudflare. The \*arr apps, Jellyseerr, Homarr, Portainer, Syncthing and the dashboard take LAN, loopback and Docker peers only ([nginx-lan-only.nix](hosts/bigtasty/modules/nginx-lan-only.nix)). A catch-all vhost refuses the bare IP and unknown names |
 | Tunnels | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL` (each service module adds its own hostname), `services.cloudflare-dyndns` syncing DNS records |
 | Docker | `oci-containers`: slskd, transmission, homeassistant, portainer-ce, homarr (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
 | File sharing | `services.nfs.server` exports `/export/{transmission,slskd,Paperless,Files,Documents}`, Samba/samba-wsdd + Netatalk for AFP |
@@ -232,10 +232,24 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `services-cloudflare.nix` | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL`, `services.cloudflare-dyndns` |
 | `services-shares.nix` | `services.nfs.server`, Samba (workgroup WORKGROUP, MacSamba/fruit), samba-wsdd, netatalk, `systemd.services.sharesSync` (inotify → rsync) |
 | `services-misc.nix` | gnupg agent |
-| `virtualisation.nix` | Host `oci-containers`, transmission restart policy, `systemd.services.docker-networks` oneshot creating immich-/paperless-/nocodb-/infisical-network |
+| `virtualisation.nix` | Host `oci-containers`, transmission restart policy, `systemd.services.docker-networks` oneshot creating immich-/paperless-/nocodb-/infisical-/cal-diy-network |
 | `sops.nix` | sops secrets for env files referenced by docker containers + ACME |
-| `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server` |
+| `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server`, `cal-diy` |
 | `services/media-audio-fix/` | Nightly job (01:00) that rewrites audio in `/mnt/Media` for the LG C2, which can't decode DTS. DTS tracks become AC3, and audio that isn't English, Russian or the title's original language (from Sonarr/Radarr) is dropped. It only touches files that need a change and starts no new file after 07:30. Preview with `media-audio-fix --dry-run`; add `--sonarr-config` and `--radarr-config` to include the language drops |
+
+### cal.diy
+
+[services/cal-diy.nix](hosts/bigtasty/modules/services/cal-diy.nix) runs cal.diy, the MIT community edition of Cal.com, at https://cal.theswisscheese.com/. nginx proxies it to `127.0.0.1:3010`, cloudflare-dyndns keeps its proxied record, and Postgres keeps its data in the `cal-diy_pgdata` Docker volume.
+
+Nobody publishes a cal.diy image, so the `cal-diy-image` oneshot builds `localhost/cal-diy:<tag>` on BigTasty from the commit pinned in the module, before `docker-cal-diy` starts. It skips the build when that tag exists. A cold build takes about 8 minutes and the image is about 5 GB. To update, change `rev` and `hash`: the tag is derived from the source and the build arguments, so the next switch builds the new image and restarts the container on it. Watchtower leaves this container alone.
+
+Signups are switched off when the image is built (`NEXT_PUBLIC_DISABLE_SIGNUP`). On the first start, `cal-diy-bootstrap` creates the admin, `philipp@theswisscheese.com` with username `philipp`, through the setup wizard on loopback. nginx answers the wizard only for LAN, loopback and Docker peers, and LAN browsers come in through Cloudflare, so nobody else can claim an empty instance. Read the generated password on BigTasty:
+
+```sh
+sudo cat /var/lib/cal-diy-bootstrap/admin-password
+```
+
+After the first login, change the password in Settings > Security > Password and turn on two-factor authentication in Settings > Security > Two-factor auth. Until the admin signs in with 2FA, cal.diy treats them as an inactive admin and keeps them out of Settings > Admin, which is where other people's accounts are added (Settings > Admin > Users). CalDAV and Apple Calendar work out of the box. Apps that need OAuth keys, such as Google Calendar, Office 365 and Zoom, stay off until their keys are added in Settings > Admin > Apps. Booking emails go through Resend as `cal@theswisscheese.com`. The `CAL_DIY_SETTINGS` sops secret holds the database password, the NextAuth and encryption keys, the cron API key and the Resend key.
 
 ## BigKing modules
 
