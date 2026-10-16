@@ -45,39 +45,40 @@ command = "nix build .#checks.x86_64-linux.adguard-cli --no-link"
 icon = "test-tube"
 
 # rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.
-# Builds run as the user; --sudo elevates only activation. The Macs' go
-# through scripts/switch-mac.sh: the flake is copied into the Mac's store
-# and built and activated there, and sudo asks for the Mac's password once.
+# scripts/switch-host.sh picks the route from the host running it, so they
+# work from Whopper and from the Macs, which have no nixos-rebuild: a Mac
+# copies the flake into the target's store and the target builds and
+# activates it over ssh, where sudo asks for the target's password once.
 # MacFlurry is the laptop: when it is asleep or away its step fails, and the
 # -all scripts run it last so the other hosts are already done. They run one
 # host at a time, so PiHome, which every host resolves names through, never
 # restarts its DNS while another host is building.
 [scripts.run.rebuild-pihome]
-command = "nixos-rebuild switch --flake .#PiHome --target-host psoldunov@pihome --build-host psoldunov@pihome --sudo --show-trace"
+command = "scripts/switch-host.sh PiHome"
 icon = "network"
 
 [scripts.run.rebuild-whopper]
-command = "nixos-rebuild switch --flake .#Whopper --sudo --show-trace"
+command = "scripts/switch-host.sh Whopper"
 icon = "rocket"
 
 [scripts.run.rebuild-bigtasty]
-command = "nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
+command = "scripts/switch-host.sh BigTasty"
 icon = "server"
 
 [scripts.run.rebuild-bigking]
-command = "nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace"
+command = "scripts/switch-host.sh BigKing"
 icon = "hard-drive"
 
 [scripts.run.rebuild-bigmac]
-command = '''scripts/switch-mac.sh BigMac'''
+command = "scripts/switch-host.sh BigMac"
 icon = "monitor"
 
 [scripts.run.rebuild-macflurry]
-command = '''scripts/switch-mac.sh MacFlurry'''
+command = "scripts/switch-host.sh MacFlurry"
 icon = "laptop"
 
 [scripts.run.rebuild-all]
-command = '''nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace && scripts/switch-mac.sh BigMac && nixos-rebuild switch --flake .#PiHome --target-host psoldunov@pihome --build-host psoldunov@pihome --sudo --show-trace && scripts/switch-mac.sh MacFlurry'''
+command = '''scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac && scripts/switch-host.sh PiHome && scripts/switch-host.sh MacFlurry'''
 icon = "layers"
 
 # One-time: the first nix-darwin switch on a Mac. Needs upstream Nix on the
@@ -93,29 +94,29 @@ icon = "refresh-cw"
 
 # update-* mirror `update_system [host|all]`: bump flake.lock, then switch.
 [scripts.run.update-whopper]
-command = "nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace"
+command = "nix flake update && scripts/switch-host.sh Whopper"
 icon = "download"
 
 [scripts.run.update-bigtasty]
-command = "nix flake update && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace"
+command = "nix flake update && scripts/switch-host.sh BigTasty"
 icon = "cloud"
 
 [scripts.run.update-bigking]
-command = "nix flake update && nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace"
+command = "nix flake update && scripts/switch-host.sh BigKing"
 icon = "database"
 
 [scripts.run.update-pihome]
-command = "nix flake update && nixos-rebuild switch --flake .#PiHome --target-host psoldunov@pihome --build-host psoldunov@pihome --sudo --show-trace"
+command = "nix flake update && scripts/switch-host.sh PiHome"
 icon = "network"
 
 [scripts.run.update-bigmac]
-command = '''nix flake update && scripts/switch-mac.sh BigMac --update'''
+command = "nix flake update && scripts/switch-host.sh BigMac --update"
 icon = "upload"
 
 [scripts.run.update-macflurry]
-command = '''nix flake update && scripts/switch-mac.sh MacFlurry --update'''
+command = "nix flake update && scripts/switch-host.sh MacFlurry --update"
 icon = "upload"
 
 [scripts.run.update-all]
-command = '''nix flake update && nixos-rebuild switch --flake .#Whopper --sudo --show-trace && nixos-rebuild switch --flake .#BigTasty --target-host psoldunov@bigtasty --build-host psoldunov@bigtasty --sudo --show-trace && nixos-rebuild switch --flake .#BigKing --target-host psoldunov@bigking --build-host psoldunov@bigking --sudo --show-trace && scripts/switch-mac.sh BigMac --update && nixos-rebuild switch --flake .#PiHome --target-host psoldunov@pihome --build-host psoldunov@pihome --sudo --show-trace && scripts/switch-mac.sh MacFlurry --update'''
+command = '''nix flake update && scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac --update && scripts/switch-host.sh PiHome && scripts/switch-host.sh MacFlurry --update'''
 icon = "zap"

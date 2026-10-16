@@ -72,7 +72,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
 ├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, the rest Whopper-only)
-├── scripts/                        # Helpers: switch-mac.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
+├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (PiHome and BigTasty)
 │   ├── whopper.yaml                # SOPS-encrypted (age, primary recipient)
@@ -249,7 +249,7 @@ Signups are switched off when the image is built (`NEXT_PUBLIC_DISABLE_SIGNUP`).
 sudo cat /var/lib/cal-diy-bootstrap/admin-password
 ```
 
-After the first login, change the password in Settings > Security > Password and turn on two-factor authentication in Settings > Security > Two-factor auth. Until the admin signs in with 2FA, cal.diy treats them as an inactive admin and keeps them out of Settings > Admin, which is where other people's accounts are added (Settings > Admin > Users). CalDAV and Apple Calendar work out of the box. Apps that need OAuth keys, such as Google Calendar, Office 365 and Zoom, stay off until their keys are added in Settings > Admin > Apps. Booking emails go through Resend as `cal@theswisscheese.com`. The `CAL_DIY_SETTINGS` sops secret holds the database password, the NextAuth and encryption keys, the cron API key and the Resend key.
+After the first login, change the password in Settings > Security > Password and turn on two-factor authentication in Settings > Security > Two-factor auth. Until the admin signs in with 2FA, cal.diy treats them as an inactive admin and keeps them out of Settings > Admin, which is where other people's accounts are added (Settings > Admin > Users). CalDAV and Apple Calendar work out of the box. Apps that need OAuth keys, such as Google Calendar, Office 365 and Zoom, stay off until their keys are added in Settings > Admin > Apps. Google's OAuth consent screen links to a privacy policy and terms of service, so nginx serves both as static pages at `/privacy` and `/terms` from [services/cal-diy-pages](hosts/bigtasty/modules/services/cal-diy-pages). Booking emails go through Resend as `cal@theswisscheese.com`. The `CAL_DIY_SETTINGS` sops secret holds the database password, the NextAuth and encryption keys, the cron API key and the Resend key.
 
 ## BigKing modules
 
