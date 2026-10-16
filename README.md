@@ -72,7 +72,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
 ├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, the rest Whopper-only)
-├── scripts/                        # Helpers: switch-mac.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
+├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (PiHome and BigTasty)
 │   ├── whopper.yaml                # SOPS-encrypted (age, primary recipient)
