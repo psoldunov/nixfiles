@@ -197,8 +197,11 @@ def ffmpeg_command(path, tmp, streams, keep, convert):
     audio_out = [o for o, i in enumerate(keep) if by_index[i]["codec_type"] == "audio"]
     if audio_out and not any(by_index[keep[o]]["disposition"].get("default") for o in audio_out):
         args += [f"-disposition:{audio_out[0]}", "default"]
-    args += ["-default_mode", "passthrough", "-max_interleave_delta", "0",
-             "-f", "matroska", tmp]
+    # No -max_interleave_delta 0: it makes the muxer hold every packet until
+    # each stream has sent one, and a forced subtitle track with 8 cues in a
+    # whole film then buffers most of the file in RAM. The default 10 s
+    # keeps memory bounded, and the source is already interleaved.
+    args += ["-default_mode", "passthrough", "-f", "matroska", tmp]
     return args
 
 
