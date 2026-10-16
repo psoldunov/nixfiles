@@ -37,6 +37,9 @@
       };
       CAL_DIY_SETTINGS = {
         group = "docker";
+        # The path stays the same when the contents change, so the container
+        # would keep the old environment until something else restarted it.
+        restartUnits = ["docker-cal-diy.service"];
       };
       # Resend API key; concierge-server reads it via LoadCredential, as root.
       CONCIERGE_SMTP_PASSWORD = {};

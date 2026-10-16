@@ -75,8 +75,11 @@ in {
         EMAIL_SERVER_USER = "resend";
       };
       # POSTGRES_PASSWORD, DATABASE_URL, DATABASE_DIRECT_URL, NEXTAUTH_SECRET,
-      # CALENDSO_ENCRYPTION_KEY, CRON_API_KEY and EMAIL_SERVER_PASSWORD (the
-      # Resend key the other services use).
+      # CALENDSO_ENCRYPTION_KEY, CRON_API_KEY, EMAIL_SERVER_PASSWORD (the
+      # Resend key the other services use) and GOOGLE_API_CREDENTIALS, the
+      # OAuth client JSON from Google Cloud on one line. The start script
+      # seeds that into the Google Calendar and Google Meet apps on every
+      # start, so their keys in Settings > Admin > Apps come from here.
       environmentFiles = [
         config.sops.secrets.CAL_DIY_SETTINGS.path
       ];
