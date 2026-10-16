@@ -670,11 +670,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791379694,
-        "narHash": "sha256-HZzNcYJj3zeC+fnq2xv2LLHerlBZ7DrK9lfr0cc40y0=",
+        "lastModified": 1792144385,
+        "narHash": "sha256-XRR3dYJfVGjyu9gULaOr1Np+o6I4ER4UL9YEC2/7u9Y=",
         "owner": "psoldunov",
         "repo": "notion-calendar",
-        "rev": "1e3ac453408feff42c509f0df24edf40a371c7d0",
+        "rev": "3e0448cdd101a06b890c9488eb7ac948f71c395c",
         "type": "github"
       },
       "original": {
