@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy · cal.theswisscheese.com</title>
+<style>
+  body { font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; color: #1a1a1a; background: #fff; max-width: 42rem; margin: 0 auto; padding: 3rem 1.25rem; }
+  h1 { font-size: 1.75rem; line-height: 1.2; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 .5rem; }
+  .updated { color: #666; margin: 0 0 2rem; }
+  a { color: #0b57d0; }
+  li { margin: .35rem 0; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 0.0625rem solid #e5e5e5; color: #666; font-size: .9rem; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e8e8e8; background: #141414; }
+    .updated, footer { color: #999; }
+    footer { border-color: #333; }
+    a { color: #8ab4f8; }
+  }
+</style>
+</head>
+<body>
+<h1>Privacy policy</h1>
+<p class="updated">Last updated 16 October 2026</p>
+
+<p>cal.theswisscheese.com is my personal scheduling page. I'm Philipp Soldunov, and I run it on my own server with <a href="https://github.com/calcom/cal.diy">cal.diy</a>, the open source edition of Cal.com. People use it to book time with me. This page covers what happens to the data it handles.</p>
+
+<h2>When you book a meeting</h2>
+<p>The booking form collects your name, your email address, the time you pick and anything you write in the notes. Cal.diy keeps this in its database on my server. It uses it to put the meeting in my calendar and to email you a confirmation, reminders and any changes. Those emails are sent through <a href="https://resend.com">Resend</a>, an email delivery service.</p>
+
+<h2>Google account data</h2>
+<p>I connect my own Google accounts so the page knows when I'm busy and can put bookings straight into my calendar. When an account is connected, cal.diy asks Google for these permissions:</p>
+<ul>
+  <li>Basic profile (<code>userinfo.profile</code>), so cal.diy can show which account is connected.</li>
+  <li>Read-only calendar access (<code>calendar.readonly</code>). Cal.diy reads the list of calendars and the times you're busy, so nobody can book over something already in the calendar.</li>
+  <li>Event access (<code>calendar.events</code>). Cal.diy adds booked meetings to the calendar you choose, and updates or deletes them when a booking is moved or cancelled.</li>
+</ul>
+<p>Cal.diy stores the access tokens Google issues and the calendars you selected. It uses busy times to work out availability and doesn't copy the contents of your other events into its database.</p>
+<p>Google user data stays on my server. The only place it goes is back to Google. I don't sell it, share it, use it for advertising, or use it to train AI or machine learning models, and nobody else has access to it.</p>
+<p>Cal.diy's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+<h2>Where it runs</h2>
+<p>The server is mine and sits in my home. Traffic to the site passes through <a href="https://www.cloudflare.com">Cloudflare</a>, which sits in front of the server. Cal.diy's telemetry is switched off, and the site runs no analytics or advertising trackers. The only cookies are the ones cal.diy needs to keep you signed in.</p>
+
+<h2>Keeping and deleting data</h2>
+<p>Bookings stay in the database until I delete them. Disconnecting a Google account in cal.diy deletes its stored tokens. You can also cut off access from Google's side at any time at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+<p>If you booked a meeting and want your details removed, email me and I'll delete them.</p>
+
+<h2>Changes</h2>
+<p>If any of this changes, I'll update this page and the date at the top.</p>
+
+<h2>Contact</h2>
+<p><a href="mailto:philipp@theswisscheese.com">philipp@theswisscheese.com</a></p>
+
+<footer><a href="/terms">Terms of service</a></footer>
+</body>
+</html>

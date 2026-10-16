@@ -176,6 +176,17 @@ in {
           recommendedProxySettings = true;
           extraConfig = lanOnly;
         };
+        # Static pages the Google OAuth consent screen links to. Exact
+        # matches, so they win over the proxy; the URI has no extension, so
+        # nginx needs the type spelled out.
+        locations."= /privacy" = {
+          alias = ./services/cal-diy-pages/privacy.html;
+          extraConfig = "default_type text/html;";
+        };
+        locations."= /terms" = {
+          alias = ./services/cal-diy-pages/terms.html;
+          extraConfig = "default_type text/html;";
+        };
       };
     };
   };
