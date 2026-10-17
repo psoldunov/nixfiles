@@ -41,6 +41,7 @@
     ./programs/numero.nix
     ./programs/skrepka.nix
     ./programs/solaar.nix
+    ./programs/strata.nix
     ./programs/token-station.nix
     ./programs/vscode.nix
     ./programs/wye.nix
