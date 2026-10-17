@@ -148,12 +148,34 @@
         "type": "github"
       }
     },
-    "concierge": {
+    "clokkr": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ],
         "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1792245293,
+        "narHash": "sha256-HSEvZoPlAGUZByCDVcPr68SleSZmkKF0fsNHOK5c1Qg=",
+        "owner": "psoldunov",
+        "repo": "clokkr",
+        "rev": "34f7d611706c1ac630b8a78d60c863dba2698345",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "clokkr",
+        "type": "github"
+      }
+    },
+    "concierge": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay_2"
       },
       "locked": {
         "lastModified": 1792134528,
@@ -689,7 +711,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay_2"
+        "rust-overlay": "rust-overlay_3"
       },
       "locked": {
         "lastModified": 1792134834,
@@ -781,6 +803,7 @@
         "catppuccin": "catppuccin",
         "catppuccin-vsc": "catppuccin-vsc",
         "caveman": "caveman",
+        "clokkr": "clokkr",
         "concierge": "concierge",
         "context-mode": "context-mode",
         "disko": "disko",
@@ -817,7 +840,7 @@
     "rust-overlay": {
       "inputs": {
         "nixpkgs": [
-          "concierge",
+          "clokkr",
           "nixpkgs"
         ]
       },
@@ -836,6 +859,27 @@
       }
     },
     "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "concierge",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791448976,
+        "narHash": "sha256-HJ4TEF3j7HmLYeEP/PtqjeiBX/6TppXB2qY53HcrWbs=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "f91010a5c1b6125b715eb78a84fb5dd8fb74a2b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_3": {
       "inputs": {
         "nixpkgs": [
           "numero",
