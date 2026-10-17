@@ -197,6 +197,15 @@
       url = "github:psoldunov/numero/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Clokkr, the tray time tracker. Used by
+    # hosts/whopper/home/programs/clokkr.nix. Bump with
+    # `nix flake update clokkr`. The repo is private: fetching it needs the
+    # GitHub token wired in hosts/whopper/modules/nix.nix.
+    clokkr = {
+      url = "github:psoldunov/clokkr/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
