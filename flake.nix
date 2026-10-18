@@ -13,8 +13,6 @@
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
-
     catppuccin = {
       url = "github:catppuccin/nix";
     };
@@ -216,7 +214,6 @@
     nixpkgs-stable,
     catppuccin,
     nix-gaming,
-    nix-flatpak,
     sops-nix,
     disko,
     home-manager,
@@ -309,7 +306,6 @@
         nix-gaming.nixosModules.pipewireLowLatency
         nix-gaming.nixosModules.platformOptimizations
         sops-nix.nixosModules.sops
-        nix-flatpak.nixosModules.nix-flatpak
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
         catppuccin.nixosModules.catppuccin

@@ -196,6 +196,9 @@
     gcc
     libheif
     protontricks
+    # Applies SteamGridDB artwork to Steam. Its sgdb:// handler is set in
+    # hosts/whopper/mime-defaults.nix.
+    sgdboop
     ydotool
     desktop-file-utils
     mangohud
