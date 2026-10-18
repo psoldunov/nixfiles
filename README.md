@@ -11,7 +11,7 @@ Personal NixOS, nix-darwin and home-manager configuration. Multi-host flake, sin
 | **BigMac** | Workstation | Apple silicon Mac on macOS, managed by nix-darwin, GUI apps from Homebrew |
 | **MacFlurry** | Laptop | MacBook Pro (M1 Pro) on Wi-Fi, managed by nix-darwin like BigMac, with a smaller app set |
 
-Whopper, BigTasty and BigKing share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, openssh, sops, docker/libvirt). BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config). Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
+Whopper, BigTasty and BigKing share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). PiHome takes only the login shell from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which gets `shell` alone. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
 
 A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them can rebuild any host (see [Deploy](#deploy)).
 
@@ -32,6 +32,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │       ├── default.nix             # Imports all shared HM modules
 │       ├── git/git.nix             # git + gh config
 │       ├── shell/shell.nix         # fish/bash/starship/atuin/zoxide/yazi (desktop bits gated)
+│       ├── shell/zsh.nix           # zsh, the login shell, set up like fish — see "Shell"
 │       ├── nix-index.nix           # nix-index + shell integrations
 │       ├── sops.nix                # HM sops preamble + SHELL_SECRETS
 │       ├── programs/claude-code/   # Declarative Claude Code (agents/hooks/skills/rules/MCP/settings)
@@ -63,6 +64,8 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   └── home/                   # home.nix (shared HM only)
 │   ├── pihome/
 │   │   ├── default.nix             # PiHome system configuration
+│   │   ├── home.nix                # Home Manager: the shared shell config only
+│   │   ├── hostConfig.nix          # role=server
 │   │   ├── INSTALL.md              # Spare-card migration and rollback steps
 │   │   └── hardware.nix            # Raspberry Pi SD-card hardware settings
 │   ├── bigmac/
@@ -71,7 +74,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # modules/darwin + host name + BigMac-only Homebrew apps — see "Macs"
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
-├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, the rest Whopper-only)
+├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, atuin-darwin on the Macs, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (PiHome and BigTasty)
@@ -128,7 +131,7 @@ An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/b
 
 ### PiHome (DNS appliance)
 
-PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/24` on `eth0` with gateway `10.24.24.1`. It was `/8` on the old Debian card, which made the Pi treat every 10.x address as local, so DNS replies to clients on other VLANs never reached them.
+PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/24` on `eth0` with gateway `10.24.24.1`. It was `/8` on the old Debian card, which made the Pi treat every 10.x address as local, so DNS replies to clients on other VLANs never reached them. Home Manager gives it the same shell as every other host ([hosts/pihome/home.nix](hosts/pihome/home.nix)), without the other home modules or any shell secrets.
 
 DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [modules/nixos/home-dns/adguard-settings.nix](modules/nixos/home-dns/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), one rule that answers Firefox's DoH canary `use-application-dns.net` with NXDOMAIN so Firefox keeps using this resolver, 15 local rewrites including `*.local.theswisscheese.com`, blocked services, Safe Search, and the existing admin login hash. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`; the complete effective settings are rendered from SOPS credentials at each service restart. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`. Nothing proxies it, because the policy is managed in Nix, so the old `adguard.theswisscheese.com` vhost and rewrite are gone. DNS rewrites still target `10.24.24.2`.
 
@@ -146,7 +149,7 @@ Both Macs import the same baseline from [modules/darwin](modules/darwin) and the
 |---|---|
 | Hardware | Apple silicon (`aarch64-darwin`). BigMac is reached as `bigmac.local`, MacFlurry (a MacBook Pro on Wi-Fi with a DHCP address) as `macflurry.local` |
 | Nix | Upstream Nix, owned by nix-darwin (`nix.enable`); same access-token include as Whopper |
-| Shell | Nix's fish as login shell (set during activation). zsh, which macOS apps and Claude Code's Bash tool start, gets the same prompt, tools, aliases, secrets and MCP tokens. Touch ID for sudo |
+| Shell | Nix's zsh as login shell (set during activation), set up as on the other hosts (see [Shell](#shell)). Fish is still installed, with the same prompt, tools, aliases, secrets and MCP tokens. Touch ID for sudo |
 | Apps | Every GUI app is a Homebrew cask or a Mac App Store app. Apps both Macs get are in [modules/darwin/homebrew.nix](modules/darwin/homebrew.nix); the rest are in each host's own list, [bigmac](hosts/bigmac/modules/homebrew.nix) or [macflurry](hosts/macflurry/modules/homebrew.nix) |
 | Runtimes | node, bun, deno and python from mise ([mise.nix](modules/home/darwin/mise.nix)) |
 | Claude Code statusline | Token Station from the `psoldunov/tap` cask; its flake is Linux-only |
@@ -159,19 +162,36 @@ Where the Macs' software comes from:
 | Agent CLIs that release several times a week (codex, mistral-vibe) | Homebrew, upgraded by `update_system` only |
 | Tap-only or macOS-only formulae, plus syncthing (runs as a brew service) | Homebrew, the same set on both Macs |
 | Claude Code, pi | This repo's overlays (`overlays/claude-code`, `overlays/pi-coding-agent`), same versions as Whopper |
+| Atuin | Upstream's release binary at nixpkgs' version ([overlays/atuin-darwin.nix](overlays/atuin-darwin.nix)). A source build fails its tests here and is never in the cache. When nixpkgs bumps atuin, add the new release's hash; until then the Mac compiles it and evaluation warns |
 | Every other CLI | nixpkgs: [workstation/cli.nix](modules/home/workstation/cli.nix) + [darwin/packages.nix](modules/home/darwin/packages.nix) |
 
 To give an app to one Mac only, add it to that host's `homebrew.nix`. Put it in the shared file only when both Macs should have it. nix-darwin merges the lists.
 
 Homebrew's `bin` comes after the Nix profiles on `PATH`, so the Nix copy wins when a tool is in both. `rebuild_system` installs missing brew packages but never upgrades them. With `onActivation.cleanup = "uninstall"`, a rebuild removes anything brew has that neither the shared list nor the host's list names. App data stays.
 
+## Shell
+
+zsh is the login shell on every host, PiHome included. [modules/nixos/shell.nix](modules/nixos/shell.nix) sets it on the NixOS hosts and [modules/darwin/system.nix](modules/darwin/system.nix) on the Macs. Fish is still installed and configured, so running `fish` gives the old setup.
+
+[modules/home/shell/zsh.nix](modules/home/shell/zsh.nix) makes zsh work like fish:
+
+| | |
+|---|---|
+| Typing | Commands are coloured as you type (zsh-syntax-highlighting). A grey suggestion from history follows the cursor, from Atuin's history first. Right or End accepts all of it, Ctrl-Right or Alt-Right one word |
+| Tab | A fuzzy menu (fzf-tab) that matches case-insensitively and on partial words (`f-b` finds `foo-bar`). `<` and `>` switch between groups. Completing `cd` previews each directory |
+| Keys | Emacs-style, as in fish. Home, End, Delete and the Ctrl/Alt arrows work. Alt-Backspace stops at `/`, Alt-E opens the line in `$EDITOR`, Alt-S adds or removes `sudo` |
+| Directories | Typing a directory's name cds into it. `cd -<Tab>` lists the ones visited before |
+| Same as fish | The starship prompt, Atuin on Ctrl-R and Up, `j` (zoxide), `y` (yazi), the fzf widgets, the aliases and `mkcd`. Desktops also get `fzf_kill`, and Whopper gets `open` |
+
+`reload` restarts zsh, for example after a rebuild.
+
 ## `hostConfig`
 
-Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
+Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager modules). Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/pihome/hostConfig.nix](hosts/pihome/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
 
 | Field | Type | Meaning |
 |---|---|---|
-| `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/shell.nix` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish functions (`open`, `fzf_kill`), and the `git` keychain key on servers. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
+| `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish and zsh functions (`open`, `fzf_kill`), and the `git` keychain key on servers. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
 | `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
@@ -185,11 +205,12 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | `nix.nix` | flakes, `auto-optimise-store`, `trusted-users = ["psoldunov"]`, allowUnfree/Insecure/Broken, nix-ld, `stateVersion` |
 | `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel) |
 | `openssh.nix` | openssh with `AllowUsers psoldunov` |
-| `users.nix` | `psoldunov` account (fish, wheel/docker/libvirtd/video) |
+| `users.nix` | `psoldunov` account (wheel/docker/libvirtd/video) |
+| `shell.nix` | zsh as the login shell, fish installed too. PiHome imports this file on its own |
 | `sops.nix` | sops format + age key path |
 | `virtualisation.nix` | docker + libvirtd + containerd, `oci-containers` backend, watchtower |
 | `hardware.nix` | `hardware.graphics` (+32-bit), fwupd, Apple SuperDrive udev rule |
-| `programs.nix` | fish, mtr, git + lfs, iperf3 |
+| `programs.nix` | mtr, git + lfs, iperf3 |
 
 [home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves (see [PiHome](#pihome-dns-appliance)).
 
@@ -358,7 +379,7 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
 |---|---|
 | `nixpkgs` | nixos-unstable — default package set |
 | `nixpkgs-stable` | nixos-25.05 — calibre, Obsidian, prisma-engines |
-| `home-manager` | NixOS module on Whopper, BigTasty and BigKing, nix-darwin module on the Macs |
+| `home-manager` | NixOS module on Whopper, BigTasty, BigKing and PiHome (shell only), nix-darwin module on the Macs |
 | `disko` | BigKing's NVMe partitioning, used by nixos-anywhere at install time |
 | `asustor-platform-driver`, `lcm` | BigKing's ASUSTOR kernel drivers (NixOS module) and the source of its LCD daemon |
 | `nix-darwin` | The Macs' system layer |
@@ -489,7 +510,7 @@ Notable secrets:
 | `STEAM_API_KEY`, `STEAMGRIDDB_API_KEY` | Whopper system | `programs.steam.presence` |
 | `SYNCTHING_GUI_PASSWORD` | both (system, `shared.yaml`) | `services.syncthing.guiPasswordFile` |
 | `WIFI_PASSWORD` | BigTasty (system, `shared.yaml`) | wpa_supplicant `secretsFile`, rendered by a sops template (only while `networking.wireless` is enabled) |
-| `SHELL_SECRETS` | Whopper, BigKing + the Macs (user, `shared.yaml`); BigTasty has its own | fish/bash init in shared `shell.nix`; shell-only env exports |
+| `SHELL_SECRETS` | Whopper, BigKing + the Macs (user, `shared.yaml`); BigTasty has its own | fish/zsh/bash init from shared `sops.nix`; shell-only env exports |
 | `SSH_KEY_GITHUB`, `SSH_KEY_ID_ED25519`, `SSH_KEY_ID_RSA`, `SSH_KEY_AGENCY_VPS`, `SSH_KEY_FLYWHEEL`, `SSH_KEY_SECRETS`, `SSH_KEY_GIT_SK`, `SSH_KEY_SUDO_*` | Whopper + the Macs (user, `shared.yaml`) | linked to `~/.ssh/<name>` by [workstation/ssh.nix](modules/home/workstation/ssh.nix); public halves in [lib/ssh-keys.nix](lib/ssh-keys.nix) |
 | `NIX_ACCESS_TOKENS` | Whopper + the Macs (system, `shared.yaml`) | GitHub token for the private flake inputs, included into nix.conf |
 | `CLAUDE_SANITY_MCP_BEARER`, `N8N_ACCESS_TOKEN`, `NOCODB_API_KEY`, `PAPERLESS_API_KEY` | all hosts (user, `shared.yaml`) | Claude Code MCP servers ([mcp.nix](modules/home/programs/claude-code/mcp.nix)) |

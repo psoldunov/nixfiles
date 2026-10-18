@@ -105,7 +105,7 @@ on_mac() {
   done
 
   sudo "$sys/sw/bin/darwin-rebuild" switch --flake "$src#$host"
-  echo "$host switched. Open a new terminal: the login shell is now Nix's fish."
+  echo "$host switched. Open a new terminal: the login shell is now Nix's zsh."
 }
 
 if [ "${2:-}" = "--on-mac" ]; then
