@@ -152,7 +152,13 @@
   pomodoro = import ./pomodoro.nix {inherit lib pkgs button icon;};
   pomodoroKey = pomodoro.key;
 
-  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon muteIcon usageKey weatherKey pomodoroKey;};
+  # A key for the Clokkr time tracker from ../clokkr.nix.
+  clokkrKey = import ./clokkr.nix {
+    inherit lib pkgs button appIcon;
+    clokkr = config.programs.clokkr.package;
+  };
+
+  decks = import ./decks.nix {inherit config pkgs button icon appIcon launch playerIcon muteIcon usageKey weatherKey pomodoroKey clokkrKey;};
 
   toml = pkgs.formats.toml {};
   deckDir = pkgs.linkFarm "deckmaster-decks" (lib.mapAttrsToList (name: deck: {
@@ -189,7 +195,7 @@ in {
       ];
       # SIGHUP makes deckmaster re-read the current deck file.
       ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-      # The usage and weather keys keep the images they draw in
+      # The usage, weather and Clokkr keys keep the images they draw in
       # $RUNTIME_DIRECTORY, which systemd removes when the daemon stops. The
       # pomodoro key keeps its own under $XDG_RUNTIME_DIR, so a running timer
       # outlives a restart.

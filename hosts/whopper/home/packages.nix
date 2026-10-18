@@ -24,9 +24,7 @@
     cargo
     obsidian
     plexamp
-    jellyfin-desktop
     fladder
-    nocturne
     pcsx2
     duckstation
     # P.T. from the PS4 PKG; the game files and saves live in
