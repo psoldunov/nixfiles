@@ -156,11 +156,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1792264465,
-        "narHash": "sha256-CYGh4o8BN3cdCJDhXkxuRCH2i4lsVUigAkUJz8x8A+Q=",
+        "lastModified": 1792304777,
+        "narHash": "sha256-UmNm3v4A/VY32EmbfHBRxF06YNJqgZ3Cm0Mvh6raiBo=",
         "owner": "psoldunov",
         "repo": "clokkr",
-        "rev": "c3f2d4988edfbf79c20767ca352c63e2c31f73ec",
+        "rev": "64f105df5f9b1430ffef5ff06766872498ab956c",
         "type": "github"
       },
       "original": {
