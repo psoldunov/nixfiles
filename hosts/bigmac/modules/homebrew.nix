@@ -27,7 +27,6 @@
       "ledger-wallet"
       "loopback"
       "motrix"
-      "notunes"
       "onyx"
       "qflipper"
       "renamer"

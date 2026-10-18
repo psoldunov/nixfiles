@@ -105,6 +105,7 @@
       "nextcloud"
       "notion"
       "notion-calendar"
+      "notunes"
       "numi"
       "obsidian"
       "orbstack"
