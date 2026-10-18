@@ -24,6 +24,7 @@
   usageKey,
   weatherKey,
   pomodoroKey,
+  clokkrKey,
 }: let
   back = index:
     button index {
@@ -232,6 +233,9 @@ in {
       # The pomodoro timer from ./pomodoro.nix. A tap starts, pauses or
       # resumes it; holding the key stops it.
       (pomodoroKey 10)
+      # The Clokkr timer from ./clokkr.nix. A tap pauses it or starts the
+      # current task; holding the key opens the popover to pick a task.
+      (clokkrKey 11)
       # Shows the muted speaker while the default output is muted.
       (button 12 {
         label = "Mute";
@@ -301,7 +305,7 @@ in {
   ];
 
   # Icons come from the installed packages the launchers start: ../../packages.nix
-  # (Cider, Plexamp, Fladder, Nocturne), ../../../modules/packages.nix
+  # (Cider, Plexamp, Fladder), ../../../modules/packages.nix
   # (Rhythmbox) and the plasma6 module (Elisa).
   media.keys =
     [
@@ -331,11 +335,6 @@ in {
         label = "Fladder";
         icon = appIcon pkgs.fladder "fladder";
         action.exec = launch "fladder";
-      })
-      (button 6 {
-        label = "Nocturne";
-        icon = appIcon pkgs.nocturne "com.jeffser.Nocturne";
-        action.exec = launch "com.jeffser.Nocturne";
       })
     ]
     ++ playerKeys
