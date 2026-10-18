@@ -5,13 +5,9 @@
   nixpkgs.overlays = [
     (import ../../overlays/claude-code)
     (import ../../overlays/pi-coding-agent)
-    # nixos-unstable moves on Linux results, so Hydra's aarch64-darwin builds
-    # can lag behind it and the Mac compiles the gap itself. atuin's test
-    # suite segfaults on macOS (history_delete, SIGSEGV), so build it
-    # without the tests. Leaf package: nothing else links it.
+    # Upstream's release binary, so no Mac compiles atuin.
+    (import ../../overlays/atuin-darwin.nix)
     (_final: prev: {
-      atuin = prev.atuin.overrideAttrs {doCheck = false;};
-
       # nixpkgs builds this for Linux only. Upstream's configure handles
       # Darwin (it links a -bundle against the SDK's OpenPAM), so drop
       # linux-pam and allow the platform. Its /proc command-line lookup just
