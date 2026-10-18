@@ -3,6 +3,7 @@
   imports = [
     ./git/git.nix
     ./shell/shell.nix
+    ./shell/fastfetch
     ./nix-index.nix
     ./sops.nix
     ./programs/claude-code
