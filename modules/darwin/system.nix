@@ -32,19 +32,25 @@ in {
   # skips that lookup, so every shell and nix-built script gets one.
   environment.variables.LANG = "en_US.UTF-8";
 
-  # Puts fish in /etc/shells and loads the nix-darwin environment (PATH and
-  # friends) in every fish, login or not, ssh commands included.
+  # zsh is the login shell and fish stays installed. Both go in /etc/shells
+  # and load the nix-darwin environment (PATH and friends) in every shell,
+  # login or not, ssh commands included.
+  programs.zsh = {
+    enable = true;
+    # Home Manager's ~/.zshrc runs compinit itself (modules/home/shell/zsh.nix).
+    enableGlobalCompInit = false;
+  };
   programs.fish.enable = true;
-  environment.shells = [pkgs.fish];
+  environment.shells = [pkgs.zsh pkgs.fish];
 
   # nix-darwin only sets the login shell of users it creates, and this
-  # account predates it. The old login shell was Homebrew's fish, which the
-  # homebrew cleanup removes, so pin the Nix one here.
+  # account predates it. Pin Nix's zsh, the one Home Manager configures,
+  # rather than macOS's /bin/zsh.
   system.activationScripts.postActivation.text = lib.mkAfter ''
     loginShell="$(dscl . -read /Users/psoldunov UserShell | awk '{print $2}')"
-    if [ "$loginShell" != "/run/current-system/sw/bin/fish" ]; then
-      echo "setting psoldunov's login shell to /run/current-system/sw/bin/fish"
-      dscl . -create /Users/psoldunov UserShell /run/current-system/sw/bin/fish
+    if [ "$loginShell" != "/run/current-system/sw/bin/zsh" ]; then
+      echo "setting psoldunov's login shell to /run/current-system/sw/bin/zsh"
+      dscl . -create /Users/psoldunov UserShell /run/current-system/sw/bin/zsh
     fi
 
     # pam_ssh_agent_auth refuses key files under a group-writable directory

@@ -13,6 +13,9 @@
   isLinuxDesktop = isDesktop && !isDarwin;
   homeDir = config.home.homeDirectory;
 in {
+  # zsh, the login shell everywhere. Fish and bash stay set up below.
+  imports = [./zsh.nix];
+
   home.sessionVariables =
     {
       GOPATH = "${homeDir}/.go";
@@ -36,16 +39,10 @@ in {
 
   programs.fish = {
     enable = true;
-    shellAliases =
-      {
-        reload = "source ~/.config/fish/config.fish && echo 'FISH config reloaded.'";
-      }
-      // lib.optionalAttrs isDesktop {
-        suspend =
-          if isDarwin
-          then "pmset sleepnow"
-          else "systemctl suspend";
-      };
+    shellAliases = {
+      reload = "source ~/.config/fish/config.fish && echo 'FISH config reloaded.'";
+    };
+    # ./zsh.nix has the same functions for zsh.
     functions =
       {
         mkcd = {
@@ -66,48 +63,40 @@ in {
     shellInit = ''
       set fish_greeting
     '';
-    shellInitLast = ''
-      if test -r ${config.sops.secrets.SHELL_SECRETS.path}
-        source ${config.sops.secrets.SHELL_SECRETS.path}
-      end
-    '';
   };
 
-  home.shellAliases = {
-    ls = "lsd -laFh";
-    # macOS has trash(1) since 15.
-    rm =
-      if isDarwin
-      then "trash"
-      else "gio trash";
-    fucking = "sudo";
-    cat = "bat -p";
-    c = "claude";
-  };
+  # Every shell gets these. SHELL_SECRETS is sourced by ../sops.nix, so a
+  # host without secrets (PiHome) can import this file on its own.
+  home.shellAliases =
+    {
+      ls = "lsd -laFh";
+      # macOS has trash(1) since 15.
+      rm =
+        if isDarwin
+        then "trash"
+        else "gio trash";
+      fucking = "sudo";
+      cat = "bat -p";
+      c = "claude";
+    }
+    // lib.optionalAttrs isDesktop {
+      suspend =
+        if isDarwin
+        then "pmset sleepnow"
+        else "systemctl suspend";
+    };
 
-  # macOS apps, VS Code's terminal and Claude Code's Bash tool start zsh, not
-  # the login shell (fish). So on BigMac zsh gets the same setup: aliases and
-  # session variables come from home.*, every HM integration here and in the
-  # sibling modules (starship, zoxide, atuin, fzf, yazi, direnv, mise,
-  # nix-index) follows `programs.zsh.enable`, and the secrets and MCP tokens
-  # are sourced like in bash (here, ../programs/claude-code/mcp.nix and
-  # ../workstation/mailspring.nix).
-  programs.zsh = {
-    enable = isDarwin;
-    enableCompletion = true;
-    initContent = ''
-      [ -r ${config.sops.secrets.SHELL_SECRETS.path} ] && source ${config.sops.secrets.SHELL_SECRETS.path}
-    '';
-  };
+  # What the aliases and MANPAGER run, so they work on the servers too.
+  # gio (in glib) backs `rm` on Linux.
+  home.packages =
+    [pkgs.bat pkgs.lsd]
+    ++ lib.optional (!isDarwin) pkgs.glib;
 
   programs.bash = {
     enable = true;
     # VTE terminals (GNOME Terminal, Ptyxis and friends) are Linux-only.
     enableVteIntegration = !isDarwin;
     enableCompletion = true;
-    bashrcExtra = ''
-      [ -r ${config.sops.secrets.SHELL_SECRETS.path} ] && source ${config.sops.secrets.SHELL_SECRETS.path}
-    '';
   };
 
   # On macOS the launchd ssh-agent and the Keychain do this job
@@ -181,9 +170,5 @@ in {
     enableFishIntegration = true;
     enableBashIntegration = true;
     shellWrapperName = "y";
-  };
-
-  programs.fastfetch = {
-    enable = true;
   };
 }

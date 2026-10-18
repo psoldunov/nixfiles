@@ -337,27 +337,25 @@
               catppuccin.homeModules.catppuccin
               plasma-manager.homeModules.plasma-manager
               (
-                { pkgs, ... }:
-                let
+                {pkgs, ...}: let
                   zen = zen-browser.packages."${system}";
                   # zen-browser-flake's bot hashed 1.23.3b before Zen published
                   # the release (youwen5/zen-browser-flake#22). The hash below is
                   # GitHub's digest of the published asset. Applies to 1.23.3b
                   # only, so the next version bump drops it on its own.
                   zen-unwrapped =
-                    if zen.zen-browser-unwrapped.version == "1.23.3b" then
+                    if zen.zen-browser-unwrapped.version == "1.23.3b"
+                    then
                       zen.zen-browser-unwrapped.overrideAttrs {
                         src = pkgs.fetchurl {
                           url = "https://github.com/zen-browser/desktop/releases/download/1.23.3b/zen.linux-x86_64.tar.xz";
                           hash = "sha256-uyBF0+IWVNQP6EElAJLurf0sH8gx7vtQkiJ3PIvcoUk=";
                         };
                       }
-                    else
-                      zen.zen-browser-unwrapped;
-                in
-                {
+                    else zen.zen-browser-unwrapped;
+                in {
                   home.packages = [
-                    (zen.default.override { zen-browser-unwrapped = zen-unwrapped; })
+                    (zen.default.override {zen-browser-unwrapped = zen-unwrapped;})
                   ];
                 }
               )
@@ -459,12 +457,28 @@
     };
 
     # Independent household DNS appliance; deliberately omits the full server
-    # baseline and Home Manager. Build its SD image on aarch64-linux.
+    # baseline. Home Manager brings only the shared shell config
+    # (hosts/pihome/home.nix). Build its SD image on aarch64-linux.
     nixosConfigurations.PiHome = mkHost {
       system = "aarch64-linux";
       modules = [
         ./hosts/pihome
         sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            extraSpecialArgs = {
+              pkgs-stable = mkPkgsStable "aarch64-linux";
+              hostConfig = import ./hosts/pihome/hostConfig.nix;
+            };
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-backup";
+            users = {
+              psoldunov = import ./hosts/pihome/home.nix;
+            };
+          };
+        }
       ];
     };
 

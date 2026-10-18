@@ -33,7 +33,6 @@ in {
     end
   '';
   programs.bash.bashrcExtra = lib.mkAfter posixExport;
-  # zsh is only enabled on macOS (../shell/shell.nix).
   programs.zsh.initContent = lib.mkAfter posixExport;
 
   # The `:-` default keeps Claude Code's config valid when Mailspring has not

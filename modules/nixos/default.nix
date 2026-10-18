@@ -9,6 +9,7 @@
     ./overlays.nix
     ./openssh.nix
     ./users.nix
+    ./shell.nix
     ./sops.nix
     ./virtualisation.nix
     ./hardware.nix

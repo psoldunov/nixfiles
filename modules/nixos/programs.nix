@@ -1,7 +1,6 @@
-# Shell + everyday-CLI baseline. Everything here was previously
-# duplicated across both hosts.
+# Everyday-CLI baseline. Everything here was previously duplicated across
+# both hosts. The shells are in ./shell.nix.
 {...}: {
-  programs.fish.enable = true;
   programs.mtr.enable = true;
   programs.git = {
     enable = true;

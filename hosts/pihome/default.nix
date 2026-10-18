@@ -1,12 +1,10 @@
-{
-  modulesPath,
-  pkgs,
-  ...
-}: let
+{modulesPath, ...}: let
   sshKeys = import ../../lib/ssh-keys.nix;
 in {
   imports = [
     ./hardware.nix
+    # The login shell every host shares; ./home.nix brings its config.
+    ../../modules/nixos/shell.nix
     ../../modules/nixos/home-dns
     (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
   ];
@@ -48,7 +46,6 @@ in {
     isNormalUser = true;
     uid = 1000;
     description = "Philipp Soldunov";
-    shell = pkgs.fish;
     extraGroups = ["wheel"];
     openssh.authorizedKeys.keys =
       sshKeys.authorized
@@ -57,7 +54,6 @@ in {
         sshKeys.identities."sudo-pihome"
       ];
   };
-  programs.fish.enable = true;
 
   # A dedicated forwarded-agent identity authorizes Pi sudo; ordinary login
   # keys remain able to SSH in but cannot escalate through PAM.

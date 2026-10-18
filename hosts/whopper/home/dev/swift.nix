@@ -169,9 +169,9 @@ in {
 
   # Offline, idempotent: writes config.json and the bin dir, installs no
   # toolchain. --platform skips os-release detection, which rejects NixOS.
-  # --no-modify-profile because fish config is home-manager owned. init moves
-  # its own executable into the bin dir, which fails from the read-only
-  # store, so it runs from a writable copy.
+  # --no-modify-profile because the shell configs are home-manager owned.
+  # init moves its own executable into the bin dir, which fails from the
+  # read-only store, so it runs from a writable copy.
   home.activation.swiftlyInit = lib.hm.dag.entryAfter ["writeBoundary"] ''
     if [ ! -f "${swiftlyHome}/config.json" ]; then (
       ${swiftlyEnv}
