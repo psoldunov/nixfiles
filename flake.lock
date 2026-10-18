@@ -521,21 +521,6 @@
         "type": "github"
       }
     },
-    "nix-flatpak": {
-      "locked": {
-        "lastModified": 1791644268,
-        "narHash": "sha256-f7Z4PmfnRxf7+37NN48ep+KsQauGtL5REE99pJtMNp8=",
-        "owner": "gmodena",
-        "repo": "nix-flatpak",
-        "rev": "02656785ab214fa1c9655f1beaaf0269eeeec2ca",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gmodena",
-        "repo": "nix-flatpak",
-        "type": "github"
-      }
-    },
     "nix-gaming": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -816,7 +801,6 @@
         "linear": "linear",
         "mattpocock-skills": "mattpocock-skills",
         "nix-darwin": "nix-darwin",
-        "nix-flatpak": "nix-flatpak",
         "nix-gaming": "nix-gaming",
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-stable": "nixpkgs-stable",

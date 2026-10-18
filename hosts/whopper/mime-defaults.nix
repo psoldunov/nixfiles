@@ -129,4 +129,6 @@ in
     "x-scheme-handler/linear" = "linear.desktop";
     "x-scheme-handler/notion" = "notion.desktop";
     "x-scheme-handler/numero" = "dev.soldunov.numero.desktop";
+    # SteamGridDB's "Boop" buttons; sgdboop comes from modules/packages.nix.
+    "x-scheme-handler/sgdb" = "com.steamgriddb.SGDBoop.desktop";
   }

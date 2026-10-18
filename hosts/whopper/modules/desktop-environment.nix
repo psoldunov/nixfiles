@@ -45,42 +45,15 @@
   # ktexteditor is only listed for Kate's save-as-root helper. Without Konsole,
   # Dolphin's embedded F4 terminal panel is unavailable; "Open Terminal Here"
   # still goes to Ghostty through kdeglobals (home/desktop/plasma.nix).
+  # There is no Flatpak, and apps come from Nix, so Discover goes too. The
+  # plasma6 module still installs it while services.fwupd is on (it lives in
+  # modules/nixos/hardware.nix); fwupdmgr covers firmware updates.
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     konsole
     kate
     ktexteditor
+    discover
   ];
-
-  # Flatpak
-  services.flatpak = {
-    enable = true;
-    update.onActivation = true;
-    packages = [
-      "com.github.tchx84.Flatseal"
-      "com.steamgriddb.SGDBoop"
-    ];
-    overrides = {
-      global = {
-        Context = {
-          filesystems = [
-            "${pkgs.kdePackages.breeze-icons}/share/icons:ro"
-            "${pkgs.kdePackages.breeze}/share/icons:ro"
-            "${pkgs.kdePackages.breeze-gtk}/share/themes:ro"
-            "/run/current-system/sw/share:ro"
-            "/mnt/Games/Emulation:rw"
-            "/run/current-system/sw/bin/:ro"
-          ];
-          sockets = ["wayland" "!x11" "!fallback-x11"];
-        };
-
-        Environment = {
-          ICON_THEME = "breeze-dark";
-          GTK_THEME = "Breeze-Dark";
-          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-        };
-      };
-    };
-  };
 
   # X server is disabled (Wayland-only) but xkb keymap still configured
   # for TTY fallback and tools that consult it.

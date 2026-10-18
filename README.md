@@ -200,7 +200,7 @@ Per-host knobs threaded via `specialArgs`. Shared schema in [hosts/whopper/hostC
 | File | Purpose |
 |---|---|
 | `boot.nix` | amdgpu/nfs initrd modules, Plymouth (`nixos-bgrt`), quiet boot, kernel params |
-| `desktop-environment.nix` | Plasma 6 + SDDM (Wayland), XDG + mime defaults, Flatpak, partition-manager, KDE Connect (+ firewall 1714-1764), gvfs/udisks2 |
+| `desktop-environment.nix` | Plasma 6 + SDDM (Wayland), XDG + mime defaults, partition-manager, KDE Connect (+ firewall 1714-1764), gvfs/udisks2 |
 | `fonts.nix` | Font packages (incl. apple-fonts) |
 | `hardware.nix` | AMD VA-API/VDPAU packages, OpenCL, Logitech/Solaar, Bluetooth, LibrePods, xone, SANE, printer, Stream Deck udev rule |
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
@@ -365,7 +365,6 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
 | `plasma-manager` | Whopper declarative KDE Plasma config |
 | `sops-nix` | NixOS + HM secret management |
 | `nix-gaming` | Whopper pipewire low-latency + platform-optimizations |
-| `nix-flatpak` | Whopper Flatpak declarations |
 | `catppuccin`, `catppuccin-vsc` | Whopper. The catppuccin modules are imported with theming off; catppuccin-vsc supplies the VS Code theme |
 | `vscode-server` | Both hosts — VS Code Remote-SSH support |
 | `zen-browser`, `apple-fonts` | Whopper |
