@@ -95,6 +95,8 @@
       SteamDeck.id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
       BigMac.id = "SDLAT7V-MXGQHXG-W2QIP3S-OUS6232-LJ4QF36-IUR4QJ7-C32QKGO-BVJOXQS";
       MacFlurry.id = "KURK5RF-HZKBXEU-OBBUQ6E-D3PC723-I2ZPRII-54R5ENX-VMALIIA-WOII4QJ";
+      # From hosts/shackstack/modules/syncthing.nix's first start.
+      ShackStack.id = "WBFYFYV-GNAXSFN-ASQBELJ-VM35BOL-YM4PXG7-OGU3RGF-R3ZUZLN-UZHD6Q2";
     };
     settings.folders.Obsidian = {
       id = "Obsidian";
@@ -112,7 +114,7 @@
       id = "default";
       path = "/home/psoldunov/Sync";
       label = "Sync Folder";
-      devices = ["BigTasty" "SteamDeck" "BigMac" "MacFlurry"];
+      devices = ["BigTasty" "SteamDeck" "BigMac" "MacFlurry" "ShackStack"];
     };
     overrideFolders = true;
     overrideDevices = true;
