@@ -25,6 +25,10 @@
       confirm-close-surface = false;
       window-padding-x = "8,4";
       window-padding-y = 8;
+      # Size of every new window, in cells (columns x rows). Tabs and splits
+      # keep their window's size.
+      window-width = 128;
+      window-height = 38;
       # Already the default on Linux; macOS keeps the app running otherwise.
       quit-after-last-window-closed = true;
       # Shift+Enter sends ESC+CR, which Claude Code reads as a newline.
