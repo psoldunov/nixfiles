@@ -73,22 +73,27 @@ From then on, update it like any other host: `rebuild_system ShackStack`, or the
 
 ### Restore saves
 
-Steam Cloud brings most saves back by itself. For the rest:
+Steam Cloud brings most saves back by itself. For the rest, run these on ShackStack after `ssh -A shackstack`, so the forwarded agent opens BigKing too. ShackStack has no `bigking` alias, so the commands use its address.
 
-1. Switch to Desktop and quit Steam.
+1. Switch to Desktop. Steam starts there in the tray: quit it from the tray icon.
 2. Copy Steam's per-account folder back:
 
    ```sh
-   rsync -a bigking:/volume1/Backup/ShackStack-bazzite/userdata/ ~/.local/share/Steam/userdata/
+   rsync -a psoldunov@10.24.24.3:/volume1/Backup/ShackStack-bazzite/userdata/ ~/.local/share/Steam/userdata/
    ```
 
-3. For a game without cloud saves, install it and launch it once, so Proton creates its prefix. Then copy its saves back:
+3. Copy the saves from each game's Proton prefix back, whether the game is installed yet or not. Steam Cloud does the same: it wrote Silent Hill 2's saves into a prefix Proton had not created yet. The command skips prefixes that already exist and files already in place, and leaves out the installer logs in `Temp`:
 
    ```sh
-   rsync -a "bigking:/volume1/Backup/ShackStack-bazzite/steamapps/compatdata/<appid>/pfx/drive_c/users/steamuser/" ~/.local/share/Steam/steamapps/compatdata/<appid>/pfx/drive_c/users/steamuser/
+   cd ~/.local/share/Steam/steamapps/compatdata
+   rsync -a -m --ignore-existing $(for d in */; do echo "--exclude=/$d"; done) --exclude=/0/ --exclude='/*/pfx/drive_c/users/steamuser/AppData/Local/Temp/' psoldunov@10.24.24.3:/volume1/Backup/ShackStack-bazzite/steamapps/compatdata/ ./
    ```
 
    `grep '"name"' /volume1/Backup/ShackStack-bazzite/steamapps/appmanifest_<appid>.acf` on BigKing shows which game an app ID is.
+
+4. Return to Gaming Mode.
+
+Done on 2026-10-19: 818 files (213 MB) of `userdata`, and Proton saves for 23 games (3,072 files, 1.5 GB). Silent Hill 2 was already installed with its cloud saves, so its prefix was left alone. Not checked yet: that each of the 23 games finds its saves on its first launch.
 
 ### Decky Loader
 
