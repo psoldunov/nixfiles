@@ -130,5 +130,6 @@ What the old install looked like, read from it before the wipe:
 | Session | `gamescope-session-plus ogui-steam`: ChimeraOS's gamescope-session-plus with OpenGamepadUI's overlay. Its Steam environment matches Valve's session that Jovian runs (HDR, VRR, tearing, mangoapp) |
 | Display | `modes.cfg`: Sony at 3840x2160@120. EDID: VRR 48–120 Hz, HDR10 and HLG |
 | CEC | `/etc/default/cec-control`: `CEC_MODE=dgpu`, wake, set source, standby on sleep and power-off, but every unit disabled |
+| CEC test (2026-10-19) | Standby sent over CEC, and the TV reported `standby`. `/dev/cec0` kept `4.0.0.0` for the 60 s it stayed off. Image View On woke it within 2 s. So the adapter keeps the link up in standby and CEC can wake the TV. Not tested: hours-long standby, and the remote keys |
 | Firmware | AMI BIOS 1656 (2024-04-18), UEFI, Secure Boot off |
 | Network | `enp7s0`, MAC `cc:28:aa:86:dd:6a`, static `10.24.24.7` from NetworkManager |
