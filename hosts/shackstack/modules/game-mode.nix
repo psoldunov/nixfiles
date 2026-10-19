@@ -6,11 +6,7 @@
 # HDR, VRR and the 4K@120 mode are Steam's own display settings. Valve's
 # session script already advertises them (STEAM_GAMESCOPE_HDR_SUPPORTED,
 # STEAM_GAMESCOPE_VRR_SUPPORTED), so gamescope needs no flags here.
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   jovian.steam = {
     enable = true;
     autoStart = true;
@@ -43,9 +39,12 @@
     protontricks.enable = true;
   };
 
-  # Jovian ships scx_lavd but leaves it stopped for steamos-manager to start.
-  # Run it from boot instead, as the scheduler Bazzite's kernel used.
-  systemd.services.scx.wantedBy = lib.mkForce ["multi-user.target"];
+  # Jovian turns on scx_lavd (mkDefault) for steamos-manager to start. Off
+  # here: the i5-12600K has P- and E-cores, and LAVD kept moving Sniper
+  # Elite Resistance's audio mixing thread onto the E-cores, where it could
+  # not keep up and the sound crackled. The kernel's own scheduler keeps
+  # busy threads on the P-cores, as on Whopper (i9-12900K, also hybrid).
+  services.scx.enable = false;
 
   services.pipewire = {
     enable = true;

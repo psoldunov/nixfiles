@@ -147,7 +147,7 @@ The living-room PC. It ran Bazzite until NixOS replaced it, and the goal is the 
 | | |
 |---|---|
 | Hardware | ASUS ROG Strix B760-I, i5-12600K (iGPU off in the firmware), 32 GB, Radeon RX 7800 XT, Samsung 980 PRO 2 TB behind Intel VMD |
-| Gaming Mode | Jovian-NixOS: Valve's gamescope session with autologin, steamos-manager, Decky Loader, Proton-GE, and SteamOS's own Plymouth splash. HDR, VRR and 4K@120 are set in Steam's display settings. Kernel `linuxPackages_latest` with the `scx_lavd` scheduler |
+| Gaming Mode | Jovian-NixOS: Valve's gamescope session with autologin, steamos-manager, Decky Loader, Proton-GE, and SteamOS's own Plymouth splash. HDR, VRR and 4K@120 are set in Steam's display settings. Kernel `linuxPackages_latest` on its default CPU scheduler. Jovian's `scx_lavd` is off: it moved game audio threads onto the 12600K's E-cores, where the sound crackled |
 | Desktop mode | Plasma 6 with the Vapor theme at 200% scale, Firefox, Telegram and 1Password, and a "Return to Gaming Mode" launcher on the panel |
 | TV | Sony Bravia (2021) on HDMI 4 through a DP→HDMI 2.1 adapter. HDMI-CEC runs through the adapter: the TV turns on at boot and resume and goes to standby before sleep and power-off, and its remote navigates Steam ([tv-cec](hosts/shackstack/modules/tv-cec/default.nix)) |
 | Controllers | DualSense and two Xbox Wireless pads over Bluetooth (AX211), wake from suspend enabled; Logitech Unifying keyboard and mouse |

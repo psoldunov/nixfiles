@@ -7,8 +7,8 @@
   ...
 }: {
   # Bazzite ran a gaming-tuned kernel. The nearest match that needs no
-  # local compile is the newest mainline kernel plus the LAVD sched_ext
-  # scheduler, which ./game-mode.nix starts at boot.
+  # local compile is the newest mainline kernel. It runs the kernel's own
+  # CPU scheduler, not LAVD (see ./game-mode.nix for why).
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # An appliance boot: no menu (hold Space to get it), no text on the TV,
