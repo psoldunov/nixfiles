@@ -1,7 +1,7 @@
 # Desktop Mode on the TV, via plasma-manager: SteamOS's Vapor theme, 200%
 # scale for the couch, no screen lock or idle sleep (Gaming Mode owns
-# power), one panel with the way back to Gaming Mode on it, and Steam in the
-# tray.
+# power), one panel with the way back to Gaming Mode on it, and Steam and
+# 1Password in the tray.
 #
 # NOTE: because `panels` is defined here, plasma-manager owns the panel
 # layout; edits in System Settings are reset on the next rebuild.
@@ -35,18 +35,25 @@
     fi
   '';
 
-  # Steam starts in the tray whenever Desktop Mode does, as on Whopper
-  # (../../whopper/home/xdg/autostart.nix); -silent means no main window.
-  # Steam's "Run Steam when my computer starts" writes this same file name,
-  # so `force` takes it back on rebuild. Gaming Mode's session runs no XDG
-  # autostart; OnlyShowIn keeps it that way.
-  steamAutostart = pkgs.makeDesktopItem {
-    name = "steam";
-    desktopName = "Steam";
-    icon = "steam";
-    exec = "${desktopSteamExe} -silent";
-    terminal = false;
-    onlyShowIn = ["KDE"];
+  # Steam and 1Password start in the tray whenever Desktop Mode does, as on
+  # Whopper (../../whopper/home/xdg/autostart.nix). The file names are the
+  # ones the apps' own "start at login" settings write, so `force` takes them
+  # back on rebuild. Gaming Mode's session runs no XDG autostart; OnlyShowIn
+  # keeps it that way.
+  autostart = {
+    name,
+    desktopName,
+    icon,
+    exec,
+  }: {
+    "autostart/${name}.desktop" = {
+      source = "${pkgs.makeDesktopItem {
+        inherit name desktopName icon exec;
+        terminal = false;
+        onlyShowIn = ["KDE"];
+      }}/share/applications/${name}.desktop";
+      force = true;
+    };
   };
 
   # KWin has no declarative output scale or mode, so they are reasserted at
@@ -65,10 +72,23 @@
     exit 0
   '';
 in {
-  xdg.configFile."autostart/steam.desktop" = {
-    source = "${steamAutostart}/share/applications/steam.desktop";
-    force = true;
-  };
+  xdg.configFile = lib.mergeAttrsList [
+    # -silent: no main window.
+    (autostart {
+      name = "steam";
+      desktopName = "Steam";
+      icon = "steam";
+      exec = "${desktopSteamExe} -silent";
+    })
+    # The package from the system module, which carries the polkit policy
+    # owners (../modules/desktop.nix); --silent keeps the window closed.
+    (autostart {
+      name = "com.onepassword.OnePassword";
+      desktopName = "1Password";
+      icon = "1password";
+      exec = "${lib.getExe osConfig.programs._1password-gui.package} --silent";
+    })
+  ];
   xdg.dataFile."applications/steam.desktop".source = desktopSteamEntry;
 
   systemd.user.services.tv-output = {
@@ -96,6 +116,15 @@ in {
 
     # Installed system-wide in ../modules/desktop.nix.
     workspace.lookAndFeel = "com.valve.vapor.desktop";
+
+    # Konsole is gone (../modules/desktop.nix), so Dolphin's "Open Terminal
+    # Here" goes to Ghostty, as on Whopper (hosts/whopper/home/desktop/
+    # plasma.nix explains the flag). TerminalService would win over
+    # TerminalApplication, so null deletes it.
+    configFile.kdeglobals.General = {
+      TerminalApplication = "ghostty --gtk-single-instance=false";
+      TerminalService = null;
+    };
 
     # Nobody locks a TV; Gaming Mode decides when the box sleeps.
     kscreenlocker = {

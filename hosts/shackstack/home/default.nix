@@ -1,10 +1,13 @@
-# ShackStack's home: the shared shell and the Plasma defaults for Desktop
-# Mode. A gaming box, so none of the rest of modules/home (Claude Code, pi,
-# the UniFi client, sops secrets) and no workstation module.
+# ShackStack's home: the shared shell, the Plasma defaults for Desktop Mode
+# and its apps. A gaming box, so none of the rest of modules/home (Claude
+# Code, pi, the UniFi client, sops secrets) and, of the workstation modules,
+# only Ghostty.
 {lib, ...}: {
   imports = [
     ../../../modules/home/shell/shell.nix
     ../../../modules/home/shell/fastfetch
+    ../../../modules/home/workstation/ghostty.nix
+    ./apps.nix
     ./plasma.nix
   ];
 
