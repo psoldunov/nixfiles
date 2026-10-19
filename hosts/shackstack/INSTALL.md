@@ -1,6 +1,6 @@
 # Installing ShackStack
 
-ShackStack is the living-room PC. It ran Bazzite until NixOS replaced it. These steps wipe its NVMe and install NixOS with [nixos-anywhere](https://github.com/nix-community/nixos-anywhere) from a USB installer. Steam downloads the games again afterwards.
+ShackStack is the living-room PC. It ran Bazzite until NixOS replaced it on 2026-10-19. These steps wipe its NVMe and install NixOS over the network with [nixos-anywhere](https://github.com/nix-community/nixos-anywhere): the running system kexecs into the installer, so no USB stick is needed. Steam downloads the games again afterwards.
 
 The saves were copied off before the wipe, to BigKing's `/volume1/Backup/ShackStack-bazzite` (about 1.7 GB):
 
@@ -12,46 +12,51 @@ The saves were copied off before the wipe, to BigKing's `/volume1/Backup/ShackSt
 
 - The backup is there: `ssh bigking du -sh /volume1/Backup/ShackStack-bazzite`.
 - Optional, on Bazzite: the CEC standby test under [TV and HDMI-CEC](#tv-and-hdmi-cec). It tells you before the wipe whether CEC can wake the TV.
-- A USB stick with the NixOS minimal ISO (unstable), and a USB keyboard.
 - Whopper has been rebuilt from this branch. The install itself doesn't need that, but `rebuild_system ShackStack` afterwards needs the `shackstack` SSH alias and `~/.ssh/sudo-shackstack` it brings.
+- Bazzite allows kexec: `cat /proc/sys/kernel/kexec_load_disabled` prints `0` and `/sys/kernel/security/lockdown` shows `[none]`. With Secure Boot off, both are the default.
 
-## 1. Boot the installer
+## 1. Give nixos-anywhere root
 
-1. Power on and press F2 or Del for the firmware setup. Leave VMD on (the initrd loads `vmd`) and Secure Boot off, as Bazzite had them.
-2. Boot the USB stick in UEFI mode.
-3. On the installer, give root a temporary password with `sudo passwd root`, and note the DHCP address from `ip -br addr`.
-4. From Whopper, copy your key to it. The installer has its own host key, so skip the known_hosts check:
-
-   ```sh
-   ssh-copy-id -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@<installer-ip>
-   ```
-
-## 2. Check the installer
+nixos-anywhere logs in as root. Bazzite has no root key, so copy yours over once. sudo asks for the Bazzite password:
 
 ```sh
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@<installer-ip>
-ls -l /dev/disk/by-id/ | grep nvme-Samsung
-ip -br link
+ssh -t psoldunov@10.24.24.7 'sudo install -d -m 700 /root/.ssh && sudo install -m 600 -o root -g root ~/.ssh/authorized_keys /root/.ssh/authorized_keys && sudo restorecon -R /root/.ssh'
+```
+
+`restorecon` gives the files their SELinux labels; without it sshd ignores the key.
+
+## 2. Boot the installer
+
+From the repository root on Whopper:
+
+```sh
+nix run github:nix-community/nixos-anywhere -- --flake .#ShackStack --target-host root@10.24.24.7 -i ~/.ssh/sudo-whopper --ssh-option UserKnownHostsFile=/dev/null --ssh-option StrictHostKeyChecking=no --phases kexec
+```
+
+Bazzite kexecs into the NixOS installer, in RAM, with the same address and host key. Nothing is written to disk yet; a power cycle boots Bazzite again. Then check the installer:
+
+```sh
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@10.24.24.7 'ls -l /dev/disk/by-id/ | grep nvme-Samsung; ip -br link'
 ```
 
 - `nvme-Samsung_SSD_980_PRO_2TB_S69ENX0TA25215J` must be listed. If the name differs, correct it in [disko.nix](disko.nix) before going on.
 - The wired port must be `enp7s0`. If it isn't, change `interface-name` in [modules/networking.nix](modules/networking.nix).
 
+If kexec ever fails, a USB stick with the NixOS minimal ISO does the same job: boot it in UEFI mode, `sudo passwd root`, `ssh-copy-id` from Whopper, and use its DHCP address below.
+
 ## 3. Install
 
-From the repository root on Whopper:
-
 ```sh
-nix run github:nix-community/nixos-anywhere -- --flake .#ShackStack --target-host root@<installer-ip> --phases disko,install,reboot
+nix run github:nix-community/nixos-anywhere -- --flake .#ShackStack --target-host root@10.24.24.7 -i ~/.ssh/sudo-whopper --ssh-option UserKnownHostsFile=/dev/null --ssh-option StrictHostKeyChecking=no --phases disko,install,reboot
 ```
 
-Whopper builds the system, so the HTPC compiles nothing. disko wipes and partitions the 980 PRO as [disko.nix](disko.nix) describes, nixos-anywhere copies the system over, and ShackStack reboots. Pull the USB stick while it restarts.
+Whopper builds the system, so the HTPC compiles nothing. disko wipes and partitions the 980 PRO as [disko.nix](disko.nix) describes, nixos-anywhere copies the system over, and ShackStack reboots. The first time this took under three minutes.
 
 ## 4. First boot
 
-ShackStack boots straight into Steam's first-run screen. The network is already up (static `10.24.24.7`), so sign in.
+ShackStack boots straight into Gaming Mode, where Steam updates itself and then asks you to sign in. The network is already up (static `10.24.24.7`). Bluetooth pairings did not survive the wipe: pair the controllers again in Steam's Bluetooth settings.
 
-On Whopper, drop Bazzite's host key and log in. `-A` forwards the agent, which is what sudo authenticates with:
+On Whopper, drop the old host key and log in. `-A` forwards the agent, which is what sudo authenticates with:
 
 ```sh
 ssh-keygen -R 10.24.24.7
