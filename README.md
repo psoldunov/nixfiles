@@ -24,7 +24,8 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 ├── lib/
 │   ├── mkHost.nix                  # Thin nixpkgs.lib.nixosSystem wrapper
 │   ├── mkDarwinHost.nix            # Same for nix-darwin's darwinSystem
-│   └── ssh-keys.nix                # Public SSH keys: the shared identities and the authorized list
+│   ├── ssh-keys.nix                # Public SSH keys: the shared identities and the authorized list
+│   └── syncthing.nix               # Syncthing device IDs and folder members, read by every host that runs Syncthing
 ├── modules/                        # SHARED ONLY
 │   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty, BigKing and ShackStack — see "Shared NixOS modules"
 │   │   ├── game-saves.nix          # Alan Wake saves over Syncthing, imported by Whopper, ShackStack and BigTasty
@@ -40,7 +41,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │       ├── programs/claude-code/   # Declarative Claude Code (agents/hooks/skills/rules/MCP/settings)
 │       ├── programs/pi/            # Pi coding agent + claude-bridge extension (Claude rules/skills/agents in pi)
 │       ├── workstation/            # Whopper + the Macs: SSH, CLI set, system scripts, Ghostty, Playwright/Mailspring MCP, pi
-│       └── darwin/                 # The Macs only: CLI extras, mise, Token Station statusline
+│       └── darwin/                 # The Macs only: CLI extras, mise, Syncthing, Token Station statusline
 ├── hosts/
 │   ├── whopper/
 │   │   ├── default.nix             # Imports ./hardware.nix + ./modules
@@ -146,7 +147,7 @@ The living-room PC. It ran Bazzite until NixOS replaced it, and the goal is the 
 | | |
 |---|---|
 | Hardware | ASUS ROG Strix B760-I, i5-12600K (iGPU off in the firmware), 32 GB, Radeon RX 7800 XT, Samsung 980 PRO 2 TB behind Intel VMD |
-| Gaming Mode | Jovian-NixOS: Valve's gamescope session with autologin, steamos-manager, Decky Loader, Proton-GE, and SteamOS's own Plymouth splash. HDR, VRR and 4K@120 are set in Steam's display settings. Kernel `linuxPackages_latest` with the `scx_lavd` scheduler |
+| Gaming Mode | Jovian-NixOS: Valve's gamescope session with autologin, steamos-manager, Decky Loader, Proton-GE, and SteamOS's own Plymouth splash. HDR, VRR and 4K@120 are set in Steam's display settings. Kernel `linuxPackages_latest` on its default CPU scheduler. Jovian's `scx_lavd` is off: it moved game audio threads onto the 12600K's E-cores, where the sound crackled |
 | Desktop mode | Plasma 6 with the Vapor theme at 200% scale, Firefox, Telegram and 1Password, and a "Return to Gaming Mode" launcher on the panel |
 | TV | Sony Bravia (2021) on HDMI 4 through a DP→HDMI 2.1 adapter. HDMI-CEC runs through the adapter: the TV turns on at boot and resume and goes to standby before sleep and power-off, and its remote navigates Steam ([tv-cec](hosts/shackstack/modules/tv-cec/default.nix)) |
 | Controllers | DualSense and two Xbox Wireless pads over Bluetooth (AX211), wake from suspend enabled; Logitech Unifying keyboard and mouse |
@@ -177,6 +178,7 @@ Both Macs import the same baseline from [modules/darwin](modules/darwin) and the
 | Shell | Nix's zsh as login shell (set during activation), set up as on the other hosts (see [Shell](#shell)). Fish is still installed, with the same prompt, tools, aliases, secrets and MCP tokens. Touch ID for sudo |
 | Apps | Every GUI app is a Homebrew cask or a Mac App Store app. Apps both Macs get are in [modules/darwin/homebrew.nix](modules/darwin/homebrew.nix); the rest are in each host's own list, [bigmac](hosts/bigmac/modules/homebrew.nix) or [macflurry](hosts/macflurry/modules/homebrew.nix) |
 | Runtimes | node, bun, deno and python from mise ([mise.nix](modules/home/darwin/mise.nix)) |
+| Syncthing | home-manager's `services.syncthing`, run by launchd ([syncthing.nix](modules/home/darwin/syncthing.nix)). Sync lives in `~/Sync` and Obsidian in `~/Obsidian`, outside `~/Documents`, where macOS would ask for permission again after every Syncthing update. The devices and folders come from [lib/syncthing.nix](lib/syncthing.nix) |
 | Claude Code statusline | Token Station from the `psoldunov/tap` cask; its flake is Linux-only |
 
 Where the Macs' software comes from:
@@ -185,7 +187,7 @@ Where the Macs' software comes from:
 |---|---|
 | GUI apps | Homebrew casks; App Store-only apps through `homebrew.masApps`. Ghostty's config still comes from [workstation/ghostty.nix](modules/home/workstation/ghostty.nix), shared with Whopper |
 | Agent CLIs that release several times a week (codex, mistral-vibe) | Homebrew, upgraded by `update_system` only |
-| Tap-only or macOS-only formulae, plus syncthing (runs as a brew service) | Homebrew, the same set on both Macs |
+| Tap-only or macOS-only formulae | Homebrew, the same set on both Macs |
 | Claude Code, pi | This repo's overlays (`overlays/claude-code`, `overlays/pi-coding-agent`), same versions as Whopper |
 | Atuin | Upstream's release binary at nixpkgs' version ([overlays/atuin-darwin.nix](overlays/atuin-darwin.nix)). A source build fails its tests here and is never in the cache. When nixpkgs bumps atuin, add the new release's hash; until then the Mac compiles it and evaluation warns |
 | Every other CLI | nixpkgs: [workstation/cli.nix](modules/home/workstation/cli.nix) + [darwin/packages.nix](modules/home/darwin/packages.nix) |

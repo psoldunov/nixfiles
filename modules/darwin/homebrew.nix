@@ -64,9 +64,6 @@
       "openai-whisper"
       "summarize"
 
-      # Runs as a brew service, peered with Whopper and BigTasty.
-      "syncthing"
-
       # Third-party taps.
       "antoniorodr/memo/memo"
       "browsh-org/browsh/browsh"

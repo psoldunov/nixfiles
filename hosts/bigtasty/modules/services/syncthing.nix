@@ -1,4 +1,6 @@
-{config, ...}: {
+{config, ...}: let
+  syncthing = import ../../../../lib/syncthing.nix;
+in {
   imports = [../../../../modules/nixos/game-saves.nix];
 
   # The Alan Wake saves, as "<title> Saves" next to the other game saves
@@ -23,40 +25,12 @@
         relaysEnabled = true;
         urAccepted = -1;
       };
-      folders = {
-        "Sync Folder" = {
-          id = "default";
-          devices = ["Whopper" "BigMac" "MacFlurry" "SteamDeck" "ShackStack"];
-          path = config.services.syncthing.dataDir + "/Sync";
-        };
-        Obsidian = {
-          id = "Obsidian";
-          devices = ["Whopper" "BigMac" "MacFlurry" "SteamDeck"];
-          path = config.services.syncthing.dataDir + "/Obsidian";
-        };
-        Emulation = {
-          id = "ycvsf-athpn";
-          devices = ["SteamDeck" "Whopper"];
-          path = "/mnt/Games/Emulation";
-        };
-      };
-      devices = {
-        Whopper = {
-          id = "UFUVKM7-NLI6ZPN-NS7O54P-ZLWSSS2-J67SCZ3-REND2NA-EGJRE3A-JL5MSQQ";
-        };
-        BigMac = {
-          id = "SDLAT7V-MXGQHXG-W2QIP3S-OUS6232-LJ4QF36-IUR4QJ7-C32QKGO-BVJOXQS";
-        };
-        MacFlurry = {
-          id = "KURK5RF-HZKBXEU-OBBUQ6E-D3PC723-I2ZPRII-54R5ENX-VMALIIA-WOII4QJ";
-        };
-        SteamDeck = {
-          id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
-        };
-        # From hosts/shackstack/modules/syncthing.nix's first start.
-        ShackStack = {
-          id = "WBFYFYV-GNAXSFN-ASQBELJ-VM35BOL-YM4PXG7-OGU3RGF-R3ZUZLN-UZHD6Q2";
-        };
+      # Device IDs and who shares what: lib/syncthing.nix.
+      devices = syncthing.devicesFor "BigTasty";
+      folders = syncthing.foldersFor "BigTasty" {
+        Sync = config.services.syncthing.dataDir + "/Sync";
+        Obsidian = config.services.syncthing.dataDir + "/Obsidian";
+        Emulation = "/mnt/Games/Emulation";
       };
     };
     overrideFolders = true;

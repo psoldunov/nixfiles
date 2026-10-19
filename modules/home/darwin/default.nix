@@ -1,6 +1,6 @@
 # What every Mac's home-manager config shares on top of ../ and
-# ../workstation: the extra CLI set, mise runtimes and Token Station.
-# Imported by hosts/bigmac/home and hosts/macflurry/home.
+# ../workstation: the extra CLI set, mise runtimes, Syncthing and Token
+# Station. Imported by hosts/bigmac/home and hosts/macflurry/home.
 {
   inputs,
   lib,
@@ -14,6 +14,7 @@ in {
   imports = [
     ./mise.nix
     ./packages.nix
+    ./syncthing.nix
   ];
 
   # Preamble lives in ../sops.nix. Every secret a Mac's user needs
