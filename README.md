@@ -178,7 +178,7 @@ Both Macs import the same baseline from [modules/darwin](modules/darwin) and the
 | Shell | Nix's zsh as login shell (set during activation), set up as on the other hosts (see [Shell](#shell)). Fish is still installed, with the same prompt, tools, aliases, secrets and MCP tokens. Touch ID for sudo |
 | Apps | Every GUI app is a Homebrew cask or a Mac App Store app. Apps both Macs get are in [modules/darwin/homebrew.nix](modules/darwin/homebrew.nix); the rest are in each host's own list, [bigmac](hosts/bigmac/modules/homebrew.nix) or [macflurry](hosts/macflurry/modules/homebrew.nix) |
 | Runtimes | node, bun, deno and python from mise ([mise.nix](modules/home/darwin/mise.nix)) |
-| Syncthing | home-manager's `services.syncthing`, run by launchd ([syncthing.nix](modules/home/darwin/syncthing.nix)). Sync lives in `~/Sync` and Obsidian in `~/Documents/Obsidian`. The devices and folders come from [lib/syncthing.nix](lib/syncthing.nix) |
+| Syncthing | home-manager's `services.syncthing`, run by launchd ([syncthing.nix](modules/home/darwin/syncthing.nix)). Sync lives in `~/Sync` and Obsidian in `~/Obsidian`, outside `~/Documents`, where macOS would ask for permission again after every Syncthing update. The devices and folders come from [lib/syncthing.nix](lib/syncthing.nix) |
 | Claude Code statusline | Token Station from the `psoldunov/tap` cask; its flake is Linux-only |
 
 Where the Macs' software comes from:
