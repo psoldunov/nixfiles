@@ -53,6 +53,11 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  # PipeWire asks RTKit for realtime priority on its audio threads. Without
+  # it they run as ordinary tasks, and a game loading every core starves
+  # them: Sniper Elite Resistance stuttered with xruns on the HDMI sink.
+  # Whopper sets this in hosts/whopper/modules/security.nix.
+  security.rtkit.enable = true;
 
   # DualSense and two Xbox Wireless pads over the AX211. Steam Input reads
   # them through hidraw, so no xpadneo; Bazzite ran without it too. Jovian
