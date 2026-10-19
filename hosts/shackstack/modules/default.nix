@@ -13,6 +13,7 @@
     ./mounts.nix
     ./networking.nix
     ./overrides.nix
+    ./pad-wake
     ./syncthing.nix
     ./tv-cec
   ];
