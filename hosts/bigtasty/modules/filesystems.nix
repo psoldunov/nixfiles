@@ -16,12 +16,6 @@
     options = ["rw" "nolock"];
   };
 
-  fileSystems."/mnt/Games" = {
-    device = "10.24.24.3:/volume1/Games";
-    fsType = "nfs";
-    options = ["rw" "nolock"];
-  };
-
   fileSystems."/export/transmission" = {
     device = "/RAID/apps/transmission/downloads/complete";
     fsType = "none";

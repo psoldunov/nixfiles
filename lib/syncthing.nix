@@ -31,6 +31,7 @@ let
   };
 
   # `members` is every device that keeps a copy, the host itself included.
+  # `ignorePatterns`, where set, replaces the folder's .stignore.
   folders = {
     # Every device but BigKing, which keeps only Emulation.
     Sync = {
@@ -47,10 +48,15 @@ let
     # (/volume1/Games/Emulation). BigKing serves it from its own disks so
     # the Steam Deck can take a copy along. Whopper and ShackStack keep no
     # copy: their emulators read it over NFS at /mnt/Games/Emulation.
+    #
+    # Switch games stay on the NAS. PS3 and GameCube carry over from the
+    # .stignore written by hand in 2024, which these patterns replace.
+    # Ignore patterns are per device: the Deck keeps its own.
     Emulation = {
       id = "ycvsf-athpn";
       label = "Emulation";
       members = ["BigKing" "SteamDeck"];
+      ignorePatterns = ["/Games/Switch" "/Games/PS3" "/Games/GameCube"];
     };
   };
 
@@ -63,11 +69,13 @@ let
     folder = folders.${name} or (throw "lib/syncthing.nix: no folder named ${name}");
   in
     if builtins.elem self folder.members
-    then {
-      inherit (folder) id label;
-      inherit path;
-      devices = builtins.filter (device: device != self) folder.members;
-    }
+    then
+      {
+        inherit (folder) id label;
+        inherit path;
+        devices = builtins.filter (device: device != self) folder.members;
+      }
+      // builtins.intersectAttrs {ignorePatterns = null;} folder
     else throw "lib/syncthing.nix: ${self} is not a member of ${name}";
 in {
   inherit devices folders;
