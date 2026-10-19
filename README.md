@@ -270,7 +270,7 @@ Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager 
 |---|---|
 | `boot.nix` | kvm-intel, blacklisted nvidia/nouveau, `vm.overcommit_memory` sysctl, iHD VA-API driver |
 | `networking.nix` | hostname, static IP, firewall ports, openssh (`PrintMotd=false`, `PrintLastLog=false`), `pam_ssh_agent_auth`, sudo `env_keep SSH_AUTH_SOCK` |
-| `hardware.nix` | Intel media/VA-API/compute packages, intel-gpu-tools, cachefilesd (`/RAID/cachefilesd`), nbd.server (cdrom), powertop, mdmonitor |
+| `hardware.nix` | Intel media/VA-API/compute packages, intel-gpu-tools, nbd.server (cdrom), powertop, mdmonitor |
 | `filesystems.nix` | `/RAID` ext4, NFS mounts, bind mounts for `/export/*` |
 | `users.nix` | `psoldunov` extras (`media` group, linger, declarative `openssh.authorizedKeys.keys`), `cloudflared` system user |
 | `nix-locale.nix` | `permittedInsecurePackages` for .NET 6 (locale and base nix settings are shared) |
