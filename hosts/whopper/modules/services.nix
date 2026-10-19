@@ -2,7 +2,9 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  syncthing = import ../../../lib/syncthing.nix;
+in {
   # services.fwupd lives in modules/nixos/hardware.nix.
   services.rpcbind.enable = true;
   services.upower.enable = true;
@@ -90,31 +92,12 @@
       urAccepted = -1;
       relaysEnabled = true;
     };
-    settings.devices = {
-      BigTasty.id = "GJTMGVV-ZBUNMER-CJRQLQS-CYPIVBO-UDLPMIZ-UW76NMG-YKEBQWH-IIMH5AY";
-      SteamDeck.id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
-      BigMac.id = "SDLAT7V-MXGQHXG-W2QIP3S-OUS6232-LJ4QF36-IUR4QJ7-C32QKGO-BVJOXQS";
-      MacFlurry.id = "KURK5RF-HZKBXEU-OBBUQ6E-D3PC723-I2ZPRII-54R5ENX-VMALIIA-WOII4QJ";
-      # From hosts/shackstack/modules/syncthing.nix's first start.
-      ShackStack.id = "WBFYFYV-GNAXSFN-ASQBELJ-VM35BOL-YM4PXG7-OGU3RGF-R3ZUZLN-UZHD6Q2";
-    };
-    settings.folders.Obsidian = {
-      id = "Obsidian";
-      path = "/home/psoldunov/Documents/Obsidian";
-      label = "Obsidian";
-      devices = ["BigTasty" "BigMac" "MacFlurry"];
-    };
-    settings.folders.Emulation = {
-      id = "ycvsf-athpn";
-      path = "/SATA/Emulation";
-      label = "Emulation";
-      devices = ["BigTasty" "SteamDeck"];
-    };
-    settings.folders.Sync = {
-      id = "default";
-      path = "/home/psoldunov/Sync";
-      label = "Sync Folder";
-      devices = ["BigTasty" "SteamDeck" "BigMac" "MacFlurry" "ShackStack"];
+    # Device IDs and who shares what: lib/syncthing.nix.
+    settings.devices = syncthing.devicesFor "Whopper";
+    settings.folders = syncthing.foldersFor "Whopper" {
+      Obsidian = "/home/psoldunov/Documents/Obsidian";
+      Emulation = "/SATA/Emulation";
+      Sync = "/home/psoldunov/Sync";
     };
     overrideFolders = true;
     overrideDevices = true;
