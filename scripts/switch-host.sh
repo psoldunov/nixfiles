@@ -11,19 +11,35 @@
 #   the target builds and activates it in one ssh session. The target needs
 #   no GitHub token, and sudo asks for its password once.
 #
-#   scripts/switch-host.sh <host>            switch
-#   scripts/switch-host.sh <host> --update   switch, then update_bleeding_edge on a Mac
+#   scripts/switch-host.sh <host>               switch
+#   scripts/switch-host.sh <host> --update      switch, then update_bleeding_edge on a Mac
+#   scripts/switch-host.sh <host> --if-online   skip, with a warning and exit 0, when
+#                                               the host does not answer (the -all
+#                                               scripts use it for the laptop and the HTPC)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-usage="usage: scripts/switch-host.sh <Whopper|BigTasty|BigKing|PiHome|BigMac|MacFlurry> [--update]"
+usage="usage: scripts/switch-host.sh <Whopper|BigTasty|BigKing|ShackStack|PiHome|BigMac|MacFlurry> [--update] [--if-online]"
 host="${1:?$usage}"
-declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [PiHome]=nixos [BigMac]=darwin [MacFlurry]=darwin)
+shift
+declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [ShackStack]=nixos [PiHome]=nixos [BigMac]=darwin [MacFlurry]=darwin)
 kind="${KIND[$host]:-}"
 if [ -z "$kind" ]; then
   echo "$usage" >&2
   exit 1
 fi
+want_update=false
+if_online=false
+for arg in "$@"; do
+  case "$arg" in
+    --update) want_update=true ;;
+    --if-online) if_online=true ;;
+    *)
+      echo "$usage" >&2
+      exit 1
+      ;;
+  esac
+done
 local_kind=nixos
 if [ "$(uname -s)" = Darwin ]; then
   local_kind=darwin
@@ -32,11 +48,23 @@ fi
 # lower case.
 target="psoldunov@${host,,}"
 update=""
-if [ "${2:-}" = "--update" ] && [ "$kind" = darwin ]; then
+if [ "$want_update" = true ] && [ "$kind" = darwin ]; then
   update=/etc/profiles/per-user/psoldunov/bin/update_bleeding_edge
 fi
-
+is_local=false
 if [ "$(hostname -s | tr '[:upper:]' '[:lower:]')" = "${host,,}" ]; then
+  is_local=true
+fi
+
+# Same check as `reachable` in modules/home/workstation/scripts.nix: ssh gets
+# in within a few seconds without prompting.
+if [ "$if_online" = true ] && [ "$is_local" = false ] \
+  && ! ssh -o ConnectTimeout=5 -o BatchMode=yes "$target" true >/dev/null 2>&1; then
+  echo "switch-host: $host is not reachable (asleep or away); skipping it." >&2
+  exit 0
+fi
+
+if [ "$is_local" = true ]; then
   if [ "$kind" = darwin ]; then
     # Keep sudo's ticket fresh for Homebrew's .pkg installs during
     # activation and for update_bleeding_edge.

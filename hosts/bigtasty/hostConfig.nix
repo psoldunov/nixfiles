@@ -3,7 +3,7 @@
 # default to false on Whopper, true here where the server uses them.
 #
 # Schema:
-#   role :: "desktop" | "server"
+#   role :: "desktop" | "server" | "htpc"
 #
 #   enableRaid              :: bool  (mdadm + /RAID fileSystems)
 #   enableNfsServer         :: bool  (NFS server exports)

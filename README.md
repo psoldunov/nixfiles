@@ -7,11 +7,12 @@ Personal NixOS, nix-darwin and home-manager configuration. Multi-host flake, sin
 | **Whopper** | Desktop | AMD Radeon RX 7900 XTX (ROCm, VA-API, gamescope), DP-1 @ 3840x2160@144 HDR, 10 Gbps NIC, KDE Plasma 6 on Wayland |
 | **BigTasty** | Home server | Intel iGPU (Quick Sync), mdadm RAID, static IP `10.24.24.2`, NFS + Samba + Netatalk exports, nginx vhosts behind Cloudflare DNS-01 |
 | **BigKing** | NAS | ASUSTOR Lockerstor 4 (AS6604T, Celeron J4125), NixOS on an NVMe mirror, ADM's RAID 0 data volume kept as `/volume1`, static IP `10.24.24.3` on an LACP bond, NFS + Samba + Time Machine |
+| **ShackStack** | HTPC | ASUS ROG Strix B760-I, i5-12600K, Radeon RX 7800 XT, Sony TV through a DP→HDMI 2.1 adapter (4K@120, VRR, HDR, HDMI-CEC), static IP `10.24.24.7`, boots into Steam's Gaming Mode (Jovian-NixOS) with Plasma 6 as the desktop mode |
 | **PiHome** | DNS appliance | Raspberry Pi 4 Model B Rev 1.5, 8 GB; NixOS + AdGuard Home + Unbound |
 | **BigMac** | Workstation | Apple silicon Mac on macOS, managed by nix-darwin, GUI apps from Homebrew |
 | **MacFlurry** | Laptop | MacBook Pro (M1 Pro) on Wi-Fi, managed by nix-darwin like BigMac, with a smaller app set |
 
-Whopper, BigTasty and BigKing share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). PiHome takes only the login shell from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which gets `shell` alone. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
+Whopper, BigTasty, BigKing and ShackStack share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). ShackStack turns docker and libvirt off. PiHome takes only the login shell from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which gets `shell` alone, and ShackStack, which gets `shell`, fastfetch and its own Plasma settings. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
 
 A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them can rebuild any host (see [Deploy](#deploy)).
 
@@ -19,13 +20,13 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 
 ```
 .
-├── flake.nix                       # Inputs + nixosConfigurations.{Whopper,BigTasty,BigKing,PiHome} + darwinConfigurations.{BigMac,MacFlurry} + alejandra formatter
+├── flake.nix                       # Inputs + nixosConfigurations.{Whopper,BigTasty,BigKing,ShackStack,PiHome} + darwinConfigurations.{BigMac,MacFlurry} + alejandra formatter
 ├── lib/
 │   ├── mkHost.nix                  # Thin nixpkgs.lib.nixosSystem wrapper
 │   ├── mkDarwinHost.nix            # Same for nix-darwin's darwinSystem
 │   └── ssh-keys.nix                # Public SSH keys: the shared identities and the authorized list
 ├── modules/                        # SHARED ONLY
-│   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty and BigKing — see "Shared NixOS modules"
+│   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty, BigKing and ShackStack — see "Shared NixOS modules"
 │   │   └── home-dns/               # AdGuard + Unbound + policy, imported by PiHome and BigTasty only
 │   ├── darwin/                     # nix-darwin baseline imported by both Macs, shared Homebrew list included — see "Macs"
 │   └── home/
@@ -62,6 +63,14 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── INSTALL.md              # One-off install over ADM with nixos-anywhere
 │   │   ├── modules/                # NixOS modules — see "BigKing modules"
 │   │   └── home/                   # home.nix (shared HM only)
+│   ├── shackstack/
+│   │   ├── default.nix             # Imports ./disko.nix + ./hardware.nix + ./modules
+│   │   ├── disko.nix               # NVMe layout nixos-anywhere creates: ESP + btrfs (@root, @nix, @home)
+│   │   ├── hardware.nix
+│   │   ├── hostConfig.nix          # role=htpc
+│   │   ├── INSTALL.md              # Bazzite to NixOS with nixos-anywhere, TV/CEC setup and tests
+│   │   ├── modules/                # Gaming Mode (Jovian), Plasma desktop mode, HDMI-CEC, network, access
+│   │   └── home/                   # Shared shell + Plasma settings for the TV
 │   ├── pihome/
 │   │   ├── default.nix             # PiHome system configuration
 │   │   ├── home.nix                # Home Manager: the shared shell config only
@@ -124,10 +133,24 @@ An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/b
 | Boot | Two Crucial P5 NVMe drives (ADM's old SSD cache): an ESP on each, kept in step by `extraInstallCommands`, and an mdadm RAID1 holding `/` |
 | Storage | ADM's data volume as it was: mdadm RAID 0 over the four WD Reds, btrfs subvolume `base` mounted at `/volume1`. ADM itself stays on the eMMC as a fallback |
 | Network | static IP `10.24.24.3` on `bond0`, an 802.3ad bond of the two RTL8125 ports (renamed `lan0`/`lan1` by MAC address) |
-| File sharing | NFS exports `/volume1/{Media,Camera,Backup,Games}` to BigTasty and Whopper, plus `Games` to the HTPC (`10.24.24.7`), Samba (ADM's fruit settings) with a Time Machine share, samba-wsdd, avahi |
+| File sharing | NFS exports `/volume1/{Media,Camera,Backup,Games}` to BigTasty and Whopper, plus `Games` to ShackStack (`10.24.24.7`), Samba (ADM's fruit settings) with a Time Machine share, samba-wsdd, avahi |
 | Services | smartd with temperature warnings |
 | Front panel | ASUSTOR kernel drivers (mafredri/asustor-platform-driver), fan control from disk and CPU temperatures, LED triggers, `openlcmd` on the LCD |
 | Passwordless sudo | Same as BigTasty |
+
+### ShackStack (HTPC)
+
+The living-room PC. It ran Bazzite until NixOS replaced it, and the goal is the same Steam Machine feel: it boots into Steam's Gaming Mode, and Steam's "Switch to Desktop" opens Plasma. [hosts/shackstack/INSTALL.md](hosts/shackstack/INSTALL.md) has the install steps and the TV tests.
+
+| | |
+|---|---|
+| Hardware | ASUS ROG Strix B760-I, i5-12600K (iGPU off in the firmware), 32 GB, Radeon RX 7800 XT, Samsung 980 PRO 2 TB behind Intel VMD |
+| Gaming Mode | Jovian-NixOS: Valve's gamescope session with autologin, steamos-manager, Decky Loader, Proton-GE, and SteamOS's own Plymouth splash. HDR, VRR and 4K@120 are set in Steam's display settings. Kernel `linuxPackages_latest` with the `scx_lavd` scheduler |
+| Desktop mode | Plasma 6 with the Vapor theme at 200% scale, Firefox, Telegram and 1Password, and a "Return to Gaming Mode" launcher on the panel |
+| TV | Sony Bravia (2021) on HDMI 4 through a DP→HDMI 2.1 adapter. HDMI-CEC runs through the adapter: the TV turns on at boot and resume and goes to standby before sleep and power-off, and its remote navigates Steam ([tv-cec](hosts/shackstack/modules/tv-cec/default.nix)) |
+| Controllers | DualSense and two Xbox Wireless pads over Bluetooth (AX211), wake from suspend enabled; Logitech Unifying keyboard and mouse |
+| Network | NetworkManager with a declared static profile, `10.24.24.7` on `enp7s0`, Wake-on-LAN, avahi, BigKing's Games share automounted at `/mnt/Games` |
+| Passwordless sudo | Its own `sudo-shackstack` key through the forwarded agent, as on PiHome |
 
 ### PiHome (DNS appliance)
 
@@ -187,11 +210,11 @@ zsh is the login shell on every host, PiHome included. [modules/nixos/shell.nix]
 
 ## `hostConfig`
 
-Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager modules). Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/pihome/hostConfig.nix](hosts/pihome/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
+Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager modules). Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/shackstack/hostConfig.nix](hosts/shackstack/hostConfig.nix), [hosts/pihome/hostConfig.nix](hosts/pihome/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
 
 | Field | Type | Meaning |
 |---|---|---|
-| `role` | `"desktop" \| "server"` | Broad-stroke gate. `modules/home/shell/` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish and zsh functions (`open`, `fzf_kill`), and the `git` keychain key on servers. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
+| `role` | `"desktop" \| "server" \| "htpc"` | Broad-stroke gate. `modules/home/shell/` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish and zsh functions (`open`, `fzf_kill`), and the `git` keychain key on servers. `"htpc"` (ShackStack) gets the server shell too, since it runs games, not a dev setup. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
 | `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
@@ -444,9 +467,10 @@ rebuild_system Whopper        # explicit local
 rebuild_system BigTasty       # remote build + activate via SSH agent
 rebuild_system BigKing        # same for the NAS
 rebuild_system PiHome         # same for the DNS Pi
+rebuild_system ShackStack     # same for the HTPC
 rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
 rebuild_system MacFlurry      # same for the laptop
-rebuild_system all            # Whopper, BigTasty, BigKing, BigMac, MacFlurry in parallel, then PiHome; skips MacFlurry when it doesn't answer
+rebuild_system all            # Whopper, BigTasty, BigKing, ShackStack, BigMac, MacFlurry in parallel, then PiHome; skips ShackStack and MacFlurry when they don't answer
 update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pt_pc, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
 clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune, + brew cleanup on the Macs
 ```
@@ -457,9 +481,9 @@ clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker im
 
 PiHome is the exception to "in parallel". Every other host resolves names through it, and a switch that restarts AdGuard or Unbound would break their downloads mid-build. So `all` switches PiHome on its own after the others have finished, and does so even when one of them failed. `LAST_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts handled this way.
 
-MacFlurry is a laptop, so it is often asleep or away. `all` checks it first with a 5-second `ssh` that can't prompt. If it doesn't answer, the script prints a warning and runs the other hosts without it. The other hosts are not checked this way: when one of them is down, `all` fails. `ROAMING_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts that get the check. The check runs in batch mode, so it also skips the laptop until the machine running `all` has its host key in `known_hosts`.
+MacFlurry is a laptop and ShackStack an HTPC, so either can be asleep or away. `all` checks them first with a 5-second `ssh` that can't prompt. If one doesn't answer, the script prints a warning and runs the other hosts without it. The other hosts are not checked this way: when one of them is down, `all` fails. `ROAMING_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts that get the check. The check runs in batch mode, so it also skips a host until the machine running `all` has its host key in `known_hosts`.
 
-Inside an Ensemblr worktree, use the run scripts in [.ensemblr/settings.toml](.ensemblr/settings.toml) instead. They target the worktree's flake (`.#<Host>`) and leave staging and committing to you. PiHome has `rebuild-pihome` and `update-pihome` like the other hosts, plus `eval-pihome`, `build-pihome-image` and `test-adguard-cli`. `rebuild-all` and `update-all` switch one host at a time, so PiHome never restarts DNS while another host builds. Evaluation and `nix flake check --no-build` passed. The initial ARM image was built and booted, and subsequent system updates were built and verified on the Pi; see [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations and rollback.
+Inside an Ensemblr worktree, use the run scripts in [.ensemblr/settings.toml](.ensemblr/settings.toml) instead. They target the worktree's flake (`.#<Host>`) and leave staging and committing to you. PiHome has `rebuild-pihome` and `update-pihome` like the other hosts, plus `eval-pihome`, `build-pihome-image` and `test-adguard-cli`. `rebuild-all` and `update-all` switch one host at a time, so PiHome never restarts DNS while another host builds. They run ShackStack and MacFlurry last with `scripts/switch-host.sh <Host> --if-online`, which makes the same 5-second check and skips a host that doesn't answer instead of failing the run. Evaluation and `nix flake check --no-build` passed. The initial ARM image was built and booted, and subsequent system updates were built and verified on the Pi; see [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations and rollback.
 
 When deploying from a machine that is not managed by this flake, the helper scripts
 and `nixos-rebuild` may not exist on `$PATH`. Use the full command from a checkout

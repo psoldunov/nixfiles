@@ -4,7 +4,7 @@
 # `lib.mkIf hostConfig.<flag>`.
 #
 # Schema:
-#   role :: "desktop" | "server"
+#   role :: "desktop" | "server" | "htpc"
 #
 #   enableRaid              :: bool  (mdadm + /RAID fileSystems)
 #   enableNfsServer         :: bool  (NFS server exports)
