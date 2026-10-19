@@ -63,10 +63,10 @@ ssh-keygen -R 10.24.24.7
 ssh -A shackstack
 ```
 
-On ShackStack, set a password for local sudo and for Plasma's prompts:
+The account starts with a locked password, so plain `passwd` has no current password to check. Set one through sudo, which accepts the forwarded agent, for local sudo and Plasma's prompts:
 
 ```sh
-passwd
+sudo passwd psoldunov
 ```
 
 From then on, update it like any other host: `rebuild_system ShackStack`, or the `rebuild-shackstack` run script. When it is asleep, `rebuild_system all` and the `-all` run scripts skip it with a warning.

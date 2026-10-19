@@ -16,7 +16,8 @@ in {
   # `rebuild_system ShackStack` from Whopper needs no password. The other
   # hosts load that key by logging in with it (the shackstack entry in
   # modules/home/workstation/ssh.nix). Local sudo on the TV asks for the
-  # password set with `passwd` after the install.
+  # password set with `sudo passwd psoldunov` after the install (the account
+  # starts locked, so plain `passwd` cannot verify a current one).
   environment.etc."ssh/sudo_authorized_keys" = {
     text = sshKeys.sudo.shackstack + "\n";
     mode = "0444";
