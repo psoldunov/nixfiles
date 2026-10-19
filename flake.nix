@@ -219,7 +219,6 @@
   outputs = {
     self,
     nixpkgs,
-    zen-browser,
     vscode-server,
     nixpkgs-stable,
     catppuccin,
@@ -346,29 +345,7 @@
               sops-nix.homeManagerModules.sops
               catppuccin.homeModules.catppuccin
               plasma-manager.homeModules.plasma-manager
-              (
-                {pkgs, ...}: let
-                  zen = zen-browser.packages."${system}";
-                  # zen-browser-flake's bot hashed 1.23.3b before Zen published
-                  # the release (youwen5/zen-browser-flake#22). The hash below is
-                  # GitHub's digest of the published asset. Applies to 1.23.3b
-                  # only, so the next version bump drops it on its own.
-                  zen-unwrapped =
-                    if zen.zen-browser-unwrapped.version == "1.23.3b"
-                    then
-                      zen.zen-browser-unwrapped.overrideAttrs {
-                        src = pkgs.fetchurl {
-                          url = "https://github.com/zen-browser/desktop/releases/download/1.23.3b/zen.linux-x86_64.tar.xz";
-                          hash = "sha256-uyBF0+IWVNQP6EElAJLurf0sH8gx7vtQkiJ3PIvcoUk=";
-                        };
-                      }
-                    else zen.zen-browser-unwrapped;
-                in {
-                  home.packages = [
-                    (zen.default.override {zen-browser-unwrapped = zen-unwrapped;})
-                  ];
-                }
-              )
+              ./modules/home/programs/zen.nix
             ];
           };
         }
@@ -505,6 +482,7 @@
             };
             sharedModules = [
               plasma-manager.homeModules.plasma-manager
+              ./modules/home/programs/zen.nix
             ];
           };
         }

@@ -1,9 +1,11 @@
 # Ghostty on every workstation, from one config so Whopper looks like the
 # Macs: Ghostty's stock colors (no theme), a translucent blurred background
-# and JetBrainsMono Nerd Font. Whopper installs the nixpkgs build; the Macs
-# get the app from the Homebrew cask (modules/darwin/homebrew.nix), so only
-# the config is managed there. The font comes from hosts/whopper/modules/
-# fonts.nix and the font-jetbrains-mono-nerd-font cask.
+# and JetBrainsMono Nerd Font. Whopper and ShackStack install the nixpkgs
+# build; the Macs get the app from the Homebrew cask
+# (modules/darwin/homebrew.nix), so only the config is managed there. The
+# font comes from hosts/whopper/modules/fonts.nix,
+# hosts/shackstack/modules/desktop.nix and the font-jetbrains-mono-nerd-font
+# cask.
 #
 # Blur on Whopper is KWin's: its global Blur effect decides the strength and
 # ignores any per-app intensity.

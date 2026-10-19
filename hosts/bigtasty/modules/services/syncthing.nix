@@ -15,7 +15,7 @@
       folders = {
         "Sync Folder" = {
           id = "default";
-          devices = ["Whopper" "BigMac" "MacFlurry" "SteamDeck"];
+          devices = ["Whopper" "BigMac" "MacFlurry" "SteamDeck" "ShackStack"];
           path = config.services.syncthing.dataDir + "/Sync";
         };
         Obsidian = {
@@ -41,6 +41,10 @@
         };
         SteamDeck = {
           id = "JOW45A7-VRICSJU-M534XZG-BSAECPK-J5QLLRK-L5GHGZT-RUZUTEL-NGQEKAF";
+        };
+        # From hosts/shackstack/modules/syncthing.nix's first start.
+        ShackStack = {
+          id = "WBFYFYV-GNAXSFN-ASQBELJ-VM35BOL-YM4PXG7-OGU3RGF-R3ZUZLN-UZHD6Q2";
         };
       };
     };

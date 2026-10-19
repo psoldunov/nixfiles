@@ -22,7 +22,9 @@
           size = "100%";
           content = {
             type = "btrfs";
-            extraArgs = ["-f" "-L" "shackstack"];
+            # The label is only what Dolphin and lsblk show; every mount
+            # goes by partition label (disk-nvme-root).
+            extraArgs = ["-f" "-L" "NixOS"];
             subvolumes = let
               # zstd:1 is what Bazzite used on this drive. Game files that
               # are already compressed cost almost nothing to try.

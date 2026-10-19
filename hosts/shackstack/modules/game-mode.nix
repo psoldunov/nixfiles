@@ -40,6 +40,7 @@
     remotePlay.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true;
     extraCompatPackages = [pkgs.proton-ge-bin];
+    protontricks.enable = true;
   };
 
   # Jovian ships scx_lavd but leaves it stopped for steamos-manager to start.

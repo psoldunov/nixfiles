@@ -13,6 +13,7 @@
     ./mounts.nix
     ./networking.nix
     ./overrides.nix
+    ./syncthing.nix
     ./tv-cec
   ];
 }
