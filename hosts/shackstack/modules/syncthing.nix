@@ -1,7 +1,8 @@
 # The Sync folder, shared with BigTasty and Whopper, which list ShackStack
 # back (hosts/bigtasty/modules/services/syncthing.nix,
 # hosts/whopper/modules/services.nix). The Macs and the Steam Deck get its
-# changes through BigTasty. ShackStack's device ID comes from the
+# changes through BigTasty. The Alan Wake saves go to Whopper and BigTasty
+# (modules/nixos/game-saves.nix). ShackStack's device ID comes from the
 # certificate Syncthing made on first start in ~/.config/syncthing; a
 # reinstall makes a new one, which the other two then need.
 #
@@ -10,6 +11,13 @@
 # hand through the REST API; Syncthing keeps it as a bcrypt hash in
 # config.xml, which nothing here overwrites.
 {...}: {
+  imports = [../../../modules/nixos/game-saves.nix];
+
+  gameSaves = {
+    heroicPrefixes = "/home/psoldunov/Games/Heroic/Prefixes";
+    devices = ["Whopper" "BigTasty"];
+  };
+
   services.syncthing = {
     enable = true;
     user = "psoldunov";

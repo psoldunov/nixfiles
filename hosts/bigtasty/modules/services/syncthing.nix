@@ -1,4 +1,15 @@
 {config, ...}: {
+  imports = [../../../../modules/nixos/game-saves.nix];
+
+  # The Alan Wake saves, as "<title> Saves" next to the other game saves
+  # here, so Whopper and ShackStack trade them without being on together.
+  # "Alan Wake 2 (2024 backup)" beside them is the copy the saves were
+  # restored from on 2026-10-19; no folder uses it.
+  gameSaves = {
+    storageDir = config.services.syncthing.dataDir;
+    devices = ["Whopper" "ShackStack"];
+  };
+
   services.syncthing = {
     enable = true;
     user = "psoldunov";
