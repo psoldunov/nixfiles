@@ -1,6 +1,6 @@
 # Syncthing devices and the folders they share, for every host that runs
-# Syncthing: BigTasty, Whopper and ShackStack through the NixOS module, and
-# BigMac and MacFlurry through home-manager's
+# Syncthing: BigTasty, BigKing, Whopper and ShackStack through the NixOS
+# module, and BigMac and MacFlurry through home-manager's
 # (modules/home/darwin/syncthing.nix). The Steam Deck isn't managed here, so
 # a new share or device has to be accepted on the Deck by hand.
 #
@@ -22,6 +22,7 @@
 let
   devices = {
     BigTasty = "GJTMGVV-ZBUNMER-CJRQLQS-CYPIVBO-UDLPMIZ-UW76NMG-YKEBQWH-IIMH5AY";
+    BigKing = "PS23NAC-UVBX7X7-YQC42YP-HMLDG5W-KNDRADI-DVE33X4-BE47F2C-65AVQAQ";
     Whopper = "UFUVKM7-NLI6ZPN-NS7O54P-ZLWSSS2-J67SCZ3-REND2NA-EGJRE3A-JL5MSQQ";
     ShackStack = "WBFYFYV-GNAXSFN-ASQBELJ-VM35BOL-YM4PXG7-OGU3RGF-R3ZUZLN-UZHD6Q2";
     BigMac = "SDLAT7V-MXGQHXG-W2QIP3S-OUS6232-LJ4QF36-IUR4QJ7-C32QKGO-BVJOXQS";
@@ -31,10 +32,11 @@ let
 
   # `members` is every device that keeps a copy, the host itself included.
   folders = {
+    # Every device but BigKing, which keeps only Emulation.
     Sync = {
       id = "default";
       label = "Sync Folder";
-      members = builtins.attrNames devices;
+      members = ["BigTasty" "Whopper" "ShackStack" "BigMac" "MacFlurry" "SteamDeck"];
     };
     Obsidian = {
       id = "Obsidian";
@@ -42,13 +44,13 @@ let
       members = ["BigTasty" "Whopper" "BigMac" "MacFlurry" "SteamDeck"];
     };
     # The emulated games, BIOS files and saves on BigKing's Games share
-    # (/volume1/Games/Emulation). BigTasty serves it from its NFS mount so
+    # (/volume1/Games/Emulation). BigKing serves it from its own disks so
     # the Steam Deck can take a copy along. Whopper and ShackStack keep no
     # copy: their emulators read it over NFS at /mnt/Games/Emulation.
     Emulation = {
       id = "ycvsf-athpn";
       label = "Emulation";
-      members = ["BigTasty" "SteamDeck"];
+      members = ["BigKing" "SteamDeck"];
     };
   };
 

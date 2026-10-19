@@ -1,4 +1,5 @@
-# BigKing-local NixOS modules: storage, shares and the ASUSTOR hardware.
+# BigKing-local NixOS modules: storage, shares, Syncthing and the ASUSTOR
+# hardware.
 # The shared baseline (boot loader, locale, nix settings, users, openssh,
 # sops, docker/libvirt) is pulled in via ../../../modules/nixos.
 {...}: {
@@ -13,6 +14,7 @@
     ./hardware.nix
     ./networking.nix
     ./services-shares.nix
+    ./syncthing.nix
     ./users.nix
   ];
 }
