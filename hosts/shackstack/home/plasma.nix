@@ -1,10 +1,54 @@
 # Desktop Mode on the TV, via plasma-manager: SteamOS's Vapor theme, 200%
 # scale for the couch, no screen lock or idle sleep (Gaming Mode owns
-# power), and one panel with the way back to Gaming Mode on it.
+# power), one panel with the way back to Gaming Mode on it, and Steam in the
+# tray.
 #
 # NOTE: because `panels` is defined here, plasma-manager owns the panel
 # layout; edits in System Settings are reset on the next rebuild.
-{pkgs, ...}: let
+{
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}: let
+  # Jovian's Steam always runs with -steamdeck -pipewire, as SteamOS's does.
+  # Under Plasma, -pipewire has Steam ask the screencast portal for a screen
+  # at every start, which is KDE's "Screen Sharing Requested" dialog each
+  # time, with no way to allow it for good. Desktop Mode starts this copy
+  # without the flag. Gaming Mode keeps it: gamescope serves the capture with
+  # no prompt. Remote Play and game recording started from Desktop Mode lose
+  # PipeWire capture.
+  desktopSteam = osConfig.programs.steam.package.override {
+    platformArgs = "-steamdeck";
+  };
+  desktopSteamExe = lib.getExe desktopSteam;
+
+  # Steam's own launcher, every Exec line pointed at desktopSteam, so the
+  # menu and steam:// links start that copy too. A user entry of the same
+  # name hides the system one.
+  desktopSteamEntry = pkgs.runCommand "steam.desktop" {} ''
+    src=${desktopSteam}/share/applications/steam.desktop
+    sed 's|^Exec=steam |Exec=${desktopSteamExe} |' "$src" > $out
+    if grep -q '^Exec=steam' $out || ! grep -q '^Exec=${desktopSteamExe} ' $out; then
+      echo "steam.desktop: Exec lines no longer start with 'steam '" >&2
+      exit 1
+    fi
+  '';
+
+  # Steam starts in the tray whenever Desktop Mode does, as on Whopper
+  # (../../whopper/home/xdg/autostart.nix); -silent means no main window.
+  # Steam's "Run Steam when my computer starts" writes this same file name,
+  # so `force` takes it back on rebuild. Gaming Mode's session runs no XDG
+  # autostart; OnlyShowIn keeps it that way.
+  steamAutostart = pkgs.makeDesktopItem {
+    name = "steam";
+    desktopName = "Steam";
+    icon = "steam";
+    exec = "${desktopSteamExe} -silent";
+    terminal = false;
+    onlyShowIn = ["KDE"];
+  };
+
   # KWin has no declarative output scale or mode, so they are reasserted at
   # session start with kscreen-doctor, as Whopper does. DP-1 is the TV
   # through the DP->HDMI adapter. Plasma stays SDR; Gaming Mode does HDR.
@@ -21,6 +65,12 @@
     exit 0
   '';
 in {
+  xdg.configFile."autostart/steam.desktop" = {
+    source = "${steamAutostart}/share/applications/steam.desktop";
+    force = true;
+  };
+  xdg.dataFile."applications/steam.desktop".source = desktopSteamEntry;
+
   systemd.user.services.tv-output = {
     Unit = {
       Description = "Set the TV to 3840x2160@120 at 200% scale under Plasma";
