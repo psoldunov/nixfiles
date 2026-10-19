@@ -67,6 +67,7 @@
 
   # Wake from suspend with a controller: the AX211's Bluetooth function
   # (8087:0033) and the xHCI controller it hangs off must both allow wakeup.
+  # ./pad-wake keeps the controller connected once the system is up.
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="pci", DRIVER=="xhci_hcd", ATTR{power/wakeup}="enabled"
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="8087", ATTR{idProduct}=="0033", ATTR{power/wakeup}="enabled"

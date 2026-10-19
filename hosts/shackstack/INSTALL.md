@@ -127,8 +127,23 @@ Run these on ShackStack. The ones marked (Bazzite) also work before the wipe, si
    - `f.f.f.f`, or no device: the TV drops hotplug in standby, and the adapter can't send anything until it comes back. The TV then has to be turned on with its remote. `shackstack-tv-on` logs this and gives up after 15 seconds; everything else still works. Waking the TV over the network (Sony IP control) is in the backlog for this case, as THE-300 in Linear.
 3. (Bazzite) With the TV on, run `cec-ctl -d0 -M` and press the remote's arrows and OK. `USER_CONTROL_PRESSED` lines must appear.
 4. `shackstack-tv standby`, then `shackstack-tv on`. The TV turns off, then on, and switches to HDMI 4.
-5. Suspend from Steam's power menu five times and wake with a controller each time. The TV goes to standby and comes back on HDMI 4. Then power off and on twice. `journalctl -b -u 'shackstack-tv-*'` shows what each run did.
+5. Suspend from Steam's power menu five times and wake with a controller each time. The TV goes to standby and comes back on HDMI 4, and the controller stays on. Then power off and on twice. `journalctl -b -u 'shackstack-tv-*' -u shackstack-pad-wake` shows what each run did.
 6. `sudo ir-keytable -t -s rc0` prints the keys as you press the remote (`ir-keytable` alone lists the rc devices, if the CEC one isn't `rc0`). Steam's menus move with the arrows and OK.
+
+### When the TV stops answering after a suspend
+
+The adapter loses power in suspend and forgets that its CEC tunnel is on. The kernel keeps `/dev/cec0` and its addresses across the suspend, so nothing switches the tunnel back on, and the TV acknowledges nothing. The journal then shows `Tx, Not Acknowledged (1), Max Retries` under every message. Claiming the CEC address again switches the tunnel back on, and `shackstack-tv` does that on every run. By hand:
+
+```sh
+cec-ctl -d0 --to 0 --give-device-power-status   # Not Acknowledged while the tunnel is off
+cec-ctl -d0 --clear
+cec-ctl -d0 --playback --osd-name ShackStack
+cec-ctl -d0 --to 0 --give-device-power-status   # the TV answers with REPORT_POWER_STATUS
+```
+
+### Waking with a controller
+
+On resume the kernel can drop the controller's first Bluetooth packet. `journalctl -k` then shows `ACL packet for unknown connection handle`, and the controller switches itself off a few seconds after waking the system. It happened on two of three resumes on 2026-10-19. `shackstack-pad-wake` runs after every resume: when a wake-allowed controller is linked but has no HID device after 0.6 seconds, it opens the HID connection from ShackStack's side. Its journal says when it had to, and whether the controller came up.
 
 ## Bazzite reference
 
