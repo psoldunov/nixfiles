@@ -9,6 +9,10 @@
 # Waking the TV from standby needs the adapter's CEC tunnel to stay up while
 # the TV sleeps. If it does not, `shackstack-tv on` exits non-zero and the
 # TV has to be switched on with its remote; see ../../INSTALL.md.
+#
+# The adapter also forgets that its CEC tunnel is on whenever ShackStack
+# suspends, so every `shackstack-tv` run claims its CEC address afresh, which
+# switches the tunnel back on. ./shackstack-tv.sh explains why.
 {pkgs, ...}: let
   shackstack-tv = pkgs.writeShellApplication {
     name = "shackstack-tv";
@@ -45,7 +49,8 @@ in {
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${shackstack-tv}/bin/shackstack-tv on";
-        TimeoutStartSec = 30;
+        # 15 s for the address, then about 10 s per message if it retries.
+        TimeoutStartSec = 45;
       };
     };
 
