@@ -19,11 +19,6 @@
 
   hardware.intel-gpu-tools.enable = true;
 
-  services.cachefilesd = {
-    enable = true;
-    cacheDir = "/RAID/cachefilesd";
-  };
-
   services.nbd.server = {
     enable = true;
     exports.cdrom = {

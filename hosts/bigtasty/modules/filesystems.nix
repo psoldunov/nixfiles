@@ -7,19 +7,19 @@
   fileSystems."/mnt/Media" = {
     device = "10.24.24.3:/volume1/Media";
     fsType = "nfs";
-    options = ["rw" "fsc" "nolock" "nconnect=16"];
+    options = ["rw" "nolock" "nconnect=16"];
   };
 
   fileSystems."/mnt/Backup" = {
     device = "10.24.24.3:/volume1/Backup";
     fsType = "nfs";
-    options = ["rw" "fsc" "nolock"];
+    options = ["rw" "nolock"];
   };
 
   fileSystems."/mnt/Games" = {
     device = "10.24.24.3:/volume1/Games";
     fsType = "nfs";
-    options = ["rw" "fsc" "nolock"];
+    options = ["rw" "nolock"];
   };
 
   fileSystems."/export/transmission" = {

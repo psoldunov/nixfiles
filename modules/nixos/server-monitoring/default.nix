@@ -32,7 +32,6 @@
       "nginx"
       "cloudflare-dyndns"
       "netatalk"
-      "cachefilesd"
       "nbd-server"
       "sonarr"
       "radarr"
