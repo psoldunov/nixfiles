@@ -27,6 +27,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   └── ssh-keys.nix                # Public SSH keys: the shared identities and the authorized list
 ├── modules/                        # SHARED ONLY
 │   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty, BigKing and ShackStack — see "Shared NixOS modules"
+│   │   ├── game-saves.nix          # Alan Wake saves over Syncthing, imported by Whopper, ShackStack and BigTasty
 │   │   └── home-dns/               # AdGuard + Unbound + policy, imported by PiHome and BigTasty only
 │   ├── darwin/                     # nix-darwin baseline imported by both Macs, shared Homebrew list included — see "Macs"
 │   └── home/
@@ -151,6 +152,7 @@ The living-room PC. It ran Bazzite until NixOS replaced it, and the goal is the 
 | Controllers | DualSense and two Xbox Wireless pads over Bluetooth (AX211), wake from suspend enabled; Logitech Unifying keyboard and mouse |
 | Network | NetworkManager with a declared static profile, `10.24.24.7` on `enp7s0`, Wake-on-LAN, avahi, BigKing's Games share automounted at `/mnt/Games` |
 | Passwordless sudo | Its own `sudo-shackstack` key through the forwarded agent, as on PiHome |
+| Game saves | Alan Wake Remastered and Alan Wake 2 saves sync with Whopper and BigTasty over Syncthing ([game-saves.nix](modules/nixos/game-saves.nix)). Resolution and graphics settings stay on each host |
 
 ### PiHome (DNS appliance)
 
@@ -235,7 +237,7 @@ Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager 
 | `hardware.nix` | `hardware.graphics` (+32-bit), fwupd, Apple SuperDrive udev rule |
 | `programs.nix` | mtr, git + lfs, iperf3 |
 
-[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves (see [PiHome](#pihome-dns-appliance)).
+[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves (see [PiHome](#pihome-dns-appliance)). Neither is [game-saves.nix](modules/nixos/game-saves.nix), which Whopper and ShackStack import to sync their Alan Wake Remastered and Alan Wake 2 saves over Syncthing. BigTasty imports it too and keeps a copy in `/RAID/apps/syncthing`, so a save still reaches the other machine when the two are never on at the same time.
 
 ## Whopper modules
 

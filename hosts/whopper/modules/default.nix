@@ -4,6 +4,7 @@
 {...}: {
   imports = [
     ../../../modules/nixos
+    ../../../modules/nixos/game-saves.nix
 
     ./boot.nix
     ./desktop-environment.nix
