@@ -447,6 +447,28 @@
         "type": "github"
       }
     },
+    "jovian": {
+      "inputs": {
+        "nix-github-actions": "nix-github-actions",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792349298,
+        "narHash": "sha256-msZDN/dIj+5MTX8PGHcwN4WHpDDdyV+Tv7aPLPz9N4c=",
+        "owner": "Jovian-Experiments",
+        "repo": "Jovian-NixOS",
+        "rev": "b3f4daa9c61909a611b95a3ea4fc46658440ad16",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Jovian-Experiments",
+        "ref": "development",
+        "repo": "Jovian-NixOS",
+        "type": "github"
+      }
+    },
     "lcm": {
       "flake": false,
       "locked": {
@@ -539,6 +561,27 @@
       "original": {
         "owner": "fufexan",
         "repo": "nix-gaming",
+        "type": "github"
+      }
+    },
+    "nix-github-actions": {
+      "inputs": {
+        "nixpkgs": [
+          "jovian",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1737420293,
+        "narHash": "sha256-F1G5ifvqTpJq7fdkT34e/Jy9VCyzd5XfJ9TO8fHhJWE=",
+        "owner": "nix-community",
+        "repo": "nix-github-actions",
+        "rev": "f4158fa080ef4503c8f4c820967d946c2af31ec9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-github-actions",
         "type": "github"
       }
     },
@@ -797,6 +840,7 @@
         "home-manager": "home-manager",
         "i-have-adhd": "i-have-adhd",
         "impeccable": "impeccable",
+        "jovian": "jovian",
         "lcm": "lcm",
         "linear": "linear",
         "mattpocock-skills": "mattpocock-skills",

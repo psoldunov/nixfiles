@@ -32,6 +32,12 @@ icon = "hammer"
 command = "nix eval --raw .#darwinConfigurations.BigMac.system.drvPath && echo && nix eval --raw .#darwinConfigurations.MacFlurry.system.drvPath"
 icon = "search"
 
+# The HTPC has no current system on Whopper to diff against, so this only
+# builds it.
+[scripts.run.build-shackstack]
+command = "nix build .#nixosConfigurations.ShackStack.config.system.build.toplevel --no-link --print-out-paths"
+icon = "hammer"
+
 [scripts.run.eval-pihome]
 command = "nix eval --raw .#nixosConfigurations.PiHome.config.system.build.toplevel.drvPath"
 icon = "search"
@@ -49,10 +55,11 @@ icon = "test-tube"
 # work from Whopper and from the Macs, which have no nixos-rebuild: a Mac
 # copies the flake into the target's store and the target builds and
 # activates it over ssh, where sudo asks for the target's password once.
-# MacFlurry is the laptop: when it is asleep or away its step fails, and the
-# -all scripts run it last so the other hosts are already done. They run one
-# host at a time, so PiHome, which every host resolves names through, never
-# restarts its DNS while another host is building.
+# MacFlurry is the laptop and ShackStack the HTPC, often asleep or away. The
+# -all scripts run them last with --if-online, which skips a host that does
+# not answer instead of failing the run. They run one host at a time, so
+# PiHome, which every host resolves names through, never restarts its DNS
+# while another host is building.
 [scripts.run.rebuild-pihome]
 command = "scripts/switch-host.sh PiHome"
 icon = "network"
@@ -69,6 +76,10 @@ icon = "server"
 command = "scripts/switch-host.sh BigKing"
 icon = "hard-drive"
 
+[scripts.run.rebuild-shackstack]
+command = "scripts/switch-host.sh ShackStack"
+icon = "gamepad-2"
+
 [scripts.run.rebuild-bigmac]
 command = "scripts/switch-host.sh BigMac"
 icon = "monitor"
@@ -78,7 +89,7 @@ command = "scripts/switch-host.sh MacFlurry"
 icon = "laptop"
 
 [scripts.run.rebuild-all]
-command = '''scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac && scripts/switch-host.sh PiHome && scripts/switch-host.sh MacFlurry'''
+command = '''scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac && scripts/switch-host.sh PiHome && scripts/switch-host.sh ShackStack --if-online && scripts/switch-host.sh MacFlurry --if-online'''
 icon = "layers"
 
 # One-time: the first nix-darwin switch on a Mac. Needs upstream Nix on the
@@ -105,6 +116,10 @@ icon = "cloud"
 command = "nix flake update && scripts/switch-host.sh BigKing"
 icon = "database"
 
+[scripts.run.update-shackstack]
+command = "nix flake update && scripts/switch-host.sh ShackStack"
+icon = "gamepad"
+
 [scripts.run.update-pihome]
 command = "nix flake update && scripts/switch-host.sh PiHome"
 icon = "network"
@@ -118,5 +133,5 @@ command = "nix flake update && scripts/switch-host.sh MacFlurry --update"
 icon = "upload"
 
 [scripts.run.update-all]
-command = '''nix flake update && scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac --update && scripts/switch-host.sh PiHome && scripts/switch-host.sh MacFlurry --update'''
+command = '''nix flake update && scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac --update && scripts/switch-host.sh PiHome && scripts/switch-host.sh ShackStack --if-online && scripts/switch-host.sh MacFlurry --update --if-online'''
 icon = "zap"

@@ -137,6 +137,16 @@ in {
           AddKeysToAgent = "yes";
           ForwardAgent = true;
         };
+
+        # The living-room HTPC.
+        "shackstack" = {
+          HostName = "10.24.24.7";
+          User = "psoldunov";
+          IdentityFile = "~/.ssh/sudo-shackstack";
+          IdentitiesOnly = true;
+          AddKeysToAgent = "yes";
+          ForwardAgent = true;
+        };
       }
       // lib.optionalAttrs isDarwin {
         # Whopper's keychain(1) preloads the agent at login. On macOS the

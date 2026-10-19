@@ -26,8 +26,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Declarative partitioning. BigKing's NVMe layout (hosts/bigking/disko.nix),
-    # which nixos-anywhere creates when installing it.
+    # Declarative partitioning: BigKing's NVMe mirror (hosts/bigking/disko.nix)
+    # and ShackStack's single NVMe (hosts/shackstack/disko.nix). nixos-anywhere
+    # creates the layout when installing each host.
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,6 +46,15 @@
     };
 
     nix-gaming.url = "github:fufexan/nix-gaming";
+
+    # SteamOS session for ShackStack (hosts/shackstack/modules/game-mode.nix):
+    # Valve's gamescope session, steamos-session-select, steamos-manager and
+    # Decky Loader. Bump deliberately with `nix flake update jovian` and test
+    # Switch to Desktop / Return to Gaming Mode after each bump.
+    jovian = {
+      url = "github:Jovian-Experiments/Jovian-NixOS/development";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     apple-fonts = {
       url = "github:Lyndeno/apple-fonts.nix";
@@ -450,6 +460,51 @@
             };
             sharedModules = [
               sops-nix.homeManagerModules.sops
+            ];
+          };
+        }
+      ];
+    };
+
+    # The living-room HTPC: Steam's Gaming Mode from Jovian-NixOS, Plasma as
+    # Desktop Mode. First installed with nixos-anywhere, see
+    # hosts/shackstack/INSTALL.md.
+    nixosConfigurations.ShackStack = mkHost {
+      inherit system;
+      specialArgs = {
+        inherit
+          inputs
+          outputs
+          pkgs-stable
+          ;
+        hostConfig = import ./hosts/shackstack/hostConfig.nix;
+      };
+      modules = [
+        ./hosts/shackstack/default.nix
+        disko.nixosModules.disko
+        inputs.jovian.nixosModules.default
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            extraSpecialArgs = {
+              inherit
+                inputs
+                outputs
+                pkgs-stable
+                ;
+              hostConfig = import ./hosts/shackstack/hostConfig.nix;
+            };
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            backupFileExtension = "hm-backup";
+            # Same reason as on Whopper: apps rewrite some HM-owned files.
+            overwriteBackup = true;
+            users = {
+              psoldunov = import ./hosts/shackstack/home;
+            };
+            sharedModules = [
+              plasma-manager.homeModules.plasma-manager
             ];
           };
         }

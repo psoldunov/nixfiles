@@ -252,11 +252,11 @@
       then "darwin"
       else "nixos"
     }
-    ALL_HOSTS=(Whopper BigTasty BigKing BigMac MacFlurry PiHome)
-    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [BigMac]=darwin [MacFlurry]=darwin [PiHome]=nixos)
-    # Hosts that are often asleep or away (the laptop). `all` skips them
-    # with a warning when they don't answer, instead of failing the run.
-    ROAMING_HOSTS=(MacFlurry)
+    ALL_HOSTS=(Whopper BigTasty BigKing ShackStack BigMac MacFlurry PiHome)
+    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [ShackStack]=nixos [BigMac]=darwin [MacFlurry]=darwin [PiHome]=nixos)
+    # Hosts that are often asleep or away (the laptop, the HTPC). `all` skips
+    # them with a warning when they don't answer, instead of failing the run.
+    ROAMING_HOSTS=(MacFlurry ShackStack)
     # Hosts run_hosts switches alone, after every other host has finished.
     # The rest of the fleet resolves names through PiHome, and a switch that
     # restarts AdGuard or Unbound would break their downloads mid-build.
