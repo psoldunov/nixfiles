@@ -96,7 +96,6 @@ in {
     settings.devices = syncthing.devicesFor "Whopper";
     settings.folders = syncthing.foldersFor "Whopper" {
       Obsidian = "/home/psoldunov/Documents/Obsidian";
-      Emulation = "/SATA/Emulation";
       Sync = "/home/psoldunov/Sync";
     };
     overrideFolders = true;

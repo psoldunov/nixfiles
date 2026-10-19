@@ -41,10 +41,14 @@ let
       label = "Obsidian";
       members = ["BigTasty" "Whopper" "BigMac" "MacFlurry" "SteamDeck"];
     };
+    # The emulated games, BIOS files and saves on BigKing's Games share
+    # (/volume1/Games/Emulation). BigTasty serves it from its NFS mount so
+    # the Steam Deck can take a copy along. Whopper and ShackStack keep no
+    # copy: their emulators read it over NFS at /mnt/Games/Emulation.
     Emulation = {
       id = "ycvsf-athpn";
       label = "Emulation";
-      members = ["BigTasty" "Whopper" "SteamDeck"];
+      members = ["BigTasty" "SteamDeck"];
     };
   };
 
