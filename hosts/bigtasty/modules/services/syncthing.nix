@@ -30,7 +30,6 @@ in {
       folders = syncthing.foldersFor "BigTasty" {
         Sync = config.services.syncthing.dataDir + "/Sync";
         Obsidian = config.services.syncthing.dataDir + "/Obsidian";
-        Emulation = "/mnt/Games/Emulation";
       };
     };
     overrideFolders = true;

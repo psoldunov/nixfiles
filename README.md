@@ -116,7 +116,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | | |
 |---|---|
 | GPU | Intel iGPU (intel-media-driver, Quick Sync, VAAPI) |
-| Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup,Games}` |
+| Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup}` |
 | Network | static IP `10.24.24.2` (`enp8s0`), openssh (`AllowUsers psoldunov`) |
 | Services | jellyfin, plex, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server, concierge-server (Concierge's Sync server), cal-diy (scheduling, see [cal.diy](#caldiy)) |
 | Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com`. The UniFi port forward sends WAN 80/443 here from Cloudflare's IP ranges only. Kuma, Jellyfin, Immich, Home Assistant and cal.diy are public through Cloudflare. The \*arr apps, Jellyseerr, Homarr, Portainer, Syncthing and the dashboard take LAN, loopback and Docker peers only ([nginx-lan-only.nix](hosts/bigtasty/modules/nginx-lan-only.nix)). A catch-all vhost refuses the bare IP and unknown names |
@@ -136,7 +136,7 @@ An ASUSTOR Lockerstor 4 (AS6604T) that ran ADM until NixOS replaced it. [hosts/b
 | Storage | ADM's data volume as it was: mdadm RAID 0 over the four WD Reds, btrfs subvolume `base` mounted at `/volume1`. ADM itself stays on the eMMC as a fallback |
 | Network | static IP `10.24.24.3` on `bond0`, an 802.3ad bond of the two RTL8125 ports (renamed `lan0`/`lan1` by MAC address) |
 | File sharing | NFS exports `/volume1/{Media,Camera,Backup,Games}` to BigTasty and Whopper, plus `Games` to ShackStack (`10.24.24.7`), Samba (ADM's fruit settings) with a Time Machine share, samba-wsdd, avahi |
-| Services | smartd with temperature warnings |
+| Services | smartd with temperature warnings, Syncthing sharing `/volume1/Games/Emulation` with the Steam Deck, Switch games excluded ([syncthing.nix](hosts/bigking/modules/syncthing.nix)) |
 | Front panel | ASUSTOR kernel drivers (mafredri/asustor-platform-driver), fan control from disk and CPU temperatures, LED triggers, `openlcmd` on the LCD |
 | Passwordless sudo | Same as BigTasty |
 

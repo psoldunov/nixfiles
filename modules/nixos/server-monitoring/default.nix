@@ -27,6 +27,7 @@
       "asustor-fan"
       "asustor-leds"
       "openlcmd"
+      "syncthing"
     ]
     else [
       "nginx"
