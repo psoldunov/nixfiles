@@ -19,6 +19,8 @@
     impeccable = "${inputs.impeccable}/plugin";
     taste-skill = inputs.taste-skill;
     i-have-adhd = inputs.i-have-adhd;
+    # Also pi's extension of the same name (../pi/default.nix).
+    ponytail = inputs.ponytail;
     # Local mods: function-hook plugins kept in this repo.
     nix-owned-paths = ./mods/nix-owned-paths;
     # Also pi's extension of the same name (../pi/default.nix).

@@ -96,7 +96,7 @@ nix flake update context-mode
 rebuild_system
 ```
 
-`caveman`, `impeccable`, `taste-skill` and `i-have-adhd` are wired the same way. The
+`caveman`, `impeccable`, `taste-skill`, `i-have-adhd` and `ponytail` are wired the same way. The
 `impeccable` repo is a marketplace, so `settings.nix` points at its `plugin/`
 subdirectory.
 
@@ -119,6 +119,18 @@ that flag file. `hooks/adhd-final-response.sh` re-asserts the rules on every
 prompt so they shape each turn's final message, and takes precedence over
 caveman on structure. Delete the flag entry in `settings.nix` to switch both
 hooks off; "stop adhd mode" switches it off for one session.
+
+`ponytail` (github.com/DietrichGebert/ponytail) steers code toward the
+smallest change that works: reuse what exists, stdlib before new code, one
+small test for risky logic. Its SessionStart hook injects the ruleset at the
+default level (`full`) and a short map of the repo; SubagentStart gives
+subagents the ruleset too. `/ponytail lite|full|ultra|off` changes the level,
+`/ponytail-review` and `/ponytail-audit` review a diff or the whole repo. The
+hooks run `node` from `PATH`. It also registers a band above the prompt (cost,
+tokens, tests) and writes one CSV row per task to `~/.config/ponytail/band/`;
+`/ponytail band` hides the band. Nothing leaves the machine unless a webhook
+URL is set in its plugin config. The same checkout is pi's `ponytail`
+extension (`../pi/default.nix`). Update both with `nix flake update ponytail`.
 
 Local mods (Claude Code function-hook plugins) live in `mods/<name>/` and are
 linked through the same `plugins` set. Each one has

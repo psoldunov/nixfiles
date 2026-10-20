@@ -11,7 +11,8 @@ owns there; the rest stays pi's own.
 ```
 
 `default.nix` also links `../claude-code/mods/humanizer-gate/` to
-`~/.pi/agent/extensions/humanizer-gate/` (see "humanizer-gate" below).
+`~/.pi/agent/extensions/humanizer-gate/` (see "humanizer-gate" below), and
+writes `~/.pi/agent/extensions/ponytail.js` (see "ponytail" below).
 
 Hosts opt in with `programs.pi-coding-agent.enable = true;` through
 `modules/home/workstation/default.nix` (Whopper, BigMac and MacFlurry).
@@ -83,7 +84,8 @@ would load it, so nothing floods the context up front:
 
 Not bridged yet: Claude Code hooks (caveman, i-have-adhd, block-rm-rf,
 impeccable), MCP servers, plugin slash commands, and settings such as
-`effortLevel`.
+`effortLevel`. Ponytail does not need the bridge for its hooks: it ships its
+own pi extension (see "ponytail" below).
 
 ## humanizer-gate
 
@@ -97,6 +99,19 @@ send. The check reads the live context on every call, so after a compaction
 the skill has to be loaded again. What counts as human-facing lives in
 `hooks/policy.ts`, which the Claude Code hooks share. Test the pi glue with
 `node --test modules/home/programs/claude-code/mods/humanizer-gate/tests/pi-extension.node.ts`.
+
+## ponytail
+
+Ponytail's own pi extension, from the `ponytail` flake input that Claude Code
+also loads as a plugin (`../claude-code/CLAUDE.md`). `extensions/ponytail.js`
+is a one-line re-export of `<input>/pi-extension/index.js`. A linked folder
+would not work: `index.js` requires `../hooks/`, which only resolves inside
+the store checkout. The extension adds the ruleset as a `ponytail`
+system-prompt section on every turn and registers `/ponytail` (level) plus
+`/ponytail-review`, `-audit`, `-debt`, `-gain` and `-help`. Those commands
+register before claude-bridge's skill aliases, so the aliases skip those
+names. The skills themselves reach pi through claude-bridge, from
+`~/.claude/skills/ponytail/skills/`.
 
 ## Working on the extension
 
