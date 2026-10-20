@@ -37,6 +37,16 @@
     localNetworkGameTransfers.openFirewall = true;
     extraCompatPackages = [pkgs.proton-ge-bin];
     protontricks.enable = true;
+
+    # Non-Steam shortcuts in the Gaming Mode library (steam-config-nix,
+    # flake.nix). Steam rewrites shortcuts.vdf from memory on exit, so the
+    # patcher waits for Steam to close (Switch to Desktop, or a reboot)
+    # before it writes. Renaming an attribute gives the shortcut a new ID.
+    config = {
+      enable = true;
+      # Fladder, the Jellyfin client Whopper runs.
+      nonSteamApps.Fladder.target = pkgs.fladder;
+    };
   };
 
   # Jovian turns on scx_lavd (mkDefault) for steamos-manager to start. Off

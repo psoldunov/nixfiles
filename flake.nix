@@ -56,6 +56,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Steam's shortcuts.vdf from Nix for ShackStack's non-Steam apps
+    # (hosts/shackstack/modules/game-mode.nix). Its patcher writes only while
+    # Steam is closed.
+    steam-config-nix = {
+      url = "github:different-name/steam-config-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     apple-fonts = {
       url = "github:Lyndeno/apple-fonts.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -460,6 +468,7 @@
         ./hosts/shackstack/default.nix
         disko.nixosModules.disko
         inputs.jovian.nixosModules.default
+        inputs.steam-config-nix.nixosModules.default
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         {
