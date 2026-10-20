@@ -10,6 +10,7 @@
 # (`/model`, `/settings`, `pi install`, the changelog marker).
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -109,6 +110,13 @@ in {
       # One folder serves both agents: Claude Code loads hooks/register.ts, pi
       # loads index.ts. Linked whole so index.ts can import ./hooks/policy.ts.
       "${cfg.configDir}/extensions/humanizer-gate".source = ../claude-code/mods/humanizer-gate;
+      # Ponytail's pi extension, from the same checkout Claude Code loads as a
+      # plugin. A one-line file, not a linked folder: index.js requires
+      # ../hooks/, which has to resolve inside the store checkout. Its skills
+      # reach pi through claude-bridge, from ~/.claude/skills/ponytail.
+      "${cfg.configDir}/extensions/ponytail.js".text = ''
+        export { default } from "${inputs.ponytail}/pi-extension/index.js";
+      '';
       "${cfg.configDir}/claude-bridge.json".text = builtins.toJSON claudeBridge;
     };
   };

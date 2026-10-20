@@ -116,6 +116,11 @@
       flake = false;
     };
 
+    ponytail = {
+      url = "github:DietrichGebert/ponytail";
+      flake = false;
+    };
+
     playwright-cli = {
       url = "github:microsoft/playwright-cli";
       flake = false;
