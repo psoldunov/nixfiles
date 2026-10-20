@@ -45,7 +45,18 @@
     config = {
       enable = true;
       # Fladder, the Jellyfin client Whopper runs.
-      nonSteamApps.Fladder.target = pkgs.fladder;
+      nonSteamApps.Fladder = {
+        target = pkgs.fladder;
+        # mpv's hardware decoding opens a Vulkan device through FFmpeg, and
+        # gamescope's WSI layer aborts in its vkCreateDevice hook (vkroots
+        # `Assertion 'obj' failed`) as soon as a video starts. Fladder draws
+        # with GL, so it loses nothing without the layer.
+        env.DISABLE_GAMESCOPE_WSI = "1";
+        # HTPC mode: fullscreen from launch with no title bar, D-pad focus
+        # navigation, and an Exit Fladder entry in Settings, since the
+        # window can't be closed any other way.
+        args = ["--htpc"];
+      };
     };
   };
 
