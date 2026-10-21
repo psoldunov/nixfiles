@@ -7,7 +7,6 @@
   # Filelight maps disk usage and Tremotesf drives the Transmission daemon on
   # BigTasty.
   home.packages = with pkgs; [
-    audacity
     ensemblr-master
     zed-editor
     cider-2
@@ -27,9 +26,6 @@
     fladder
     pcsx2
     duckstation
-    # P.T. from the PS4 PKG; the game files and saves live in
-    # ~/.local/share/pt-pc (overlays/pt-pc).
-    pt-pc
     heroic
     bchunk
     lutris
