@@ -85,7 +85,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # modules/darwin + host name + BigMac-only Homebrew apps — see "Macs"
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
-├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, atuin-darwin on the Macs, the rest Whopper-only)
+├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, atuin-darwin on the Macs, aggregate-modules on every NixOS host, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (PiHome and BigTasty)
@@ -230,7 +230,7 @@ Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager 
 | `boot.nix` | systemd-boot (`configurationLimit = 10`), EFI variables, swraid + mdadm `MAILADDR` |
 | `locale.nix` | `Asia/Nicosia`, `en_US.UTF-8` with metric `LC_MEASUREMENT` and `en_GB` time |
 | `nix.nix` | flakes, `auto-optimise-store`, `trusted-users = ["psoldunov"]`, allowUnfree/Insecure/Broken, nix-ld, `stateVersion` |
-| `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel) |
+| `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel), `overlays/aggregate-modules.nix` (see [Upstream workarounds](#upstream-workarounds)) |
 | `openssh.nix` | openssh with `AllowUsers psoldunov` |
 | `users.nix` | `psoldunov` account (wheel/docker/libvirtd/video) |
 | `shell.nix` | zsh as the login shell, fish installed too. PiHome imports this file on its own |
@@ -254,7 +254,7 @@ Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager 
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
 | `networking.nix` | hostname, static IP on `enp10s0`, firewall ports, openssh hardening, avahi, Skrepka firewall |
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
-| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pt-pc, pi-coding-agent, bambu-studio, periphery, solaar) |
+| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pi-coding-agent, bambu-studio, periphery, solaar, pyopenjtalk-plus, calibre-speechd) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
@@ -475,7 +475,7 @@ rebuild_system ShackStack     # same for the HTPC
 rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
 rebuild_system MacFlurry      # same for the laptop
 rebuild_system all            # Whopper, BigTasty, BigKing, ShackStack, BigMac, MacFlurry in parallel, then PiHome; skips ShackStack and MacFlurry when they don't answer
-update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pt_pc, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
+update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
 clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune, + brew cleanup on the Macs
 ```
 
@@ -586,6 +586,17 @@ nixos-rebuild dry-activate --flake .#BigTasty --target-host psoldunov@bigtasty -
 | Docker container activation fails on first switch | `systemd.services.docker-networks` is After=docker.service — if docker.service stopped during activation, networks aren't there yet; retry deploy |
 | Home-manager activation fails with "would be clobbered" | A desktop app rewrote an HM-owned file; `overwriteBackup = true` in `flake.nix` should handle it, else remove the stale `<file>.hm-backup` |
 | Stale `home-manager` generation | `systemctl status home-manager-psoldunov && journalctl -u home-manager-psoldunov -b` |
+
+## Upstream workarounds
+
+Temporary fixes for nixpkgs breakage, added with the 2026-10-20 update. Each file marks its fix with a `shortcut:` comment, so `rg 'shortcut:'` lists them. Once the upstream fix has landed and a `nix flake update` has pulled it in, delete the workaround and run its check. If the check builds, the workaround isn't needed any more.
+
+| Workaround | Where | Why | Remove when | Check |
+|---|---|---|---|---|
+| Missing kernel module certificates are skipped | [overlays/aggregate-modules.nix](overlays/aggregate-modules.nix), every NixOS host | Since [nixpkgs#571181](https://github.com/NixOS/nixpkgs/pull/571181), `aggregateModules` expects a `.ko.cer` next to every external kernel module. asustor-platform-driver (BigKing), ddcci-driver and xpad-noone (Whopper) copy their `.ko` files by hand and ship none, so the module bundle fails to build. If the aggregator code changes upstream, evaluation stops with an error naming this file | [nixpkgs#575192](https://github.com/NixOS/nixpkgs/issues/575192) is fixed, or all three packages install through kbuild's `modules_install` | `nix build .#nixosConfigurations.Whopper.config.system.modulesTree`, then the same for BigKing |
+| v4l2loopback installs with `DEPMOD=true` | [hosts/whopper/modules/boot.nix](hosts/whopper/modules/boot.nix) | The package ships depmod's `modules.*` index files, which collide with the kernel's in the module bundle | [nixpkgs#575861](https://github.com/NixOS/nixpkgs/pull/575861) is merged | `nix build .#nixosConfigurations.Whopper.config.system.modulesTree` |
+| One pyopenjtalk-plus test is skipped | [overlays/pyopenjtalk-plus.nix](overlays/pyopenjtalk-plus.nix), Whopper | Cython 3.3 reworded an error message that `test_run_njd_from_mecab_invalid_input_should_not_break_next_call` matches. The failing test also breaks piper-tts and calibre, which depend on the package | [nixpkgs#576063](https://github.com/NixOS/nixpkgs/pull/576063) is merged | `nix build .#nixosConfigurations.Whopper.pkgs.calibre` |
+| calibre gets its own speechd with Python bindings | [overlays/calibre-speechd.nix](overlays/calibre-speechd.nix), Whopper | speechd's rework ([nixpkgs#470797](https://github.com/NixOS/nixpkgs/pull/470797)) turned on `strictDeps` but left Python in `buildInputs`, so configure skips the Python bindings. calibre's `test_speech_dispatcher` then can't import `speechd` and the build fails. The overlay patches calibre's copy only, since patching speechd itself would rebuild everything that links it, Firefox and Qt speech among them | [nixpkgs#576062](https://github.com/NixOS/nixpkgs/pull/576062) is merged | `nix build .#nixosConfigurations.Whopper.pkgs.calibre` |
 
 ## History
 

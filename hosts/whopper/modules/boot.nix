@@ -51,7 +51,12 @@
 
   boot.extraModulePackages = with config.boot.kernelPackages; [
     gasket
-    v4l2loopback
+    # shortcut: DEPMOD=true keeps depmod's index files out of the package;
+    # they collide with the kernel's in aggregateModules. Drop once
+    # nixpkgs#575861 lands.
+    (v4l2loopback.overrideAttrs (old: {
+      installFlags = (old.installFlags or []) ++ ["DEPMOD=true"];
+    }))
   ];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1

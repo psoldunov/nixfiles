@@ -27,9 +27,8 @@
     # Vapor, SteamOS's own Plasma theme, so Desktop Mode looks like the Steam
     # Deck's (selected in ../home/plasma.nix).
     (import ../../../overlays/vapor-kde.nix)
-    # DuckStation and P.T. for ../home/apps.nix; nixpkgs has neither.
+    # DuckStation for ../home/apps.nix; nixpkgs doesn't have it.
     (import ../../../overlays/duckstation)
-    (import ../../../overlays/pt-pc)
   ];
 
   programs = {
