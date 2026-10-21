@@ -503,30 +503,12 @@
       ];
     };
 
-    # Independent household DNS appliance; deliberately omits the full server
-    # baseline. Home Manager brings only the shared shell config
-    # (hosts/pihome/home.nix). Build its SD image on aarch64-linux.
+    # The household DNS appliance: AdGuard and Unbound only. No server
+    # baseline, Home Manager or sops (hosts/pihome/default.nix says why).
+    # Build its SD image on aarch64-linux.
     nixosConfigurations.PiHome = mkHost {
       system = "aarch64-linux";
-      modules = [
-        ./hosts/pihome
-        sops-nix.nixosModules.sops
-        home-manager.nixosModules.home-manager
-        {
-          home-manager = {
-            extraSpecialArgs = {
-              pkgs-stable = mkPkgsStable "aarch64-linux";
-              hostConfig = import ./hosts/pihome/hostConfig.nix;
-            };
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            backupFileExtension = "hm-backup";
-            users = {
-              psoldunov = import ./hosts/pihome/home.nix;
-            };
-          };
-        }
-      ];
+      modules = [./hosts/pihome];
     };
 
     checks.${system}.adguard-cli = let

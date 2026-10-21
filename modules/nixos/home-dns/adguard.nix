@@ -6,17 +6,8 @@
   policy = import ./adguard-settings.nix;
 in
   lib.recursiveUpdate policy {
+    # `users` comes from ./sops.nix or ./boot-credentials.nix.
     http = {address = "127.0.0.1:${toString config.homeDns.uiPort}";};
-    users = [
-      {
-        name = "psoldunov";
-        password = config.sops.placeholder.ADGUARD_ADMIN_PASSWORD_HASH;
-      }
-      {
-        name = "adguard-cli";
-        password = config.sops.placeholder.ADGUARD_CLI_PASSWORD_HASH;
-      }
-    ];
     dns = {
       bind_hosts = ["0.0.0.0"];
       upstream_dns = ["127.0.0.1:5335"];

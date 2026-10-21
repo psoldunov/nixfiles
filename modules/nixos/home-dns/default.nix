@@ -1,7 +1,9 @@
 # The household DNS server: AdGuard Home on port 53 in front of a local
 # validating Unbound on 127.0.0.1:5335. PiHome is the primary and BigTasty
-# the standby; both import this module, so they serve the same policy
-# (./adguard-settings.nix) with the same credentials (secrets/dns.yaml).
+# the standby; both serve the same policy (./adguard-settings.nix). Hosts
+# import one of the two credential flavours, which imports this file:
+# ./sops.nix (BigTasty, secrets/dns.yaml) or ./boot-credentials.nix
+# (PiHome, which holds no age key).
 {
   config,
   lib,
@@ -9,14 +11,28 @@
   ...
 }: let
   cfg = config.homeDns;
-  # A host that installs secrets from a systemd unit (PiHome) has to order
-  # AdGuard after it; the others install them during activation.
-  sopsUnit = lib.optionals config.sops.useSystemdActivation ["sops-install-secrets.service"];
 in {
-  options.homeDns.uiPort = lib.mkOption {
-    type = lib.types.port;
-    default = 3000;
-    description = "Loopback port of the AdGuard UI and API, which the adguard CLI uses.";
+  options.homeDns = {
+    uiPort = lib.mkOption {
+      type = lib.types.port;
+      default = 3000;
+      description = "Loopback port of the AdGuard UI and API, which the adguard CLI uses.";
+    };
+    credentials = {
+      configFile = lib.mkOption {
+        type = lib.types.str;
+        description = "Root-only AdGuardHome.yaml with the users' password hashes filled in.";
+      };
+      apiFile = lib.mkOption {
+        type = lib.types.str;
+        description = "Root-only JSON with the username and password the adguard CLI logs in with.";
+      };
+      units = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = "systemd units that must write both files before AdGuard starts.";
+      };
+    };
   };
 
   config = {
@@ -33,10 +49,10 @@ in {
 
     systemd = {
       services.adguardhome = {
-        after = sopsUnit ++ ["unbound.service"];
-        requires = sopsUnit;
+        after = cfg.credentials.units ++ ["unbound.service"];
+        requires = cfg.credentials.units;
         wants = ["unbound.service"];
-        serviceConfig.LoadCredential = "adguard-config:${config.sops.templates."adguard-config".path}";
+        serviceConfig.LoadCredential = "adguard-config:${cfg.credentials.configFile}";
         preStart = lib.mkForce ''
           install -m 600 "$CREDENTIALS_DIRECTORY/adguard-config" "$STATE_DIRECTORY/AdGuardHome.yaml"
           ${lib.getExe config.services.adguardhome.package} -c "$STATE_DIRECTORY/AdGuardHome.yaml" --check-config
@@ -73,37 +89,13 @@ in {
       };
     };
 
-    sops.secrets =
-      lib.genAttrs [
-        "ADGUARD_ADMIN_PASSWORD_HASH"
-        "ADGUARD_CLI_PASSWORD_HASH"
-        "ADGUARD_CLI_PASSWORD"
-      ] (_: {
-        sopsFile = ../../../secrets/dns.yaml;
-        restartUnits = ["adguardhome.service"];
-      });
-    sops.templates = {
-      "adguard-config" = {
-        mode = "0400";
-        content = builtins.toJSON config.services.adguardhome.settings;
-        restartUnits = ["adguardhome.service"];
-      };
-      "adguard-api.json" = {
-        mode = "0400";
-        content = builtins.toJSON {
-          username = "adguard-cli";
-          password = config.sops.placeholder.ADGUARD_CLI_PASSWORD;
-        };
-      };
-    };
-
     environment.systemPackages = [
       pkgs.dig
       (pkgs.callPackage ../../../packages/adguard-cli {
         config = {
           mode = "local";
           base_url = "http://127.0.0.1:${toString cfg.uiPort}";
-          credentials_file = config.sops.templates."adguard-api.json".path;
+          credentials_file = cfg.credentials.apiFile;
           unbound_control = [
             "${pkgs.unbound}/bin/unbound-control"
             "-c"
