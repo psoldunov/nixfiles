@@ -93,5 +93,15 @@ in {
       icon = "steam";
       exec = "${lib.getExe osConfig.programs.steam.package} -silent";
     })
+    # --opened-at-login=1 marks a login launch; Motrix then keeps its window
+    # hidden while "Show window at login" is off, its default. Motrix leaves
+    # autostart to the desktop on Linux, so no in-app toggle writes this file.
+    # The other flags match the launcher entry in ./desktop-entries.nix.
+    (autostart {
+      name = "motrix";
+      desktopName = "Motrix";
+      icon = "motrix";
+      exec = "${lib.getExe pkgs.motrix} --ozone-platform-hint=auto --no-sandbox --opened-at-login=1";
+    })
   ];
 }
