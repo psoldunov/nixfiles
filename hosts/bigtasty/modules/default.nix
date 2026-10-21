@@ -6,7 +6,7 @@
     ../../../modules/nixos
     ../../../modules/nixos/server-monitoring
     # Standby DNS server, PiHome's twin.
-    ../../../modules/nixos/home-dns
+    ../../../modules/nixos/home-dns/sops.nix
     ./monitoring
 
     ./boot.nix

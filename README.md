@@ -12,7 +12,7 @@ Personal NixOS, nix-darwin and home-manager configuration. Multi-host flake, sin
 | **BigMac** | Workstation | Apple silicon Mac on macOS, managed by nix-darwin, GUI apps from Homebrew |
 | **MacFlurry** | Laptop | MacBook Pro (M1 Pro) on Wi-Fi, managed by nix-darwin like BigMac, with a smaller app set |
 
-Whopper, BigTasty, BigKing and ShackStack share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). ShackStack turns docker and libvirt off. PiHome takes only the login shell from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which gets `shell` alone, and ShackStack, which gets `shell`, fastfetch and its own Plasma settings. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
+Whopper, BigTasty, BigKing and ShackStack share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). ShackStack turns docker and libvirt off. PiHome takes nothing from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which has no Home Manager at all, and ShackStack, which gets `shell`, fastfetch and its own Plasma settings. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Everything else is host-scoped.
 
 A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them can rebuild any host (see [Deploy](#deploy)).
 
@@ -29,7 +29,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 ├── modules/                        # SHARED ONLY
 │   ├── nixos/                      # NixOS baseline imported by Whopper, BigTasty, BigKing and ShackStack — see "Shared NixOS modules"
 │   │   ├── game-saves.nix          # Alan Wake saves over Syncthing, imported by Whopper, ShackStack and BigTasty
-│   │   └── home-dns/               # AdGuard + Unbound + policy, imported by PiHome and BigTasty only
+│   │   └── home-dns/               # AdGuard + Unbound + policy; PiHome imports boot-credentials.nix, BigTasty sops.nix
 │   ├── darwin/                     # nix-darwin baseline imported by both Macs, shared Homebrew list included — see "Macs"
 │   └── home/
 │       ├── default.nix             # Imports all shared HM modules
@@ -75,8 +75,6 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   └── home/                   # Shared shell + Plasma settings for the TV
 │   ├── pihome/
 │   │   ├── default.nix             # PiHome system configuration
-│   │   ├── home.nix                # Home Manager: the shared shell config only
-│   │   ├── hostConfig.nix          # role=server
 │   │   ├── INSTALL.md              # Spare-card migration and rollback steps
 │   │   └── hardware.nix            # Raspberry Pi SD-card hardware settings
 │   ├── bigmac/
@@ -88,7 +86,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 ├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper + the Macs, atuin-darwin on the Macs, aggregate-modules on every NixOS host, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
-│   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (PiHome and BigTasty)
+│   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (BigTasty; PiHome makes its own)
 │   ├── whopper.yaml                # SOPS-encrypted (age, primary recipient)
 │   ├── bigtasty.yaml
 │   └── shared.yaml                 # Secrets more than one host reads, SSH keys included
@@ -157,15 +155,17 @@ The living-room PC. It ran Bazzite until NixOS replaced it, and the goal is the 
 
 ### PiHome (DNS appliance)
 
-PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/24` on `eth0` with gateway `10.24.24.1`. It was `/8` on the old Debian card, which made the Pi treat every 10.x address as local, so DNS replies to clients on other VLANs never reached them. Home Manager gives it the same shell as every other host ([hosts/pihome/home.nix](hosts/pihome/home.nix)), without the other home modules or any shell secrets.
+PiHome is a Raspberry Pi 4 Model B Rev 1.5 with 8 GB RAM. Its NixOS configuration is in [hosts/pihome](hosts/pihome) and the flake exposes it as `nixosConfigurations.PiHome`. It uses hostname `pi-home`, SSH alias `pihome`, and static address `10.24.24.9/24` on `eth0` with gateway `10.24.24.1`. It was `/8` on the old Debian card, which made the Pi treat every 10.x address as local, so DNS replies to clients on other VLANs never reached them.
 
-DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [modules/nixos/home-dns/adguard-settings.nix](modules/nixos/home-dns/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), one rule that answers Firefox's DoH canary `use-application-dns.net` with NXDOMAIN so Firefox keeps using this resolver, 15 local rewrites including `*.local.theswisscheese.com`, blocked services, Safe Search, and the existing admin login hash. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`; the complete effective settings are rendered from SOPS credentials at each service restart. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`. Nothing proxies it, because the policy is managed in Nix, so the old `adguard.theswisscheese.com` vhost and rewrite are gone. DNS rewrites still target `10.24.24.2`.
+The Pi runs AdGuard, Unbound and SSH, and little else. It has no Home Manager or shared shell config (its login shell is bash), no docs, and none of the installer tools or firmware the SD-image module would add. That keeps rebuilds short: deploys build on the Pi itself, so anything missing from the binary cache compiles on its CPU. Anyone can pull the SD card and read it, so the Pi holds no age key and no SSH private keys other than sshd's host keys.
 
-The CLI package provides `adguard status`, `adguard pause` (default five minutes), `adguard pause 15m`, `adguard resume`, and `adguard flush`. Pause leaves DNS available. Flush clears Unbound before AdGuard to avoid repopulating stale cache. Workstations get the remote wrapper from [modules/home/workstation/adguard.nix](modules/home/workstation/adguard.nix). It runs each command on `pihome` and then on `bigtasty` over SSH, using forwarded-agent sudo, and reports which server failed if one does. The alias loads PiHome's dedicated `sudo-pihome` identity. The normal GitHub and `id_ed25519` login keys can SSH in, but cannot authorize PiHome sudo. For a fresh installation, rebuild the workstation configuration before cutover so the identity, alias, and CLI are available. On the Pi, run `sudo adguard ...`. Credentials are root-only SOPS-rendered files, not command-line arguments or Nix store content.
+DNS runs device → AdGuard Home on port 53 → Unbound on `127.0.0.1:5335`. Unbound resolves authoritatively with DNSSEC and QNAME minimisation; there are no public forwarders or fallback. The Pi itself uses `127.0.0.1`. AdGuard policy is declarative in [modules/nixos/home-dns/adguard-settings.nix](modules/nixos/home-dns/adguard-settings.nix): two filter subscriptions (AdGuard DNS filter and AdAway Default Blocklist), two allow rules (`@@||webflow.grsm.io^` and `@@||analytics.google.com^`), one rule that answers Firefox's DoH canary `use-application-dns.net` with NXDOMAIN so Firefox keeps using this resolver, 15 local rewrites including `*.local.theswisscheese.com`, blocked services, and Safe Search. The snapshot was taken from the running container's lowercase `/opt/adguardhome/conf/AdGuardHome.yaml`, migrated locally to schema 34 / AdGuard Home 0.107.79, and checked against live rewrites. `mutableSettings = false`: every service start rewrites AdGuard's config from Nix, with the login hashes filled in on the host. The UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`. Nothing proxies it, because the policy is managed in Nix, so the old `adguard.theswisscheese.com` vhost and rewrite are gone. DNS rewrites still target `10.24.24.2`.
 
-BigTasty runs a standby copy, so DNS keeps working when the Pi is down. The AdGuard and Unbound setup, the policy and the CLI live in [modules/nixos/home-dns](modules/nixos/home-dns/default.nix), which PiHome and BigTasty both import, so the two servers give the same answers and read the same credentials from `secrets/dns.yaml`. BigTasty's UI and API listen on `127.0.0.1:3003` because Grafana already has port 3000. Each server keeps its own query log and statistics. Whopper, BigTasty and BigKing list `10.24.24.9` first and `10.24.24.2` second. Whopper's resolved moves to the second server when the first stops answering; BigTasty and BigKing set glibc's `timeout:1`, so a Pi outage costs each lookup one second instead of five. Devices that get DNS from the UniFi DHCP server use the standby only once the network's DHCP settings list both addresses.
+The CLI package provides `adguard status`, `adguard pause` (default five minutes), `adguard pause 15m`, `adguard resume`, and `adguard flush`. Pause leaves DNS available. Flush clears Unbound before AdGuard to avoid repopulating stale cache. Workstations get the remote wrapper from [modules/home/workstation/adguard.nix](modules/home/workstation/adguard.nix). It runs each command on `pihome` and then on `bigtasty` over SSH, using forwarded-agent sudo, and reports which server failed if one does. The alias loads PiHome's dedicated `sudo-pihome` identity. The normal GitHub and `id_ed25519` login keys can SSH in, but cannot authorize PiHome sudo. For a fresh installation, rebuild the workstation configuration before cutover so the identity, alias, and CLI are available. On the Pi, run `sudo adguard ...`. The CLI logs in to the API with credentials from a root-only file, never from command-line arguments or the Nix store. On PiHome that file holds a random password made at every boot under `/run/adguard-credentials` ([boot-credentials.nix](modules/nixos/home-dns/boot-credentials.nix)); on BigTasty it comes from `secrets/dns.yaml`. PiHome has no UI login of its own. To reach its UI, tunnel to `127.0.0.1:3000` over SSH and sign in as `adguard-cli` with the password from `sudo cat /run/adguard-credentials/adguard-api.json`.
 
-PiHome now serves live DNS on NixOS from the spare card. The initial ARM image was built, flashed, and booted; subsequent boot fixes were built and activated in place. Verification covered external DNS, DNSSEC validation, filtering, all 15 rewrites, NTP synchronization, and forwarded-key CLI access. The original Debian 12 / AdGuard Home 0.107.54 card is retained intact for rollback; its old query logs and mutable data were not migrated. Before recreating the original Debian container, back up its active config and work data from the container's writable layer, not the stale `/opt/AdGuardHome/conf/AdGuardHome.yaml` bind mount. Follow [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations, SOPS age-key staging, verification, and rollback. The conventional primary age key must be staged before first boot. `all` includes PiHome but switches it last, once every other host has finished building (see [Deploy](#deploy)).
+BigTasty runs a standby copy, so DNS keeps working when the Pi is down. The AdGuard and Unbound setup, the policy and the CLI live in [modules/nixos/home-dns](modules/nixos/home-dns/default.nix), which PiHome and BigTasty both import, so the two servers give the same answers. Only the logins differ: BigTasty reads them from `secrets/dns.yaml` ([sops.nix](modules/nixos/home-dns/sops.nix)), and PiHome makes its own at boot. BigTasty's UI and API listen on `127.0.0.1:3003` because Grafana already has port 3000. Each server keeps its own query log and statistics. Whopper, BigTasty and BigKing list `10.24.24.9` first and `10.24.24.2` second. Whopper's resolved moves to the second server when the first stops answering; BigTasty and BigKing set glibc's `timeout:1`, so a Pi outage costs each lookup one second instead of five. Devices that get DNS from the UniFi DHCP server use the standby only once the network's DHCP settings list both addresses.
+
+PiHome now serves live DNS on NixOS from the spare card. The initial ARM image was built, flashed, and booted; subsequent boot fixes were built and activated in place. Verification covered external DNS, DNSSEC validation, filtering, all 15 rewrites, NTP synchronization, and forwarded-key CLI access. The original Debian 12 / AdGuard Home 0.107.54 card is retained intact for rollback; its old query logs and mutable data were not migrated. Before recreating the original Debian container, back up its active config and work data from the container's writable layer, not the stale `/opt/AdGuardHome/conf/AdGuardHome.yaml` bind mount. Follow [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations, verification, and rollback. Nothing has to be copied onto the card before first boot. `all` includes PiHome but switches it last, once every other host has finished building (see [Deploy](#deploy)).
 
 ### Macs (BigMac, MacFlurry)
 
@@ -198,7 +198,7 @@ Homebrew's `bin` comes after the Nix profiles on `PATH`, so the Nix copy wins wh
 
 ## Shell
 
-zsh is the login shell on every host, PiHome included. [modules/nixos/shell.nix](modules/nixos/shell.nix) sets it on the NixOS hosts and [modules/darwin/system.nix](modules/darwin/system.nix) on the Macs. Fish is still installed and configured, so running `fish` gives the old setup.
+zsh is the login shell on every host except PiHome, which keeps NixOS's default bash. [modules/nixos/shell.nix](modules/nixos/shell.nix) sets it on the NixOS hosts and [modules/darwin/system.nix](modules/darwin/system.nix) on the Macs. Fish is still installed and configured, so running `fish` gives the old setup.
 
 [modules/home/shell/zsh.nix](modules/home/shell/zsh.nix) makes zsh work like fish:
 
@@ -214,7 +214,7 @@ zsh is the login shell on every host, PiHome included. [modules/nixos/shell.nix]
 
 ## `hostConfig`
 
-Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager modules). Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/shackstack/hostConfig.nix](hosts/shackstack/hostConfig.nix), [hosts/pihome/hostConfig.nix](hosts/pihome/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
+Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/shackstack/hostConfig.nix](hosts/shackstack/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
 
 | Field | Type | Meaning |
 |---|---|---|
@@ -233,13 +233,13 @@ Per-host knobs threaded via `specialArgs` (PiHome's only reach its Home Manager 
 | `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel), `overlays/aggregate-modules.nix` (see [Upstream workarounds](#upstream-workarounds)) |
 | `openssh.nix` | openssh with `AllowUsers psoldunov` |
 | `users.nix` | `psoldunov` account (wheel/docker/libvirtd/video) |
-| `shell.nix` | zsh as the login shell, fish installed too. PiHome imports this file on its own |
+| `shell.nix` | zsh as the login shell, fish installed too |
 | `sops.nix` | sops format + age key path |
 | `virtualisation.nix` | docker + libvirtd + containerd, `oci-containers` backend, watchtower |
 | `hardware.nix` | `hardware.graphics` (+32-bit), fwupd, Apple SuperDrive udev rule |
 | `programs.nix` | mtr, git + lfs, iperf3 |
 
-[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves (see [PiHome](#pihome-dns-appliance)). Neither is [game-saves.nix](modules/nixos/game-saves.nix), which Whopper and ShackStack import to sync their Alan Wake Remastered and Alan Wake 2 saves over Syncthing. BigTasty imports it too and keeps a copy in `/RAID/apps/syncthing`, so a save still reaches the other machine when the two are never on at the same time.
+[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves, each through its own credentials file (see [PiHome](#pihome-dns-appliance)). Neither is [game-saves.nix](modules/nixos/game-saves.nix), which Whopper and ShackStack import to sync their Alan Wake Remastered and Alan Wake 2 saves over Syncthing. BigTasty imports it too and keeps a copy in `/RAID/apps/syncthing`, so a save still reaches the other machine when the two are never on at the same time.
 
 ## Whopper modules
 
@@ -406,7 +406,7 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
 |---|---|
 | `nixpkgs` | nixos-unstable — default package set |
 | `nixpkgs-stable` | nixos-25.05 — calibre, Obsidian, prisma-engines |
-| `home-manager` | NixOS module on Whopper, BigTasty, BigKing and PiHome (shell only), nix-darwin module on the Macs |
+| `home-manager` | NixOS module on Whopper, BigTasty, BigKing and ShackStack, nix-darwin module on the Macs |
 | `disko` | BigKing's NVMe partitioning, used by nixos-anywhere at install time |
 | `asustor-platform-driver`, `lcm` | BigKing's ASUSTOR kernel drivers (NixOS module) and the source of its LCD daemon |
 | `nix-darwin` | The Macs' system layer |

@@ -1,13 +1,29 @@
+# The household DNS appliance: AdGuard Home and Unbound, SSH for remote
+# rebuilds and emergencies, and nothing else. It builds on the Pi itself
+# (scripts/switch-host.sh), so whatever is added here compiles on the Pi.
+# It holds no age key and no SSH private keys besides sshd's host keys:
+# anyone can pull the SD card and read it.
 {modulesPath, ...}: let
   sshKeys = import ../../lib/ssh-keys.nix;
 in {
   imports = [
     ./hardware.nix
-    # The login shell every host shares; ./home.nix brings its config.
-    ../../modules/nixos/shell.nix
-    ../../modules/nixos/home-dns
+    ../../modules/nixos/home-dns/boot-credentials.nix
     (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
+    # No docs, man cache, default packages or command-not-found.
+    (modulesPath + "/profiles/minimal.nix")
   ];
+  # The SD image pulls in the installer CD's toolbox (ZFS, btrfs, testdisk,
+  # vim and more); the image builds fine without it.
+  disabledModules = ["profiles/base.nix"];
+
+  system.tools = {
+    nixos-build-vms.enable = false;
+    nixos-enter.enable = false;
+    nixos-generate-config.enable = false;
+    nixos-install.enable = false;
+    nixos-option.enable = false;
+  };
 
   networking = {
     hostName = "pi-home";
@@ -34,7 +50,6 @@ in {
     };
   };
 
-  i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Asia/Nicosia";
   # DNSSEC needs correct time before the local resolver can resolve NTP names.
   services.timesyncd = {
@@ -81,7 +96,12 @@ in {
     Defaults env_keep += "SSH_AUTH_SOCK"
   '';
 
+  # An earlier install staged the fleet's primary age key here for sops.
+  # Nothing on the Pi decrypts secrets any more, so make sure it is gone.
+  system.activationScripts.removeAgeKey = "rm -f /home/psoldunov/.config/sops/age/keys.txt";
+
   nix.settings = {
+    # Flakes for the macOS deploy route, which evaluates on the Pi.
     experimental-features = ["nix-command" "flakes"];
     warn-dirty = false;
     auto-optimise-store = true;
@@ -94,9 +114,6 @@ in {
     dates = "weekly";
     options = "--delete-older-than 14d";
   };
-  # AdGuard, Unbound and their secrets come from modules/nixos/home-dns.
-  sops.useSystemdActivation = true;
-  sops.age.keyFile = "/home/psoldunov/.config/sops/age/keys.txt";
 
   system.stateVersion = "26.11";
   services.journald.settings.Journal = {

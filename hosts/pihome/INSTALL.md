@@ -10,13 +10,12 @@ The initial host-side snapshot was stale: the Docker bind mount at `/opt/AdGuard
 
 1. Build the image with `nix build .#nixosConfigurations.PiHome.config.system.build.sdImage --out-link result-pihome-image`. This needs an **aarch64-linux** builder, local or remote. An ARM Mac runs aarch64 Darwin, not Linux, and cannot build it by itself. The current x86 Linux host is not configured for aarch64-linux builds. The initial migration used a temporary ARM Linux VM on BigMac; that builder was removed after the DNS cutover passed verification.
 2. Flash the image to a verified spare microSD card. Flashing erases the selected device, so identify it carefully first. Leave the current card untouched. Do not use `nixos-anywhere` or target the existing card.
-3. Before boot, mount the spare card's root filesystem and stage the existing primary age identity at `/home/psoldunov/.config/sops/age/keys.txt`. Set mode `0600` and ensure root can read it. Do not paste the key into the repository, Nix store, or image. Without it, SOPS cannot render AdGuard credentials and AdGuard will not start correctly.
-4. Make sure no other device is using `10.24.24.9`. PiHome configures `eth0` as `10.24.24.9/24`, with gateway `10.24.24.1`.
-5. Shut down the Pi cleanly and disconnect power before swapping cards. Keep the original card intact. Both installations use `10.24.24.9`, so never run them at once.
+3. Make sure no other device is using `10.24.24.9`. PiHome configures `eth0` as `10.24.24.9/24`, with gateway `10.24.24.1`.
+4. Shut down the Pi cleanly and disconnect power before swapping cards. Keep the original card intact. Both installations use `10.24.24.9`, so never run them at once.
 
 ## Check the new system
 
-For a fresh installation, rebuild the workstation configuration before cutover so it installs `~/.ssh/sudo-pihome`, the `pihome` alias, and the remote CLI. This changes only the workstation, not PiHome. SSH in as `psoldunov` through that alias. The Pi accepts normal GitHub and `id_ed25519` keys for SSH, but only the dedicated forwarded `sudo-pihome` key authorizes sudo. The SSH host key changes on first NixOS boot. Verify its fingerprint at the local console before updating `known_hosts`; do not disable host-key checking or blindly remove the old key. The AdGuard UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`, and nothing proxies it: `adguard.theswisscheese.com` is gone. Configuration is declarative (`mutableSettings = false`): UI/API changes are not persistent, and SOPS renders the effective settings again on each restart. Use the local CLI with sudo:
+For a fresh installation, rebuild the workstation configuration before cutover so it installs `~/.ssh/sudo-pihome`, the `pihome` alias, and the remote CLI. This changes only the workstation, not PiHome. SSH in as `psoldunov` through that alias. The Pi accepts normal GitHub and `id_ed25519` keys for SSH, but only the dedicated forwarded `sudo-pihome` key authorizes sudo. The SSH host key changes on first NixOS boot. Verify its fingerprint at the local console before updating `known_hosts`; do not disable host-key checking or blindly remove the old key. The AdGuard UI/API bind is `127.0.0.1:3000`, unlike the original Debian container's `0.0.0.0:80`, and nothing proxies it: `adguard.theswisscheese.com` is gone. Configuration is declarative (`mutableSettings = false`): UI/API changes are not persistent, and each restart rewrites the settings from Nix. Nothing goes on the card besides the image. The Pi holds no age key: it makes a new random password for the CLI at every boot, under `/run/adguard-credentials`. Use the local CLI with sudo:
 
 ```sh
 sudo adguard status
@@ -44,3 +43,5 @@ AdGuard DHCP remains disabled. DNS flows from devices to AdGuard on port 53, the
 ## Roll back
 
 Power off the Pi, put the original card back, and boot. Do not run both cards at once; both use `10.24.24.9`. Verify the old SSH host key before reconnecting. The original Debian/AdGuard system and its data remain the rollback path.
+
+Rolling back to an older NixOS generation on the new card is not a rollback path for AdGuard. Generations built before the Pi stopped holding an age key read their AdGuard credentials through SOPS, so AdGuard fails to start on them, and BigTasty's standby answers instead.

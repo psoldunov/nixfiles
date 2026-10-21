@@ -66,7 +66,7 @@ in {
   };
 
   # Every shell gets these. SHELL_SECRETS is sourced by ../sops.nix, so a
-  # host without secrets (PiHome) can import this file on its own.
+  # host without secrets (ShackStack) can import this file on its own.
   home.shellAliases =
     {
       ls = "lsd -laFh";

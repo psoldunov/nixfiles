@@ -1,6 +1,5 @@
-# psoldunov's login shell on every NixOS host: zsh, with fish still
-# installed. PiHome imports this file on its own, without the rest of the
-# baseline. The per-user shell config comes from Home Manager
+# psoldunov's login shell on every NixOS host but PiHome: zsh, with fish
+# still installed. The per-user shell config comes from Home Manager
 # (modules/home/shell).
 {pkgs, ...}: {
   programs.zsh = {
