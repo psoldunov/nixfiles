@@ -10,10 +10,27 @@
 # Blur on Whopper is KWin's: its global Blur effect decides the strength and
 # ignores any per-app intensity.
 {
+  config,
   lib,
   pkgs,
   ...
 }: {
+  # shortcut: systemd 262 refuses to start a Type=notify-reload unit whose
+  # process has no SIGUSR2 handler when it reports ready, and Ghostty 1.3.1
+  # reports ready before installing it. Launches from the menu or Meta+Return
+  # (D-Bus activation) then fail about half the time with "Remote peer
+  # disconnected". Plain Type=notify skips that check, and ExecReload keeps
+  # the config reload home-manager triggers on rebuild. Delete this once
+  # nixpkgs ships a Ghostty with ghostty-org/ghostty#14399.
+  xdg.configFile."systemd/user/app-com.mitchellh.ghostty.service.d/notify.conf" =
+    lib.mkIf config.programs.ghostty.systemd.enable {
+      text = ''
+        [Service]
+        Type=notify
+        ExecReload=${pkgs.util-linux}/bin/kill -USR2 $MAINPID
+      '';
+    };
+
   programs.ghostty = {
     enable = true;
     package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
