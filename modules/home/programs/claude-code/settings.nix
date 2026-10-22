@@ -17,7 +17,6 @@
     caveman = inputs.caveman;
     # The repo is a marketplace; the plugin itself lives in plugin/.
     impeccable = "${inputs.impeccable}/plugin";
-    taste-skill = inputs.taste-skill;
     i-have-adhd = inputs.i-have-adhd;
     # Also pi's extension of the same name (../pi/default.nix).
     ponytail = inputs.ponytail;
@@ -29,6 +28,10 @@
 in {
   home.file =
     {
+      # Taste v2 has a marketplace manifest, not a plugin manifest; link the skill itself.
+      "${configDir}/skills/design-taste-frontend".source = "${inputs.taste-skill}/skills/taste-skill";
+      # Codex's standard user skill directory; Pi also discovers this location.
+      ".agents/skills/design-taste-frontend".source = "${inputs.taste-skill}/skills/taste-skill";
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
       # Matt Pocock's grill-me and grill-with-docs. Both only call the Skill
