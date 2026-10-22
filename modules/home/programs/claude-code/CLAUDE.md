@@ -96,9 +96,9 @@ nix flake update context-mode
 rebuild_system
 ```
 
-`caveman`, `impeccable`, `taste-skill`, `i-have-adhd` and `ponytail` are wired the same way. The
-`impeccable` repo is a marketplace, so `settings.nix` points at its `plugin/`
-subdirectory.
+`caveman`, `impeccable`, `i-have-adhd` and `ponytail` are wired the same way.
+The `impeccable` repo is a marketplace, so `settings.nix` points at its
+`plugin/` subdirectory.
 
 The plugins deliberately skip `programs.claude-code.plugins`. That option
 rebuilds each plugin as a directory of per-entry symlinks, and Claude Code
@@ -109,8 +109,16 @@ falls outside the plugin directory. Check that every plugin loads with
 Never install a marketplace copy of one of these plugins. An installed
 marketplace plugin takes the name, and the nix copy then does not load. Its hooks run a launcher that downloads the matching engine
 binary into `~/.impeccable/bin/<version>/` on first use; that cache is not
-declarative. `taste-skill` is skills only (frontend design taste, redesign,
-image-to-code, brand kits), with no hooks or MCP servers.
+declarative.
+
+`taste-skill` v2 provides one skill, `design-taste-frontend`, with no hooks or
+MCP servers. Its repo has a marketplace manifest but no plugin manifest, so
+`settings.nix` links `skills/taste-skill/` directly into both
+`~/.claude/skills/design-taste-frontend/` (Claude Code and pi's claude-bridge)
+and `~/.agents/skills/design-taste-frontend/` (Codex and Pi's native discovery).
+Both links preserve its scripts, references and assets. Linking the whole
+repo hides the nested skill from Claude Code and pi's claude-bridge. Update
+it with `nix flake update taste-skill` and `rebuild_system`.
 
 `i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
 steps, one closing next action. Its SessionStart hook injects the full ruleset
