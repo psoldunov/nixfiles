@@ -720,11 +720,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791377939,
-        "narHash": "sha256-ruPOXlzJAdj99Ntd16isGwwYjy3NVKcwHg1LP8WQoWc=",
+        "lastModified": 1792692562,
+        "narHash": "sha256-kV0De8uWSEjQeIwqDHpqJXBRggzGdD1d/oBqj/576QY=",
         "owner": "psoldunov",
         "repo": "notion",
-        "rev": "93097822c38313c3459cddb359d9d873ea75ee87",
+        "rev": "3a34d6379599cff7e5f3b9c1144e8f524f82afb5",
         "type": "github"
       },
       "original": {
@@ -741,11 +741,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792144385,
-        "narHash": "sha256-XRR3dYJfVGjyu9gULaOr1Np+o6I4ER4UL9YEC2/7u9Y=",
+        "lastModified": 1792690210,
+        "narHash": "sha256-7cYqa97r4SCtzDfcqdy2oF1N3PbQTU926I2qZuPJIUc=",
         "owner": "psoldunov",
         "repo": "notion-calendar",
-        "rev": "3e0448cdd101a06b890c9488eb7ac948f71c395c",
+        "rev": "982fb06df2adfeb2350d385470d79db937b4af31",
         "type": "github"
       },
       "original": {
