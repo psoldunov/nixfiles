@@ -128,6 +128,16 @@ six-phase audit (which writes report files and runs its `validate-*.cjs`
 checks with `node`) runs only when asked for an audit or pen test. Update it
 with `nix flake update security-audit-skill` and `rebuild_system`.
 
+latent-spaces' `brag` and `brag-slim` skills (github.com/latent-spaces/brag)
+come from the `brag` input the same way: `skills/brag/` and `skills/brag-slim/`
+are linked into `~/.claude/skills/` and `~/.agents/skills/`. Skip the repo's
+marketplace plugin, which would shadow these copies. Both turn a project or
+site into a short launch video in `brag-output/` and need `node`, `npx` and
+`ffmpeg` on `PATH`. On Opus 5.5, `/brag` hands off to its bundled copy of
+`/brag-slim`; on other models it runs the full workflow through `npx
+hyperframes`, whose helper skills (`npx hyperframes skills`) are not wired
+here. Update with `nix flake update brag` and `rebuild_system`.
+
 `i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
 steps, one closing next action. Its SessionStart hook injects the full ruleset
 only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares
