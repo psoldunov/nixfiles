@@ -120,6 +120,14 @@ Both links preserve its scripts, references and assets. Linking the whole
 repo hides the nested skill from Claude Code and pi's claude-bridge. Update
 it with `nix flake update taste-skill` and `rebuild_system`.
 
+Cloudflare's `security-audit` skill (github.com/cloudflare/security-audit-skill)
+is wired the same way from the `security-audit-skill` input: its
+`skills/security-audit/` is linked into `~/.claude/skills/security-audit/` and
+`~/.agents/skills/security-audit/`. It is guidance by default; the full
+six-phase audit (which writes report files and runs its `validate-*.cjs`
+checks with `node`) runs only when asked for an audit or pen test. Update it
+with `nix flake update security-audit-skill` and `rebuild_system`.
+
 `i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
 steps, one closing next action. Its SessionStart hook injects the full ruleset
 only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares
