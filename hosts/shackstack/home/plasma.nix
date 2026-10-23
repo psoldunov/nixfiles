@@ -17,9 +17,10 @@
   # time, with no way to allow it for good. Desktop Mode starts this copy
   # without the flag. Gaming Mode keeps it: gamescope serves the capture with
   # no prompt. Remote Play and game recording started from Desktop Mode lose
-  # PipeWire capture.
+  # PipeWire capture. Jovian's wrapper is not overridable itself: it puts
+  # the flags in nixpkgs' extraArgs, so that is what gets replaced.
   desktopSteam = osConfig.programs.steam.package.override {
-    platformArgs = "-steamdeck";
+    extraArgs = "-steamdeck";
   };
   desktopSteamExe = lib.getExe desktopSteam;
 
