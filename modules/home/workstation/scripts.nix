@@ -501,6 +501,19 @@
         clean_system
         ;
 
+      # The shackstack ssh entry forwards the agent key that sudo there
+      # accepts. shackstack-tv-sleep puts the TV in standby on the way down.
+      shackstack-sleep = pkgs.writeShellScriptBin "shackstack-sleep" ''
+        ssh -o ConnectTimeout=5 shackstack sudo systemctl suspend
+      '';
+
+      # MAC from hosts/shackstack/INSTALL.md. The subnet broadcast rather than
+      # 255.255.255.255, so the packet leaves on the LAN interface even when
+      # another one holds the default route.
+      shackstack-wake = pkgs.writeShellScriptBin "shackstack-wake" ''
+        ${pkgs.wakeonlan}/bin/wakeonlan -i 10.24.24.255 cc:28:aa:86:dd:6a
+      '';
+
       shadd = pkgs.writeShellScriptBin "shadd" ''
         ${pkgs.bun}/bin/bunx shadcn@latest add $1
       '';
