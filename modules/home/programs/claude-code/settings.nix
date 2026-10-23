@@ -32,6 +32,9 @@ in {
       "${configDir}/skills/design-taste-frontend".source = "${inputs.taste-skill}/skills/taste-skill";
       # Codex's standard user skill directory; Pi also discovers this location.
       ".agents/skills/design-taste-frontend".source = "${inputs.taste-skill}/skills/taste-skill";
+      # Cloudflare's security-audit skill: a bare skill repo, linked for both locations.
+      "${configDir}/skills/security-audit".source = "${inputs.security-audit-skill}/skills/security-audit";
+      ".agents/skills/security-audit".source = "${inputs.security-audit-skill}/skills/security-audit";
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
       # Matt Pocock's grill-me and grill-with-docs. Both only call the Skill
