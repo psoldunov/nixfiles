@@ -35,6 +35,11 @@ in {
       # Cloudflare's security-audit skill: a bare skill repo, linked for both locations.
       "${configDir}/skills/security-audit".source = "${inputs.security-audit-skill}/skills/security-audit";
       ".agents/skills/security-audit".source = "${inputs.security-audit-skill}/skills/security-audit";
+      # latent-spaces' brag launch-video skills, linked for both locations.
+      "${configDir}/skills/brag".source = "${inputs.brag}/skills/brag";
+      ".agents/skills/brag".source = "${inputs.brag}/skills/brag";
+      "${configDir}/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
+      ".agents/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
       # Matt Pocock's grill-me and grill-with-docs. Both only call the Skill

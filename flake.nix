@@ -116,6 +116,11 @@
       flake = false;
     };
 
+    brag = {
+      url = "github:latent-spaces/brag";
+      flake = false;
+    };
+
     i-have-adhd = {
       url = "github:ayghri/i-have-adhd";
       flake = false;
