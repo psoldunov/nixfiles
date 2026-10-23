@@ -720,11 +720,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792692562,
-        "narHash": "sha256-kV0De8uWSEjQeIwqDHpqJXBRggzGdD1d/oBqj/576QY=",
+        "lastModified": 1792736685,
+        "narHash": "sha256-WXQ7EHcFt75moIz4A+b1rpB0qpVXY0C7SRRnUBgKDyY=",
         "owner": "psoldunov",
         "repo": "notion",
-        "rev": "3a34d6379599cff7e5f3b9c1144e8f524f82afb5",
+        "rev": "f30ea325fa1f3baa757357bcdb3bf807b58c44f3",
         "type": "github"
       },
       "original": {
