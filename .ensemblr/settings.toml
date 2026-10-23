@@ -55,7 +55,7 @@ icon = "test-tube"
 # work from Whopper and from the Macs, which have no nixos-rebuild: a Mac
 # copies the flake into the target's store and the target builds and
 # activates it over ssh, where sudo asks for the target's password once.
-# MacFlurry is the laptop and ShackStack the HTPC, often asleep or away. The
+# The Macs and ShackStack (the HTPC) are often asleep or away. The
 # -all scripts run them last with --if-online, which skips a host that does
 # not answer instead of failing the run. They run one host at a time, so
 # PiHome, which every host resolves names through, never restarts its DNS
@@ -89,7 +89,7 @@ command = "scripts/switch-host.sh MacFlurry"
 icon = "laptop"
 
 [scripts.run.rebuild-all]
-command = '''scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac && scripts/switch-host.sh PiHome && scripts/switch-host.sh ShackStack --if-online && scripts/switch-host.sh MacFlurry --if-online'''
+command = '''scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh PiHome && scripts/switch-host.sh ShackStack --if-online && scripts/switch-host.sh BigMac --if-online && scripts/switch-host.sh MacFlurry --if-online'''
 icon = "layers"
 
 # One-time: the first nix-darwin switch on a Mac. Needs upstream Nix on the
@@ -133,5 +133,5 @@ command = "nix flake update && scripts/switch-host.sh MacFlurry --update"
 icon = "upload"
 
 [scripts.run.update-all]
-command = '''nix flake update && scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh BigMac --update && scripts/switch-host.sh PiHome && scripts/switch-host.sh ShackStack --if-online && scripts/switch-host.sh MacFlurry --update --if-online'''
+command = '''nix flake update && scripts/switch-host.sh Whopper && scripts/switch-host.sh BigTasty && scripts/switch-host.sh BigKing && scripts/switch-host.sh PiHome && scripts/switch-host.sh ShackStack --if-online && scripts/switch-host.sh BigMac --update --if-online && scripts/switch-host.sh MacFlurry --update --if-online'''
 icon = "zap"
