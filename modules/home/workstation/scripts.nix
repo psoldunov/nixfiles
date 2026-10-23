@@ -214,9 +214,9 @@
     }
     ALL_HOSTS=(Whopper BigTasty BigKing ShackStack BigMac MacFlurry PiHome)
     declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [ShackStack]=nixos [BigMac]=darwin [MacFlurry]=darwin [PiHome]=nixos)
-    # Hosts that are often asleep or away (the laptop, the HTPC). `all` skips
+    # Hosts that are often asleep or away (the Macs, the HTPC). `all` skips
     # them with a warning when they don't answer, instead of failing the run.
-    ROAMING_HOSTS=(MacFlurry ShackStack)
+    ROAMING_HOSTS=(MacFlurry BigMac ShackStack)
     # Hosts run_hosts switches alone, after every other host has finished.
     # The rest of the fleet resolves names through PiHome, and a switch that
     # restarts AdGuard or Unbound would break their downloads mid-build.
@@ -456,10 +456,28 @@
     PROG=clean_system
     ${deployLib}
     HOSTS="$(hosts_for "''${1:-$LOCAL_HOST}")"
+    # A Mac with its lid closed still answers ssh, but OrbStack has frozen its
+    # VM for sleep and docker waits forever. So docker gets 20 seconds to
+    # answer `docker info` (killed, since Go ignores SIGALRM; macOS has no
+    # timeout(1)) and is skipped if it doesn't. CLEAN sits inside single quotes
+    # on the remote side, so it must not contain one.
     CLEAN='set -e
       sudo "$(command -v nix-collect-garbage)" -d
       nix-collect-garbage -d
-      if command -v docker >/dev/null 2>&1; then docker image prune -a -f; fi
+      if command -v docker >/dev/null 2>&1; then
+        docker info >/dev/null 2>&1 &
+        p=$!
+        (sleep 20; kill $p) >/dev/null 2>&1 &
+        w=$!
+        up=yes
+        wait $p || up=no
+        kill $w 2>/dev/null || true
+        if [ $up = yes ]; then
+          docker image prune -a -f
+        else
+          echo "docker is not answering; skipping docker image prune." >&2
+        fi
+      fi
       if [ -x /opt/homebrew/bin/brew ]; then /opt/homebrew/bin/brew cleanup; fi'
     for h in $HOSTS; do
       echo "===== Cleaning $h ====="
