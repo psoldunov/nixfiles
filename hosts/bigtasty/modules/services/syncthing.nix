@@ -27,10 +27,16 @@ in {
       };
       # Device IDs and who shares what: lib/syncthing.nix.
       devices = syncthing.devicesFor "BigTasty";
-      folders = syncthing.foldersFor "BigTasty" {
-        Sync = config.services.syncthing.dataDir + "/Sync";
-        Obsidian = config.services.syncthing.dataDir + "/Obsidian";
-      };
+      folders =
+        syncthing.foldersFor "BigTasty" {
+          Sync = config.services.syncthing.dataDir + "/Sync";
+          Obsidian = config.services.syncthing.dataDir + "/Obsidian";
+        }
+        // {
+          # The Steam Deck takes the Remastered saves, and only from here.
+          # NixOS appends this to the devices game-saves.nix gives the folder.
+          AlanWakeRemastered.devices = ["SteamDeck"];
+        };
     };
     overrideFolders = true;
     overrideDevices = true;
