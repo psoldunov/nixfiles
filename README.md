@@ -239,7 +239,7 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 | `hardware.nix` | `hardware.graphics` (+32-bit), fwupd, Apple SuperDrive udev rule |
 | `programs.nix` | mtr, git + lfs, iperf3 |
 
-[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves, each through its own credentials file (see [PiHome](#pihome-dns-appliance)). Neither is [game-saves.nix](modules/nixos/game-saves.nix), which Whopper and ShackStack import to sync their Alan Wake Remastered and Alan Wake 2 saves over Syncthing. BigTasty imports it too and keeps a copy in `/RAID/apps/syncthing`, so a save still reaches the other machine when the two are never on at the same time.
+[home-dns](modules/nixos/home-dns/default.nix) is not part of the baseline. PiHome and BigTasty import it themselves, each through its own credentials file (see [PiHome](#pihome-dns-appliance)). Neither is [game-saves.nix](modules/nixos/game-saves.nix), which Whopper and ShackStack import to sync their Alan Wake Remastered and Alan Wake 2 saves over Syncthing. BigTasty imports it too and keeps a copy in `/RAID/apps/syncthing`, so a save still reaches the other machine when the two are never on at the same time. BigTasty also shares the Remastered saves with the Steam Deck.
 
 ## Whopper modules
 
