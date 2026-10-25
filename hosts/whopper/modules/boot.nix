@@ -18,6 +18,12 @@
     hfsplus = true;
   };
 
+  # Agent worktrees fill /tmp (31G on 2026-10-25); systemd's default keeps files 10d.
+  # 00-nixos.conf sorts before systemd's tmp.conf, and per path the earliest file wins.
+  systemd.tmpfiles.rules = ["q /tmp 1777 root root 3d"];
+  # The upstream timer runs daily; "" clears its OnUnitActiveSec before ours applies.
+  systemd.timers.systemd-tmpfiles-clean.timerConfig.OnUnitActiveSec = ["" "6h"];
+
   boot.plymouth = {
     enable = true;
     theme = "nixos-bgrt";
