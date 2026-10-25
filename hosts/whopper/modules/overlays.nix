@@ -15,6 +15,7 @@
     (import ../../../overlays/motrix)
     (import ../../../overlays/pi-coding-agent)
     (import ../../../overlays/bambu-studio.nix)
+    (import ../../../overlays/epic-games-launcher.nix)
     (import ../../../overlays/periphery.nix)
     (import ../../../overlays/solaar.nix {src = inputs.solaar;})
     (import ../../../overlays/pyopenjtalk-plus.nix)
