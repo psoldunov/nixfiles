@@ -41,5 +41,6 @@ in {
     };
 
     home.file."${config.programs.claude-code.configDir}/skills/unifi-readonly/SKILL.md".source = ./SKILL.md;
+    programs.codex.skills.unifi-readonly = ./SKILL.md;
   };
 }

@@ -242,12 +242,16 @@ in `settings.json` to the quoted bare-script form on every boot, so
 `settings.nix` declares that exact string. Any other spelling makes the array
 union append a fresh copy on each rebuild.
 
-## Shared with pi
+## Shared with pi and Codex
 
 pi reads the same `CLAUDE.md`, rules, skills and agents through its
 claude-bridge extension (`../pi/`). A change here reaches pi after the same
 rebuild. Skills and agents that need Claude-only features (hooks, MCP tools)
 are excluded or tuned in `../pi/default.nix`.
+
+Codex gets the MCP servers, rules, agents and `block-rm-rf.sh` from this
+folder through `../codex/`, which converts them at build time. Skills are
+listed one by one in `../codex/skills.nix`, so add a new skill there too.
 
 ## Notes for future Claude sessions
 
