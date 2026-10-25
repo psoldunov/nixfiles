@@ -22,6 +22,10 @@
   # Installs pi and, through ../programs/pi, its claude-bridge extension.
   programs.pi-coding-agent.enable = true;
 
+  # Gives Codex Claude Code's MCP servers, rules, skills and agents
+  # (../programs/codex). The package itself is installed per host.
+  programs.codex.enable = true;
+
   programs = {
     direnv = {
       enable = true;
