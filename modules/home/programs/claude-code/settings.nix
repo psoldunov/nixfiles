@@ -42,6 +42,10 @@ in {
       ".agents/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
+      # blader's humanizer: only SKILL.md, since the repo root's .claude-plugin
+      # would load it as the plugin skill humanizer:humanizer.
+      # shortcut: links SKILL.md alone, link more files if upstream adds references beside it.
+      "${configDir}/skills/humanizer/SKILL.md".source = "${inputs.humanizer}/SKILL.md";
       # Opts in to i-have-adhd's always-on mode: its SessionStart hook injects
       # the full ruleset, and hooks/adhd-final-response.sh re-asserts it on
       # every prompt. Remove this entry to switch both off.

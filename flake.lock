@@ -452,6 +452,22 @@
         "type": "github"
       }
     },
+    "humanizer": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792177923,
+        "narHash": "sha256-PkMQTzYs/0uUa6/liyndLCblx30N96XYlVQYc0c8Hfo=",
+        "owner": "blader",
+        "repo": "humanizer",
+        "rev": "8c307f367c91bd974002f10f2be2965d642c13df",
+        "type": "github"
+      },
+      "original": {
+        "owner": "blader",
+        "repo": "humanizer",
+        "type": "github"
+      }
+    },
     "i-have-adhd": {
       "flake": false,
       "locked": {
@@ -892,6 +908,7 @@
         "ensemblr": "ensemblr",
         "figma": "figma",
         "home-manager": "home-manager",
+        "humanizer": "humanizer",
         "i-have-adhd": "i-have-adhd",
         "impeccable": "impeccable",
         "jovian": "jovian",

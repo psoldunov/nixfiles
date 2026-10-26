@@ -182,6 +182,16 @@ flake input too. `settings.nix` links its `skills/playwright-cli/` directory
 into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it
 with `nix flake update playwright-cli`.
 
+The `humanizer` skill comes from blader's repo (github.com/blader/humanizer),
+the `humanizer` input. Its root is the skill, but it also holds a
+`.claude-plugin` manifest that would load it as `humanizer:humanizer`, so
+`settings.nix` links only `SKILL.md` into `~/.claude/skills/humanizer/`
+(Claude Code and pi's claude-bridge). `../codex/skills.nix` links the whole
+root, which adds the `agents/openai.yaml` Codex reads. Keep the name plain
+`humanizer`: `rules/common/human-facing-text.md` and `humanizer-gate` load it
+by that name. `update_system` refreshes it with the other inputs; on its own,
+`nix flake update humanizer` and `rebuild_system`.
+
 Matt Pocock's skills come from the `mattpocock-skills` input, linked the
 same way. `mattpocock-skills.nix` lists each one (name -> folder), and both
 `settings.nix` and `../codex/skills.nix` link from that list, so a skill is
