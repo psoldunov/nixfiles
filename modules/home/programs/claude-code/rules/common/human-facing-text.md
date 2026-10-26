@@ -23,7 +23,8 @@ Text written for someone other than the user in this chat goes through the
 1. Load the skill before writing: the Skill tool (`humanizer`) in Claude Code,
    or its `SKILL.md` from the skill listing in pi.
 2. Draft the text.
-3. Run the skill's pattern scan and its final anti-AI pass on the draft.
+3. Run the skill's process on the draft, including its final check for tells
+   that survived the rewrite.
 4. Write or send the result. A draft shown to the user for sending is the
    humanized version.
 

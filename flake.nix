@@ -141,6 +141,11 @@
       flake = false;
     };
 
+    humanizer = {
+      url = "github:blader/humanizer";
+      flake = false;
+    };
+
     # REA's reverse-engineer-anything skill, pinned to a release tag. The rea
     # MCP server in modules/home/programs/claude-code/mcp.nix runs the npm
     # release named by this checkout's package.json, so both move together.
