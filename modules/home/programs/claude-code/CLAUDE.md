@@ -12,6 +12,7 @@ All Claude Code state that's declaratively managed lives in:
 ```
 ~/.nixfiles/modules/home/programs/claude-code/
 ├── default.nix          # imports the modules below
+├── mattpocock-skills.nix # Matt Pocock skills to link (Claude Code, pi, Codex)
 ├── mcp.nix              # sops secrets, env wiring, programs.mcp servers
 ├── mutable-settings.nix # merges settings.nix into a writable settings.json
 ├── settings.nix         # programs.claude-code settings, plugins, hooks
@@ -181,12 +182,29 @@ flake input too. `settings.nix` links its `skills/playwright-cli/` directory
 into `~/.claude/skills/playwright-cli/`, next to the local skills. Update it
 with `nix flake update playwright-cli`.
 
-Matt Pocock's `grill-me` and `grill-with-docs` come from the
-`mattpocock-skills` input, linked the same way. Each is a one-line wrapper
-that calls the Skill tool, so their targets `grilling` and `domain-modeling`
-are linked too. Skip the repo's marketplace plugin: it pulls in every skill,
-and its `code-review` collides with the local one. Update with
-`nix flake update mattpocock-skills`.
+Matt Pocock's skills come from the `mattpocock-skills` input, linked the
+same way. `mattpocock-skills.nix` lists each one (name -> folder), and both
+`settings.nix` and `../codex/skills.nix` link from that list, so a skill is
+added in one place. Some only call the Skill tool on another (`grill-me` ->
+`grilling`, `tdd` -> `codebase-design`), so keep a target listed with its
+caller. Skip the repo's marketplace plugin and his issue-tracker pipeline
+(`to-spec`, `to-tickets`, `implement*`, `wayfinder`, `triage`): they expect
+a per-repo GitHub or GitLab setup, and his `code-review` collides with the
+local one. Update with `nix flake update mattpocock-skills`.
+
+Where his skills overlap ours, his won and ours went:
+
+- `tdd` replaced the `tdd-guide` agent; the testing and workflow rules point
+  at the skill. The 80% coverage target stays.
+- `diagnosing-bugs` beats caveman's `investigate-first`. That one is part of
+  the caveman plugin, so `permissions.deny` blocks it in Claude Code, pi's
+  claude-bridge excludes it and Codex skips it.
+- `improve-codebase-architecture` and `codebase-design` replaced the local
+  `code-review` skill's codebase mode. `code-review` now reads that skill's
+  `SKILL.md` from the sibling folder, since a user-invoked skill cannot be
+  called through the Skill tool.
+- `retro` replaced the `harness-optimizer` agent.
+- `pr` sets the PR body shape that `rules/common/git-workflow.md` asks for.
 
 ## MCP servers
 
@@ -251,7 +269,8 @@ are excluded or tuned in `../pi/default.nix`.
 
 Codex gets the MCP servers, rules, agents and `block-rm-rf.sh` from this
 folder through `../codex/`, which converts them at build time. Skills are
-listed one by one in `../codex/skills.nix`, so add a new skill there too.
+listed one by one in `../codex/skills.nix`, so add a new skill there too
+(Matt Pocock's come from `mattpocock-skills.nix` instead).
 
 ## Notes for future Claude sessions
 

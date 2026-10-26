@@ -1,6 +1,6 @@
 # Agent Orchestration
 
-Every named agent in these rules (planner, tdd-guide, code-reviewer and the
+Every named agent in these rules (planner, code-reviewer, architect and the
 rest) applies only when the Agent tool is available. Without it, do the step
 inline or follow the host's own delegation rules.
 
@@ -9,7 +9,7 @@ inline or follow the host's own delegation rules.
 No user prompt needed:
 1. Complex feature requests - Use **planner** agent
 2. Code just written/modified - Use **code-reviewer** agent
-3. Bug fix or new feature - Use **tdd-guide** agent
+3. Bug fix or new feature - Use the **tdd** skill
 4. Architectural decision - Use **architect** agent
 
 ## Parallel Task Execution

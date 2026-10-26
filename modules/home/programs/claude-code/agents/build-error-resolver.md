@@ -106,7 +106,7 @@ npx eslint . --fix
 - Code needs refactoring → use `refactor-cleaner`
 - Architecture changes needed → use `architect`
 - New features required → use `planner`
-- Tests failing → use `tdd-guide`
+- Tests failing → use the `diagnosing-bugs` skill
 - Security issues → use `security-reviewer`
 
 ---

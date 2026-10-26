@@ -4,10 +4,10 @@ description: >
   Reviews code at the scope the context calls for. By default it reviews the change in front of
   you as a senior pre-merge gate: inside Ensemblr that is the workspace diff the Changes panel
   shows (the Review button lands here), elsewhere the whole branch against its base plus
-  uncommitted work, uncommitted work alone when asked, or a GitHub PR by number. It switches to a
-  codebase-wide architectural review (deep vs shallow modules, coupling, smells, refactoring
-  roadmap) only when the user explicitly asks for the whole codebase, a directory or a module's
-  design. Trigger on "review this", "review my changes", "review the diff", "review before
+  uncommitted work, uncommitted work alone when asked, or a GitHub PR by number. It hands off to
+  the improve-codebase-architecture flow (deepening opportunities as an HTML report, then a
+  grilling session) only when the user explicitly asks for the whole codebase, a directory or a
+  module's design. Trigger on "review this", "review my changes", "review the diff", "review before
   commit", "review the branch", "review before PR", "is this ready to merge", "PR-readiness
   check", "audit the codebase", "is this good architecture", "refactor suggestions", "code
   quality", "module design", or pasted code with "what do you think?".
@@ -22,7 +22,7 @@ that carries that mode's instructions. Read exactly that one file before you sta
 
 | Signal | Mode | Read |
 |--------|------|------|
-| The user explicitly asks for the whole codebase, a directory or a module's design: "review the codebase", "audit the architecture", "is `src/billing` well structured?", "refactor suggestions for this module" | Codebase | `references/codebase-review.md` |
+| The user explicitly asks for the whole codebase, a directory or a module's design: "review the codebase", "audit the architecture", "is `src/billing` well structured?", "refactor suggestions for this module" | Codebase | `../improve-codebase-architecture/SKILL.md`, the sibling skill folder. It is user-invoked, so read the file instead of calling the Skill tool; a named directory or module is its direction |
 | Anything else: Ensemblr's Review button, "review this", "review my changes", "review the branch", "ready for PR?", a PR number | Change | `references/change-review.md` |
 
 At the boundary:
