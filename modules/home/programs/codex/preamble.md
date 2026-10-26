@@ -15,7 +15,7 @@ ported it, and the import would write files that Nix owns.
 The rules below are shared with Claude Code and use its names. In Codex:
 
 - "Agent tool", "subagent", or a named agent (planner, code-reviewer,
-  tdd-guide, security-reviewer, architect and the rest) means the Codex
+  security-reviewer, architect and the rest) means the Codex
   subagent of that name, defined in `~/.codex/agents/`.
 - "Skill tool" or "load the X skill" means invoking the skill as `$X`.
 - AskUserQuestion means asking the user in chat.

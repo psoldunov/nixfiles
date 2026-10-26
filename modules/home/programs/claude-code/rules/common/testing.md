@@ -9,21 +9,13 @@ Test Types (ALL required):
 
 ## Test-Driven Development
 
-MANDATORY workflow:
-1. Write test first (RED)
-2. Run test - it should FAIL
-3. Write minimal implementation (GREEN)
-4. Run test - it should PASS
-5. Refactor (IMPROVE)
-6. Verify coverage (80%+)
+Build features and fix bugs test-first: call the Skill tool with `tdd`. It owns
+the red → green loop, where tests go (seams agreed with the user up front) and
+what makes a test worth keeping. Check coverage once the loop is done.
 
 ## Troubleshooting Test Failures
 
-1. Use **tdd-guide** agent
+1. Cause unclear: call the Skill tool with `diagnosing-bugs`
 2. Check test isolation
 3. Verify mocks are correct
 4. Fix implementation, not tests (unless tests are wrong)
-
-## Agent Support
-
-- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first

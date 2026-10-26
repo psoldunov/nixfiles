@@ -23,15 +23,13 @@
 in {
   config = lib.mkIf config.programs.codex.enable {
     programs.codex.skills =
-      skillsIn "${inputs.caveman}/skills"
+      # investigate-first overlaps Matt Pocock's stronger diagnosing-bugs.
+      removeAttrs (skillsIn "${inputs.caveman}/skills") ["investigate-first"]
+      // lib.mapAttrs (_: path: "${inputs.mattpocock-skills}/skills/${path}") (import ../claude-code/mattpocock-skills.nix)
       // {
         code-review = local + "/code-review";
         humanizer = local + "/humanizer";
         playwright-cli = "${inputs.playwright-cli}/skills/playwright-cli";
-        grill-me = "${inputs.mattpocock-skills}/skills/productivity/grill-me";
-        grilling = "${inputs.mattpocock-skills}/skills/productivity/grilling";
-        grill-with-docs = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs";
-        domain-modeling = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling";
         # The Codex build of the skill; plugin/ holds the Claude Code one.
         impeccable = "${inputs.impeccable}/.agents/skills/impeccable";
         i-have-adhd = "${inputs.i-have-adhd}/skills/i-have-adhd";

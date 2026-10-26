@@ -45,7 +45,8 @@ this module reads. That means `../claude-code/agents/`,
 `../claude-code/rules/common/` or `../claude-code/rules/typescript/` (read
 whole), or `rules/web/defaults.md` and `rules/web/tailwind.md` (read by name).
 A new file in `rules/web/` needs adding to `instructions.nix`. Skills are
-listed one by one in `skills.nix`.
+listed one by one in `skills.nix`; Matt Pocock's come from
+`../claude-code/mattpocock-skills.nix`.
 
 Agents keep their Claude names and instructions. The Claude model tier sets
 `model_reasoning_effort` (opus high, sonnet medium, haiku low). An agent whose

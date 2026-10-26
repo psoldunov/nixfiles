@@ -42,12 +42,6 @@ in {
       ".agents/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
-      # Matt Pocock's grill-me and grill-with-docs. Both only call the Skill
-      # tool, so grilling and domain-modeling come along as their dependencies.
-      "${configDir}/skills/grill-me".source = "${inputs.mattpocock-skills}/skills/productivity/grill-me";
-      "${configDir}/skills/grilling".source = "${inputs.mattpocock-skills}/skills/productivity/grilling";
-      "${configDir}/skills/grill-with-docs".source = "${inputs.mattpocock-skills}/skills/engineering/grill-with-docs";
-      "${configDir}/skills/domain-modeling".source = "${inputs.mattpocock-skills}/skills/engineering/domain-modeling";
       # Opts in to i-have-adhd's always-on mode: its SessionStart hook injects
       # the full ruleset, and hooks/adhd-final-response.sh re-asserts it on
       # every prompt. Remove this entry to switch both off.
@@ -58,7 +52,8 @@ in {
       # Linux only, like the server.
       "${configDir}/skills/reverse-engineer-anything".source = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
     }
-    // lib.mapAttrs' (name: source: lib.nameValuePair "${configDir}/skills/${name}" {inherit source;}) plugins;
+    // lib.mapAttrs' (name: source: lib.nameValuePair "${configDir}/skills/${name}" {inherit source;}) plugins
+    // lib.mapAttrs' (name: path: lib.nameValuePair "${configDir}/skills/${name}" {source = "${inputs.mattpocock-skills}/skills/${path}";}) (import ./mattpocock-skills.nix);
 
   programs.claude-code = {
     enable = true;
@@ -98,6 +93,13 @@ in {
         allow = [
           "mcp__claude_ai_Context7"
           "mcp__plugin_context-mode_context-mode"
+        ];
+        # caveman's investigate-first overlaps Matt Pocock's diagnosing-bugs,
+        # the stronger of the two. A plugin skill ignores skillOverrides, so
+        # deny rules keep Claude from invoking it under either name.
+        deny = [
+          "Skill(investigate-first)"
+          "Skill(caveman:investigate-first)"
         ];
         additionalDirectories = [
           "~/.claude/plans/"

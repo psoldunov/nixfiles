@@ -2,7 +2,8 @@
 
 Reviews the change in front of you: what a branch, an Ensemblr workspace or a pull request adds
 on top of its base. The question it answers is "is this change ready to merge?", not "is this
-codebase well designed?". That second question belongs to `references/codebase-review.md`.
+codebase well designed?". That second question belongs to the `improve-codebase-architecture`
+skill (`../improve-codebase-architecture/SKILL.md` from this skill's folder).
 
 ---
 
