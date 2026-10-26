@@ -17,6 +17,7 @@
       "asana"
       "atuin-desktop"
       "chatgpt"
+      "conductor"
       "downie"
       "dropzone"
       "expressvpn"
