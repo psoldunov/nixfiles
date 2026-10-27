@@ -33,6 +33,7 @@
     ./programs/clokkr.nix
     ./programs/concierge.nix
     ./programs/deckmaster
+    ./programs/ensemblr.nix
     ./programs/figma.nix
     ./programs/ghostty.nix
     ./programs/spotifyd.nix
