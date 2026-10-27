@@ -7,7 +7,6 @@
     actionlint
     age
     bitwarden-cli
-    chezmoi
     cmatrix
     # g-prefixed (gls, gdate), so macOS's own ls and date keep their names.
     coreutils-prefixed
