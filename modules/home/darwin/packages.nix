@@ -10,6 +10,11 @@
     cmatrix
     # g-prefixed (gls, gdate), so macOS's own ls and date keep their names.
     coreutils-prefixed
+    # The GNU tools macOS has no command for go on PATH unprefixed too.
+    (linkFarm "coreutils-unshadowed" (map (n: {
+      name = "bin/${n}";
+      path = "${coreutils}/bin/${n}";
+    }) ["nproc" "numfmt" "shuf" "tac" "timeout"]))
     fd
     ghostscript
     git-filter-repo
