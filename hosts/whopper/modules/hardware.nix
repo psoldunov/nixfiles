@@ -89,10 +89,11 @@ in {
   programs.librepods.enable = true;
 
   # Elgato Stream Deck, driven by deckmaster from the user session (see
-  # ../home/programs/deckmaster). deckmaster opens the USB device through
-  # libusb, so the rule targets the usb_device node rather than hidraw. It
-  # grants the seat user access, links the deck as /dev/streamdeck and starts
-  # the user's deckmaster.service when the deck is plugged in.
+  # ../home/programs/deckmaster and modules/home/programs/deckmaster).
+  # deckmaster opens the USB device through libusb, so the rule targets the
+  # usb_device node rather than hidraw. It grants the seat user access, links
+  # the deck as /dev/streamdeck and starts the user's deckmaster.service when
+  # the deck is plugged in.
   #
   # `uaccess` only takes effect in rules that sort before 73-seat-late.rules,
   # which services.udev.extraRules (99-local.rules) does not, hence a package.

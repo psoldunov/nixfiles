@@ -254,6 +254,27 @@
         "type": "github"
       }
     },
+    "deckmaster": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793185768,
+        "narHash": "sha256-bkK+jTed5Jguj3EexJaJMcuK2O/egsYE78Rx8E1GGQA=",
+        "owner": "psoldunov",
+        "repo": "deckmaster",
+        "rev": "12b47dbd2075da56a62359aa9bfc06cde780e080",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "deckmaster",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -904,6 +925,7 @@
         "clokkr": "clokkr",
         "concierge": "concierge",
         "context-mode": "context-mode",
+        "deckmaster": "deckmaster",
         "disko": "disko",
         "ensemblr": "ensemblr",
         "figma": "figma",

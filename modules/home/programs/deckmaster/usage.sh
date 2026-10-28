@@ -1,6 +1,7 @@
 # Draws the Stream Deck keys for Claude Code and Codex plan usage from the
-# snapshot Token Station publishes on the session bus (docs/dbus-api.md in its
-# repository), and switches the usage window each key shows.
+# snapshot Token Station publishes (docs/dbus-api.md in its repository), and
+# switches the usage window each key shows. The snapshot comes over the session
+# bus, or from the CLI at $TOKEN_STATION when that is set, as on macOS.
 #
 #   deckmaster-usage icon PROVIDER LOGO   print the path of the key's current image
 #   deckmaster-usage next PROVIDER        show the provider's next usage window
@@ -34,7 +35,7 @@ declare -A level_colors=([normal]='#3daee9' [warning]='#f67400' [critical]='#da4
 # slug like "Weekly · gpt-5.3-codex-spark" keeps its last part, "spark".
 # shellcheck disable=SC2016 # jq variables, not shell ones
 readonly filter='
-  .data | fromjson | .providers[] | select(.id == $provider)
+  .providers[] | select(.id == $provider)
   | (.windows // []) as $windows
   | (($windows | map(select(.id == $selected)) | first) // $windows[0] // {}) as $w
   | .state,
@@ -47,6 +48,16 @@ readonly filter='
     ($w.resetsAt // ""),
     ($w.level // "normal")
 '
+
+# Prints the snapshot JSON: from the CLI at $TOKEN_STATION when set, otherwise
+# from the session bus, where it is a string property.
+read_snapshot() {
+  if [[ -n ${TOKEN_STATION:-} ]]; then
+    timeout 2 "$TOKEN_STATION" status --json
+  else
+    busctl --user --timeout=2 --json=short get-property "${bus[@]}" Snapshot | jq --raw-output .data
+  fi
+}
 
 # Text that goes into the SVG as-is.
 escape() {
@@ -151,7 +162,7 @@ icon() {
 
   mkdir --parents "$dir"
   local snapshot fields=()
-  if snapshot=$(busctl --user --timeout=2 --json=short get-property "${bus[@]}" Snapshot 2>/dev/null); then
+  if snapshot=$(read_snapshot 2>/dev/null); then
     mapfile -t fields < <(jq --raw-output --arg provider "$provider" --arg selected "$selected" "$filter" <<<"$snapshot")
   fi
   printf '%s\n' "${fields[1]:-}" >"$dir/$provider.windows"
@@ -178,7 +189,11 @@ next() {
 refresh() {
   mkdir --parents "$dir"
   touch "$dir/refreshing"
-  busctl --user --timeout=60 call "${bus[@]}" Refresh || true
+  if [[ -n ${TOKEN_STATION:-} ]]; then
+    timeout 60 "$TOKEN_STATION" refresh || true
+  else
+    busctl --user --timeout=60 call "${bus[@]}" Refresh || true
+  fi
   # Redraw every key from the new snapshot now instead of after the TTL.
   rm --force -- "$dir/refreshing" "$dir"/*.key
 }

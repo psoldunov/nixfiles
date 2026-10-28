@@ -243,6 +243,14 @@
       url = "github:psoldunov/clokkr/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Deckmaster, the Stream Deck daemon, from the fork that carries the
+    # Whopper patches and the macOS port. Used by
+    # modules/home/programs/deckmaster. Bump with `nix flake update deckmaster`.
+    deckmaster = {
+      url = "github:psoldunov/deckmaster/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
