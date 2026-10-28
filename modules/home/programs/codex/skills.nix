@@ -28,6 +28,7 @@ in {
       // lib.mapAttrs (_: path: "${inputs.mattpocock-skills}/skills/${path}") (import ../claude-code/mattpocock-skills.nix)
       // {
         code-review = local + "/code-review";
+        linear-issue = local + "/linear-issue";
         # The repo root is the skill; Codex reads its agents/openai.yaml too.
         humanizer = "${inputs.humanizer}";
         playwright-cli = "${inputs.playwright-cli}/skills/playwright-cli";
