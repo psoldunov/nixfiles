@@ -6,6 +6,8 @@
     ../../../modules/home
     ../../../modules/home/workstation
     ../../../modules/home/darwin
+
+    ./programs/deckmaster
   ];
 
   home.stateVersion = "25.11";

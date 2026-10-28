@@ -1,9 +1,14 @@
 # Stream Deck keys for Claude Code and Codex plan usage. ./usage.sh draws each
-# key from the snapshot that Token Station (../token-station.nix) publishes on
-# the session bus: the provider's logo, one usage window with its percentage,
-# a bar in the level colour and the time until the window resets. A tap shows
-# the provider's next window (for Claude: session, weekly, then per model), and
-# holding the key makes Token Station refresh every provider at once.
+# key from Token Station's usage snapshot: the provider's logo, one usage
+# window with its percentage, a bar in the level colour and the time until the
+# window resets. A tap shows the provider's next window (for Claude: session,
+# weekly, then per model), and holding the key makes Token Station refresh
+# every provider at once.
+#
+# On Linux the snapshot comes over the session bus from the daemon that
+# hosts/whopper/home/programs/token-station.nix installs. macOS has no session
+# bus, so the Macs ask the CLI inside the app bundle the psoldunov/tap cask
+# installs (../../darwin/default.nix).
 {
   lib,
   pkgs,
@@ -12,7 +17,12 @@
 }: let
   usage = lib.getExe (pkgs.writeShellApplication {
     name = "deckmaster-usage";
-    runtimeInputs = [pkgs.coreutils pkgs.jq pkgs.librsvg pkgs.systemd];
+    runtimeInputs =
+      [pkgs.coreutils pkgs.jq pkgs.librsvg]
+      ++ lib.optional pkgs.stdenv.hostPlatform.isLinux pkgs.systemd;
+    runtimeEnv = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+      TOKEN_STATION = "/Applications/Token Station.app/Contents/MacOS/token-station";
+    };
     text = builtins.readFile ./usage.sh;
   });
 

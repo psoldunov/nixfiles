@@ -1,11 +1,8 @@
-# Stream Deck pages. Each attribute becomes <name>.deck; deckmaster opens
-# `main` first. Keys are numbered 0-14, left to right and top to bottom:
+# Whopper's Stream Deck pages for programs.deckmaster.decks. Each attribute
+# becomes <name>.deck; deckmaster opens `main` first. The key numbering and the
+# shared helpers (`deck`) are in modules/home/programs/deckmaster/lib.nix.
 #
-#    0  1  2  3  4
-#    5  6  7  8  9
-#   10 11 12 13 14
-#
-# Widgets and actions follow https://github.com/muesli/deckmaster#configuration.
+# Widgets and actions follow https://github.com/psoldunov/deckmaster#configuration.
 # `keycode` presses go through a virtual keyboard on /dev/uinput, so Plasma
 # handles them like the real keys: media and volume keys drive MPRIS and the
 # volume OSD, and chords reach the shortcuts in ../../desktop/plasma-shortcuts.nix
@@ -15,23 +12,15 @@
 {
   config,
   pkgs,
-  button,
-  icon,
+  deck,
   appIcon,
   launch,
   playerIcon,
   muteIcon,
-  usageKey,
-  weatherKey,
   pomodoroKey,
   clokkrKey,
 }: let
-  back = index:
-    button index {
-      label = "Back";
-      icon = icon "actions/32/go-previous";
-      action.deck = "main.deck";
-    };
+  inherit (deck) button icon back toggle time top volumeKeys usageKey weatherKey;
 
   # A launcher on the Apps page. It also returns to the main page, so the page
   # closes like a folder once the app starts.
@@ -72,54 +61,8 @@
     })
   ];
 
-  # Volume steps, at the right end of the bottom row on the main and Media
-  # pages. A tap steps the volume once; holding keeps stepping every 150 ms.
-  volumeKeys = [
-    (button 13 {
-      label = "Vol -";
-      icon = icon "status/24/audio-volume-low";
-      action = {
-        keycode = "Volumedown";
-        repeat = 150;
-      };
-    })
-    (button 14 {
-      label = "Vol +";
-      icon = icon "status/24/audio-volume-high";
-      action = {
-        keycode = "Volumeup";
-        repeat = 150;
-      };
-    })
-  ];
-
-  # A key that shows the first of `widgets` and switches to the next on a tap,
-  # through the `toggle` widget from ./widget-toggle.patch. The key takes no
-  # action of its own, since an action would replace the switch.
-  toggle = index: widgets: {
-    inherit index;
-    widget = {
-      id = "toggle";
-      config = {inherit widgets;};
-    };
-  };
-
-  # A clock face. `format` and `font` hold one entry per line, split on `;`.
-  time = format: font: {
-    id = "time";
-    config = {inherit format font;};
-  };
-
-  # Usage bars, one column per mode. `mode` and `fillColor` hold one entry per
-  # column, split on `;` (./top-columns.patch). A mode is cpu or memory, or gpu
-  # or vram from ./top-gpu.patch.
-  top = mode: fillColor: {
-    id = "top";
-    config = {inherit mode fillColor;};
-  };
-
-  # A temperature bar from hwmon through the `temp` widget from
-  # ./widget-temp.patch. `sensor` picks it: `chip` is the hwmon name, `sensor`
+  # A temperature bar from hwmon through the fork's `temp` widget, which reads
+  # Linux's sysfs. `sensor` picks it: `chip` is the hwmon name, `sensor`
   # the temp*_label (left out for an unlabelled one), and `device` a part of the
   # chip's resolved sysfs device path, for chips that exist more than once.
   # `warn` and `crit` in °C turn the bar orange and red; they default to the
@@ -206,8 +149,8 @@ in {
         })
         (temp "Wi-Fi" {chip = "iwlwifi_1";})
       ])
-      # The weather in Parekklisia from ./weather.nix. A tap opens the weather
-      # page, holding the key fetches the forecast again.
+      # The weather in Parekklisia (the shared weather.nix). A tap opens the
+      # weather page, holding the key fetches the forecast again.
       (weatherKey 4 "main" {deck = "weather.deck";})
 
       # Plan usage from Token Station. A tap switches the usage window, holding
@@ -233,8 +176,8 @@ in {
       # The pomodoro timer from ./pomodoro.nix. A tap starts, pauses or
       # resumes it; holding the key stops it.
       (pomodoroKey 10)
-      # The Clokkr timer from ./clokkr.nix. A tap pauses it or starts the
-      # current task; holding the key opens the popover to pick a task.
+      # The Clokkr timer (the shared clokkr.nix). A tap pauses it or starts
+      # the current task; holding the key opens the popover to pick a task.
       (clokkrKey 11)
       # Shows the muted speaker while the default output is muted.
       (button 12 {
@@ -273,36 +216,7 @@ in {
     })
   ];
 
-  # Behind the weather key: the weather now on the top row, today on the middle
-  # row and the next five days on the bottom one. A tap on any key closes the
-  # page, holding one fetches the forecast again.
-  weather.keys = let
-    detail = index: name: weatherKey index name {deck = "main.deck";};
-  in [
-    (back 0)
-    (detail 1 "now")
-    (detail 2 "feels")
-    (detail 3 "humidity")
-    # Speed and gusts in km/h, and the compass point the wind blows from.
-    (detail 4 "wind")
-
-    (detail 5 "today")
-    # The highest rain chance in the next 24 hours, then when rain gets
-    # likely or how much falls.
-    (detail 6 "rain")
-    (detail 7 "uv")
-    # Today's sunrise and sunset, or tomorrow's once the sun has set.
-    (detail 8 "sun")
-    # The European Air Quality Index, or the Saharan dust level when it is
-    # high.
-    (detail 9 "air")
-
-    (detail 10 "day1")
-    (detail 11 "day2")
-    (detail 12 "day3")
-    (detail 13 "day4")
-    (detail 14 "day5")
-  ];
+  weather.keys = deck.weatherPage;
 
   # Icons come from the installed packages the launchers start: ../../packages.nix
   # (Cider, Plexamp, Fladder), ../../../modules/packages.nix
