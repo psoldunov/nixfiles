@@ -78,12 +78,24 @@
   # It lives in sops and this wrapper reads it at launch, so the value
   # never reaches /nix/store or the generated MCP config. Without a
   # readable token the server still starts and falls back to the page.
-  # The tokens belong to one Chrome install, so only Whopper's are in sops
-  # (secrets/whopper.yaml); the Macs use the connect page.
-  withExtensionToken = name: secret: let
-    tokenFile = lib.escapeShellArg config.sops.secrets.${secret}.path;
+  # The tokens belong to one Chrome install, so they are listed per host,
+  # each in that host's default sops file: secrets/whopper.yaml on Whopper,
+  # secrets/shared.yaml on the Macs. A profile not listed uses the page.
+  tokenSecrets =
+    {
+      Whopper = {
+        swiss-cheese = "PLAYWRIGHT_SWISS_CHEESE_EXTENSION_TOKEN";
+        almost-always = "PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN";
+      };
+      BigMac.almost-always = "PLAYWRIGHT_BIGMAC_ALMOST_ALWAYS_EXTENSION_TOKEN";
+    }
+    .${osConfig.networking.hostName}
+    or {};
+
+  withExtensionToken = name: let
+    tokenFile = lib.escapeShellArg config.sops.secrets.${tokenSecrets.${name}}.path;
   in
-    lib.optionalAttrs (!isDarwin) {
+    lib.optionalAttrs (tokenSecrets ? ${name}) {
       command = toString (pkgs.writeShellScript "playwright-mcp-${name}" ''
         if [ -r ${tokenFile} ]; then
           PLAYWRIGHT_MCP_EXTENSION_TOKEN="$(<${tokenFile})"
@@ -106,18 +118,15 @@ in
         };
 
         playwright-swiss-cheese =
-          chromeProfileServer "swiss-cheese"
-          // withExtensionToken "swiss-cheese" "PLAYWRIGHT_SWISS_CHEESE_EXTENSION_TOKEN";
+          chromeProfileServer "swiss-cheese" // withExtensionToken "swiss-cheese";
         playwright-almost-always =
-          chromeProfileServer "almost-always"
-          // withExtensionToken "almost-always" "PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN";
+          chromeProfileServer "almost-always" // withExtensionToken "almost-always";
       };
+
+      sops.secrets = lib.genAttrs (lib.attrValues tokenSecrets) (_: {});
     }
 
     (lib.mkIf (!isDarwin) {
-      sops.secrets.PLAYWRIGHT_SWISS_CHEESE_EXTENSION_TOKEN = {};
-      sops.secrets.PLAYWRIGHT_ALMOST_ALWAYS_EXTENSION_TOKEN = {};
-
       home.packages = [pkgs.playwright-test];
 
       home.sessionVariables = {
