@@ -43,6 +43,14 @@
       };
       # Resend API key; concierge-server reads it via LoadCredential, as root.
       CONCIERGE_SMTP_PASSWORD = {};
+      # SEARXNG_SECRET=..., SearXNG's secret_key (./services/searxng.nix).
+      SEARXNG_ENV = {};
+      # agent:<apr1 hash>, the Basic Auth login in front of SearXNG. Its
+      # password is the one inside SEARXNG_URL in shared.yaml. Not bcrypt:
+      # nixpkgs' nginx has no libcrypt, so crypt() hashes answer 500.
+      SEARXNG_HTPASSWD = {
+        owner = "nginx";
+      };
       SYNCTHING_GUI_PASSWORD = {
         owner = "psoldunov";
         sopsFile = ../../../secrets/shared.yaml;

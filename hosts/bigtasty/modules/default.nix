@@ -32,6 +32,7 @@
     ./services/n8n.nix
     ./services/nocodb.nix
     ./services/paperless.nix
+    ./services/searxng.nix
     ./services/sotf-server.nix
     ./services/syncthing.nix
     ./services/vaultwarden.nix
