@@ -240,6 +240,15 @@ the OAuth screen chooses which permissions the agent gets.
 `CFD_MAIN_TUNNEL`'s public hostnames are managed in the dashboard, so add
 them there or through this server; Nix `ingress` entries have no effect.
 
+`searxng` is nixpkgs' `mcp-searxng` (stdio) pointed at BigTasty's SearXNG
+(`hosts/bigtasty/modules/services/searxng.nix`). `SEARXNG_URL`
+(`secrets/shared.yaml`) is `https://agent:<password>@search.theswisscheese.com`;
+the login is nginx Basic Auth in front of SearXNG, and its hashed half is
+`SEARXNG_HTPASSWD` in `secrets/bigtasty.yaml` (`htpasswd -nim agent`; apr1,
+since nixpkgs' nginx cannot check bcrypt). Rotate both together. The same
+variable lets a shell reach the JSON API:
+`curl "$SEARXNG_URL/search?q=<query>&format=json"`.
+
 `rea` is REA (github.com/morluto/rea), a reverse-engineering server. It runs
 `npx -y rea-agents@<version> mcp` on Node 24, where `<version>` comes from the
 `package.json` of the `rea` flake input, and that same checkout supplies the

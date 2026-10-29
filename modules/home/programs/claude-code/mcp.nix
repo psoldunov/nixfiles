@@ -26,6 +26,8 @@ in {
     N8N_ACCESS_TOKEN.sopsFile = sharedFile;
     NOCODB_API_KEY.sopsFile = sharedFile;
     PAPERLESS_API_KEY.sopsFile = sharedFile;
+    # https://agent:<password>@search.theswisscheese.com, BigTasty's SearXNG.
+    SEARXNG_URL.sopsFile = sharedFile;
   };
 
   # Expose the Claude MCP secrets as shell env vars. The MCP server
@@ -38,7 +40,8 @@ in {
         CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
-        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}
+        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path} \
+        SEARXNG_URL:${config.sops.secrets.SEARXNG_URL.path}
       set name (string split -m1 ':' $pair)[1]
       set path (string split -m1 ':' $pair)[2]
       if test -r $path
@@ -53,7 +56,8 @@ in {
         CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
-        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
+        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path} \
+        SEARXNG_URL:${config.sops.secrets.SEARXNG_URL.path}; do
       name="''${pair%%:*}"
       secret_file="''${pair#*:}"
       if [ -r "$secret_file" ]; then
@@ -68,7 +72,8 @@ in {
         CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
-        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
+        PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path} \
+        SEARXNG_URL:${config.sops.secrets.SEARXNG_URL.path}; do
       name="''${pair%%:*}"
       path="''${pair#*:}"
       if [ -r "$path" ]; then
@@ -120,6 +125,13 @@ in {
         # Cloudflare API (DNS, Zero Trust tunnels, Workers and the rest), plus
         # docs(). Sign in through /mcp; the OAuth grant picks the permissions.
         cloudflare-api.url = "https://mcp.cloudflare.com/mcp";
+
+        # BigTasty's SearXNG (hosts/bigtasty/modules/services/searxng.nix).
+        # The Basic Auth login rides in the URL, which mcp-searxng accepts.
+        searxng = {
+          command = lib.getExe pkgs.mcp-searxng;
+          env.SEARXNG_URL = "\${SEARXNG_URL}";
+        };
 
         Paperless = {
           command = "${pkgs.bun}/bin/bunx";

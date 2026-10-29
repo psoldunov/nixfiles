@@ -46,6 +46,7 @@
       "syncthing"
       "vaultwarden"
       "concierge-server"
+      "searx"
       "grafana"
       "prometheus"
       "prometheus-blackbox-exporter"

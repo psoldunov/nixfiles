@@ -32,6 +32,7 @@ in [
   (web "n8n" 5678 "docker-n8n")
   (web "infisical" 8088 "docker-infisical")
   (web "vaultwarden" 8222 "vaultwarden")
+  (web "search" 8790 "searx")
   (web "cal" 3010 "docker-cal-diy")
   (
     (web "plex" 32400 "plex")
