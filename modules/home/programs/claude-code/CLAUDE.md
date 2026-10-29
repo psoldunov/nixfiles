@@ -227,6 +227,10 @@ not BigTasty), with macOS paths for Chrome and Mailspring on the Macs.
 Linear workspaces. Sign in to each one separately through `/mcp`.
 `clockify` is Clockify's hosted server, authenticated with the personal API
 key in `CLOCKIFY_API_KEY` (`secrets/shared.yaml`); no sign-in needed.
+`clokkr` is the local Clokkr time tracker's `clokkr mcp` stdio server. It is
+declared per host, next to Clokkr itself: Whopper runs the flake package
+(`hosts/whopper/home/programs/clokkr.nix`), BigMac the CLI inside
+`Clokkr.app` (`hosts/bigmac/home/programs/clokkr.nix`).
 
 `cloudflare-api` is Cloudflare's remote API server
 (`https://mcp.cloudflare.com/mcp`). It has three tools: `search()` and
