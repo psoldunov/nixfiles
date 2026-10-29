@@ -22,7 +22,6 @@
   };
   boot = {
     consoleLogLevel = 3;
-    initrd.verbose = false;
     loader.timeout = 0;
   };
 
