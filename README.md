@@ -186,7 +186,7 @@ Where the Macs' software comes from:
 | Kind | Source |
 |---|---|
 | GUI apps | Homebrew casks; App Store-only apps through `homebrew.masApps`. Ghostty's config still comes from [workstation/ghostty.nix](modules/home/workstation/ghostty.nix), shared with Whopper |
-| Agent CLIs that release several times a week (codex, mistral-vibe) | Homebrew, upgraded by `update_system` only |
+| Agent CLIs that release several times a week (codex) | Homebrew, upgraded by `update_system` only |
 | Tap-only or macOS-only formulae | Homebrew, the same set on both Macs |
 | Claude Code, pi | This repo's overlays (`overlays/claude-code`, `overlays/pi-coding-agent`), same versions as Whopper |
 | Atuin | Upstream's release binary at nixpkgs' version ([overlays/atuin-darwin.nix](overlays/atuin-darwin.nix)). A source build fails its tests here and is never in the cache. When nixpkgs bumps atuin, add the new release's hash; until then the Mac compiles it and evaluation warns |

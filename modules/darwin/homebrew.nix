@@ -3,8 +3,8 @@
 # BigMac and MacFlurry want it. nix-darwin merges the lists. The split:
 #
 #   - Every GUI app is a cask; App Store-only apps are masApps.
-#   - Agent CLIs that ship several releases a week are formulae (codex is
-#     upstream's cask), so they stay ahead of nixpkgs.
+#   - Agent CLIs that ship several releases a week come from Homebrew
+#     (codex is upstream's cask), so they stay ahead of nixpkgs.
 #   - Formulae that live only in third-party taps, or are macOS-specific and
 #     missing from nixpkgs, stay here too.
 #   - Every other CLI comes from nixpkgs: the shared set in
@@ -50,9 +50,6 @@
       ];
 
     brews = [
-      # Bleeding-edge agent CLI (codex is upstream's cask, below).
-      "mistral-vibe"
-
       # Vendor CLIs that move faster than nixpkgs.
       "ctx7"
       "neonctl"
