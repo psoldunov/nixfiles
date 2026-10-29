@@ -7,7 +7,9 @@ owns there; the rest stays pi's own.
 ~/.nixfiles/modules/home/programs/pi/
 ├── default.nix                  # extension links, bridge config, package activation
 ├── CLAUDE.md                    # this file
-└── extensions/claude-bridge/    # linked to ~/.pi/agent/extensions/claude-bridge/
+└── extensions/
+    ├── claude-bridge/           # linked to ~/.pi/agent/extensions/claude-bridge/
+    └── searxng-search.ts        # linked to ~/.pi/agent/extensions/searxng-search.ts
 ```
 
 `default.nix` also links `../claude-code/mods/humanizer-gate/` to
@@ -115,6 +117,22 @@ system-prompt section on every turn and registers `/ponytail` (level) plus
 register before claude-bridge's skill aliases, so the aliases skip those
 names. The skills themselves reach pi through claude-bridge, from
 `~/.claude/skills/ponytail/skills/`.
+
+## searxng-search
+
+Web search goes through BigTasty's SearXNG in every agent (Claude Code's
+`WebSearch` hook, Codex's `web_search = "disabled"`). In pi,
+`extensions/searxng-search.ts` blocks pi-web-access's `web_search` and
+`source_check` calls, nested `codemode` calls included, and points the model
+at `mcp({ tool: "searxng_searxng_web_search" })`. pi-mcp-adapter serves that
+from `~/.config/mcp/mcp.json` under its default `server` tool prefix, so the
+name changes if `toolPrefix` does. `fetch_content` stays available. Reaching
+the MCP server needs `SEARXNG_URL` in pi's environment, so start pi from a
+shell that ran its init.
+
+Pointing pi-web-access at SearXNG directly does not work here: it refuses a
+base URL with credentials and reads `searxngHeaders` only as literal strings,
+so the Basic Auth password would have to sit in `web-search.json`.
 
 ## Working on the extension
 

@@ -33,6 +33,8 @@ Codex has no hook for these, so follow them yourself:
   "Human-Facing Text" below).
 - Never edit a file whose real path is under `/nix/store`. Edit the Nix
   source that produces it, usually under `~/.nixfiles/`.
+- Search the web with the `searxng` MCP server's `searxng_web_search`, and
+  read a page with its `web_url_read`. Codex's built-in web search is off.
 
 ## Tailwind
 

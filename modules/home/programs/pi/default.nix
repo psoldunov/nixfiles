@@ -111,6 +111,8 @@ in {
       # One folder serves both agents: Claude Code loads hooks/register.ts, pi
       # loads index.ts. Linked whole so index.ts can import ./hooks/policy.ts.
       "${cfg.configDir}/extensions/humanizer-gate".source = ../claude-code/mods/humanizer-gate;
+      # Blocks pi-web-access's search tools in favour of the searxng MCP server.
+      "${cfg.configDir}/extensions/searxng-search.ts".source = ./extensions/searxng-search.ts;
       # Ponytail's pi extension, from the same checkout Claude Code loads as a
       # plugin. A one-line file, not a linked folder: index.js requires
       # ../hooks/, which has to resolve inside the store checkout. Its skills
