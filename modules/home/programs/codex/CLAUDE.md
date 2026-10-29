@@ -27,6 +27,7 @@ both agents work from one source. Hosts opt in with
 | `programs.mcp.servers` | `config.toml` `[mcp_servers]` (`mcp.nix`) |
 | `rules/common`, `rules/web/defaults.md`, `rules/typescript` | inlined into `~/.codex/AGENTS.md` after `preamble.md` |
 | `rules/web/tailwind.md` (path-scoped) | the `tailwind` skill |
+| `rules/rust/gpui.md` (path-scoped) | dropped; the `gpui` skill it points at is in `skills.nix` |
 | both `hooks.md` rules | dropped (Claude Code settings) |
 | skills | `~/.codex/skills/<name>` (`skills.nix`) |
 | `agents/*.md`, caveman's `cavecrew-*` | `~/.codex/agents/<name>.toml` |

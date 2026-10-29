@@ -292,6 +292,15 @@ folder through `../codex/`, which converts them at build time. Skills are
 listed one by one in `../codex/skills.nix`, so add a new skill there too
 (Matt Pocock's come from `mattpocock-skills.nix` instead).
 
+GPUI knowledge is shared the same way. `skills/gpui/` holds the versioned
+quirk log pooled from the Concierge, Clokkr and Numero apps: a short
+`SKILL.md` index and one reference file per area. `rules/rust/gpui.md` is a
+path-scoped rule (`*.rs`, `Cargo.toml`) that tells Claude Code and pi to load
+that skill in a GPUI crate. Codex has no path-scoped rules, and
+`../codex/instructions.nix` leaves `rules/rust/` out, so Codex finds the skill
+by its description. Add new generic quirks to the matching reference file,
+with the versions they were seen on.
+
 ## Notes for future Claude sessions
 
 If you're editing Claude Code config: edit the nix module, not `~/.claude/`.
