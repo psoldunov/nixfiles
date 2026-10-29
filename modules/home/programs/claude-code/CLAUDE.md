@@ -225,6 +225,8 @@ not BigTasty), with macOS paths for Chrome and Mailspring on the Macs.
 `figma-personal` are two remote Figma servers, one per Figma account.
 `linear-swiss-cheese` and `linear-almost-always` do the same for the two
 Linear workspaces. Sign in to each one separately through `/mcp`.
+`clockify` is Clockify's hosted server, authenticated with the personal API
+key in `CLOCKIFY_API_KEY` (`secrets/shared.yaml`); no sign-in needed.
 
 `cloudflare-api` is Cloudflare's remote API server
 (`https://mcp.cloudflare.com/mcp`). It has three tools: `search()` and

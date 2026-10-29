@@ -22,6 +22,7 @@ in {
     sharedFile = ../../../../secrets/shared.yaml;
   in {
     CLAUDE_SANITY_MCP_BEARER.sopsFile = sharedFile;
+    CLOCKIFY_API_KEY.sopsFile = sharedFile;
     N8N_ACCESS_TOKEN.sopsFile = sharedFile;
     NOCODB_API_KEY.sopsFile = sharedFile;
     PAPERLESS_API_KEY.sopsFile = sharedFile;
@@ -34,6 +35,7 @@ in {
   programs.fish.shellInitLast = lib.mkAfter ''
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}
@@ -48,6 +50,7 @@ in {
   programs.zsh.initContent = lib.mkAfter ''
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
@@ -62,6 +65,7 @@ in {
   programs.bash.bashrcExtra = lib.mkAfter ''
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
+        CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path}; do
@@ -82,6 +86,13 @@ in {
         nocodb-the-connection = {
           url = "https://nocodb.theswisscheese.com/mcp/nc5tvdxynrmu24vo";
           headers.x-api-key = "\${NOCODB_API_KEY}";
+        };
+
+        # Clockify's hosted server; the key is a personal API key, so the
+        # agent gets exactly the Clockify permissions that account has.
+        clockify = {
+          url = "https://api.clockify.me/mcp-server/mcp";
+          headers.x-api-key = "\${CLOCKIFY_API_KEY}";
         };
 
         Sanity = {
