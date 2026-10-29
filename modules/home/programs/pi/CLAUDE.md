@@ -52,6 +52,9 @@ for updates. A Home Manager dry run only prints the intended package list and
 does not invoke Pi or npm. Nix supplies Node/npm on Linux and macOS, including
 in Pi's runtime PATH. `programs.pi-coding-agent.package` must not be null.
 This hook does not configure MCP servers or account credentials.
+`pi-mcp-adapter` picks up every server in `programs.mcp.servers` on its own:
+it reads `~/.config/mcp/mcp.json`, which home-manager writes from that list,
+and expands the `${VAR}` header placeholders from pi's environment.
 
 ## claude-bridge
 
