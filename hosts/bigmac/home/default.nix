@@ -7,6 +7,7 @@
     ../../../modules/home/workstation
     ../../../modules/home/darwin
 
+    ./programs/clokkr.nix
     ./programs/deckmaster
   ];
 

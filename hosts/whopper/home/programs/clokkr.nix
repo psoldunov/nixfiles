@@ -11,7 +11,14 @@
 #
 # The Plasma widget only links the plasmoid; add "Clokkr Timer" to a panel
 # from Edit Mode › Add Widgets.
-{inputs, ...}: {
+#
+# `clokkr mcp` serves the timer, tasks, sessions and reports to Claude Code,
+# Codex and pi over stdio (docs/mcp.md in the Clokkr repo).
+{
+  config,
+  inputs,
+  ...
+}: {
   imports = [
     inputs.clokkr.homeManagerModules.default
   ];
@@ -19,5 +26,10 @@
   programs.clokkr = {
     enable = true;
     plasmaWidget.enable = true;
+  };
+
+  programs.mcp.servers.clokkr = {
+    command = "${config.programs.clokkr.package}/bin/clokkr";
+    args = ["mcp"];
   };
 }
