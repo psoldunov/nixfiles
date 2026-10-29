@@ -242,9 +242,9 @@ them there or through this server; Nix `ingress` entries have no effect.
 
 `searxng` is nixpkgs' `mcp-searxng` (stdio) pointed at BigTasty's SearXNG
 (`hosts/bigtasty/modules/services/searxng.nix`). `SEARXNG_URL`
-(`secrets/shared.yaml`) is `https://agent:<password>@search.theswisscheese.com`;
+(`secrets/shared.yaml`) is `https://psoldunov:<password>@search.theswisscheese.com`;
 the login is nginx Basic Auth in front of SearXNG, and its hashed half is
-`SEARXNG_HTPASSWD` in `secrets/bigtasty.yaml` (`htpasswd -nim agent`; apr1,
+`SEARXNG_HTPASSWD` in `secrets/bigtasty.yaml` (`htpasswd -nim psoldunov`; apr1,
 since nixpkgs' nginx cannot check bcrypt). Rotate both together. The same
 variable lets a shell reach the JSON API:
 `curl "$SEARXNG_URL/search?q=<query>&format=json"`.
