@@ -1,7 +1,7 @@
 // node --test modules/home/programs/clokkr-gate/clokkr-gate.test.mjs
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, symlinkSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
@@ -115,9 +115,13 @@ function fixture() {
   return { root, repo, env, sessionAdd }
 }
 
-test('hook: blocks the first stop, writes the session at the second', () => {
+const realScript = fileURLToPath(new URL('./clokkr-gate.mjs', import.meta.url))
+
+for (const viaLink of [false, true])
+test(`hook: blocks the first stop, writes the session at the second${viaLink ? ' (run through a symlink, as home-manager installs it)' : ''}`, () => {
   const { root, repo, env, sessionAdd } = fixture()
-  const script = fileURLToPath(new URL('./clokkr-gate.mjs', import.meta.url))
+  const script = viaLink ? join(root, 'clokkr-gate.mjs') : realScript
+  if (viaLink) symlinkSync(realScript, script)
   const hook = (event, input) => execFileSync('node', [script, event], { env, input: JSON.stringify(input), encoding: 'utf8' })
   const statePath = join(root, 'state', 'clokkr-gate', 's1.json')
 
