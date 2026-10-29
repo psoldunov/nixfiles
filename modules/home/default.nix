@@ -7,6 +7,7 @@
     ./nix-index.nix
     ./sops.nix
     ./programs/claude-code
+    ./programs/clokkr-gate
     ./programs/codex
     ./programs/pi
     ./programs/unifi

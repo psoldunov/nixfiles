@@ -270,6 +270,10 @@ command) lives in `settings.hooks` in `settings.nix`.
 `adhd-final-response.sh` (UserPromptSubmit) prints the i-have-adhd reminder
 when the plugin's opt-in flag exists, and stays silent otherwise.
 
+`clokkr-gate.mjs` (UserPromptSubmit, Stop) comes from `../clokkr-gate/`,
+which links and registers it on hosts with Clokkr: root agents log their
+client-repo turns to Clokkr. See `../clokkr-gate/CLAUDE.md`.
+
 `context-mode-cache-heal.mjs` is a vendored copy of the script context-mode
 deploys for its marketplace install. context-mode rewrites the hook's command
 in `settings.json` to the quoted bare-script form on every boot, so
