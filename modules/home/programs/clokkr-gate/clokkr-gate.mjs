@@ -15,7 +15,7 @@
  * the agent find or create the client's folder and task before it logs.
  */
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -214,7 +214,9 @@ function main(event) {
   if (out.block) process.stdout.write(JSON.stringify({ decision: 'block', reason: out.block }))
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+// The hook runs through a home-manager symlink and Node resolves the main module
+// to its realpath, so argv[1] must be resolved too.
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   try {
     main(process.argv[2])
   } catch (error) {
