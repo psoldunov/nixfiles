@@ -26,7 +26,7 @@ in {
     N8N_ACCESS_TOKEN.sopsFile = sharedFile;
     NOCODB_API_KEY.sopsFile = sharedFile;
     PAPERLESS_API_KEY.sopsFile = sharedFile;
-    # https://agent:<password>@search.theswisscheese.com, BigTasty's SearXNG.
+    # https://psoldunov:<password>@search.theswisscheese.com, BigTasty's SearXNG.
     SEARXNG_URL.sopsFile = sharedFile;
   };
 
