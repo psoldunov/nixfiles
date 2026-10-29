@@ -276,6 +276,12 @@ Hook scripts live in `hooks/` and are linked into `~/.claude/hooks/` by
 `programs.claude-code.hooks`. Their registration (which event triggers which
 command) lives in `settings.hooks` in `settings.nix`.
 
+A PreToolUse entry on `WebSearch`, inline in `settings.nix`, blocks the
+built-in search (exit 2) and tells the agent to use the `searxng` MCP
+server's `searxng_web_search` instead. Subagents hit the same hook. Codex
+turns its built-in search off (`../codex/default.nix`) and pi blocks
+pi-web-access's search tools (`../pi/extensions/searxng-search.ts`).
+
 `adhd-final-response.sh` (UserPromptSubmit) prints the i-have-adhd reminder
 when the plugin's opt-in flag exists, and stays silent otherwise.
 

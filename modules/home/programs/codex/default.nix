@@ -36,6 +36,9 @@ in {
       plugins = [inputs.context-mode inputs.ponytail];
       # A folder's CLAUDE.md loads when the folder has no AGENTS.md.
       settings.project_doc_fallback_filenames = ["CLAUDE.md"];
+      # Web search goes through the searxng MCP server (BigTasty's SearXNG),
+      # as in Claude Code; this unregisters Codex's built-in tool.
+      settings.web_search = "disabled";
       hooks.PreToolUse = [
         {
           matcher = "^Bash$";

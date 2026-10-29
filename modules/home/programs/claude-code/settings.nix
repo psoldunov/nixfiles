@@ -120,6 +120,17 @@ in {
               }
             ];
           }
+          {
+            # Web search goes through BigTasty's SearXNG (the searxng server in
+            # mcp.nix). Exit 2 blocks the call and hands stderr to the agent.
+            matcher = "WebSearch";
+            hooks = [
+              {
+                type = "command";
+                command = "echo 'WebSearch is disabled here. Search with mcp__plugin_hm_searxng__searxng_web_search instead (load it with ToolSearch \"select:mcp__plugin_hm_searxng__searxng_web_search\" if deferred), and read pages with mcp__plugin_hm_searxng__web_url_read.' >&2; exit 2";
+              }
+            ];
+          }
         ];
         UserPromptSubmit = [
           {

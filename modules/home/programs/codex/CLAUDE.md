@@ -33,6 +33,7 @@ both agents work from one source. Hosts opt in with
 | `agents/*.md`, caveman's `cavecrew-*` | `~/.codex/agents/<name>.toml` |
 | context-mode, ponytail plugins | Codex plugins, `programs.codex.plugins` |
 | `hooks/block-rm-rf.sh` | `~/.codex/hooks.json` PreToolUse `^Bash$` |
+| `WebSearch` hook (searxng only) | `web_search = "disabled"` plus a line in `preamble.md` |
 | i-have-adhd always-on hook | the "Output style" section of `preamble.md` |
 
 `~/.agents/skills/` keeps the four skills `../claude-code/settings.nix` links
