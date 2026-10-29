@@ -1,0 +1,1093 @@
+/*
+ * The Search Cheese: a restyle of SearXNG's `simple` theme.
+ *
+ * nginx links this file after sxng-ltr.min.css, so equal specificity wins by
+ * source order. The stock theme sets its palette on :root, on :root.theme-auto
+ * inside a prefers-color-scheme:dark query, on :root.theme-dark and on
+ * :root.theme-black; the --tsc-* tokens below are set on the same four
+ * selectors, and every stock --color-* variable is mapped onto them once.
+ *
+ * One face (Mona Sans, variable weight and width), one ink, one accent: a
+ * cheese gold that appears as fills (the search button, Save), the marker
+ * behind matched words and the underline under running-text links. Focus
+ * rings and selected states lean on the ink, because gold on white is under
+ * 3:1.
+ */
+
+@font-face {
+  font-family: "Mona Sans";
+  src: url("/theme/fonts/MonaSans.ttf") format("truetype");
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- tokens ---------- */
+
+:root {
+  --tsc-ground: #ffffff;
+  --tsc-ground-phone: #f3f3f1;
+  --tsc-panel: #f5f5f2;
+  --tsc-raised: #ffffff;
+  --tsc-hover: #ecece8;
+  --tsc-line: #e6e6e2;
+  --tsc-line-strong: #cbcbc6;
+  --tsc-ink: #141413;
+  --tsc-text: #2c2c2a;
+  --tsc-muted: #5f5f5a;
+  --tsc-visited: #6b6b66;
+  --tsc-accent: #f5b800;
+  --tsc-accent-hover: #e2a800;
+  --tsc-accent-ink: #141413;
+  --tsc-accent-ring: rgb(245 184 0 / 0.45);
+  --tsc-mark: #fde9a6;
+  --tsc-mark-ink: #141413;
+  --tsc-float-shadow: 0 12px 32px rgb(20 20 19 / 0.12);
+  --tsc-error: #b4232a;
+  --tsc-error-bg: #ffedea;
+  --tsc-warning: #8a3d0c;
+  --tsc-warning-bg: #fff7dd;
+  --tsc-success: #1f6f47;
+  --tsc-success-bg: #dcf7e5;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root.theme-auto {
+    --tsc-ground: #121211;
+    --tsc-ground-phone: #0c0c0b;
+    --tsc-panel: #1c1c1a;
+    --tsc-raised: #1a1a18;
+    --tsc-hover: #262624;
+    --tsc-line: #2a2a27;
+    --tsc-line-strong: #474743;
+    --tsc-ink: #f3f3ef;
+    --tsc-text: #dadad5;
+    --tsc-muted: #a4a49e;
+    --tsc-visited: #a4a49e;
+    --tsc-accent: #f7c534;
+    --tsc-accent-hover: #ffd558;
+    --tsc-accent-ink: #141413;
+    --tsc-accent-ring: rgb(247 197 52 / 0.4);
+    --tsc-mark: #4a3b0c;
+    --tsc-mark-ink: #f3f3ef;
+    --tsc-float-shadow: 0 12px 32px rgb(0 0 0 / 0.5);
+    --tsc-error: #f27b7b;
+    --tsc-error-bg: #2c1717;
+    --tsc-warning: #f5c04a;
+    --tsc-warning-bg: #2a2310;
+    --tsc-success: #5fcf98;
+    --tsc-success-bg: #12261b;
+    color-scheme: dark;
+  }
+}
+
+:root.theme-dark {
+  --tsc-ground: #121211;
+  --tsc-ground-phone: #0c0c0b;
+  --tsc-panel: #1c1c1a;
+  --tsc-raised: #1a1a18;
+  --tsc-hover: #262624;
+  --tsc-line: #2a2a27;
+  --tsc-line-strong: #474743;
+  --tsc-ink: #f3f3ef;
+  --tsc-text: #dadad5;
+  --tsc-muted: #a4a49e;
+  --tsc-visited: #a4a49e;
+  --tsc-accent: #f7c534;
+  --tsc-accent-hover: #ffd558;
+  --tsc-accent-ink: #141413;
+  --tsc-accent-ring: rgb(247 197 52 / 0.4);
+  --tsc-mark: #4a3b0c;
+  --tsc-mark-ink: #f3f3ef;
+  --tsc-float-shadow: 0 12px 32px rgb(0 0 0 / 0.5);
+  --tsc-error: #f27b7b;
+  --tsc-error-bg: #2c1717;
+  --tsc-warning: #f5c04a;
+  --tsc-warning-bg: #2a2310;
+  --tsc-success: #5fcf98;
+  --tsc-success-bg: #12261b;
+  color-scheme: dark;
+}
+
+/* The dark palette on a true-black ground. */
+:root.theme-black {
+  --tsc-ground: #000000;
+  --tsc-ground-phone: #000000;
+  --tsc-panel: #111111;
+  --tsc-raised: #0d0d0d;
+  --tsc-hover: #1d1d1d;
+  --tsc-line: #222222;
+  --tsc-line-strong: #3d3d3d;
+  --tsc-ink: #f3f3ef;
+  --tsc-text: #dadad5;
+  --tsc-muted: #a4a49e;
+  --tsc-visited: #a4a49e;
+  --tsc-accent: #f7c534;
+  --tsc-accent-hover: #ffd558;
+  --tsc-accent-ink: #141413;
+  --tsc-accent-ring: rgb(247 197 52 / 0.4);
+  --tsc-mark: #4a3b0c;
+  --tsc-mark-ink: #f3f3ef;
+  --tsc-float-shadow: 0 12px 32px rgb(0 0 0 / 0.6);
+  --tsc-error: #f27b7b;
+  --tsc-error-bg: #2c1717;
+  --tsc-warning: #f5c04a;
+  --tsc-warning-bg: #2a2310;
+  --tsc-success: #5fcf98;
+  --tsc-success-bg: #12261b;
+  color-scheme: dark;
+}
+
+/*
+ * The stock variables, pointed at the tokens. :root:root:root (0,3,0) outranks
+ * every stock palette block (at most 0,2,0), and since the values are var()
+ * references they follow whichever palette the tokens hold.
+ */
+:root:root:root {
+  --color-base-font: var(--tsc-text);
+  --color-base-background: var(--tsc-ground);
+  --color-base-background-mobile: var(--tsc-ground-phone);
+  --color-url-font: var(--tsc-ink);
+  --color-url-visited-font: var(--tsc-visited);
+  --color-header-background: var(--tsc-ground);
+  --color-header-border: var(--tsc-line);
+  --color-footer-background: var(--tsc-ground);
+  --color-footer-border: var(--tsc-line);
+  --color-sidebar-border: var(--tsc-line);
+  --color-sidebar-font: var(--tsc-text);
+  --color-sidebar-background: var(--tsc-raised);
+  --color-backtotop-font: var(--tsc-ink);
+  --color-backtotop-border: var(--tsc-line);
+  --color-backtotop-background: var(--tsc-raised);
+  --color-btn-background: var(--tsc-accent);
+  --color-btn-font: var(--tsc-accent-ink);
+  --color-show-btn-background: var(--tsc-panel);
+  --color-show-btn-font: var(--tsc-ink);
+  --color-search-border: var(--tsc-line-strong);
+  --color-search-shadow: none;
+  --color-search-background: var(--tsc-raised);
+  --color-search-font: var(--tsc-ink);
+  --color-search-background-hover: var(--tsc-accent-hover);
+  --color-error: var(--tsc-error);
+  --color-error-background: var(--tsc-error-bg);
+  --color-warning: var(--tsc-warning);
+  --color-warning-background: var(--tsc-warning-bg);
+  --color-success: var(--tsc-success);
+  --color-success-background: var(--tsc-success-bg);
+  --color-categories-item-selected-font: var(--tsc-ink);
+  --color-categories-item-border-selected: var(--tsc-accent);
+  --color-autocomplete-font: var(--tsc-ink);
+  --color-autocomplete-border: var(--tsc-line);
+  --color-autocomplete-shadow: var(--tsc-float-shadow);
+  --color-autocomplete-background: var(--tsc-raised);
+  --color-autocomplete-background-hover: var(--tsc-panel);
+  --color-answer-font: var(--tsc-text);
+  --color-answer-background: var(--tsc-panel);
+  --color-result-keyvalue-col-table: var(--tsc-panel);
+  --color-result-keyvalue-table: var(--tsc-panel);
+  --color-result-keyvalue-odd: var(--tsc-panel);
+  --color-result-keyvalue-even: var(--tsc-raised);
+  --color-result-background: var(--tsc-raised);
+  --color-result-border: var(--tsc-line);
+  --color-result-url-font: var(--tsc-muted);
+  --color-result-vim-selected: var(--tsc-panel);
+  --color-result-vim-arrow: var(--tsc-accent);
+  --color-result-description-highlight-font: var(--tsc-mark-ink);
+  --color-result-link-font: var(--tsc-ink);
+  --color-result-link-font-highlight: var(--tsc-ink);
+  --color-result-link-visited-font: var(--tsc-visited);
+  --color-result-publishdate-font: var(--tsc-muted);
+  --color-result-engines-font: var(--tsc-muted);
+  --color-result-search-url-border: var(--tsc-line);
+  --color-result-search-url-font: var(--tsc-ink);
+  --color-result-image-span-font: var(--tsc-text);
+  --color-result-image-span-font-selected: var(--tsc-ground);
+  --color-result-image-background: var(--tsc-panel);
+  --color-settings-tr-hover: var(--tsc-panel);
+  --color-settings-engine-description-font: var(--tsc-muted);
+  --color-settings-table-group-background: var(--tsc-panel);
+  --color-toolkit-badge-font: var(--tsc-ink);
+  --color-toolkit-badge-background: var(--tsc-hover);
+  --color-toolkit-kbd-font: var(--tsc-ground);
+  --color-toolkit-kbd-background: var(--tsc-ink);
+  --color-toolkit-dialog-border: var(--tsc-line);
+  --color-toolkit-dialog-background: var(--tsc-raised);
+  --color-toolkit-tabs-label-border: var(--tsc-ground);
+  --color-toolkit-tabs-section-border: var(--tsc-line);
+  --color-toolkit-select-background: var(--tsc-raised);
+  --color-toolkit-select-border: var(--tsc-line-strong);
+  --color-toolkit-select-background-hover: var(--tsc-panel);
+  --color-toolkit-input-text-font: var(--tsc-ink);
+  --color-toolkit-checkbox-onoff-off-background: var(--tsc-hover);
+  --color-toolkit-checkbox-onoff-on-background: var(--tsc-hover);
+  --color-toolkit-checkbox-onoff-on-mark-background: var(--tsc-ink);
+  --color-toolkit-checkbox-onoff-on-mark-color: var(--tsc-ground);
+  --color-toolkit-checkbox-onoff-off-mark-background: var(--tsc-line-strong);
+  --color-toolkit-checkbox-onoff-off-mark-color: var(--tsc-ground);
+  --color-toolkit-checkbox-label-background: var(--tsc-panel);
+  --color-toolkit-checkbox-label-border: var(--tsc-line);
+  --color-toolkit-checkbox-input-border: var(--tsc-ink);
+  --color-toolkit-engine-tooltip-border: var(--tsc-line);
+  --color-toolkit-engine-tooltip-background: var(--tsc-raised);
+  --color-doc-code: var(--tsc-ink);
+  --color-doc-code-background: var(--tsc-panel);
+  --color-bar-chart-primary: var(--tsc-accent);
+  --color-bar-chart-secondary: var(--tsc-line-strong);
+}
+
+/* ---------- type ---------- */
+
+html {
+  font-family: "Mona Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 0.9375em;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--tsc-mark);
+  color: var(--tsc-mark-ink);
+}
+
+/* Visible focus on every control, drawn in ink so it holds 3:1 on any ground. */
+:focus-visible {
+  outline: 2px solid var(--tsc-ink);
+  outline-offset: 2px;
+}
+
+/* Running-text links: ink, underlined in gold. */
+#answers a,
+#infoboxes a,
+#sidebar a,
+.info-page a,
+footer a,
+#main_preferences a,
+.dialog-error a,
+.dialog-warning a {
+  color: var(--tsc-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--tsc-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+#answers a:hover,
+#infoboxes a:hover,
+#sidebar a:hover,
+.info-page a:hover,
+footer a:hover,
+#main_preferences a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Stats is a table of links: ink, underlined only under the pointer. */
+#main_stats a {
+  color: var(--tsc-ink);
+  text-decoration: none;
+}
+
+#main_stats a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--tsc-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* ---------- top links ---------- */
+
+#links_on_top {
+  right: 1.5rem;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+#links_on_top a,
+#links_on_top a:link *,
+#links_on_top a:hover *,
+#links_on_top a:visited *,
+#links_on_top a:active * {
+  color: var(--tsc-muted);
+}
+
+#links_on_top a {
+  margin-inline-start: 1.25em;
+  gap: 0.35em;
+  text-decoration: none;
+}
+
+#links_on_top a:hover,
+#links_on_top a:hover * {
+  color: var(--tsc-ink);
+}
+
+/* ---------- home ---------- */
+
+/* The search sits in the optical middle of the screen instead of 26vh down. */
+#main_index {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 1rem 12vh;
+  box-sizing: border-box;
+}
+
+.index .title {
+  background: none;
+  min-height: 0;
+  margin: 0 auto 2.25rem;
+}
+
+/* The template hard-codes "SearXNG"; the instance's own name replaces it. */
+.index .title h1 {
+  visibility: hidden;
+  font-size: 0;
+  line-height: 0;
+  margin: 0;
+}
+
+.index .title h1::after {
+  content: "The Search Cheese";
+  visibility: visible;
+  display: block;
+  font-size: clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--tsc-ink);
+}
+
+.index .search_box {
+  max-width: 44rem;
+}
+
+/* Preferences, stats and about carry the same wordmark in place of the logo image. */
+/* :is(main, #main_preferences) lifts this over the #main_preferences a link rule. */
+:is(main, #main_preferences).page_with_header > a:has(> img.logo) {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--tsc-ink);
+  border-radius: 0.4rem;
+}
+
+.page_with_header > a:has(> img.logo)::before {
+  content: "The Search Cheese";
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.page_with_header > a > img.logo {
+  display: none;
+}
+
+.page_with_header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--tsc-ink);
+  margin: 1.5rem 0 1rem;
+}
+
+.index #q {
+  font-size: 1.15rem;
+}
+
+/* ---------- search box ---------- */
+
+.search_box {
+  background: var(--tsc-raised);
+  border: 1px solid var(--tsc-line-strong);
+  border-radius: 999px;
+  box-shadow: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search_box:hover {
+  border-color: var(--tsc-muted);
+}
+
+.search_box:focus-within {
+  border-color: var(--tsc-ink);
+  box-shadow: 0 0 0 4px var(--tsc-accent-ring);
+}
+
+#q,
+#clear_search,
+#send_search {
+  background: transparent;
+}
+
+#q {
+  border-radius: 999px 0 0 999px;
+  padding-left: 1.4rem;
+  font-size: 1.07rem;
+  color: var(--tsc-ink);
+}
+
+#q::placeholder {
+  color: var(--tsc-muted);
+  opacity: 1;
+}
+
+#clear_search {
+  color: var(--tsc-muted);
+}
+
+#clear_search:hover {
+  color: var(--tsc-ink);
+}
+
+/*
+ * A fixed square that the nowrap inline-flex search row cannot shrink, so the
+ * button stays a circle at every width and in the phone's full-screen overlay.
+ */
+#send_search {
+  --tsc-send-size: 2.75rem;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  flex: none;
+  width: var(--tsc-send-size);
+  min-width: var(--tsc-send-size);
+  height: var(--tsc-send-size);
+  aspect-ratio: 1;
+  align-self: center;
+  margin: 0.3rem;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--tsc-accent);
+  color: var(--tsc-accent-ink);
+  transition: background-color 0.15s;
+}
+
+#send_search:hover {
+  background: var(--tsc-accent-hover);
+  color: var(--tsc-accent-ink);
+}
+
+#send_search:active {
+  transform: scale(0.96);
+}
+
+#send_search svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.autocomplete.open {
+  margin-top: 3.85rem;
+  border: 1px solid var(--tsc-line);
+  border-radius: 1rem;
+  box-shadow: var(--tsc-float-shadow);
+  padding: 0.35rem 0;
+}
+
+.autocomplete > ul > li {
+  padding: 0.55rem 1.4rem;
+}
+
+/* Open with no suggestions yet: the stock :empty check misses the empty <ul>. */
+.autocomplete.open:has(> ul:empty) {
+  display: none;
+}
+
+/* ---------- results header ---------- */
+
+#search_header {
+  padding-top: 1.25rem;
+}
+
+/* A gold monogram stands in for the SearXNG logo; the link keeps its title. */
+#search_logo svg {
+  display: none;
+}
+
+#search_logo {
+  padding: 0;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-decoration: none;
+  border-radius: 0.75rem;
+}
+
+/* Centred on the 3.5rem search box below .5rem of #search_view padding. */
+#search_logo::before {
+  content: "S";
+  content: "S" / "";
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-top: 0.95rem;
+  border-radius: 0.8rem;
+  background: var(--tsc-accent);
+  color: var(--tsc-accent-ink);
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 1;
+}
+
+button.category_button {
+  color: var(--tsc-muted);
+  font-size: 0.93rem;
+  font-weight: 500;
+  gap: 0.4rem;
+  padding: 0.5rem 0.1rem 0.6rem;
+  margin-inline-end: 1.1rem;
+  border-bottom: 3px solid transparent;
+}
+
+button.category_button svg {
+  padding-right: 0;
+  opacity: 0.85;
+}
+
+button.category_button:hover {
+  color: var(--tsc-ink);
+}
+
+button.category_button.selected,
+button.category_button:active {
+  color: var(--tsc-ink);
+  font-weight: 650;
+  border-bottom: 3px solid var(--tsc-accent);
+}
+
+/*
+ * Search filters: quiet pills under the tabs, their left edge on the search
+ * box's (7rem header padding + 3rem logo + 1.2rem gap). The stock select draws
+ * its arrow inside a 2rem transparent right border, so the pill's edge is an
+ * inset outline rather than a border.
+ */
+.search_filters {
+  gap: 0.5rem;
+  margin: 0.9rem 0 0 11.2rem;
+}
+
+.search_filters select {
+  height: 2.1rem;
+  margin: 0;
+  border-radius: 999px;
+  padding: 0.2rem 0.2rem 0.2rem 0.95rem !important;
+  outline: 1px solid var(--tsc-line-strong);
+  outline-offset: -1px;
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: var(--tsc-text);
+  background-color: var(--tsc-raised);
+}
+
+.search_filters select:hover {
+  outline-color: var(--tsc-ink);
+  color: var(--tsc-ink);
+  background-color: var(--tsc-raised);
+}
+
+.search_filters select:focus-visible {
+  outline: 2px solid var(--tsc-ink);
+  outline-offset: 2px;
+}
+
+/*
+ * Every select: a visible field edge and a smaller arrow, still painted inside
+ * the stock 2rem right border ([cr + .5rem, cr + 1.45rem] of the content box).
+ */
+select {
+  outline: 1px solid var(--tsc-line-strong);
+  outline-offset: -1px;
+  border-radius: 0.6rem;
+  background-size: 0.95rem;
+  background-position: calc(100% + 1.45rem) center;
+}
+
+select:hover {
+  outline-color: var(--tsc-ink);
+}
+
+select:focus-visible {
+  outline: 2px solid var(--tsc-ink);
+  outline-offset: 2px;
+}
+
+/* ---------- results ---------- */
+
+.result {
+  padding: 0.9rem 1rem 1rem;
+}
+
+.result .url_wrapper {
+  font-size: 0.84rem;
+  color: var(--tsc-muted);
+}
+
+.result .url_wrapper .url_i1 {
+  color: var(--tsc-text);
+  font-weight: 500;
+}
+
+.result h3 {
+  margin: 0.25rem 0 0.35rem;
+  font-size: 1.22rem;
+  line-height: 1.3;
+}
+
+.result h3 a {
+  color: var(--tsc-ink);
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  text-decoration: none;
+}
+
+.result h3 a:visited {
+  color: var(--tsc-visited);
+}
+
+.result h3 a:hover,
+.result h3 a:focus {
+  text-decoration: underline;
+  text-decoration-color: var(--tsc-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.result h3 a .highlight {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.result .content,
+.result .stat {
+  font-size: 0.97rem;
+  line-height: 1.58;
+  color: var(--tsc-text);
+  max-width: 42em;
+}
+
+/* Matched words: the marker, the one place gold meets running text. */
+.result .content .highlight,
+.result .stat .highlight {
+  background: var(--tsc-mark);
+  color: var(--tsc-mark-ink);
+  font-weight: 600;
+  border-radius: 3px;
+  padding: 0 0.12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.engines {
+  color: var(--tsc-muted);
+  font-size: 0.8rem;
+  align-items: center;
+}
+
+/* Stock sets these to `smaller`, which lands under 11px. */
+.engines span {
+  font-size: inherit;
+}
+
+.result .cache_link,
+.result .proxyfied_link {
+  color: var(--tsc-muted);
+  font-size: 0.8rem !important;
+  text-decoration: none;
+}
+
+.result .cache_link:hover,
+.result .proxyfied_link:hover {
+  color: var(--tsc-ink);
+  text-decoration: underline;
+}
+
+.result a.thumbnail_link {
+  border-radius: 0.75rem;
+  background: var(--tsc-panel);
+}
+
+.result .published_date,
+.result .result_length,
+.result .result_views,
+.result .result_author {
+  font-size: 0.82rem;
+}
+
+article[data-vim-selected] {
+  border-radius: 0.75rem;
+}
+
+.category-videos,
+.category-news,
+.category-map,
+.category-music,
+.category-social {
+  border-radius: 1rem;
+}
+
+/* ---------- answers and sidebar ---------- */
+
+#answers {
+  border-radius: 1rem;
+  padding: 1.1rem 1.3rem;
+  line-height: 1.6;
+  font-size: 0.97rem;
+}
+
+#answers .answer-url {
+  font-size: 0.87rem;
+}
+
+#sidebar .infobox {
+  background: var(--tsc-panel);
+  border: none;
+  border-radius: 1rem;
+  padding: 1.25rem 1.35rem;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+#sidebar .infobox h2 {
+  font-size: 1.4rem;
+  font-weight: 750;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
+  color: var(--tsc-ink);
+}
+
+#sidebar .infobox dt {
+  font-weight: 600;
+  color: var(--tsc-ink);
+}
+
+#sidebar .infobox img {
+  border-radius: 0.6rem;
+}
+
+#infoboxes .title,
+#suggestions .title,
+#search_url .title,
+#engines_msg .title,
+#apis .title,
+.sidebar-collapsible summary,
+#sidebar summary {
+  color: var(--tsc-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+#infoboxes .infobox .title {
+  color: var(--tsc-ink);
+}
+
+#suggestions input[type="submit"],
+#infoboxes input[type="submit"] {
+  background: none;
+  color: var(--tsc-ink);
+  border-radius: 0;
+  padding: 0.2rem 0;
+  text-decoration: underline;
+  text-decoration-color: var(--tsc-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+#apis input,
+#search_url input {
+  border-radius: 0.6rem;
+}
+
+/* ---------- pagination ---------- */
+
+#pagination {
+  margin-top: 1.5rem;
+}
+
+#pagination button,
+#pagination input.page_number,
+#pagination input.page_number_current {
+  min-width: 2.4rem;
+  height: 2.4rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--tsc-line-strong);
+  background: var(--tsc-raised) !important;
+  color: var(--tsc-ink) !important;
+  font-weight: 550;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#pagination input.page_number {
+  padding: 0;
+}
+
+#pagination button:hover,
+#pagination input.page_number:hover {
+  border-color: var(--tsc-ink);
+}
+
+#pagination input.page_number_current {
+  padding: 0;
+  background: var(--tsc-ink) !important;
+  color: var(--tsc-ground) !important;
+  border-color: var(--tsc-ink);
+}
+
+#pagination button svg {
+  vertical-align: -0.15em;
+}
+
+#backToTop {
+  border-radius: 999px;
+}
+
+/* ---------- footer ---------- */
+
+footer {
+  color: var(--tsc-muted);
+  line-height: 1.7;
+  padding: 1.25rem 1.25rem;
+  box-sizing: border-box;
+}
+
+footer p {
+  font-size: 0.875rem;
+}
+
+footer a {
+  color: var(--tsc-muted);
+}
+
+/* ---------- images ---------- */
+
+.result-images img {
+  border-radius: 0.6rem;
+}
+
+.result-images span.title {
+  font-weight: 500;
+  color: var(--tsc-ink);
+}
+
+.result-images {
+  padding-bottom: 3.4rem;
+}
+
+.result-images span.source {
+  color: var(--tsc-muted);
+  font-size: 0.75rem;
+}
+
+#main_results div#results.only_template_images {
+  margin-inline: 1rem;
+}
+
+/* ---------- buttons and controls (preferences, stats, about) ---------- */
+
+input[type="submit"],
+#results button[type="submit"],
+.button {
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  font-weight: 600;
+}
+
+input[type="submit"]:hover,
+.button:hover {
+  background: var(--tsc-accent-hover);
+}
+
+select {
+  border-radius: 0.6rem;
+}
+
+.tabs > label,
+.tabs > li > a {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--tsc-muted);
+}
+
+.tabs > label:hover,
+.tabs > li > a:hover {
+  color: var(--tsc-ink);
+}
+
+html body .tabs > input:checked + label,
+.tabs > label.active,
+.tabs > li > a.active {
+  font-weight: 650;
+  color: var(--tsc-ink);
+  border-bottom-width: 3px;
+}
+
+html body .tabs > input:checked ~ label {
+  color: var(--tsc-muted);
+}
+
+html body .tabs > input:checked + label {
+  color: var(--tsc-ink);
+}
+
+#main_preferences input[type="text"] {
+  border-radius: 0.6rem;
+}
+
+/* A checked default category: ink edge, since gold on white is under 3:1. */
+#main_preferences .category input[type="checkbox"]:checked + label {
+  border-color: var(--tsc-ink);
+  background: var(--tsc-panel);
+  border-radius: 0.6rem;
+}
+
+/* Save stays the gold primary; Back and Reset become outlined secondaries. */
+#main_preferences .preferences_back {
+  background: transparent;
+  border: 1px solid var(--tsc-line-strong);
+  border-radius: 999px;
+  padding: 0;
+}
+
+#main_preferences .preferences_back:hover {
+  border-color: var(--tsc-ink);
+}
+
+#main_preferences .preferences_back a {
+  display: block;
+  padding: 0.7rem 1.3rem;
+  color: var(--tsc-ink);
+  font-weight: 550;
+  text-decoration: none;
+  border-radius: 999px;
+}
+
+.small_font {
+  font-size: 0.875rem;
+  color: var(--tsc-muted);
+}
+
+div.selectable_url {
+  border-radius: 0.6rem;
+}
+
+div.selectable_url pre {
+  font-size: 0.8rem;
+}
+
+kbd {
+  border-radius: 0.3rem;
+}
+
+/* ---------- narrower screens ---------- */
+
+/* Below 79.75em the stock header drops its 7rem indent: .5rem + 3rem + .5rem. */
+@media screen and (max-width: 79.75em) {
+  .search_filters {
+    margin-inline-start: 4rem;
+  }
+
+  button.category_button {
+    margin-inline-end: 0.9rem;
+  }
+}
+
+/* ---------- phone: one 1rem gutter for every edge ---------- */
+
+@media screen and (max-width: 50em) {
+  #search_header {
+    box-sizing: border-box;
+    padding-inline: 1rem 0.5rem;
+  }
+
+  .search_filters {
+    margin: 0;
+    padding: 0.75rem 1rem;
+  }
+
+  #categories_container {
+    padding-inline-start: 0;
+  }
+
+  .result {
+    border-radius: 1rem;
+    width: auto;
+    margin: 0.75rem 1rem;
+  }
+
+  /* On the grey phone ground, panels lift to the card surface like results do. */
+  #answers {
+    margin: 0.75rem 1rem 0;
+    background: var(--tsc-raised);
+  }
+
+  #sidebar {
+    margin: 0.75rem 1rem 0;
+  }
+
+  #sidebar .infobox {
+    background: var(--tsc-raised);
+  }
+
+  /* The stock full-screen search overlay: keep it inside the screen and keep the pill. */
+  body.results_endpoint #search_view:focus-within {
+    left: 0;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem 0;
+  }
+
+  body #search_view:focus-within .search_box {
+    border: 1px solid var(--tsc-ink);
+    border-radius: 999px;
+    box-shadow: 0 0 0 4px var(--tsc-accent-ring);
+  }
+
+  #search_view:focus-within .search_box #send_search {
+    border-radius: 999px;
+    margin: 0.3rem !important;
+  }
+
+  #search_view:focus-within .search_box #q {
+    border-radius: 999px 0 0 999px;
+  }
+
+  .page_with_header {
+    margin: 1.5rem 1.25rem;
+  }
+
+  .page_with_header h1 {
+    font-size: 1.5rem;
+  }
+
+  #search_logo::before {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.15rem;
+    margin-top: 0.35rem;
+  }
+
+  #send_search {
+    --tsc-send-size: 2.4rem;
+  }
+
+  #links_on_top {
+    right: 1rem;
+  }
+}
