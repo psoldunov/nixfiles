@@ -23,6 +23,13 @@
       };
       # Agents read json; SearXNG answers it with 403 unless it is listed.
       search.formats = ["html" "json"];
+      # Brave rate-limits this IP ("too many requests") on most queries.
+      # Entries merge into the stock engine list by name.
+      engines =
+        map (name: {
+          inherit name;
+          disabled = true;
+        }) ["brave" "brave.images" "brave.news" "brave.videos"];
     };
   };
 
