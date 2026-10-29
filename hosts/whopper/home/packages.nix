@@ -27,7 +27,6 @@
     pcsx2
     duckstation
     heroic
-    epic-games-launcher
     bchunk
     lutris
     shipments
