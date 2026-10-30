@@ -146,6 +146,13 @@
       flake = false;
     };
 
+    # Firecrawl CLI and Alexandria skills. Bump the tag, then run
+    # `nix flake update firecrawl-cli` to update both together.
+    firecrawl-cli = {
+      url = "github:firecrawl/cli/v1.26.24";
+      flake = false;
+    };
+
     # REA's reverse-engineer-anything skill, pinned to a release tag. The rea
     # MCP server in modules/home/programs/claude-code/mcp.nix runs the npm
     # release named by this checkout's package.json, so both move together.

@@ -23,6 +23,7 @@ in {
   in {
     CLAUDE_SANITY_MCP_BEARER.sopsFile = sharedFile;
     CLOCKIFY_API_KEY.sopsFile = sharedFile;
+    FIRECRAWL_API_KEY.sopsFile = sharedFile;
     N8N_ACCESS_TOKEN.sopsFile = sharedFile;
     NOCODB_API_KEY.sopsFile = sharedFile;
     PAPERLESS_API_KEY.sopsFile = sharedFile;
@@ -38,6 +39,7 @@ in {
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
         CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
+        FIRECRAWL_API_KEY:${config.sops.secrets.FIRECRAWL_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path} \
@@ -54,6 +56,7 @@ in {
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
         CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
+        FIRECRAWL_API_KEY:${config.sops.secrets.FIRECRAWL_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path} \
@@ -70,6 +73,7 @@ in {
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
         CLOCKIFY_API_KEY:${config.sops.secrets.CLOCKIFY_API_KEY.path} \
+        FIRECRAWL_API_KEY:${config.sops.secrets.FIRECRAWL_API_KEY.path} \
         N8N_ACCESS_TOKEN:${config.sops.secrets.N8N_ACCESS_TOKEN.path} \
         NOCODB_API_KEY:${config.sops.secrets.NOCODB_API_KEY.path} \
         PAPERLESS_API_KEY:${config.sops.secrets.PAPERLESS_API_KEY.path} \
