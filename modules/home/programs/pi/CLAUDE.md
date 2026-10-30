@@ -126,9 +126,9 @@ Web search goes through BigTasty's SearXNG in every agent (Claude Code's
 `source_check` calls, nested `codemode` calls included, and points the model
 at `mcp({ tool: "searxng_searxng_web_search" })`. pi-mcp-adapter serves that
 from `~/.config/mcp/mcp.json` under its default `server` tool prefix, so the
-name changes if `toolPrefix` does. `fetch_content` stays available. Reaching
-the MCP server needs `SEARXNG_URL` in pi's environment, so start pi from a
-shell that ran its init.
+name changes if `toolPrefix` does. `fetch_content` stays available. The MCP
+server's wrapper reads `SEARXNG_URL` from its sops file, so pi needs nothing
+in its own environment for it.
 
 Pointing pi-web-access at SearXNG directly does not work here: it refuses a
 base URL with credentials and reads `searxngHeaders` only as literal strings,

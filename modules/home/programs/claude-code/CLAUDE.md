@@ -245,9 +245,20 @@ them there or through this server; Nix `ingress` entries have no effect.
 (`secrets/shared.yaml`) is `https://psoldunov:<password>@search.theswisscheese.com`;
 the login is nginx Basic Auth in front of SearXNG, and its hashed half is
 `SEARXNG_HTPASSWD` in `secrets/bigtasty.yaml` (`htpasswd -nim psoldunov`; apr1,
-since nixpkgs' nginx cannot check bcrypt). Rotate both together. The same
-variable lets a shell reach the JSON API:
+since nixpkgs' nginx cannot check bcrypt). Rotate both together. The server
+runs through a wrapper (`searxngMcp` in `mcp.nix`) that reads the sops file at
+launch, so Claude Code, Codex and pi reach it without `SEARXNG_URL` in their
+environment. The shell exports the same variable for the JSON API:
 `curl "$SEARXNG_URL/search?q=<query>&format=json"`.
+
+`${VAR}` placeholders resolve from the environment Claude Code started with.
+Concierge's daemon hands its `claude -p` agents the environment it captured at
+its own start, so a secret added after that start reaches them only after
+`systemctl --user restart concierge-daemon`. A new secret-bearing server should
+read its sops file at launch instead: a wrapper script for a stdio server
+(searxng), a `headersHelper` for an HTTP one (firecrawl, `../firecrawl/`).
+The nocodb, clockify, Sanity, n8n, Paperless and mailspring entries still use
+placeholders.
 
 `rea` is REA (github.com/morluto/rea), a reverse-engineering server. It runs
 `npx -y rea-agents@<version> mcp` on Node 24, where `<version>` comes from the

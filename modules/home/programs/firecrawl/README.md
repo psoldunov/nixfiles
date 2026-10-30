@@ -35,9 +35,13 @@ SOPS edit workflow. Do not add a placeholder value. Activation remains blocked
 until that encrypted entry exists.
 
 The Claude Code module exports this secret from the SOPS runtime path in fish,
-zsh, and bash. After activation, start or restart Claude Code, Codex, Pi, and
-CLI sessions from a shell that has loaded those hooks. This source change does
-not alter GUI environment inheritance or activate the configuration.
+zsh, and bash. Claude Code's MCP entry does not depend on that export: a
+`headersHelper` script reads the SOPS file on every connect and prints the
+`Authorization` header, so agents started by a long-running launcher such as
+Concierge authenticate even when their environment predates the key. Codex and
+Pi still read `FIRECRAWL_API_KEY` from their environment, so start or restart
+them from a shell that has loaded the hooks. This source change does not alter
+GUI environment inheritance or activate the configuration.
 
 There is no per-agent OAuth login. The API key unlocks Firecrawl's full MCP
 surface subject to the team's access; keyless access does not include
