@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  mcpLaunchEnv,
   pkgs,
   ...
 }: let
@@ -31,10 +32,11 @@ in {
     SEARXNG_URL.sopsFile = sharedFile;
   };
 
-  # Expose the Claude MCP secrets as shell env vars. The MCP server
-  # declarations below reference them as `${VAR}` placeholders — Claude
-  # Code performs the env-substitution when it launches each server, so
-  # the JSON files on disk only ever contain the placeholder text.
+  # Expose the Claude MCP secrets as shell env vars, for Codex and pi's HTTP
+  # servers and for scripts. The MCP server declarations below reference them
+  # as `${VAR}` placeholders, so no value reaches /nix/store; mcp-secrets.nix
+  # reads each one at launch for Claude Code, and for every client of a stdio
+  # server.
   programs.fish.shellInitLast = lib.mkAfter ''
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
@@ -132,12 +134,12 @@ in {
 
         # BigTasty's SearXNG (hosts/bigtasty/modules/services/searxng.nix).
         # The Basic Auth login rides in the URL, which mcp-searxng accepts.
-        searxng = {
+        searxng = mcpLaunchEnv "searxng" {
           command = lib.getExe pkgs.mcp-searxng;
           env.SEARXNG_URL = "\${SEARXNG_URL}";
         };
 
-        Paperless = {
+        Paperless = mcpLaunchEnv "Paperless" {
           command = "${pkgs.bun}/bin/bunx";
           args = [
             "-y"

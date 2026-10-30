@@ -35,7 +35,12 @@ in {
   programs.bash.bashrcExtra = lib.mkAfter posixExport;
   programs.zsh.initContent = lib.mkAfter posixExport;
 
-  # The `:-` default keeps Claude Code's config valid when Mailspring has not
+  # Claude Code reads the token at connect time through this, so a token
+  # regenerated in Mailspring reaches it without a restart. Codex and pi
+  # take the shell export above.
+  programs.claude-code.mcpSecretReaders.MAILSPRING_MCP_TOKEN = "${jq} -r '${tokenQuery}' ${mailspringConfig}";
+
+  # The `:-` default keeps Codex and pi's config valid when Mailspring has not
   # created a token yet; the server then answers 401 until it has one.
   programs.mcp.servers.mailspring = {
     url = "http://127.0.0.1:2587/mcp";
