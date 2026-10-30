@@ -9,6 +9,7 @@
     ./programs/claude-code
     ./programs/clokkr-gate
     ./programs/codex
+    ./programs/firecrawl
     ./programs/pi
     ./programs/unifi
   ];

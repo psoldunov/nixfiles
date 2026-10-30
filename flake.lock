@@ -337,6 +337,23 @@
         "type": "github"
       }
     },
+    "firecrawl-cli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793071113,
+        "narHash": "sha256-CYJP1U0UC+L1MQLZrTbeIzXioHwyKZKj9Bw0ZOILbL0=",
+        "owner": "firecrawl",
+        "repo": "cli",
+        "rev": "a9a46fe23af001d726a05d8448d25a7188b42fdc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "firecrawl",
+        "ref": "v1.26.24",
+        "repo": "cli",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -929,6 +946,7 @@
         "disko": "disko",
         "ensemblr": "ensemblr",
         "figma": "figma",
+        "firecrawl-cli": "firecrawl-cli",
         "home-manager": "home-manager",
         "humanizer": "humanizer",
         "i-have-adhd": "i-have-adhd",
