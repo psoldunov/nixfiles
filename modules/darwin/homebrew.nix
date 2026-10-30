@@ -53,6 +53,7 @@
       # Vendor CLIs that move faster than nixpkgs.
       "ctx7"
       "neonctl"
+      "sanity"
       "vercel"
 
       # macOS-specific, or absent from nixpkgs.
