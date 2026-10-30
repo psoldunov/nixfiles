@@ -245,20 +245,41 @@ them there or through this server; Nix `ingress` entries have no effect.
 (`secrets/shared.yaml`) is `https://psoldunov:<password>@search.theswisscheese.com`;
 the login is nginx Basic Auth in front of SearXNG, and its hashed half is
 `SEARXNG_HTPASSWD` in `secrets/bigtasty.yaml` (`htpasswd -nim psoldunov`; apr1,
-since nixpkgs' nginx cannot check bcrypt). Rotate both together. The server
-runs through a wrapper (`searxngMcp` in `mcp.nix`) that reads the sops file at
-launch, so Claude Code, Codex and pi reach it without `SEARXNG_URL` in their
-environment. The shell exports the same variable for the JSON API:
+since nixpkgs' nginx cannot check bcrypt). Rotate both together. The shell
+exports the same variable for the JSON API:
 `curl "$SEARXNG_URL/search?q=<query>&format=json"`.
 
-`${VAR}` placeholders resolve from the environment Claude Code started with.
-Concierge's daemon hands its `claude -p` agents the environment it captured at
-its own start, so a secret added after that start reaches them only after
-`systemctl --user restart concierge-daemon`. A new secret-bearing server should
-read its sops file at launch instead: a wrapper script for a stdio server
-(searxng), a `headersHelper` for an HTTP one (firecrawl, `../firecrawl/`).
-The nocodb, clockify, Sanity, n8n, Paperless and mailspring entries still use
-placeholders.
+### MCP secrets
+
+Never let an MCP server depend on a secret in the client's environment. A
+client fills `${VAR}` from the environment it started with, and Concierge's
+daemon hands the Claude Code and Codex agents it starts the environment it
+captured at its own start. A secret added to the shell exports after that
+never reaches them: on 2026-10-30, Concierge tasks got the literal
+`${SEARXNG_URL}` and `${FIRECRAWL_API_KEY}` until the daemon restarted.
+
+`mcp-secrets.nix` reads every placeholder in `programs.mcp.servers` at launch
+instead:
+
+- HTTP servers need nothing extra. Write the header as
+  `"Bearer \${MY_KEY}"`; Claude Code's copy of the server moves it into a
+  generated `headersHelper` that reads the value on every connect. Codex and pi
+  cannot run a helper, so they still take the shell export.
+- Stdio servers go through `mcpLaunchEnv "<name>" { command; args; env.MY_KEY =
+  "\${MY_KEY}"; }` (a module argument, see searxng and Paperless in `mcp.nix`).
+  The wrapper reads the value before it starts the server, for every client.
+  Each env value must be a single `${VAR}`.
+- A sops secret's reader is `cat` on its decrypted file, so adding the secret
+  to `sops.secrets` is enough. Anything else needs
+  `programs.claude-code.mcpSecretReaders.<VAR>`, a shell command that prints
+  the value (Mailspring's token, read from its own config, in
+  `../../workstation/mailspring.nix`).
+
+Evaluation fails on a placeholder with no reader, and on one outside an HTTP
+header, such as a stdio server missing `mcpLaunchEnv`. Keep the shell export
+loops in `mcp.nix` in step for Codex, pi and scripts. Codex agents that
+Concierge starts still read HTTP keys from the daemon's environment, so a new
+HTTP key reaches them only after `systemctl --user restart concierge-daemon`.
 
 `rea` is REA (github.com/morluto/rea), a reverse-engineering server. It runs
 `npx -y rea-agents@<version> mcp` on Node 24, where `<version>` comes from the

@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  mcpLaunchEnv,
   pkgs,
   ...
 }: let
@@ -12,15 +13,6 @@
   reaMcp = pkgs.writeShellScript "rea-mcp" ''
     export PATH=${lib.makeBinPath [pkgs.nodejs_24]}:$PATH
     exec npx -y rea-agents@${reaVersion} mcp
-  '';
-  # Reads the URL at launch rather than taking a `${SEARXNG_URL}` placeholder,
-  # so it works whatever environment the client started with. Not
-  # `env.SEARXNG_URL.file`: that reaches pi's ~/.config/mcp/mcp.json as a
-  # `{file:...}` token, which pi-mcp-adapter would pass on as the URL.
-  searxngMcp = pkgs.writeShellScript "mcp-searxng" ''
-    SEARXNG_URL=$(<${lib.escapeShellArg config.sops.secrets.SEARXNG_URL.path}) || exit 1
-    export SEARXNG_URL
-    exec ${lib.getExe pkgs.mcp-searxng}
   '';
 in {
   # Secrets live as individual sops entries decrypted to
@@ -40,17 +32,11 @@ in {
     SEARXNG_URL.sopsFile = sharedFile;
   };
 
-  # Expose the Claude MCP secrets as shell env vars. Several MCP server
-  # declarations below reference them as `${VAR}` placeholders — Claude
-  # Code performs the env-substitution when it launches each server, so
-  # the JSON files on disk only ever contain the placeholder text.
-  #
-  # A placeholder only resolves if the variable was in Claude Code's own
-  # environment, and a long-running launcher (concierge-daemon) hands its
-  # agents the environment it captured at its own start: a secret added
-  # later reaches them only after that launcher restarts. New servers read
-  # the sops file at launch instead: a wrapper script for a stdio server
-  # (searxngMcp above), a `headersHelper` for an HTTP one (../firecrawl/).
+  # Expose the Claude MCP secrets as shell env vars, for Codex and pi's HTTP
+  # servers and for scripts. The MCP server declarations below reference them
+  # as `${VAR}` placeholders, so no value reaches /nix/store; mcp-secrets.nix
+  # reads each one at launch for Claude Code, and for every client of a stdio
+  # server.
   programs.fish.shellInitLast = lib.mkAfter ''
     for pair in \
         CLAUDE_SANITY_MCP_BEARER:${config.sops.secrets.CLAUDE_SANITY_MCP_BEARER.path} \
@@ -148,9 +134,12 @@ in {
 
         # BigTasty's SearXNG (hosts/bigtasty/modules/services/searxng.nix).
         # The Basic Auth login rides in the URL, which mcp-searxng accepts.
-        searxng.command = "${searxngMcp}";
+        searxng = mcpLaunchEnv "searxng" {
+          command = lib.getExe pkgs.mcp-searxng;
+          env.SEARXNG_URL = "\${SEARXNG_URL}";
+        };
 
-        Paperless = {
+        Paperless = mcpLaunchEnv "Paperless" {
           command = "${pkgs.bun}/bin/bunx";
           args = [
             "-y"

@@ -60,9 +60,12 @@ gets `sandbox_mode = "read-only"`.
 Claude Code expands `${VAR}` in server config and Codex does not. `mcp.nix`
 rewrites each placeholder to the key Codex reads that variable from
 (`bearer_token_env_var`, `env_http_headers`, `env_vars`) and fails evaluation
-if one is left. The values come from the shell environment that `../claude-code/mcp.nix`
-and `../../workstation/mailspring.nix` export, so Codex has to start from a
-shell that ran its init.
+if one is left. Stdio servers carry no placeholder by then: `mcpLaunchEnv`
+(`../claude-code/mcp-secrets.nix`) wraps them so they read their own secrets.
+HTTP header values come from the shell environment that
+`../claude-code/mcp.nix` and `../../workstation/mailspring.nix` export, so
+Codex has to start from a shell that ran its init, and Codex agents started by
+Concierge see a new key only after `concierge-daemon` restarts.
 
 OAuth servers sign in once per machine: `codex mcp login <name>` for
 `figma-almost-always`, `figma-personal`, `linear-swiss-cheese`,
