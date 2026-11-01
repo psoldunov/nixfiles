@@ -102,9 +102,10 @@ in {
     overrideDevices = true;
   };
 
-  # The Alan Wake save folders, shared with ShackStack and BigTasty.
+  # The Alan Wake save folders, shared with BigTasty only; ShackStack gets
+  # them through it.
   gameSaves = {
     heroicPrefixes = "/SATA/Heroic/Prefixes";
-    devices = ["ShackStack" "BigTasty"];
+    devices = ["BigTasty"];
   };
 }

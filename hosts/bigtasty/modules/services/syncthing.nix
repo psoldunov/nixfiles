@@ -4,7 +4,8 @@ in {
   imports = [../../../../modules/nixos/game-saves.nix];
 
   # The Alan Wake saves, as "<title> Saves" next to the other game saves
-  # here, so Whopper and ShackStack trade them without being on together.
+  # here. Whopper and ShackStack share them with this host only, so every
+  # save between them goes through here.
   # "Alan Wake 2 (2024 backup)" beside them is the copy the saves were
   # restored from on 2026-10-19; no folder uses it.
   gameSaves = {
