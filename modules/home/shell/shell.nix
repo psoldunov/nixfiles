@@ -28,9 +28,6 @@ in {
     // lib.optionalAttrs isLinuxDesktop {
       TERMINAL = "${pkgs.ghostty}/bin/ghostty";
       MAILER = "${pkgs.mailspring}/bin/mailspring";
-      # Prisma 7 queries in JS and formats in Wasm. Only the schema engine
-      # (migrate, db push) is native, and Prisma ships no NixOS build of it.
-      PRISMA_SCHEMA_ENGINE_BINARY = lib.getExe pkgs.prisma-engines_7;
     };
 
   programs.lazygit.enable = true;
