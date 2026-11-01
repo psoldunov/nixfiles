@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  pkgs-stable,
   hostConfig,
   ...
 }: let
@@ -29,10 +28,9 @@ in {
     // lib.optionalAttrs isLinuxDesktop {
       TERMINAL = "${pkgs.ghostty}/bin/ghostty";
       MAILER = "${pkgs.mailspring}/bin/mailspring";
-      PRISMA_QUERY_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/query-engine";
-      PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs-stable.prisma-engines}/bin/schema-engine";
-      PRISMA_FMT_BINARY = "${pkgs-stable.prisma-engines}/bin/prisma-fmt";
-      PRISMA_QUERY_ENGINE_LIBRARY = "${lib.getLib pkgs-stable.prisma-engines}/lib/libquery_engine.node";
+      # Prisma 7 queries in JS and formats in Wasm. Only the schema engine
+      # (migrate, db push) is native, and Prisma ships no NixOS build of it.
+      PRISMA_SCHEMA_ENGINE_BINARY = lib.getExe pkgs.prisma-engines_7;
     };
 
   programs.lazygit.enable = true;
