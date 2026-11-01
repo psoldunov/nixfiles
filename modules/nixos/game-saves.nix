@@ -15,8 +15,12 @@
 # preferences container stores the upgrades next to the audio and gameplay
 # options.
 #
-# Simple versioning keeps the last five copies of every changed or deleted
-# file in each folder's .stversions, in case a sync overwrites a save.
+# Staggered versioning keeps old copies of every changed or deleted file in
+# each folder's .stversions, in case a sync overwrites a save: one per 30
+# seconds for the first hour, one per hour for a day, one per day for 30
+# days, then one per week for a year. Keeping a fixed count was not enough:
+# Remastered rewrites `config` about once a minute, which pushed every older
+# copy out within minutes.
 {
   config,
   lib,
@@ -83,8 +87,8 @@ in {
         label = game.title;
         path = pathFor game;
         versioning = {
-          type = "simple";
-          params.keep = "5";
+          type = "staggered";
+          params.maxAge = toString (365 * 24 * 60 * 60);
         };
       })
       games;
