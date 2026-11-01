@@ -261,11 +261,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793268921,
-        "narHash": "sha256-674WbQwRpCJQg9UcffXVGBwINtx92VJvXel+9rbdJ8o=",
+        "lastModified": 1793539840,
+        "narHash": "sha256-8btGXpuG5wcedHbqcAJPAUwAMU4WtsqZrx6zs2kqNQU=",
         "owner": "psoldunov",
         "repo": "deckmaster",
-        "rev": "2ad42de35ab316bb22191a72726c0d3764b7c238",
+        "rev": "ca68129976e15545b57be0c721497afdee44668a",
         "type": "github"
       },
       "original": {
