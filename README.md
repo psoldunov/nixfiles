@@ -405,7 +405,7 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
 | Input | Purpose |
 |---|---|
 | `nixpkgs` | nixos-unstable — default package set |
-| `nixpkgs-stable` | nixos-25.05 — calibre, Obsidian, prisma-engines |
+| `nixpkgs-stable` | nixos-25.05 — calibre, Obsidian |
 | `home-manager` | NixOS module on Whopper, BigTasty, BigKing and ShackStack, nix-darwin module on the Macs |
 | `disko` | BigKing's NVMe partitioning, used by nixos-anywhere at install time |
 | `asustor-platform-driver`, `lcm` | BigKing's ASUSTOR kernel drivers (NixOS module) and the source of its LCD daemon |
