@@ -1,8 +1,9 @@
 # The Sync folder, shared directly with every other Syncthing host
-# (lib/syncthing.nix). The Alan Wake saves go to Whopper and BigTasty
-# (modules/nixos/game-saves.nix). ShackStack's device ID comes from the
-# certificate Syncthing made on first start in ~/.config/syncthing; a
-# reinstall makes a new one, which then goes into lib/syncthing.nix.
+# (lib/syncthing.nix). The Alan Wake saves go to BigTasty only, which passes
+# them on to Whopper (modules/nixos/game-saves.nix). ShackStack's device ID
+# comes from the certificate Syncthing made on first start in
+# ~/.config/syncthing; a reinstall makes a new one, which then goes into
+# lib/syncthing.nix.
 #
 # No guiPasswordFile: that would need the sops age key, and ShackStack keeps
 # none. The GUI listens on localhost only, and its password was set once by
@@ -15,7 +16,7 @@ in {
 
   gameSaves = {
     heroicPrefixes = "/home/psoldunov/Games/Heroic/Prefixes";
-    devices = ["Whopper" "BigTasty"];
+    devices = ["BigTasty"];
   };
 
   services.syncthing = {

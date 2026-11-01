@@ -1,10 +1,11 @@
-# Alan Wake saves, kept in step by Syncthing between the hosts that import
-# this module. Whopper and ShackStack play the Epic copies through Heroic
-# with GE-Proton, one wine prefix per game named after its title, so each
-# save directory sits at the same place inside a host's prefix root
-# (`heroicPrefixes`). BigTasty is always on and keeps its own copy under
-# `storageDir`, so a save made on one machine reaches the other even when
-# the two are never on at the same time.
+# Alan Wake saves, kept in step by Syncthing through BigTasty. Whopper and
+# ShackStack play the Epic copies through Heroic with GE-Proton, one wine
+# prefix per game named after its title, so each save directory sits at the
+# same place inside a host's prefix root (`heroicPrefixes`). BigTasty is
+# always on and keeps its own copy under `storageDir`. The players share the
+# folders with BigTasty only, never with each other, so every save passes
+# through it, and a save made on one machine reaches the other even when the
+# two are never on at the same time.
 #
 # Ignore patterns keep the files that belong to one machine local:
 # Remastered's resolution.xml, and Alan Wake 2's renderer.ini (resolution,
