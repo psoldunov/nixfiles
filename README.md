@@ -218,7 +218,7 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 
 | Field | Type | Meaning |
 |---|---|---|
-| `role` | `"desktop" \| "server" \| "htpc"` | Broad-stroke gate. `modules/home/shell/` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish and zsh functions (`open`, `fzf_kill`), and the `git` keychain key on servers. `"htpc"` (ShackStack) gets the server shell too, since it runs games, not a dev setup. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
+| `role` | `"desktop" \| "server" \| "htpc"` | Broad-stroke gate. `modules/home/shell/` uses it to omit desktop-only env vars (ghostty/mailspring/deno), aliases (`suspend`), fish and zsh functions (`open`, `fzf_kill`), and the `git` keychain key on servers. `"htpc"` (ShackStack) gets the server shell too, since it runs games, not a dev setup. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
 | `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
@@ -573,7 +573,7 @@ nixos-rebuild dry-activate --flake .#BigTasty --target-host psoldunov@bigtasty -
 - **`/modules` is shared-only.** Anything host-specific lives under `hosts/<host>/`. Shared modules hold the host-agnostic baseline; hosts append to lists and attrsets rather than redefine them.
 - **`hostConfig` over `mkOption`.** No formal module options for now; flags threaded via `specialArgs`. Upgrade if/when a third host needs diverging settings.
 - **Scripts on `$PATH`.** Everything in `modules/home/workstation/scripts.nix` and `hosts/whopper/home/scripts/` lands in `home.packages`, so other modules and shortcuts call scripts by bare name, not by Nix store path.
-- **Closure isolation.** Shared modules that pull desktop-heavy deps (ghostty, mailspring, prisma-engines) must gate them behind `lib.optionalAttrs (hostConfig.role == "desktop")` — see [modules/home/shell/shell.nix](modules/home/shell/shell.nix) for the pattern.
+- **Closure isolation.** Shared modules that pull desktop-heavy deps (ghostty, mailspring) must gate them behind `lib.optionalAttrs (hostConfig.role == "desktop")` — see [modules/home/shell/shell.nix](modules/home/shell/shell.nix) for the pattern.
 - **Flake visibility.** `nix flake` only sees git-tracked files. `git add` new files before `nixos-rebuild build`.
 - **Formatting**: alejandra, exposed as the flake formatter. `nix fmt -- flake.nix lib hosts modules overlays packages`.
 
