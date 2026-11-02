@@ -1,7 +1,8 @@
 # Alan Wake saves, kept in step by Syncthing through BigTasty. Whopper and
 # ShackStack play the Epic copies through Heroic with GE-Proton, one wine
 # prefix per game named after its title, so each save directory sits at the
-# same place inside a host's prefix root (`heroicPrefixes`). BigTasty is
+# same place inside a host's prefix root (`heroicPrefixes`), unless
+# `prefixDirs` puts that game's prefix somewhere else. BigTasty is
 # always on and keeps its own copy under `storageDir`. The players share the
 # folders with BigTasty only, never with each other, so every save passes
 # through it, and a save made on one machine reaches the other even when the
@@ -48,9 +49,9 @@
     };
   };
 
-  pathFor = game:
+  pathFor = name: game:
     if cfg.heroicPrefixes != null
-    then "${cfg.heroicPrefixes}/${game.title}/drive_c/users/steamuser/${game.inPrefix}"
+    then "${cfg.prefixDirs.${name} or "${cfg.heroicPrefixes}/${game.title}"}/drive_c/users/steamuser/${game.inPrefix}"
     else "${cfg.storageDir}/${game.title} Saves";
 in {
   options.gameSaves = {
@@ -59,6 +60,12 @@ in {
       default = null;
       example = "/home/psoldunov/Games/Heroic/Prefixes";
       description = "On a host that plays the games: the directory holding Heroic's per-game wine prefixes.";
+    };
+    prefixDirs = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+      example = {AlanWake2 = "/NVMe/Heroic/Prefixes/Alan Wake 2";};
+      description = "Per game, by its attribute name here: a wine prefix that lives outside `heroicPrefixes`.";
     };
     storageDir = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
@@ -78,14 +85,18 @@ in {
         assertion = (cfg.heroicPrefixes == null) != (cfg.storageDir == null);
         message = "gameSaves: set exactly one of heroicPrefixes and storageDir.";
       }
+      {
+        assertion = lib.all (name: games ? ${name}) (lib.attrNames cfg.prefixDirs);
+        message = "gameSaves.prefixDirs: unknown game; use one of ${toString (lib.attrNames games)}.";
+      }
     ];
 
     services.syncthing.settings.folders =
-      lib.mapAttrs (_: game: {
+      lib.mapAttrs (name: game: {
         inherit (game) id ignorePatterns;
         inherit (cfg) devices;
         label = game.title;
-        path = pathFor game;
+        path = pathFor name game;
         versioning = {
           type = "staggered";
           params.maxAge = toString (365 * 24 * 60 * 60);
