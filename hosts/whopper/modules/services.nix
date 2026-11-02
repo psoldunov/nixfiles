@@ -106,6 +106,8 @@ in {
   # them through it.
   gameSaves = {
     heroicPrefixes = "/SATA/Heroic/Prefixes";
+    # Alan Wake 2 lives on the NVMe drive, next to its game files.
+    prefixDirs.AlanWake2 = "/NVMe/Heroic/Prefixes/Alan Wake 2";
     devices = ["BigTasty"];
   };
 }
