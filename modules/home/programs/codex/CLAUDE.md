@@ -30,7 +30,8 @@ both agents work from one source. Hosts opt in with
 | `rules/rust/gpui.md` (path-scoped) | dropped; the `gpui` skill it points at is in `skills.nix` |
 | both `hooks.md` rules | dropped (Claude Code settings) |
 | skills | `~/.codex/skills/<name>` (`skills.nix`) |
-| `agents/*.md`, caveman's `cavecrew-*` | `~/.codex/agents/<name>.toml` |
+| `agents/*.md` | `~/.codex/agents/<name>.toml` |
+| pstack plugin | not ported (Codex has no user-only skills) |
 | context-mode, ponytail plugins | Codex plugins, `programs.codex.plugins` |
 | `hooks/block-rm-rf.sh` | `~/.codex/hooks.json` PreToolUse `^Bash$` |
 | `WebSearch` hook (searxng only) | `web_search = "disabled"` plus a line in `preamble.md` |

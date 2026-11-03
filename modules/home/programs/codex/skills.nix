@@ -6,6 +6,8 @@
 #   - context-mode's and ponytail's skills: they come with the plugins
 #     (./default.nix).
 #   - codex-imagegen: Codex has its own imagegen skill.
+#   - pstack: Codex lists every skill to the model, and pstack's adapter only
+#     maps Cursor names to Claude Code.
 # ./instructions.nix adds `tailwind`, ../unifi/ adds `unifi-readonly`.
 {
   config,
@@ -15,17 +17,10 @@
   ...
 }: let
   local = ../claude-code/skills;
-  # Every skill directly under dir.
-  skillsIn = dir:
-    lib.mapAttrs (skill: _: "${dir}/${skill}")
-    (lib.filterAttrs (skill: type: type == "directory" && builtins.pathExists "${dir}/${skill}/SKILL.md")
-      (builtins.readDir dir));
 in {
   config = lib.mkIf config.programs.codex.enable {
     programs.codex.skills =
-      # investigate-first overlaps Matt Pocock's stronger diagnosing-bugs.
-      removeAttrs (skillsIn "${inputs.caveman}/skills") ["investigate-first"]
-      // lib.mapAttrs (_: path: "${inputs.mattpocock-skills}/skills/${path}") (import ../claude-code/mattpocock-skills.nix)
+      lib.mapAttrs (_: path: "${inputs.mattpocock-skills}/skills/${path}") (import ../claude-code/mattpocock-skills.nix)
       // {
         code-review = local + "/code-review";
         # Claude Code and pi also load ../claude-code/rules/rust/gpui.md on Rust

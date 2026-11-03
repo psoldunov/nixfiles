@@ -87,8 +87,8 @@ would load it, so nothing floods the context up front:
 - `/claude-bridge` in pi shows what loaded, what was excluded and why, the
   skill listing size vs budget, and what has been injected in this branch.
 
-Not bridged yet: Claude Code hooks (caveman, i-have-adhd, block-rm-rf,
-impeccable), MCP servers, plugin slash commands, and settings such as
+Not bridged yet: Claude Code hooks (i-have-adhd, block-rm-rf, impeccable),
+MCP servers, plugin slash commands, and settings such as
 `effortLevel`. Ponytail does not need the bridge for its hooks: it ships its
 own pi extension (see "ponytail" below).
 

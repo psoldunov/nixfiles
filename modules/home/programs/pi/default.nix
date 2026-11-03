@@ -45,8 +45,7 @@
       # Skill ids are `<source>:<dir>`. context-mode's skills drive its ctx_*
       # MCP tools, which pi does not have; synced/ holds claude.ai's skills.
       # reverse-engineer-anything drives the rea MCP server the same way.
-      # caveman's investigate-first overlaps the stronger diagnosing-bugs.
-      exclude = ["context-mode:*" "synced:*" "user:reverse-engineer-anything" "caveman:investigate-first"];
+      exclude = ["context-mode:*" "synced:*" "user:reverse-engineer-anything"];
       # `/name` and `/plugin:name` next to pi's `/skill:name`.
       aliases = true;
     };

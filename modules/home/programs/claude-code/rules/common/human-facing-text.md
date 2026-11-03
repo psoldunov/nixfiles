@@ -13,7 +13,7 @@ Text written for someone other than the user in this chat goes through the
 
 ## What does not
 
-- Replies to the user. Caveman and i-have-adhd keep shaping those.
+- Replies to the user. i-have-adhd keeps shaping those.
 - Commit messages, code comments and docstrings
 - Agent-facing files: `CLAUDE.md`, `AGENTS.md`, rules, skills, agent prompts,
   plans and memory

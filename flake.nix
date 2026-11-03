@@ -96,8 +96,10 @@
       flake = false;
     };
 
-    caveman = {
-      url = "github:juliusbrussee/caveman";
+    # Cursor's plugin monorepo; pstack's generated Claude Code port lives in
+    # harness/pstack/claude-code.
+    cursor-plugins = {
+      url = "github:cursor/plugins";
       flake = false;
     };
 

@@ -14,7 +14,8 @@
   # directory. A single symlink keeps the source tree as the plugin's real root.
   plugins = {
     context-mode = inputs.context-mode;
-    caveman = inputs.caveman;
+    # Cursor's marketplace repo; pstack's Claude Code port is generated here.
+    pstack = "${inputs.cursor-plugins}/harness/pstack/claude-code";
     # The repo is a marketplace; the plugin itself lives in plugin/.
     impeccable = "${inputs.impeccable}/plugin";
     i-have-adhd = inputs.i-have-adhd;
@@ -88,22 +89,11 @@ in {
         pr = "";
         sessionUrl = false;
       };
-      statusLine = {
-        type = "command";
-        command = ''bash "${inputs.caveman}/src/hooks/caveman-statusline.sh"'';
-      };
       permissions = {
         defaultMode = "auto";
         allow = [
           "mcp__claude_ai_Context7"
           "mcp__plugin_context-mode_context-mode"
-        ];
-        # caveman's investigate-first overlaps Matt Pocock's diagnosing-bugs,
-        # the stronger of the two. A plugin skill ignores skillOverrides, so
-        # deny rules keep Claude from invoking it under either name.
-        deny = [
-          "Skill(investigate-first)"
-          "Skill(caveman:investigate-first)"
         ];
         additionalDirectories = [
           "~/.claude/plans/"
