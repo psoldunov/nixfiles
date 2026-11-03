@@ -1,12 +1,12 @@
 /**
  * Claude Code plugins linked into `<claude dir>/skills/<plugin>/` (how the nix
- * module installs context-mode, caveman, impeccable, taste-skill, ...).
+ * module installs context-mode, pstack, impeccable, ponytail, ...).
  *
  * A plugin is a directory with `.claude-plugin/plugin.json`. Its manifest may
  * name `skills` and `agents` paths (string or list); without them Claude Code
  * uses `./skills/` and `./agents/`. Only those paths count: a blind recursive
- * scan would also pick up vendored copies such as `caveman/plugins/**` and
- * `context-mode/configs/**`, which is how pi ends up listing 75 skills.
+ * scan would also pick up vendored copies such as `context-mode/configs/**`,
+ * which is how pi ends up listing 75 skills.
  */
 
 import * as fs from "node:fs";

@@ -17,5 +17,5 @@ ADHD MODE ACTIVE (i-have-adhd). The final message of this turn, the answer the r
 4. Stay on one topic. Offer a side issue as one separate question at the end.
 5. Time estimates in concrete units. Lists capped at 5 visible items per group.
 6. When anything is left open, end with ONE concrete next action doable in under two minutes.
-Interim status lines between tool calls stay short; these rules shape the final message. Caveman, when active, sets the wording; this sets the structure and takes precedence where the two conflict. Off only after the reader says "stop adhd mode" or "normal mode" in this session.
+Interim status lines between tool calls stay short; these rules shape the final message. Another style skill (such as /pstack:poteto-mode), when active, sets the wording; this sets the structure and takes precedence where the two conflict. Off only after the reader says "stop adhd mode" or "normal mode" in this session.
 EOF

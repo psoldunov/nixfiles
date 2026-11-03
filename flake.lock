@@ -126,22 +126,6 @@
         "url": "https://flakehub.com/f/catppuccin/vscode/%2A.tar.gz"
       }
     },
-    "caveman": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1792915057,
-        "narHash": "sha256-fuSsPP7GMuAZ5Ab2paS41RAo5k/objd503ElcMeMgsk=",
-        "owner": "juliusbrussee",
-        "repo": "caveman",
-        "rev": "9b68f7ed12b05e7efaff18e65c5a3fc2849fd0a4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "juliusbrussee",
-        "repo": "caveman",
-        "type": "github"
-      }
-    },
     "ci": {
       "inputs": {
         "blueprint": "blueprint",
@@ -251,6 +235,22 @@
       "original": {
         "owner": "ipetkov",
         "repo": "crane",
+        "type": "github"
+      }
+    },
+    "cursor-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793491838,
+        "narHash": "sha256-sX6KIElyFreuDPt4zViNis2nuAn9QG0n38z3uejJU98=",
+        "owner": "cursor",
+        "repo": "plugins",
+        "rev": "ae5650febf4320793844c12c4adaa937f417f8da",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cursor",
+        "repo": "plugins",
         "type": "github"
       }
     },
@@ -938,10 +938,10 @@
         "brag": "brag",
         "catppuccin": "catppuccin",
         "catppuccin-vsc": "catppuccin-vsc",
-        "caveman": "caveman",
         "clokkr": "clokkr",
         "concierge": "concierge",
         "context-mode": "context-mode",
+        "cursor-plugins": "cursor-plugins",
         "deckmaster": "deckmaster",
         "disko": "disko",
         "ensemblr": "ensemblr",

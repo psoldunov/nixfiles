@@ -14,7 +14,7 @@ import { isFile, listDir, matchesAny } from "./paths.ts";
 import type { Plugin } from "./plugins.ts";
 
 export interface AgentDefinition {
-	/** `subagent_type` value. Plugin agents are namespaced like Claude Code: `caveman:cavecrew-builder`. */
+	/** `subagent_type` value. Plugin agents are namespaced like Claude Code: `pstack:poteto-agent`. */
 	name: string;
 	description: string;
 	source: string;

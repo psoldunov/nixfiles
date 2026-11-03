@@ -97,7 +97,7 @@ nix flake update context-mode
 rebuild_system
 ```
 
-`caveman`, `impeccable`, `i-have-adhd` and `ponytail` are wired the same way.
+`pstack`, `impeccable`, `i-have-adhd` and `ponytail` are wired the same way.
 The `impeccable` repo is a marketplace, so `settings.nix` points at its
 `plugin/` subdirectory.
 
@@ -144,7 +144,7 @@ steps, one closing next action. Its SessionStart hook injects the full ruleset
 only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares
 that flag file. `hooks/adhd-final-response.sh` re-asserts the rules on every
 prompt so they shape each turn's final message, and takes precedence over
-caveman on structure. Delete the flag entry in `settings.nix` to switch both
+other style skills on structure. Delete the flag entry in `settings.nix` to switch both
 hooks off; "stop adhd mode" switches it off for one session.
 
 `ponytail` (github.com/DietrichGebert/ponytail) steers code toward the
@@ -158,6 +158,23 @@ tokens, tests) and writes one CSV row per task to `~/.config/ponytail/band/`;
 `/ponytail band` hides the band. Nothing leaves the machine unless a webhook
 URL is set in its plugin config. The same checkout is pi's `ponytail`
 extension (`../pi/default.nix`). Update both with `nix flake update ponytail`.
+
+`pstack` (github.com/cursor/plugins/tree/main/pstack) comes from the
+`cursor-plugins` input. `settings.nix` links its generated Claude Code port,
+`harness/pstack/claude-code/`, as the `pstack` plugin, so Claude Code and pi's
+claude-bridge load it from `~/.claude/skills/pstack/`. Every skill except
+`setup-pstack` sets `disable-model-invocation`, so nothing runs until you type
+`/pstack:<name>`, usually `/pstack:poteto-mode <task>`. Its skills load one
+another by reading `<pstack>/skills/<name>/SKILL.md`, as the plugin's
+`docs/harness/claude-code.md` explains. Without a model rule, judgment roles
+run on `opus xhigh` and code roles on the session model.
+`/pstack:setup-pstack` writes `~/.claude/rules/pstack-models.md`, which nix
+does not own; copy it into this module to keep it. Delegates spawn
+`pstack:poteto-agent` through the `Agent` tool, which Ensemblr sessions lack,
+so `arena`, `swarm`, `interrogate` and `reflect` fan out only in plain `claude`
+and pi. `statechart` installs Java and TLC through mise on first use. Codex
+skips the plugin (`../codex/skills.nix`). Update with
+`nix flake update cursor-plugins`.
 
 Local mods (Claude Code function-hook plugins) live in `mods/<name>/` and are
 linked through the same `plugins` set. Each one has
@@ -206,9 +223,6 @@ Where his skills overlap ours, his won and ours went:
 
 - `tdd` replaced the `tdd-guide` agent; the testing and workflow rules point
   at the skill. The 80% coverage target stays.
-- `diagnosing-bugs` beats caveman's `investigate-first`. That one is part of
-  the caveman plugin, so `permissions.deny` blocks it in Claude Code, pi's
-  claude-bridge excludes it and Codex skips it.
 - `improve-codebase-architecture` and `codebase-design` replaced the local
   `code-review` skill's codebase mode. `code-review` now reads that skill's
   `SKILL.md` from the sibling folder, since a user-invoked skill cannot be

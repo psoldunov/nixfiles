@@ -421,7 +421,7 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
 | `ensemblr` | Whopper overlay providing `ensemblr` / `ensemblr-master` |
 | `token-station` | Whopper tray monitor for Claude Code and Codex plan usage |
 | `solaar` | Non-flake source for `overlays/solaar.nix` (psoldunov/Solaar fork) |
-| `context-mode`, `caveman` | Claude Code plugin sources |
+| `context-mode`, `cursor-plugins` | Claude Code plugin sources (`cursor-plugins` supplies pstack) |
 
 ## Adding a new host
 
