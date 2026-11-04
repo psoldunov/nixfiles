@@ -65,6 +65,9 @@ in {
 
   programs.claude-code = {
     enable = true;
+    # The Macs install the binary from the claude-code@latest cask
+    # (modules/darwin/homebrew.nix); only Linux uses overlays/claude-code.
+    package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
     enableMcpIntegration = true;
     agentsDir = ./agents;
     rulesDir = ./rules;
@@ -77,11 +80,6 @@ in {
       "context-mode-cache-heal.mjs" = builtins.readFile ./hooks/context-mode-cache-heal.mjs;
     };
     settings = {
-      # Nixpkgs defaults to system-only CAs, but the native runtime on macOS
-      # misses the built-in roots. Restore Claude's default trust sources.
-      env = lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-        CLAUDE_CODE_CERT_STORE = "bundled,system";
-      };
       effortLevel = "xhigh";
       skillListingBudgetFraction = 0.02;
       skillListingMaxDescChars = 2048;

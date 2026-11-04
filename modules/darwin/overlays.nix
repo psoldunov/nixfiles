@@ -1,9 +1,8 @@
-# The overlays the Macs need: the two agents that track upstream releases
-# instead of nixpkgs (modules/nixos/overlays.nix carries the same claude-code
-# overlay for the NixOS hosts), plus macOS build fixes.
+# The overlays the Macs need: pi, which tracks upstream releases instead of
+# nixpkgs, plus macOS build fixes. Claude Code comes from the
+# claude-code@latest cask (modules/darwin/homebrew.nix), not overlays/claude-code.
 {...}: {
   nixpkgs.overlays = [
-    (import ../../overlays/claude-code)
     (import ../../overlays/pi-coding-agent)
     # Upstream's release binary, so no Mac compiles atuin.
     (import ../../overlays/atuin-darwin.nix)
