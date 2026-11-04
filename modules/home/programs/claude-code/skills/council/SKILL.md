@@ -125,6 +125,47 @@ VERDICT: APPROVE | CHANGES
 <diff>
 ```
 
+For a UI design review or a design climb, members score screenshots, not a
+diff. Build the pack in `$run/pack/`:
+
+- Screenshots of the app under review and of the reference apps the user
+  named, each at most 1568 px on its long edge (`magick mogrify -resize
+  '1568x1568>' "$run"/pack/app/*.png "$run"/pack/refs/*/*.png`). Larger
+  images get downscaled on the member's side, and a downscaled screenshot
+  can fake clipping.
+- The same scenes, sizes and themes every round of a climb. A changed pack
+  makes scores incomparable: score the old build on the new pack first.
+- `app/<scene>-<size>-<theme>.png` and `refs/<product>/<screen>-<theme>.png`.
+
+Never tell a member the target score, earlier rounds' scores or which change
+is new. Members who know the target drift toward it, references included.
+Use this brief:
+
+```
+You sit on a two-member design council. Work read only: look at the images
+and read files, edit nothing, run nothing, start no subagents.
+Pack: <abs path>   Round: <n>   Your id prefix: <C|X>
+The app: <1-2 sentences: what it is, who uses it, for what>
+References: <product: one line each>
+Fixed by the owner, do not score against them: <list>
+Read every image before you score. The data is a fixture: score layout,
+truncation and hierarchy, never the wording of made-up titles or paths.
+Score the app and each reference from 1 to 10 in each category. 10 is the
+best desktop app you know for this kind of work; 7 is solid but clearly
+behind the best.
+Categories: <list>
+Then list what holds each of the app's categories below 10, and the five
+fixes that would raise its scores most, most important first. Each fix names
+the scene, size and theme, what is wrong, and the change. "The sidebar's
+time label competes with the title in task-dark; drop it to the muted
+token" is useful; "improve hierarchy" is not.
+Reply in exactly this shape:
+| Category | App | <reference> | ... |
+<id> [fix] <scene> <size> <theme>: <problem>. Fix: <change>
+```
+
+Before you act on a clipping or blur finding, open the image at 1:1.
+
 For feedback, a design question or any other request, send the request, the
 context and the same read-only line, and ask for a direct answer with no score.
 
@@ -149,7 +190,13 @@ Fight scope creep. Repeated rounds pull the change wider; your job is to keep
 the scope where the intent put it.
 
 Stop a code review when both members return `APPROVE` with no blocker or
-should open. Stop any other request once a round brings no recommendation you
+should open. Stop a design climb when both members rate every category of the
+app at or above the user's target and above every reference, or at the
+user's round cap; the three-round limit below does not apply. A member may
+sit out rounds to save usage, the cheaper one alone until it reaches the
+target, but the climb stops only on a round both members scored. Re-score the
+references every round; when a reference moves more than 0.5 on the same
+images, report the round as noisy. Stop any other request once a round brings no recommendation you
 agree to act on. Stop as stuck when an item is still disputed after two
 replies, or after three rounds (five for security, auth, data loss or
 concurrency while a blocker or should stays open with evidence). For a stuck
@@ -176,4 +223,7 @@ Rounds: 2
 | GPT-6.1-Sol | 8/10 | 10/10 |
 ```
 
-Name each delegate by the model that actually ran.
+Name each delegate by the model that actually ran. For a design climb, each
+cell is the app's lowest category score that round (`not run` when a member
+sat out), and a second table gives the last round's overall scores for the
+app and each reference, per delegate.
