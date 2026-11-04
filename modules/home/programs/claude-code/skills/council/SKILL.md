@@ -44,6 +44,7 @@ Pick each member's route by where you run:
 | You run in | Claude member | Codex member |
 | --- | --- | --- |
 | Ensemblr | child conversation | `codex exec` |
+| T3 Code (`delegate_task` available) | child thread | child thread |
 | Claude Code with the Agent tool | Agent tool, `model: "opus"` | `codex exec` |
 | Codex, pi, a plain shell | `claude -p` | `codex exec` |
 
@@ -54,6 +55,15 @@ its prompt. Every other member uses its CLI. When a native route is refused
 (an Ensemblr leaf cannot spawn children), the Claude member uses `claude -p`.
 The Codex member falls back to pi when `codex` is missing or logged out
 (`codex login status`).
+
+In T3 Code, `orchestrator_capabilities` resolves both members: the latest
+Opus on the Claude provider, the latest Sol on the Codex provider. Start
+each with one `delegate_task`: the brief as `task`; `target` with that
+provider instance, model and high effort; `role` `review`, or `design` for a
+design review; `title` `Council r<n>: <member>`; isolation `shared`; mode
+`async`. Each completion wakes you; read the reply with `task_status`. Child
+threads share your checkout and keep their tools, so they stay read-only
+through the brief alone. Without `delegate_task`, use the Claude Code row.
 
 ```bash
 run=$(mktemp -d "${TMPDIR:-/tmp}/council.XXXXXX")
