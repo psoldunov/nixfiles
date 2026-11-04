@@ -316,6 +316,22 @@
         "type": "github"
       }
     },
+    "ex-ussr-kinship-research": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793655756,
+        "narHash": "sha256-Je85JgPMUQImyQIxNkXYH/a39+z+n1NBFk4VTlfHMQQ=",
+        "owner": "DenisSergeevitch",
+        "repo": "ex-ussr-kinship-research",
+        "rev": "5525e28ecc2e87bf3190c0ca5a9e254c0a965be2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DenisSergeevitch",
+        "repo": "ex-ussr-kinship-research",
+        "type": "github"
+      }
+    },
     "figma": {
       "inputs": {
         "nixpkgs": [
@@ -945,6 +961,7 @@
         "deckmaster": "deckmaster",
         "disko": "disko",
         "ensemblr": "ensemblr",
+        "ex-ussr-kinship-research": "ex-ussr-kinship-research",
         "figma": "figma",
         "firecrawl-cli": "firecrawl-cli",
         "home-manager": "home-manager",

@@ -33,6 +33,7 @@ in {
         # The Codex build of the skill; plugin/ holds the Claude Code one.
         impeccable = "${inputs.impeccable}/.agents/skills/impeccable";
         i-have-adhd = "${inputs.i-have-adhd}/skills/i-have-adhd";
+        ex-ussr-kinship-research = "${inputs.ex-ussr-kinship-research}";
       }
       # Linux only, like the rea MCP server it drives.
       // lib.optionalAttrs (!pkgs.stdenv.hostPlatform.isDarwin) {

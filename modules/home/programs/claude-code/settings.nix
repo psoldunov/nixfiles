@@ -41,6 +41,9 @@ in {
       ".agents/skills/brag".source = "${inputs.brag}/skills/brag";
       "${configDir}/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
       ".agents/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
+      # Genealogy research for the former USSR; the repo root is the skill.
+      # Codex gets it from ../codex/skills.nix.
+      "${configDir}/skills/ex-ussr-kinship-research".source = inputs.ex-ussr-kinship-research;
       # Microsoft's official playwright-cli skill, linked next to ./skills.
       "${configDir}/skills/playwright-cli".source = "${inputs.playwright-cli}/skills/playwright-cli";
       # blader's humanizer: only SKILL.md, since the repo root's .claude-plugin

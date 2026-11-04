@@ -139,6 +139,18 @@ site into a short launch video in `brag-output/` and need `node`, `npx` and
 hyperframes`, whose helper skills (`npx hyperframes skills`) are not wired
 here. Update with `nix flake update brag` and `rebuild_system`.
 
+The `ex-ussr-kinship-research` skill
+(github.com/DenisSergeevitch/ex-ussr-kinship-research) does evidence-first
+genealogy across the former USSR. Its repo root is the skill, so `settings.nix`
+links the whole `ex-ussr-kinship-research` input into
+`~/.claude/skills/ex-ussr-kinship-research/` (Claude Code and pi), and
+`../codex/skills.nix` links it for Codex. `SKILL.md` is in Russian; the
+skill replies in the user's language. Its scripts need `python3`; cases go in a
+folder outside the skill (`scripts/init_case.py` refuses the skill dir). At the
+start of a case it checks the upstream repo and offers to update itself: the
+nix store copy is read-only, so update with
+`nix flake update ex-ussr-kinship-research` and `rebuild_system`.
+
 `i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
 steps, one closing next action. Its SessionStart hook injects the full ruleset
 only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares
