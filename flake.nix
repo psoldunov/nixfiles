@@ -123,6 +123,11 @@
       flake = false;
     };
 
+    ex-ussr-kinship-research = {
+      url = "github:DenisSergeevitch/ex-ussr-kinship-research";
+      flake = false;
+    };
+
     i-have-adhd = {
       url = "github:ayghri/i-have-adhd";
       flake = false;
