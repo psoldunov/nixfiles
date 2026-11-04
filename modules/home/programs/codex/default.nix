@@ -25,8 +25,8 @@ in {
 
   config = lib.mkIf config.programs.codex.enable {
     programs.codex = {
-      # Installed outside home-manager: system-wide on Whopper, the Homebrew
-      # cask on the Macs.
+      # Installed outside home-manager: system-wide on Whopper and BigTasty,
+      # the Homebrew cask on the Macs.
       package = lib.mkDefault null;
       # Codex writes config.toml itself (project trust, /model, hook trust), so
       # it stays a real file; activation merges the declared keys into it.

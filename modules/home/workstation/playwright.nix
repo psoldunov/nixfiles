@@ -109,14 +109,18 @@
 in
   lib.mkMerge [
     {
-      programs.mcp.servers = {
-        # Nix Chromium with a fresh in-memory profile per session, headless so
-        # it never opens a window. playwright-mcp runs headed by default.
-        playwright = {
-          command = playwrightMcp;
-          args = ["--headless"];
-        };
+      # Nix Chromium with a fresh in-memory profile per session, headless so
+      # it never opens a window. playwright-mcp runs headed by default.
+      programs.mcp.servers.playwright = {
+        command = playwrightMcp;
+        args = ["--headless"];
+      };
+    }
 
+    # Where there is a Chrome to drive: the Macs' cask, Whopper's
+    # programs.google-chrome. BigTasty imports this file for the server above.
+    (lib.mkIf (isDarwin || config.programs.google-chrome.enable) {
+      programs.mcp.servers = {
         playwright-swiss-cheese =
           chromeProfileServer "swiss-cheese" // withExtensionToken "swiss-cheese";
         playwright-almost-always =
@@ -124,7 +128,7 @@ in
       };
 
       sops.secrets = lib.genAttrs (lib.attrValues tokenSecrets) (_: {});
-    }
+    })
 
     (lib.mkIf (!isDarwin) {
       home.packages = [pkgs.playwright-test];

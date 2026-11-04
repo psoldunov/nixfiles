@@ -15,6 +15,7 @@
 in {
   imports = [
     ../../../modules/home
+    ./agents.nix
   ];
 
   # Preamble + SHELL_SECRETS live in modules/home/sops.nix.

@@ -4,10 +4,10 @@ Home Manager's `programs.codex` module writes `~/.codex/`. This folder feeds it
 Claude Code's MCP servers, rules, skills and agents (`../claude-code/`), so
 both agents work from one source. Hosts opt in with
 `programs.codex.enable = true;`, which `../../workstation/default.nix` sets
-(Whopper, BigMac, MacFlurry). The package stays outside Home Manager
-(`package = null`): Whopper installs `codex` in
-`hosts/whopper/modules/packages.nix`, the Macs through the Homebrew cask in
-`modules/darwin/homebrew.nix`.
+(Whopper, BigMac, MacFlurry) and `hosts/bigtasty/home/agents.nix` sets for
+BigTasty. The package stays outside Home Manager (`package = null`): Whopper
+and BigTasty install `codex` in their `hosts/<host>/modules/packages.nix`,
+the Macs through the Homebrew cask in `modules/darwin/homebrew.nix`.
 
 ```
 ~/.nixfiles/modules/home/programs/codex/

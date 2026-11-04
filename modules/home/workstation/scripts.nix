@@ -124,9 +124,10 @@
   '';
 
   # Pins overlays/t3code to the newest nightly `vX.Y.Z-nightly.YYYYMMDD.N`
-  # prerelease that ships an x86_64 AppImage (or the version given as $1).
-  # Nightlies sort by date, then by build number. The AppImage is prefetched
-  # into the store, so the next rebuild reuses it.
+  # prerelease that ships both the x86_64 AppImage (Whopper's desktop app)
+  # and the linux-x64 server archive (BigTasty), or to the version given as
+  # $1. Nightlies sort by date, then by build number. Both files are
+  # prefetched into the store, so the next rebuild reuses them.
   update_t3code = pkgs.writeShellScriptBin "update_t3code" ''
     set -euo pipefail
     FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
@@ -136,6 +137,7 @@
       | ${jq} -r '[.[] | select(.draft | not)
           | (.tag_name | ltrimstr("v")) as $v
           | select(any(.assets[]; .name == "T3-Code-\($v)-x86_64.AppImage"))
+          | select(any(.assets[]; .name == "t3-\($v)-linux-x64.tar.gz"))
           | $v | capture("^[0-9]+\\.[0-9]+\\.[0-9]+-nightly\\.(?<d>[0-9]{8})\\.(?<n>[0-9]+)$") as $c
           | {v: $v, key: [($c.d | tonumber), ($c.n | tonumber)]}]
           | max_by(.key) | .v // empty')}"
@@ -148,16 +150,21 @@
       echo "T3 Code already pinned at $VERSION."
       exit 0
     fi
-    URL="https://github.com/$REPO/releases/download/v$VERSION/T3-Code-$VERSION-x86_64.AppImage"
-    HASH="$(nix store prefetch-file --json "$URL" | ${jq} -r .hash)"
-    if ! [[ "$HASH" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
-      echo "update_t3code: unexpected hash '$HASH' for $URL" >&2
-      exit 1
-    fi
+    prefetch() {
+      local url="https://github.com/$REPO/releases/download/v$VERSION/$1" hash
+      hash="$(nix store prefetch-file --json "$url" | ${jq} -r .hash)"
+      if ! [[ "$hash" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+        echo "update_t3code: unexpected hash '$hash' for $url" >&2
+        return 1
+      fi
+      echo "$hash"
+    }
+    HASH="$(prefetch "T3-Code-$VERSION-x86_64.AppImage")"
+    SERVER_HASH="$(prefetch "t3-$VERSION-linux-x64.tar.gz")"
     TMP="$(mktemp)"
     trap 'rm -f "$TMP"' EXIT
-    ${jq} -n --arg version "$VERSION" --arg hash "$HASH" \
-      '{version: $version, hash: $hash}' > "$TMP"
+    ${jq} -n --arg version "$VERSION" --arg hash "$HASH" --arg serverHash "$SERVER_HASH" \
+      '{version: $version, hash: $hash, serverHash: $serverHash}' > "$TMP"
     install -m 644 "$TMP" "$TARGET"
     echo "T3 Code pin: $CURRENT -> $VERSION"
   '';
