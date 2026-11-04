@@ -17,7 +17,8 @@ owns there; the rest stays pi's own.
 writes `~/.pi/agent/extensions/ponytail.js` (see "ponytail" below).
 
 Hosts opt in with `programs.pi-coding-agent.enable = true;` through
-`modules/home/workstation/default.nix` (Whopper, BigMac and MacFlurry).
+`modules/home/workstation/default.nix` (Whopper, BigMac and MacFlurry) and
+`hosts/bigtasty/home/agents.nix` (BigTasty).
 Home Manager's own module installs the executable;
 `overlays/pi-coding-agent` pins the release it builds.
 

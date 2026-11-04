@@ -14,6 +14,7 @@
     ./hardware.nix
     ./networking.nix
     ./nix-locale.nix
+    ./overlays.nix
     ./packages.nix
     ./services-cloudflare.nix
     ./services-media.nix
@@ -35,6 +36,7 @@
     ./services/searxng.nix
     ./services/sotf-server.nix
     ./services/syncthing.nix
+    ./services/t3code.nix
     ./services/vaultwarden.nix
   ];
 }

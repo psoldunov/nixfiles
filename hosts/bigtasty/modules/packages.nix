@@ -1,6 +1,8 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     claude-code
+    # Installed system-wide as on Whopper; ../home/agents.nix configures it.
+    codex
     bun
     pnpm
     ghostty

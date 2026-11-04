@@ -245,8 +245,11 @@ Where his skills overlap ours, his won and ours went:
 ## MCP servers
 
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`.
-Playwright and Mailspring live in `../../workstation/` (Whopper and the Macs,
-not BigTasty), with macOS paths for Chrome and Mailspring on the Macs.
+Playwright and Mailspring live in `../../workstation/` (Whopper and the Macs),
+with macOS paths for Chrome and Mailspring on the Macs. BigTasty imports
+`playwright.nix` alone (`hosts/bigtasty/home/agents.nix`) and gets only the
+headless `playwright` server: the Chrome-profile servers load where there is
+a Chrome, the Macs' cask or `programs.google-chrome`.
 `enableMcpIntegration` feeds them to Claude Code. `figma-almost-always` and
 `figma-personal` are two remote Figma servers, one per Figma account.
 `linear-swiss-cheese` and `linear-almost-always` do the same for the two
@@ -379,8 +382,7 @@ with the versions they were seen on.
 seats three providers through T3 Code's `delegate_task`; this copy seats two,
 Claude and Codex, so it is kept here rather than linked from a flake input.
 Its routes, CLI flags and the reason for each live in its `SKILL.md`. `codex`
-ships on the workstations only, so BigTasty cannot seat the Codex member.
-Codex gets the skill from `../codex/skills.nix` and pi through claude-bridge.
+ships on the workstations and BigTasty. Codex gets the skill from `../codex/skills.nix` and pi through claude-bridge.
 
 ## Notes for future Claude sessions
 

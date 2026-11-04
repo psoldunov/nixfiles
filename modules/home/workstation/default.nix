@@ -1,7 +1,9 @@
 # What the workstations (Whopper, BigMac, MacFlurry) share on top of ../
 # (which BigTasty imports too): the same SSH keys and hosts, CLI tools,
 # system scripts, Ghostty config, Claude Code MCP servers and pi. Imported by
-# hosts/whopper/home, hosts/bigmac/home and hosts/macflurry/home.
+# hosts/whopper/home, hosts/bigmac/home and hosts/macflurry/home. BigTasty
+# takes cli.nix and playwright.nix, plus Codex and pi, in
+# hosts/bigtasty/home/agents.nix.
 # Platform differences are handled inside each module with
 # `pkgs.stdenv.hostPlatform.isDarwin`.
 {...}: {
