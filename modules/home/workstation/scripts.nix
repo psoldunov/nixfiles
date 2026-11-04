@@ -123,6 +123,45 @@
     echo "Motrix pin: $CURRENT -> $VERSION"
   '';
 
+  # Pins overlays/t3code to the newest nightly `vX.Y.Z-nightly.YYYYMMDD.N`
+  # prerelease that ships an x86_64 AppImage (or the version given as $1).
+  # Nightlies sort by date, then by build number. The AppImage is prefetched
+  # into the store, so the next rebuild reuses it.
+  update_t3code = pkgs.writeShellScriptBin "update_t3code" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    REPO="pingdotgg/t3code"
+    TARGET="$FLAKE_DIR/overlays/t3code/pin.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "https://api.github.com/repos/$REPO/releases?per_page=30" \
+      | ${jq} -r '[.[] | select(.draft | not)
+          | (.tag_name | ltrimstr("v")) as $v
+          | select(any(.assets[]; .name == "T3-Code-\($v)-x86_64.AppImage"))
+          | $v | capture("^[0-9]+\\.[0-9]+\\.[0-9]+-nightly\\.(?<d>[0-9]{8})\\.(?<n>[0-9]+)$") as $c
+          | {v: $v, key: [($c.d | tonumber), ($c.n | tonumber)]}]
+          | max_by(.key) | .v // empty')}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-nightly\.[0-9]{8}\.[0-9]+$ ]]; then
+      echo "update_t3code: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${jq} -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "T3 Code already pinned at $VERSION."
+      exit 0
+    fi
+    URL="https://github.com/$REPO/releases/download/v$VERSION/T3-Code-$VERSION-x86_64.AppImage"
+    HASH="$(nix store prefetch-file --json "$URL" | ${jq} -r .hash)"
+    if ! [[ "$HASH" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+      echo "update_t3code: unexpected hash '$HASH' for $URL" >&2
+      exit 1
+    fi
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${jq} -n --arg version "$VERSION" --arg hash "$HASH" \
+      '{version: $version, hash: $hash}' > "$TMP"
+    install -m 644 "$TMP" "$TARGET"
+    echo "T3 Code pin: $CURRENT -> $VERSION"
+  '';
+
   # Pins overlays/pi-coding-agent to the newest GitHub release (or the version
   # given as $1, e.g. 1.0.4). A release needs three hashes: the source
   # tarball, its npm dependency cache (prefetch-npm-deps over the tagged
@@ -433,6 +472,7 @@
     FLAKE_DIR="$FLAKE_DIR" ${update_claude_code}/bin/update_claude_code
     FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
     FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
+    FLAKE_DIR="$FLAKE_DIR" ${update_t3code}/bin/update_t3code
     FLAKE_DIR="$FLAKE_DIR" ${update_pi_coding_agent}/bin/update_pi_coding_agent
     update_host() {
       if [ "''${KIND[$1]}" = darwin ]; then
@@ -495,6 +535,7 @@
         update_claude_code
         update_duckstation
         update_motrix
+        update_t3code
         update_pi_coding_agent
         rebuild_system
         update_system

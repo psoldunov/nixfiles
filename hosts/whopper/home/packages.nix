@@ -8,6 +8,7 @@
   # BigTasty.
   home.packages = with pkgs; [
     ensemblr-master
+    t3code-nightly
     zed-editor
     cider-2
     ledger-live-desktop
