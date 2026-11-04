@@ -83,7 +83,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # modules/darwin + host name + BigMac-only Homebrew apps — see "Macs"
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
-├── overlays/                       # Custom nixpkgs overlays (claude-code and pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules on every NixOS host, the rest Whopper-only)
+├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules on every NixOS host, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (BigTasty; PiHome makes its own)
@@ -186,9 +186,9 @@ Where the Macs' software comes from:
 | Kind | Source |
 |---|---|
 | GUI apps | Homebrew casks; App Store-only apps through `homebrew.masApps`. Ghostty's config still comes from [workstation/ghostty.nix](modules/home/workstation/ghostty.nix), shared with Whopper |
-| Agent CLIs that release several times a week (codex) | Homebrew, upgraded by `update_system` only |
+| Agent CLIs that release several times a week (codex, Claude Code from the `claude-code@latest` cask) | Homebrew, upgraded by `update_system` only |
 | Tap-only or macOS-only formulae | Homebrew, the same set on both Macs |
-| Claude Code, pi | This repo's overlays (`overlays/claude-code`, `overlays/pi-coding-agent`), same versions as Whopper |
+| pi | This repo's overlay (`overlays/pi-coding-agent`), same version as Whopper |
 | Atuin | Upstream's release binary at nixpkgs' version ([overlays/atuin-darwin.nix](overlays/atuin-darwin.nix)). A source build fails its tests here and is never in the cache. When nixpkgs bumps atuin, add the new release's hash; until then the Mac compiles it and evaluation warns |
 | Every other CLI | nixpkgs: [workstation/cli.nix](modules/home/workstation/cli.nix) + [darwin/packages.nix](modules/home/darwin/packages.nix) |
 

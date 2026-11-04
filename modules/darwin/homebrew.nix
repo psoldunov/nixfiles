@@ -4,13 +4,13 @@
 #
 #   - Every GUI app is a cask; App Store-only apps are masApps.
 #   - Agent CLIs that ship several releases a week come from Homebrew
-#     (codex is upstream's cask), so they stay ahead of nixpkgs.
+#     (codex and claude-code@latest are casks), so they stay ahead of nixpkgs.
 #   - Formulae that live only in third-party taps, or are macOS-specific and
 #     missing from nixpkgs, stay here too.
 #   - Every other CLI comes from nixpkgs: the shared set in
 #     modules/home/workstation/cli.nix plus modules/home/darwin/packages.nix.
-#     Claude Code and pi come from this repo's overlays; node, bun, deno and
-#     python come from mise.
+#     pi comes from this repo's overlay; node, bun, deno and python come
+#     from mise.
 #
 # `rebuild_system` installs what is missing and never upgrades
 # (autoUpdate/upgrade off); `update_system` runs `brew update && brew
@@ -75,7 +75,9 @@
     ];
 
     casks = [
-      # Agent CLI, upstream ships it as a cask.
+      # Agent CLIs, upstream ships them as casks. claude-code@latest is
+      # Anthropic's `latest` channel; Linux pins it in overlays/claude-code.
+      "claude-code@latest"
       "codex"
       "1password"
       "1password-cli"

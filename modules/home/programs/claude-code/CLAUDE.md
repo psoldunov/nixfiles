@@ -75,15 +75,21 @@ permanent, copy it into `settings.nix`.
 ## Package version
 
 The `claude-code` binary tracks Anthropic's `latest` release channel, not
-nixpkgs. `~/.nixfiles/overlays/claude-code/` swaps the pinned release manifest
-into nixpkgs' package; nixpkgs' own version wins if it is newer. Bump it:
+nixpkgs.
 
-```bash
-update_claude_code            # or: update_claude_code <version>
-rebuild_system
-```
+- **Macs:** the `claude-code@latest` Homebrew cask
+  (`~/.nixfiles/modules/darwin/homebrew.nix`); `programs.claude-code.package`
+  is `null` there. `update_system` upgrades it with `brew upgrade`.
+- **Linux:** `~/.nixfiles/overlays/claude-code/` swaps the pinned release
+  manifest into nixpkgs' package; nixpkgs' own version wins if it is newer.
+  Bump it:
 
-`update_system` runs `update_claude_code` on its own.
+  ```bash
+  update_claude_code            # or: update_claude_code <version>
+  rebuild_system
+  ```
+
+  `update_system` runs `update_claude_code` on its own.
 
 ## Plugins
 
