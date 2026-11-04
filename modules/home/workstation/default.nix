@@ -1,7 +1,8 @@
 # What the workstations (Whopper, BigMac, MacFlurry) share on top of ../
 # (which BigTasty imports too): the same SSH keys and hosts, CLI tools,
-# system scripts, Ghostty config, Claude Code MCP servers and pi. Imported by
-# hosts/whopper/home, hosts/bigmac/home and hosts/macflurry/home. BigTasty
+# system scripts, Ghostty config, Claude Code MCP servers, pi and the T3 Code
+# server setup. Imported by hosts/whopper/home, hosts/bigmac/home and
+# hosts/macflurry/home. BigTasty
 # takes cli.nix and playwright.nix, plus Codex and pi, in
 # hosts/bigtasty/home/agents.nix.
 # Platform differences are handled inside each module with
@@ -15,6 +16,7 @@
     ./playwright.nix
     ./scripts.nix
     ./ssh.nix
+    ./t3code.nix
   ];
 
   # Same SHELL_SECRETS on every workstation. BigTasty keeps its own, from
