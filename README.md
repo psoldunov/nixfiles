@@ -254,7 +254,7 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
 | `networking.nix` | hostname, static IP on `enp10s0`, firewall ports, openssh hardening, avahi, Skrepka firewall |
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
-| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pi-coding-agent, bambu-studio, periphery, solaar, pyopenjtalk-plus, calibre-speechd) |
+| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, t3code, pi-coding-agent, bambu-studio, periphery, solaar, pyopenjtalk-plus, calibre-speechd) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
@@ -475,7 +475,7 @@ rebuild_system ShackStack     # same for the HTPC
 rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
 rebuild_system MacFlurry      # same for the laptop
 rebuild_system all            # Whopper, BigTasty, BigKing, ShackStack, BigMac, MacFlurry in parallel, then PiHome; skips ShackStack, BigMac and MacFlurry when they don't answer
-update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
+update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_t3code, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
 clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune (skipped if docker doesn't answer in 20s), + brew cleanup on the Macs
 ```
 
