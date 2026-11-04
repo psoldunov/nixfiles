@@ -23,6 +23,7 @@ in {
       lib.mapAttrs (_: path: "${inputs.mattpocock-skills}/skills/${path}") (import ../claude-code/mattpocock-skills.nix)
       // {
         code-review = local + "/code-review";
+        council = local + "/council";
         # Claude Code and pi also load ../claude-code/rules/rust/gpui.md on Rust
         # files; Codex has no path-scoped rules, so the description triggers it.
         gpui = local + "/gpui";

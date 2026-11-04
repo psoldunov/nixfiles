@@ -374,6 +374,14 @@ that skill in a GPUI crate. Codex has no path-scoped rules, and
 by its description. Add new generic quirks to the matching reference file,
 with the versions they were seen on.
 
+`skills/council/` is a local rewrite of tstack's `council` skill
+(github.com/t3dotgg/tstack, MIT; its `LICENSE` sits in the folder). Upstream
+seats three providers through T3 Code's `delegate_task`; this copy seats two,
+Claude and Codex, so it is kept here rather than linked from a flake input.
+Its routes, CLI flags and the reason for each live in its `SKILL.md`. `codex`
+ships on the workstations only, so BigTasty cannot seat the Codex member.
+Codex gets the skill from `../codex/skills.nix` and pi through claude-bridge.
+
 ## Notes for future Claude sessions
 
 If you're editing Claude Code config: edit the nix module, not `~/.claude/`.
