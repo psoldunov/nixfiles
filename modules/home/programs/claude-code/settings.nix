@@ -81,6 +81,9 @@ in {
     };
     settings = {
       effortLevel = "xhigh";
+      # Auto-compact at 750K tokens on every model, not at the 1M context limit.
+      # A per-model `/autocompact` value in modelSettings overrides this.
+      autoCompactWindow = 750000;
       skillListingBudgetFraction = 0.02;
       skillListingMaxDescChars = 2048;
       # No Co-Authored-By trailer, "Generated with Claude Code" PR footer, or
