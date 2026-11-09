@@ -23,7 +23,8 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    jack.enable = true;
+    # No jack.enable: nixpkgs deprecated it (global LD_LIBRARY_PATH). Run a
+    # JACK app through `pw-jack` from pipewire.jack instead.
     lowLatency = {
       enable = true;
     };
