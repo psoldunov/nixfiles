@@ -258,14 +258,14 @@
   '';
 
   # The Macs' bleeding-edge layer: Homebrew (the agent CLIs and every cask)
-  # and mise's runtimes. update_system runs it after switching a Mac.
+  # and mise's runtimes. `fleet update` runs it after switching a Mac.
   #
   # Casks that ship a .pkg or a privileged helper make brew call sudo part-way
   # through. sudo -v asks once, or reuses the ticket of the switch that ran
   # just before it in the same session, and the loop keeps that ticket fresh
   # until the script exits.
   #
-  # Without a tty (update_system all runs ssh -T), sudo keys the ticket to
+  # Without a tty (fleet runs several hosts with ssh -T), sudo keys the ticket to
   # the parent process, so the loop's `sudo -n` fails and set -e ends the
   # loop at once. The trap's kill then finds nothing, and `|| true` stops
   # that failure from becoming the script's exit status.
@@ -281,309 +281,95 @@
     ${lib.getExe config.programs.mise.package} upgrade
   '';
 
-  # Shared by rebuild_system, update_system and clean_system. Each host is
-  # reached as psoldunov@<lower-cased name> through the ssh config
-  # (./ssh.nix), and each runs either nixos-rebuild or darwin-rebuild.
-  deployLib = ''
-    LOCAL_HOST=${lib.escapeShellArg osConfig.networking.hostName}
-    LOCAL_KIND=${
-      if isDarwin
-      then "darwin"
-      else "nixos"
+  # The hosts fleet (packages/fleet) works on, each reached as
+  # <user>@<lower-cased name> through the ssh config (./ssh.nix).
+  # - roaming: often asleep or away, so `all` skips it when it doesn't answer.
+  # - last: switched alone, after the others. The rest of the fleet resolves
+  #   names through PiHome, and a switch that restarts AdGuard or Unbound
+  #   would break their downloads mid-build.
+  # - buildsItself: the builder (Whopper) builds every other NixOS host, so a
+  #   derivation several hosts share (Concierge's crates, kernel modules,
+  #   Plasma bits) compiles once, on the fastest machine. PiHome is aarch64.
+  # - sleep: fleet may suspend it. wakeMac: its Wake-on-LAN address
+  #   (ShackStack's from hosts/shackstack/INSTALL.md, Whopper's enp10s0).
+  fleetHosts = [
+    {
+      name = "Whopper";
+      kind = "nixos";
+      sleep = true;
+      wakeMac = "98:b7:85:1f:2c:9a";
     }
-    ALL_HOSTS=(Whopper BigTasty BigKing ShackStack BigMac MacFlurry PiHome)
-    declare -A KIND=([Whopper]=nixos [BigTasty]=nixos [BigKing]=nixos [ShackStack]=nixos [BigMac]=darwin [MacFlurry]=darwin [PiHome]=nixos)
-    # Hosts that are often asleep or away (the Macs, the HTPC). `all` skips
-    # them with a warning when they don't answer, instead of failing the run.
-    ROAMING_HOSTS=(MacFlurry BigMac ShackStack)
-    # Hosts run_hosts switches alone, after every other host has finished.
-    # The rest of the fleet resolves names through PiHome, and a switch that
-    # restarts AdGuard or Unbound would break their downloads mid-build.
-    LAST_HOSTS=(PiHome)
-    # Whopper builds every x86_64 NixOS host and copies the result over, so
-    # a derivation several hosts share (Concierge's crates, kernel modules,
-    # Plasma bits) compiles once, on the fastest machine. PiHome is aarch64
-    # and builds itself.
-    BUILDER=Whopper
-    SELF_BUILDING_HOSTS=(PiHome)
-
-    target_of() { echo "psoldunov@''${1,,}"; }
-
-    # reachable <host>: whether ssh gets in within a few seconds, without
-    # prompting for anything.
-    reachable() {
-      ssh -o ConnectTimeout=5 -o BatchMode=yes "$(target_of "$1")" true >/dev/null 2>&1
+    {
+      name = "BigTasty";
+      kind = "nixos";
     }
-
-    # keep_sudo: ask for the password once and keep sudo's ticket fresh
-    # until the script exits, so later sudo calls (Homebrew's .pkg installs
-    # during activation, update_bleeding_edge) reuse it instead of asking.
-    keep_sudo() {
-      [ -n "''${SUDO_KEEPALIVE:-}" ] && return 0
-      sudo -v
-      while true; do sudo -n true; sleep 50; done 2>/dev/null &
-      SUDO_KEEPALIVE=$!
-      trap 'kill "$SUDO_KEEPALIVE" 2>/dev/null' EXIT
+    {
+      name = "BigKing";
+      kind = "nixos";
     }
-
-    # The same for the remote side, as POSIX sh run before the switch.
-    REMOTE_KEEP_SUDO='sudo -v || exit 1; while true; do sudo -n true; sleep 50; done 2>/dev/null & k=$!; trap "kill $k 2>/dev/null" EXIT'
-
-    # hosts_for <host|all>: the hosts an argument stands for. A roaming host
-    # that is not this one and doesn't answer is left out of `all`.
-    hosts_for() {
-      if [ "$1" = "all" ]; then
-        local h r hosts=()
-        for h in "''${ALL_HOSTS[@]}"; do
-          for r in "''${ROAMING_HOSTS[@]}"; do
-            if [ "$h" = "$r" ] && [ "$h" != "$LOCAL_HOST" ] && ! reachable "$h"; then
-              echo "$PROG: $h is not reachable; skipping it." >&2
-              continue 2
-            fi
-          done
-          hosts+=("$h")
-        done
-        echo "''${hosts[@]}"
-      elif [ -n "''${KIND[$1]:-}" ]; then
-        echo "$1"
-      else
-        echo "$PROG: unknown host '$1' (known: ''${ALL_HOSTS[*]} all)" >&2
-        exit 1
-      fi
+    {
+      name = "ShackStack";
+      kind = "nixos";
+      roaming = true;
+      sleep = true;
+      wakeMac = "cc:28:aa:86:dd:6a";
     }
-
-    # sync_repo: every workstation commits here, so start from the others'
-    # latest push. --autostash carries uncommitted edits across.
-    sync_repo() {
-      if ! git pull --rebase --autostash --quiet; then
-        if [ -d "$(git rev-parse --git-path rebase-merge)" ] \
-          || [ -d "$(git rev-parse --git-path rebase-apply)" ]; then
-          echo "$PROG: git pull stopped on a conflict; resolve it (or git rebase --abort) and rerun." >&2
-          exit 1
-        fi
-        echo "$PROG: git pull failed; building the local tree as it is." >&2
-      fi
-      git add -A
+    {
+      name = "BigMac";
+      kind = "darwin";
+      roaming = true;
+      sleep = true;
     }
-
-    # switch_host <host> [extra switch args...]: activate <host> from the
-    # flake in the current directory.
-    switch_host() {
-      local h="$1"
-      shift
-      local kind="''${KIND[$h]}"
-      local th
-      th="$(target_of "$h")"
-      if [ "$h" = "$LOCAL_HOST" ]; then
-        keep_sudo
-        if [ "$kind" = darwin ]; then
-          sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ".#$h" --show-trace "$@"
-        else
-          sudo nixos-rebuild switch --flake ".#$h" --show-trace "$@"
-        fi
-      elif [ "$kind" = nixos ] && [ "$LOCAL_KIND" = nixos ]; then
-        # No --build-host means this machine builds. --use-substitutes has
-        # the target download what cache.nixos.org has itself, so ssh only
-        # carries what the builder compiled.
-        local s build=(--build-host "$(target_of "$BUILDER")")
-        if [ "$LOCAL_HOST" = "$BUILDER" ]; then build=(); fi
-        for s in "''${SELF_BUILDING_HOSTS[@]}"; do
-          if [ "$h" = "$s" ]; then build=(--build-host "$th"); fi
-        done
-        nixos-rebuild switch --flake ".#$h" --target-host "$th" "''${build[@]}" --use-substitutes --sudo --show-trace "$@"
-      else
-        # macOS on either end: copy the flake and every input, the private
-        # ones included, into the target's store, then build and activate
-        # there. sudo asks for the target's password once over ssh -t, and
-        # $AFTER_SWITCH (update_bleeding_edge for update_system) runs in the
-        # same session on that ticket. A job run_hosts starts in the
-        # background has no terminal to pass on, so it goes without -t.
-        local src tty=-T
-        src="$(nix flake archive --json \
-          --to "ssh-ng://$th?remote-program=/run/current-system/sw/bin/nix-daemon" \
-          | ${jq} -r .path)"
-        if [ -t 0 ]; then tty=-t; fi
-        # An ssh session has no LANG, and nixpkgs bash can crash on macOS 27
-        # without one (NixOS/nixpkgs#570561); macOS sudo keeps LANG.
-        local after="''${AFTER_SWITCH:+ && $AFTER_SWITCH}"
-        ssh "$tty" "$th" "/bin/sh -c '$REMOTE_KEEP_SUDO; export LANG=en_US.UTF-8; sudo /run/current-system/sw/bin/$kind-rebuild switch --flake $src#$h --show-trace $*$after'"
-      fi
+    {
+      name = "MacFlurry";
+      kind = "darwin";
+      roaming = true;
+      sleep = true;
     }
-
-    # label <host>: prefix each line of stdin with [<host>].
-    label() {
-      local line
-      while IFS= read -r line || [ -n "$line" ]; do
-        printf '%-11s%s\n' "[$1]" "$line"
-      done
+    {
+      name = "PiHome";
+      kind = "nixos";
+      last = true;
+      buildsItself = true;
     }
+  ];
 
-    # run_logged <job> <host> <logs>: run `<job> <host>` with its lines
-    # tagged with the host and copied to <logs>/<host>.log.
-    run_logged() {
-      local job="$1" h="$2" logs="$3"
-      (
-        set -o pipefail
-        trap '[ $? -eq 0 ] || echo "===== $h FAILED, see $logs/$h.log =====" >&2' EXIT
-        "$job" "$h" 2>&1 | tee "$logs/$h.log" | label "$h"
-        echo "===== $h done ====="
-      )
-    }
+  # Rebuilds, updates and cleans the hosts, reboots, suspends and wakes them,
+  # and keeps a report of every run that `fleet fix` hands to an agent.
+  fleet = pkgs.callPackage ../../../packages/fleet {
+    config = {
+      localHost = osConfig.networking.hostName;
+      sshUser = config.home.username;
+      builder = "Whopper";
+      hosts = fleetHosts;
+      # `fleet update` runs these, in this order, after `nix flake update`.
+      pins = map lib.getExe [
+        update_claude_code
+        update_duckstation
+        update_motrix
+        update_t3code
+        update_codex
+        update_pi_coding_agent
+      ];
+      bleedingEdge =
+        if isDarwin
+        then lib.getExe update_bleeding_edge
+        else null;
+      remoteBleedingEdge = "/etc/profiles/per-user/${config.home.username}/bin/update_bleeding_edge";
+      gum = lib.getExe pkgs.gum;
+      # The subnet broadcast rather than 255.255.255.255, so the packet leaves
+      # on the LAN interface even when another one holds the default route.
+      wolBroadcast = "10.24.24.255";
+    };
+  };
 
-    # run_hosts <verb> <job> <host>...: run `<job> <host>` for each host.
-    # A single host runs in the foreground on the terminal. Several run at
-    # once through run_logged (the x86_64 NixOS ones build on $BUILDER, whose
-    # daemon builds a shared derivation once and the other jobs wait), and
-    # the call fails once all of them have finished if any one failed. The
-    # LAST_HOSTS among them run one at a time after the others are done,
-    # whether or not those succeeded.
-    #
-    # Remote sudo authenticates with the forwarded agent, so the only
-    # password is the local host's, asked here before any job starts.
-    # Background jobs read /dev/null, so a remote sudo that falls back to a
-    # password fails instead of waiting. They also ignore SIGINT, so Ctrl-C
-    # sends SIGTERM to the whole process group to stop every job.
-    run_hosts() {
-      local verb="$1" job="$2"
-      shift 2
-      if [ "$#" -eq 1 ]; then
-        echo "===== $verb $1 ====="
-        "$job" "$1"
-        return
-      fi
-      local h l logs i
-      local -a first=() last=() pids=() failed=()
-      for h in "$@"; do
-        if [ "$h" = "$LOCAL_HOST" ]; then keep_sudo; fi
-        for l in "''${LAST_HOSTS[@]}"; do
-          if [ "$h" = "$l" ]; then
-            last+=("$h")
-            continue 2
-          fi
-        done
-        first+=("$h")
-      done
-      logs="$(mktemp -d "''${TMPDIR:-/tmp}/$PROG.XXXXXX")"
-      echo "===== $verb ''${first[*]} at once (logs in $logs) ====="
-      trap 'trap - INT TERM; kill 0' INT TERM
-      for h in "''${first[@]}"; do
-        run_logged "$job" "$h" "$logs" &
-        pids+=("$!")
-      done
-      for i in "''${!pids[@]}"; do
-        if ! wait "''${pids[$i]}"; then
-          failed+=("''${first[$i]}")
-        fi
-      done
-      for h in "''${last[@]}"; do
-        echo "===== $verb $h now that the others are done ====="
-        run_logged "$job" "$h" "$logs" &
-        if ! wait "$!"; then
-          failed+=("$h")
-        fi
-      done
-      trap - INT TERM
-      if [ "''${#failed[@]}" -gt 0 ]; then
-        echo "$PROG: failed on ''${failed[*]}; logs in $logs" >&2
-        return 1
-      fi
-      rm -rf "$logs"
-    }
-
-    commit_and_push() {
-      if ! git diff --cached --quiet || ! git diff --quiet; then
-        git commit -am "$1"
-      else
-        echo "$PROG succeeded; nothing to commit."
-      fi
-      if ! git push; then
-        echo "$PROG: git push failed; commits are local only." >&2
-        exit 1
-      fi
-    }
-  '';
-
-  rebuild_system = pkgs.writeShellScriptBin "rebuild_system" ''
-    set -e
-    PROG=rebuild_system
-    ${deployLib}
-    HOSTS="$(hosts_for "''${1:-$LOCAL_HOST}")"
-    cd "''${FLAKE_DIR:-''${HOME}/.nixfiles}"
-    sync_repo
-    # shellcheck disable=SC2086 # $HOSTS is a list of host names
-    run_hosts Rebuilding switch_host $HOSTS
-    commit_and_push "rebuild commit $(date '+%d/%m/%Y %H:%M:%S')"
-  '';
-
-  update_system = pkgs.writeShellScriptBin "update_system" ''
-    set -e
-    PROG=update_system
-    ${deployLib}
-    HOSTS="$(hosts_for "''${1:-$LOCAL_HOST}")"
-    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
-    cd "$FLAKE_DIR"
-    sync_repo
-    sudo nix flake update
-    FLAKE_DIR="$FLAKE_DIR" ${update_claude_code}/bin/update_claude_code
-    FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
-    FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
-    FLAKE_DIR="$FLAKE_DIR" ${update_t3code}/bin/update_t3code
-    FLAKE_DIR="$FLAKE_DIR" ${update_codex}/bin/update_codex
-    FLAKE_DIR="$FLAKE_DIR" ${update_pi_coding_agent}/bin/update_pi_coding_agent
-    update_host() {
-      if [ "''${KIND[$1]}" = darwin ]; then
-        if [ "$1" = "$LOCAL_HOST" ]; then
-          switch_host "$1"
-          update_bleeding_edge
-        else
-          AFTER_SWITCH=/etc/profiles/per-user/psoldunov/bin/update_bleeding_edge switch_host "$1"
-        fi
-      else
-        switch_host "$1" --upgrade-all
-      fi
-    }
-    # shellcheck disable=SC2086 # $HOSTS is a list of host names
-    run_hosts Updating update_host $HOSTS
-    commit_and_push "update commit $(date '+%d/%m/%Y %H:%M:%S')"
-  '';
-
-  clean_system = pkgs.writeShellScriptBin "clean_system" ''
-    set -e
-    PROG=clean_system
-    ${deployLib}
-    HOSTS="$(hosts_for "''${1:-$LOCAL_HOST}")"
-    # A Mac with its lid closed still answers ssh, but OrbStack has frozen its
-    # VM for sleep and docker waits forever. So docker gets 20 seconds to
-    # answer `docker info` (killed, since Go ignores SIGALRM; macOS has no
-    # timeout(1)) and is skipped if it doesn't. CLEAN sits inside single quotes
-    # on the remote side, so it must not contain one.
-    CLEAN='set -e
-      sudo "$(command -v nix-collect-garbage)" -d
-      nix-collect-garbage -d
-      if command -v docker >/dev/null 2>&1; then
-        docker info >/dev/null 2>&1 &
-        p=$!
-        (sleep 20; kill $p) >/dev/null 2>&1 &
-        w=$!
-        up=yes
-        wait $p || up=no
-        kill $w 2>/dev/null || true
-        if [ $up = yes ]; then
-          docker image prune -a -f
-        else
-          echo "docker is not answering; skipping docker image prune." >&2
-        fi
-      fi
-      if [ -x /opt/homebrew/bin/brew ]; then /opt/homebrew/bin/brew cleanup; fi'
-    for h in $HOSTS; do
-      echo "===== Cleaning $h ====="
-      if [ "$h" = "$LOCAL_HOST" ]; then
-        bash -c "$CLEAN"
-      else
-        ssh -t "$(target_of "$h")" "bash -c '$CLEAN'"
-      fi
-    done
-  '';
+  # The old script names, for muscle memory, the docs and the agents that
+  # call them. With no host they act on this machine, as they always did.
+  fleetAlias = name: action:
+    pkgs.writeShellScriptBin name ''
+      if [ "$#" -eq 0 ]; then set -- ${lib.escapeShellArg osConfig.networking.hostName}; fi
+      exec ${lib.getExe fleet} ${action} "$@"
+    '';
 
   scripts =
     {
@@ -594,22 +380,19 @@
         update_t3code
         update_codex
         update_pi_coding_agent
-        rebuild_system
-        update_system
-        clean_system
+        fleet
         ;
 
-      # The shackstack ssh entry forwards the agent key that sudo there
-      # accepts. shackstack-tv-sleep puts the TV in standby on the way down.
-      shackstack-sleep = pkgs.writeShellScriptBin "shackstack-sleep" ''
-        ssh -o ConnectTimeout=5 shackstack sudo systemctl suspend
-      '';
+      rebuild_system = fleetAlias "rebuild_system" "rebuild";
+      update_system = fleetAlias "update_system" "update";
+      clean_system = fleetAlias "clean_system" "clean";
 
-      # MAC from hosts/shackstack/INSTALL.md. The subnet broadcast rather than
-      # 255.255.255.255, so the packet leaves on the LAN interface even when
-      # another one holds the default route.
+      # shackstack-tv-sleep puts the TV in standby on the way down.
+      shackstack-sleep = pkgs.writeShellScriptBin "shackstack-sleep" ''
+        exec ${lib.getExe fleet} sleep ShackStack
+      '';
       shackstack-wake = pkgs.writeShellScriptBin "shackstack-wake" ''
-        ${pkgs.wakeonlan}/bin/wakeonlan -i 10.24.24.255 cc:28:aa:86:dd:6a
+        exec ${lib.getExe fleet} wake ShackStack
       '';
 
       shadd = pkgs.writeShellScriptBin "shadd" ''

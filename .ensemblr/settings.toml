@@ -1,8 +1,8 @@
 #:schema https://www.ensemblr.dev/schemas/settings.schema.json
 
 # Every command targets this worktree's flake (`.#...`), never ~/.nixfiles.
-# rebuild_system/update_system hardcode ~/.nixfiles and `git add -A` + commit
-# there, so the switch/update scripts below reimplement them against the
+# fleet rebuild/update (rebuild_system/update_system) work in ~/.nixfiles and
+# `git add -A` + commit there, so the switch/update scripts below reimplement them against the
 # worktree and leave staging and committing to the workspace.
 
 [scripts]
@@ -48,6 +48,10 @@ icon = "hard-drive"
 
 [scripts.run.test-adguard-cli]
 command = "nix build .#checks.x86_64-linux.adguard-cli --no-link"
+icon = "test-tube"
+
+[scripts.run.test-fleet]
+command = "nix build .#checks.x86_64-linux.fleet --no-link"
 icon = "test-tube"
 
 # rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.

@@ -3,3 +3,4 @@ home-manager/modules/desktop/ags/types
 .claude/plans
 *.local.*
 .decrypted~*
+__pycache__/

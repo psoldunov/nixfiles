@@ -71,7 +71,7 @@ sudo passwd psoldunov
 
 From then on, update it like any other host: `rebuild_system ShackStack`, or the `rebuild-shackstack` run script. When it is asleep, `rebuild_system all` and the `-all` run scripts skip it with a warning.
 
-`shackstack-sleep` suspends it from Whopper or a Mac over ssh, and the TV goes to standby with it. `shackstack-wake` sends a Wake-on-LAN packet to `cc:28:aa:86:dd:6a` to bring it back. Wake-on-LAN from suspend has not been tested yet.
+`fleet sleep ShackStack` (or `shackstack-sleep`) suspends it from Whopper or a Mac over ssh, and the TV goes to standby with it. `fleet wake ShackStack` (or `shackstack-wake`) sends a Wake-on-LAN packet to `cc:28:aa:86:dd:6a` and waits up to 3 minutes for ssh to answer. Wake-on-LAN from suspend has not been tested yet.
 
 ### Restore saves
 

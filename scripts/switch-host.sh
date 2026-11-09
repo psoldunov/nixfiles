@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Switches a host to this checkout's flake, from whichever host runs it. The
-# Ensemblr run scripts use it; rebuild_system and update_system do the same
-# through switch_host in modules/home/workstation/scripts.nix, and pick the
-# route the same way:
+# Ensemblr run scripts use it; fleet (packages/fleet/fleet/actions.py) does the
+# same for rebuild_system and update_system, and picks the route the same way:
 #
 # - the host running it: nixos-rebuild or darwin-rebuild, locally;
 # - NixOS from NixOS: nixos-rebuild --target-host --build-host;
