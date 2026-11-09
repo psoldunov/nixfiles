@@ -41,6 +41,10 @@ in {
       ".agents/skills/brag".source = "${inputs.brag}/skills/brag";
       "${configDir}/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
       ".agents/skills/brag-slim".source = "${inputs.brag}/skills/brag-slim";
+      # Longbridge's GPUI Kit coding and design guides. Codex gets them from
+      # ../codex/skills.nix.
+      "${configDir}/skills/gpui-kit".source = "${inputs.gpui-kit}/skills/gpui-kit";
+      "${configDir}/skills/gpui-kit-design-guides".source = "${inputs.gpui-kit}/skills/gpui-kit-design-guides";
       # Genealogy research for the former USSR; the repo root is the skill.
       # Codex gets it from ../codex/skills.nix.
       "${configDir}/skills/ex-ussr-kinship-research".source = inputs.ex-ussr-kinship-research;

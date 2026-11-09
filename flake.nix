@@ -128,6 +128,11 @@
       flake = false;
     };
 
+    gpui-kit = {
+      url = "github:longbridge/gpui-kit";
+      flake = false;
+    };
+
     i-have-adhd = {
       url = "github:ayghri/i-have-adhd";
       flake = false;
