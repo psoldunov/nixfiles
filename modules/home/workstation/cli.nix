@@ -67,7 +67,6 @@
     ffmpeg-full
     imagemagick
     libwebp
-    tesseract
     woff2
   ];
 }

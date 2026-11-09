@@ -83,7 +83,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # modules/darwin + host name + BigMac-only Homebrew apps — see "Macs"
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
-├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules and codex-sys-libs on every NixOS host, the rest Whopper-only)
+├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules and codex on every NixOS host, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (BigTasty; PiHome makes its own)
@@ -189,7 +189,8 @@ Where the Macs' software comes from:
 | Agent CLIs that release several times a week (codex, Claude Code from the `claude-code@latest` cask) | Homebrew, upgraded by `update_system` only |
 | Tap-only or macOS-only formulae | Homebrew, the same set on both Macs |
 | pi | This repo's overlay (`overlays/pi-coding-agent`), same version as Whopper |
-| Atuin | Upstream's release binary at nixpkgs' version ([overlays/atuin-darwin.nix](overlays/atuin-darwin.nix)). A source build fails its tests here and is never in the cache. When nixpkgs bumps atuin, add the new release's hash; until then the Mac compiles it and evaluation warns |
+| Atuin | Upstream's release binary at nixpkgs' version ([overlays/atuin-darwin.nix](overlays/atuin-darwin.nix)). A source build fails its tests here and is never in the cache. When nixpkgs bumps atuin, add the new release's hash; until then the Macs keep the newest release that has one and evaluation warns |
+| Formulae cache.nixos.org has no aarch64-darwin build for (tesseract) | Homebrew bottles, so no Mac compiles them |
 | Every other CLI | nixpkgs: [workstation/cli.nix](modules/home/workstation/cli.nix) + [darwin/packages.nix](modules/home/darwin/packages.nix) |
 
 To give an app to one Mac only, add it to that host's `homebrew.nix`. Put it in the shared file only when both Macs should have it. nix-darwin merges the lists.
@@ -230,7 +231,7 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 | `boot.nix` | systemd-boot (`configurationLimit = 10`), EFI variables, swraid + mdadm `MAILADDR` |
 | `locale.nix` | `Asia/Nicosia`, `en_US.UTF-8` with metric `LC_MEASUREMENT` and `en_GB` time |
 | `nix.nix` | flakes, `auto-optimise-store`, `trusted-users = ["psoldunov"]`, allowUnfree/Insecure/Broken, nix-ld, `stateVersion` |
-| `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel), `overlays/aggregate-modules.nix` and `overlays/codex-sys-libs.nix` (see [Upstream workarounds](#upstream-workarounds)) |
+| `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel), `overlays/codex` (codex from upstream's prebuilt release package, pinned by `update_codex`) and `overlays/aggregate-modules.nix` (see [Upstream workarounds](#upstream-workarounds)) |
 | `openssh.nix` | openssh with `AllowUsers psoldunov` |
 | `users.nix` | `psoldunov` account (wheel/docker/libvirtd/video) |
 | `shell.nix` | zsh as the login shell, fish installed too |
@@ -254,7 +255,7 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
 | `networking.nix` | hostname, static IP on `enp10s0`, firewall ports, openssh hardening, avahi, Skrepka firewall |
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
-| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, t3code, pi-coding-agent, bambu-studio, periphery, solaar, pyopenjtalk-plus, calibre-speechd) |
+| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, t3code, pi-coding-agent, bambu-studio, periphery, solaar) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
@@ -462,7 +463,7 @@ A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its direct
 
 `rebuild_system` is host-aware. It lives in the workstation scripts ([modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix)), so Whopper and the Macs have it and BigTasty doesn't. It runs locally when the argument is the current host (`nixos-rebuild` or `darwin-rebuild`). Otherwise it works on `psoldunov@<host>`:
 
-- Linux to Linux (Whopper to BigTasty or BigKing): `nixos-rebuild --target-host --build-host --sudo`, as before.
+- Linux to Linux (Whopper to BigTasty, BigKing or ShackStack): `nixos-rebuild --target-host --use-substitutes --sudo`. Whopper builds the system and sends over only what it compiled; the target downloads everything else from cache.nixos.org. A package two hosts share, such as Concierge's crates, compiles once. From another NixOS host, `rebuild_system` passes `--build-host psoldunov@whopper`, so Whopper still does the building. PiHome is aarch64 and builds itself.
 - Anything involving macOS: `nix flake archive --to ssh-ng://<host>` copies the flake and every input, private ones included, into the target's store. Then `ssh -t <host> sudo <nixos|darwin>-rebuild switch` builds and activates it there. sudo asks for the target's password once, and the session keeps that ticket alive for Homebrew's `.pkg` installs and, under `update_system`, for `update_bleeding_edge`. Like `--target-host`, this deploys the local working tree.
 
 ```fish
@@ -475,7 +476,7 @@ rebuild_system ShackStack     # same for the HTPC
 rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
 rebuild_system MacFlurry      # same for the laptop
 rebuild_system all            # Whopper, BigTasty, BigKing, ShackStack, BigMac, MacFlurry in parallel, then PiHome; skips ShackStack, BigMac and MacFlurry when they don't answer
-update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_t3code, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
+update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_t3code, update_codex, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
 clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune (skipped if docker doesn't answer in 20s), + brew cleanup on the Macs
 ```
 
@@ -583,7 +584,7 @@ nixos-rebuild dry-activate --flake .#BigTasty --target-host psoldunov@bigtasty -
 |---|---|
 | `path 'X' does not exist` during eval | New file not `git add`ed |
 | Sudo password prompted on remote deploy | `pam_ssh_agent_auth` not yet active (first deploy on a fresh box); use bootstrap sudoers.d |
-| `error: cannot add path ... because it lacks a signature by a trusted key` | Target host's `nix.settings.trusted-users` doesn't include `psoldunov`; or omit `--build-host` and let target build locally |
+| `error: cannot add path ... because it lacks a signature by a trusted key` | Target host's `nix.settings.trusted-users` doesn't include `psoldunov`, so it refuses the unsigned paths Whopper built. Add it, or pass `--build-host <target>` so the target builds them itself |
 | Docker container activation fails on first switch | `systemd.services.docker-networks` is After=docker.service — if docker.service stopped during activation, networks aren't there yet; retry deploy |
 | Home-manager activation fails with "would be clobbered" | A desktop app rewrote an HM-owned file; `overwriteBackup = true` in `flake.nix` should handle it, else remove the stale `<file>.hm-backup` |
 | Stale `home-manager` generation | `systemctl status home-manager-psoldunov && journalctl -u home-manager-psoldunov -b` |
@@ -596,11 +597,8 @@ Temporary fixes for nixpkgs breakage, added with the 2026-10-20 and 2026-11-07 u
 |---|---|---|---|---|
 | Missing kernel module certificates are skipped | [overlays/aggregate-modules.nix](overlays/aggregate-modules.nix), every NixOS host | Since [nixpkgs#571181](https://github.com/NixOS/nixpkgs/pull/571181), `aggregateModules` expects a `.ko.cer` next to every external kernel module. asustor-platform-driver (BigKing), ddcci-driver and xpad-noone (Whopper) copy their `.ko` files by hand and ship none, so the module bundle fails to build. If the aggregator code changes upstream, evaluation stops with an error naming this file | [nixpkgs#575192](https://github.com/NixOS/nixpkgs/issues/575192) is fixed, or all three packages install through kbuild's `modules_install` | `nix build .#nixosConfigurations.Whopper.config.system.modulesTree`, then the same for BigKing |
 | v4l2loopback installs with `DEPMOD=true` | [hosts/whopper/modules/boot.nix](hosts/whopper/modules/boot.nix) | The package ships depmod's `modules.*` index files, which collide with the kernel's in the module bundle | [nixpkgs#575861](https://github.com/NixOS/nixpkgs/pull/575861) is merged | `nix build .#nixosConfigurations.Whopper.config.system.modulesTree` |
-| One pyopenjtalk-plus test is skipped | [overlays/pyopenjtalk-plus.nix](overlays/pyopenjtalk-plus.nix), Whopper | Cython 3.3 reworded an error message that `test_run_njd_from_mecab_invalid_input_should_not_break_next_call` matches. The failing test also breaks piper-tts and calibre, which depend on the package | [nixpkgs#576063](https://github.com/NixOS/nixpkgs/pull/576063) is merged | `nix build .#nixosConfigurations.Whopper.pkgs.calibre` |
-| calibre gets its own speechd with Python bindings | [overlays/calibre-speechd.nix](overlays/calibre-speechd.nix), Whopper | speechd's rework ([nixpkgs#470797](https://github.com/NixOS/nixpkgs/pull/470797)) turned on `strictDeps` but left Python in `buildInputs`, so configure skips the Python bindings. calibre's `test_speech_dispatcher` then can't import `speechd` and the build fails. The overlay patches calibre's copy only, since patching speechd itself would rebuild everything that links it, Firefox and Qt speech among them | [nixpkgs#576062](https://github.com/NixOS/nixpkgs/pull/576062) is merged | `nix build .#nixosConfigurations.Whopper.pkgs.calibre` |
 | Ghostty's user service runs as `Type=notify` | [modules/home/workstation/ghostty.nix](modules/home/workstation/ghostty.nix), Whopper and ShackStack | systemd 262 refuses to start a `Type=notify-reload` unit if the process reports ready before it has a handler for the reload signal. Ghostty 1.3.1 sometimes does, so roughly every other launch from Meta+Return or the app menu fails with "Remote peer disconnected". `ExecReload` sends SIGUSR2 itself, so the config still reloads on rebuild | A Ghostty release with [ghostty-org/ghostty#14399](https://github.com/ghostty-org/ghostty/pull/14399) reaches nixpkgs | With every Ghostty window closed, start and stop `app-com.mitchellh.ghostty.service` ten times with `systemctl --user`. `journalctl --user` should show no `lacks handler for reload signal` |
-| codex gets the system libraries its crates now link | [overlays/codex-sys-libs.nix](overlays/codex-sys-libs.nix), every NixOS host | Since [nixpkgs#537108](https://github.com/NixOS/nixpkgs/pull/537108), Rust builds link system copies of aws-lc, SQLite, zstd and oniguruma instead of building their own. codex 0.167.0 lists none of them, so `aws-lc-sys` fails to build. The overlay adds the four libraries that [nixpkgs#584667](https://github.com/NixOS/nixpkgs/pull/584667) adds | nixpkgs#584667 reaches `nixos-unstable` | `nix build .#nixosConfigurations.Whopper.pkgs.codex` |
-| Concierge, Ensemblr, the Sync server and Clokkr build with their bundled libraries | [concierge.nix](hosts/whopper/home/programs/concierge.nix), [ensemblr.nix](hosts/whopper/home/programs/ensemblr.nix) and [clokkr.nix](hosts/whopper/home/programs/clokkr.nix) on Whopper, [concierge-server.nix](hosts/bigtasty/modules/services/concierge-server.nix) on BigTasty | The nixpkgs#537108 hook also makes rusqlite link a system SQLite and points `JEMALLOC_OVERRIDE` at a system jemalloc. These packages bundle SQLite and build jemalloc themselves, so linking fails. Each one is built with `dontCargoUseSystemLibs = true`, which turns the hook off | psoldunov/concierge and psoldunov/clokkr set `dontCargoUseSystemLibs` in their own packages | `nix build .#nixosConfigurations.Whopper.config.system.build.toplevel`, then the same for BigTasty |
+| Concierge, Ensemblr, the Sync server and Clokkr build with their bundled libraries | [concierge.nix](hosts/whopper/home/programs/concierge.nix), [ensemblr.nix](hosts/whopper/home/programs/ensemblr.nix) and [clokkr.nix](hosts/whopper/home/programs/clokkr.nix) on Whopper, [concierge-server.nix](hosts/bigtasty/modules/services/concierge-server.nix) on BigTasty | Since [nixpkgs#537108](https://github.com/NixOS/nixpkgs/pull/537108), the cargo setup hook makes rusqlite link a system SQLite and points `JEMALLOC_OVERRIDE` at a system jemalloc. These packages bundle SQLite and build jemalloc themselves, so linking fails. Each one is built with `dontCargoUseSystemLibs = true`, which turns the hook off | psoldunov/concierge and psoldunov/clokkr set `dontCargoUseSystemLibs` in their own packages | `nix build .#nixosConfigurations.Whopper.config.system.build.toplevel`, then the same for BigTasty |
 | Notion's node_modules hash is pinned here | [hosts/whopper/home/programs/notion.nix](hosts/whopper/home/programs/notion.nix), Whopper | The notion flake follows this repo's nixpkgs, which moved bun from 1.4.2 to 1.4.4. The node_modules that bun 1.4.4 installs no longer match the hash in psoldunov/notion, so the fixed-output build fails. The override swaps in the new hash, and only while notion still carries the old one. Once notion changes it, evaluation warns that the override can go | psoldunov/notion updates its x86_64-linux node_modules hash | `nix build .#nixosConfigurations.Whopper.config.system.build.toplevel` |
 
 ## History

@@ -169,6 +169,39 @@
     echo "T3 Code pin: $CURRENT -> $VERSION"
   '';
 
+  # Pins overlays/codex to the newest stable `rust-vX.Y.Z` release (or the
+  # version given as $1, e.g. 0.167.0). The x86_64 musl package is
+  # prefetched into the store, so the next rebuild reuses it.
+  update_codex = pkgs.writeShellScriptBin "update_codex" ''
+    set -euo pipefail
+    FLAKE_DIR="''${FLAKE_DIR:-''${HOME}/.nixfiles}"
+    REPO="openai/codex"
+    TARGET="$FLAKE_DIR/overlays/codex/pin.json"
+    VERSION="''${1:-$(${pkgs.curl}/bin/curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+      | ${jq} -r '.tag_name // empty | ltrimstr("rust-v")')}"
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "update_codex: unexpected version '$VERSION'" >&2
+      exit 1
+    fi
+    CURRENT="$(${jq} -r .version "$TARGET" 2>/dev/null || echo none)"
+    if [ "$CURRENT" = "$VERSION" ]; then
+      echo "Codex already pinned at $VERSION."
+      exit 0
+    fi
+    URL="https://github.com/$REPO/releases/download/rust-v$VERSION/codex-package-x86_64-unknown-linux-musl.tar.zst"
+    HASH="$(nix store prefetch-file --json "$URL" | ${jq} -r .hash)"
+    if ! [[ "$HASH" =~ ^sha256-[A-Za-z0-9+/]{43}=$ ]]; then
+      echo "update_codex: unexpected hash '$HASH' for $URL" >&2
+      exit 1
+    fi
+    TMP="$(mktemp)"
+    trap 'rm -f "$TMP"' EXIT
+    ${jq} -n --arg version "$VERSION" --arg hash "$HASH" \
+      '{version: $version, hash: $hash}' > "$TMP"
+    install -m 644 "$TMP" "$TARGET"
+    echo "Codex pin: $CURRENT -> $VERSION"
+  '';
+
   # Pins overlays/pi-coding-agent to the newest GitHub release (or the version
   # given as $1, e.g. 1.0.4). A release needs three hashes: the source
   # tarball, its npm dependency cache (prefetch-npm-deps over the tagged
@@ -267,6 +300,12 @@
     # The rest of the fleet resolves names through PiHome, and a switch that
     # restarts AdGuard or Unbound would break their downloads mid-build.
     LAST_HOSTS=(PiHome)
+    # Whopper builds every x86_64 NixOS host and copies the result over, so
+    # a derivation several hosts share (Concierge's crates, kernel modules,
+    # Plasma bits) compiles once, on the fastest machine. PiHome is aarch64
+    # and builds itself.
+    BUILDER=Whopper
+    SELF_BUILDING_HOSTS=(PiHome)
 
     target_of() { echo "psoldunov@''${1,,}"; }
 
@@ -343,7 +382,15 @@
           sudo nixos-rebuild switch --flake ".#$h" --show-trace "$@"
         fi
       elif [ "$kind" = nixos ] && [ "$LOCAL_KIND" = nixos ]; then
-        nixos-rebuild switch --flake ".#$h" --target-host "$th" --build-host "$th" --sudo --show-trace "$@"
+        # No --build-host means this machine builds. --use-substitutes has
+        # the target download what cache.nixos.org has itself, so ssh only
+        # carries what the builder compiled.
+        local s build=(--build-host "$(target_of "$BUILDER")")
+        if [ "$LOCAL_HOST" = "$BUILDER" ]; then build=(); fi
+        for s in "''${SELF_BUILDING_HOSTS[@]}"; do
+          if [ "$h" = "$s" ]; then build=(--build-host "$th"); fi
+        done
+        nixos-rebuild switch --flake ".#$h" --target-host "$th" "''${build[@]}" --use-substitutes --sudo --show-trace "$@"
       else
         # macOS on either end: copy the flake and every input, the private
         # ones included, into the target's store, then build and activate
@@ -385,7 +432,8 @@
 
     # run_hosts <verb> <job> <host>...: run `<job> <host>` for each host.
     # A single host runs in the foreground on the terminal. Several run at
-    # once, since each builds on its own machine, through run_logged, and
+    # once through run_logged (the x86_64 NixOS ones build on $BUILDER, whose
+    # daemon builds a shared derivation once and the other jobs wait), and
     # the call fails once all of them have finished if any one failed. The
     # LAST_HOSTS among them run one at a time after the others are done,
     # whether or not those succeeded.
@@ -480,6 +528,7 @@
     FLAKE_DIR="$FLAKE_DIR" ${update_duckstation}/bin/update_duckstation
     FLAKE_DIR="$FLAKE_DIR" ${update_motrix}/bin/update_motrix
     FLAKE_DIR="$FLAKE_DIR" ${update_t3code}/bin/update_t3code
+    FLAKE_DIR="$FLAKE_DIR" ${update_codex}/bin/update_codex
     FLAKE_DIR="$FLAKE_DIR" ${update_pi_coding_agent}/bin/update_pi_coding_agent
     update_host() {
       if [ "''${KIND[$1]}" = darwin ]; then
@@ -543,6 +592,7 @@
         update_duckstation
         update_motrix
         update_t3code
+        update_codex
         update_pi_coding_agent
         rebuild_system
         update_system
