@@ -4,6 +4,6 @@
   nixpkgs.overlays = [
     (import ../../overlays/claude-code)
     (import ../../overlays/aggregate-modules.nix)
-    (import ../../overlays/codex-sys-libs.nix)
+    (import ../../overlays/codex)
   ];
 }

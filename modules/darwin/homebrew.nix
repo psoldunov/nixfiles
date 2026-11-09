@@ -61,6 +61,9 @@
       "libpq"
       "openai-whisper"
       "summarize"
+      # nixpkgs' tesseract is not in cache.nixos.org for aarch64-darwin, so
+      # every Mac compiled it.
+      "tesseract"
 
       # Third-party taps.
       "antoniorodr/memo/memo"

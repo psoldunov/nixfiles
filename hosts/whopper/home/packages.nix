@@ -36,6 +36,8 @@
     kdePackages.filelight
     parted
     lsof
+    # OCR. The Macs take Homebrew's: cache.nixos.org has no aarch64-darwin build.
+    tesseract
     prismlauncher
     ryubing
     picard
