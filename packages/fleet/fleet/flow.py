@@ -118,6 +118,10 @@ class Execution:
         if action == "reboot":
             self._power("reboot", ready, self._confirm_reboot)
             return
+        if action == "clean" and self.plan.reboot:
+            ready = self._reboot_first(ready)
+            if not ready:
+                return
         done = self._phase(action, ready, lambda h, tty: actions.BUILDERS[action](self.cfg, h, tty), cwd=self.cfg.flake_dir)
         if action in SWITCHING:
             # Hosts that never answered count too; ones skipped as asleep don't.
@@ -126,7 +130,7 @@ class Execution:
                 self.console.line(f"fleet: not committing, since {', '.join(failed)} failed.")
             else:
                 self._commit()
-        if self.plan.reboot:
+        if self.plan.reboot and action != "clean":
             self._power("reboot", [h for h in ready if any(e.host == h.name and e.status == "ok" for e in done)], self._confirm_reboot)
 
     def _add(self, entry: Entry) -> Entry:
@@ -276,6 +280,23 @@ class Execution:
         local = next((h for h in hosts if self.cfg.is_local(h)), None)
         if local:
             self.local_power = (action, local)
+
+    def _reboot_first(self, hosts: list[Host]) -> list[Host]:
+        """Before a clean: reboot the remote hosts so nothing still running
+        holds old store paths, and keep the ones that came back. This machine
+        can't reboot without ending fleet, so it is cleaned without one."""
+        remote = [h for h in hosts if not self.cfg.is_local(h)]
+        back: set[str] = set()
+        if remote:
+            done = self._phase("reboot", remote, lambda h, tty: actions.BUILDERS["reboot"](self.cfg, h, tty), follow=self._confirm_reboot)
+            back = {e.host for e in done if e.status == "ok"}
+        for host in hosts:
+            if self.cfg.is_local(host):
+                note = "not rebooted first: fleet can't keep running across this machine's reboot"
+                self.console.line(f"fleet: {host.name} is this machine, so it is cleaned without rebooting first.")
+                self._add(Entry(host.name, "reboot", "skipped", note=note))
+                back.add(host.name)
+        return [h for h in hosts if h.name in back]
 
     def _confirm_sleep(self, host: Host, entry: Entry) -> Entry:
         gone = wait_for(self.cfg.target(host), False, SLEEP_TIMEOUT, self.jobs, self.probe, interval=3)

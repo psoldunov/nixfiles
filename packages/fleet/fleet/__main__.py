@@ -33,6 +33,11 @@ HELPS = {
     "wake": "wake hosts with Wake-on-LAN and wait for them to answer",
     "status": "show which hosts answer over ssh",
 }
+REBOOT_HELP = {
+    "rebuild": "reboot each host that succeeded, afterwards",
+    "update": "reboot each host that succeeded, afterwards",
+    "clean": "reboot each host first and clean it once it is back (this machine is cleaned without one)",
+}
 EPILOG = """\
 Hosts go by their flake names, in any case. `all` means every host, minus the
 roaming ones (ShackStack and the Macs) that don't answer. Without host names,
@@ -50,7 +55,7 @@ def parser() -> argparse.ArgumentParser:
         cmd = sub.add_parser(name, help=text, description=text)
         cmd.add_argument("hosts", nargs="*", metavar="HOST")
         if name in ("rebuild", "update", "clean"):
-            cmd.add_argument("--reboot", action="store_true", help="reboot each host that succeeded, afterwards")
+            cmd.add_argument("--reboot", action="store_true", help=REBOOT_HELP[name])
             cmd.add_argument("--wake", action="store_true", help="wake hosts that don't answer first (Wake-on-LAN)")
     shown = sub.add_parser("report", help="print a run's report, the last one by default")
     shown.add_argument("run", nargs="?", help="a run directory, or its name under ~/.local/state/fleet/runs")
@@ -90,7 +95,8 @@ def ask_plan(cfg: Config, action: str, console: Console, reboot: bool = False, w
         if asleep and not wake:
             wake = interactive.confirm(cfg, f"Wake {', '.join(asleep)} first?")
         if not reboot:
-            reboot = interactive.confirm(cfg, "Reboot them afterwards?", default=action == "clean")
+            question = "Reboot them first, then clean?" if action == "clean" else "Reboot them afterwards?"
+            reboot = interactive.confirm(cfg, question, default=action == "clean")
     return Plan(action, tuple(hosts), from_all=False, reboot=reboot, wake=wake)
 
 
