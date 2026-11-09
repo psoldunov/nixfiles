@@ -11,6 +11,8 @@ paths:
 **Load the `gpui` skill before you write, debug or review GPUI code.** It is the shared log of GPUI
 quirks met in the Concierge, Clokkr and Numero apps, each with its fix and the crate versions it was
 seen on. Read the reference file for the area you touch; most GPUI bugs there are a known quirk.
+For gpui-kit's API and its Coding Guides load `gpui-kit`; for screen design load
+`gpui-kit-design-guides`.
 
 The quirks that bite first, seen on gpui-kit 0.7.1 and gpui-component 0.7.1 on gpui-pre 0.3.8:
 

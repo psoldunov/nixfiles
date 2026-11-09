@@ -27,6 +27,8 @@ in {
         # Claude Code and pi also load ../claude-code/rules/rust/gpui.md on Rust
         # files; Codex has no path-scoped rules, so the description triggers it.
         gpui = local + "/gpui";
+        gpui-kit = "${inputs.gpui-kit}/skills/gpui-kit";
+        gpui-kit-design-guides = "${inputs.gpui-kit}/skills/gpui-kit-design-guides";
         linear-issue = local + "/linear-issue";
         # The repo root is the skill; Codex reads its agents/openai.yaml too.
         humanizer = "${inputs.humanizer}";

@@ -157,6 +157,14 @@ start of a case it checks the upstream repo and offers to update itself: the
 nix store copy is read-only, so update with
 `nix flake update ex-ussr-kinship-research` and `rebuild_system`.
 
+Longbridge's GPUI Kit (github.com/longbridge/gpui-kit) ships two skills in
+`skills/`: `gpui-kit` (the framework, its components and the Coding Guides)
+and `gpui-kit-design-guides` (the Design Guides for UI work). `settings.nix`
+links both from the `gpui-kit` input into `~/.claude/skills/` (Claude Code and
+pi), and `../codex/skills.nix` links them for Codex. They sit beside the local
+`gpui` skill, which logs runtime quirks; `rules/rust/gpui.md` points at all
+three. Update with `nix flake update gpui-kit` and `rebuild_system`.
+
 `i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
 steps, one closing next action. Its SessionStart hook injects the full ruleset
 only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares

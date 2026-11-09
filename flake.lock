@@ -486,6 +486,22 @@
         "type": "github"
       }
     },
+    "gpui-kit": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794242036,
+        "narHash": "sha256-d+tnnhWlnm3Ge8p62heR0ELAIsUXQCDWBcdqO4in0lg=",
+        "owner": "longbridge",
+        "repo": "gpui-kit",
+        "rev": "0a2a64339c1821e9914e4c19603c0e543f618f7d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "longbridge",
+        "repo": "gpui-kit",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -964,6 +980,7 @@
         "ex-ussr-kinship-research": "ex-ussr-kinship-research",
         "figma": "figma",
         "firecrawl-cli": "firecrawl-cli",
+        "gpui-kit": "gpui-kit",
         "home-manager": "home-manager",
         "humanizer": "humanizer",
         "i-have-adhd": "i-have-adhd",
