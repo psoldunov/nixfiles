@@ -22,6 +22,12 @@ GIT_ENV = {
 }
 
 
+# Programs that reach or change a real machine. Every flow test gets stand-ins
+# for them on PATH that refuse, so a step that slips past the fake builders
+# can never touch a host; tearDown fails the test if one was called.
+GUARDED = ("ssh", "sudo", "nixos-rebuild", "darwin-rebuild", "systemctl", "shutdown", "pmset", "nix")
+
+
 def fake_builder(cfg, host, tty):
     return [Step(("sh", "-c", FAKE_SWITCH.get(host.name, "true")))]
 
@@ -38,8 +44,15 @@ class FlowCase(unittest.TestCase):
         subprocess.run(["git", "commit", "-qm", "init"], cwd=self.flake, check=True, env=env)
         self.cfg = support.config("Whopper", state=str(Path(self.tmp.name, "state")), flake=str(self.flake))
         self.console = support.console()
+        self.guard_log = Path(self.tmp.name, "guarded-calls")
+        guard_bin = Path(self.tmp.name, "bin")
+        guard_bin.mkdir()
+        for name in GUARDED:
+            stand_in = guard_bin / name
+            stand_in.write_text(f'#!/bin/sh\necho "{name} $*" >> "{self.guard_log}"\nexit 97\n')
+            stand_in.chmod(0o755)
         patches = [
-            mock.patch.dict(os.environ, GIT_ENV),
+            mock.patch.dict(os.environ, {**GIT_ENV, "PATH": f"{guard_bin}:{os.environ['PATH']}"}),
             mock.patch.dict(actions.BUILDERS, {name: fake_builder for name in actions.BUILDERS}),
         ]
         for patch in patches:
@@ -47,7 +60,9 @@ class FlowCase(unittest.TestCase):
             self.addCleanup(patch.stop)
 
     def tearDown(self):
+        called = self.guard_log.read_text() if self.guard_log.exists() else ""
         self.tmp.cleanup()
+        self.assertEqual(called, "", "a flow test ran a program that reaches real hosts")
 
     def plan(self, action, names, **kwargs):
         return Plan(action, tuple(self.cfg.host(n) for n in names), **kwargs)
@@ -133,6 +148,35 @@ class Power(FlowCase):
             run = self.go(self.plan("rebuild", ["BigTasty", "PiHome"], reboot=True)).run
         rebooted = [e.host for e in run.entries if e.phase == "reboot"]
         self.assertEqual(rebooted, ["BigTasty", "PiHome"])
+
+    def test_the_guard_catches_a_real_host_command(self):
+        with mock.patch.dict(actions.BUILDERS, {"reboot": actions.reboot}), \
+                mock.patch.object(flow, "wait_for", lambda *a, **k: 1.0):
+            (entry,) = self.go(self.plan("reboot", ["BigTasty"])).run.entries
+        self.assertEqual((entry.status, entry.exit_code), ("failed", 97))
+        self.assertIn("ssh -T", self.guard_log.read_text())
+        self.guard_log.unlink()
+
+    def test_clean_reboots_first_and_cleans_only_hosts_that_came_back(self):
+        answers = {"psoldunov@bigtasty": [7.0, 9.0], "psoldunov@bigking": [7.0, None]}
+        with mock.patch.object(flow, "wait_for", lambda target, *a, **k: answers[target].pop(0)), \
+                mock.patch.object(flow.Execution, "_keep_sudo", return_value=True):
+            result = self.go(self.plan("clean", ["Whopper", "BigTasty", "BigKing"], reboot=True))
+        phases = [e.phase for e in result.run.entries]
+        self.assertEqual(phases, ["reboot", "reboot", "reboot", "clean", "clean"])  # every reboot before any clean
+        steps = {(e.host, e.phase, e.status) for e in result.run.entries}
+        self.assertEqual(
+            steps,
+            {
+                ("BigTasty", "reboot", "ok"),
+                ("BigKing", "reboot", "failed"),
+                ("Whopper", "reboot", "skipped"),
+                ("Whopper", "clean", "ok"),
+                ("BigTasty", "clean", "ok"),
+            },
+        )
+        self.assertIsNone(result.local_power)
+        self.assertIn("cleaned without rebooting first", self.console.text())
 
     def test_wake(self):
         sent = []

@@ -462,14 +462,14 @@ A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its direct
 
 ## Deploy
 
-`fleet` deploys and looks after every host. Only the workstations (Whopper and the Macs) have it: [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) installs it and holds its host list, and the code is in [packages/fleet](packages/fleet). On a terminal, plain `fleet` asks what to do and on which hosts, in a gum menu that shows which hosts answer. For rebuild, update and clean it also asks whether to wake sleeping hosts first and whether to reboot afterwards.
+`fleet` deploys and looks after every host. Only the workstations (Whopper and the Macs) have it: [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) installs it and holds its host list, and the code is in [packages/fleet](packages/fleet). On a terminal, plain `fleet` asks what to do and on which hosts, in a gum menu that shows which hosts answer. For rebuild, update and clean it also asks whether to wake sleeping hosts first and whether to reboot: before a clean, after a rebuild or update.
 
 ```fish
 fleet                               # menu: pick an action, then the hosts
 fleet rebuild [host...|all]         # switch hosts to the flake, then commit and push
 fleet update [host...|all]          # nix flake update and the update_* pins, switch (--upgrade-all on NixOS, brew and mise upgrades on the Macs), commit and push
 fleet clean [host...|all]           # nix-collect-garbage -d as root and as the user, docker image prune (skipped if docker doesn't answer in 20 s), brew cleanup
-fleet clean all --reboot            # then reboot each host that succeeded and wait for it to come back
+fleet clean all --reboot            # reboot each host first, then clean it once it is back
 fleet rebuild ShackStack --wake     # send Wake-on-LAN first if it doesn't answer
 fleet reboot [host...|all]          # reboot, then wait up to 10 min for ssh to answer again
 fleet sleep [host...]               # suspend Whopper, ShackStack or a Mac
@@ -494,7 +494,9 @@ PiHome is the exception to "in parallel". Every other host resolves names throug
 
 MacFlurry is a laptop, BigMac a desktop Mac and ShackStack an HTPC, and any of them can be asleep or away. fleet checks every remote host first with a 5-second `ssh` that can't prompt. Under `all`, a host marked `roaming = true` that doesn't answer is skipped with a warning; any other host that doesn't answer is reported as failed and the rest carry on. With `--wake`, a host that has a `wakeMac` gets a Wake-on-LAN packet instead and joins the run once ssh answers. The check runs in batch mode, so it also counts a host as down until this machine has its host key in `known_hosts`.
 
-`--reboot` reboots only the hosts whose action succeeded. fleet watches each one go down and come back over ssh, and reports it as failed when it isn't back within 10 minutes. A Mac with FileVault stays at its login screen after a reboot, so it shows up that way until someone unlocks it. This machine reboots last, after the report is written, and fleet asks first when it runs on a terminal.
+`--reboot` means different things per action. With `clean`, every remote host reboots first, so nothing still running holds old store paths, and fleet cleans each one once it is back. A host that doesn't come back isn't cleaned. This machine can't reboot without ending fleet, so it is cleaned without a reboot, and the report says so. With `rebuild` and `update`, fleet reboots the hosts whose switch succeeded, afterwards, and this machine goes last, after the report is written (fleet asks first on a terminal).
+
+fleet watches each rebooted host go down and come back over ssh, and reports it as failed when it isn't back within 10 minutes. A Mac with FileVault stays at its login screen after a reboot, so it shows up that way until someone unlocks it.
 
 ### Errors, evaluation warnings and agents
 
