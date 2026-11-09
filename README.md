@@ -83,7 +83,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # modules/darwin + host name + BigMac-only Homebrew apps — see "Macs"
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
-├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules on every NixOS host, the rest Whopper-only)
+├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules and codex-sys-libs on every NixOS host, the rest Whopper-only)
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (BigTasty; PiHome makes its own)
@@ -230,7 +230,7 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 | `boot.nix` | systemd-boot (`configurationLimit = 10`), EFI variables, swraid + mdadm `MAILADDR` |
 | `locale.nix` | `Asia/Nicosia`, `en_US.UTF-8` with metric `LC_MEASUREMENT` and `en_GB` time |
 | `nix.nix` | flakes, `auto-optimise-store`, `trusted-users = ["psoldunov"]`, allowUnfree/Insecure/Broken, nix-ld, `stateVersion` |
-| `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel), `overlays/aggregate-modules.nix` (see [Upstream workarounds](#upstream-workarounds)) |
+| `overlays.nix` | `overlays/claude-code` (Claude Code from Anthropic's `latest` channel), `overlays/aggregate-modules.nix` and `overlays/codex-sys-libs.nix` (see [Upstream workarounds](#upstream-workarounds)) |
 | `openssh.nix` | openssh with `AllowUsers psoldunov` |
 | `users.nix` | `psoldunov` account (wheel/docker/libvirtd/video) |
 | `shell.nix` | zsh as the login shell, fish installed too |
@@ -590,7 +590,7 @@ nixos-rebuild dry-activate --flake .#BigTasty --target-host psoldunov@bigtasty -
 
 ## Upstream workarounds
 
-Temporary fixes for nixpkgs breakage, added with the 2026-10-20 update. Each file marks its fix with a `shortcut:` comment, so `rg 'shortcut:'` lists them. Once the upstream fix has landed and a `nix flake update` has pulled it in, delete the workaround and run its check. If the check builds, the workaround isn't needed any more.
+Temporary fixes for nixpkgs breakage, added with the 2026-10-20 and 2026-11-07 updates. Each file marks its fix with a `shortcut:` comment, so `rg 'shortcut:'` lists them. Once the upstream fix has landed and a `nix flake update` has pulled it in, delete the workaround and run its check. If the check builds, the workaround isn't needed any more.
 
 | Workaround | Where | Why | Remove when | Check |
 |---|---|---|---|---|
@@ -599,6 +599,9 @@ Temporary fixes for nixpkgs breakage, added with the 2026-10-20 update. Each fil
 | One pyopenjtalk-plus test is skipped | [overlays/pyopenjtalk-plus.nix](overlays/pyopenjtalk-plus.nix), Whopper | Cython 3.3 reworded an error message that `test_run_njd_from_mecab_invalid_input_should_not_break_next_call` matches. The failing test also breaks piper-tts and calibre, which depend on the package | [nixpkgs#576063](https://github.com/NixOS/nixpkgs/pull/576063) is merged | `nix build .#nixosConfigurations.Whopper.pkgs.calibre` |
 | calibre gets its own speechd with Python bindings | [overlays/calibre-speechd.nix](overlays/calibre-speechd.nix), Whopper | speechd's rework ([nixpkgs#470797](https://github.com/NixOS/nixpkgs/pull/470797)) turned on `strictDeps` but left Python in `buildInputs`, so configure skips the Python bindings. calibre's `test_speech_dispatcher` then can't import `speechd` and the build fails. The overlay patches calibre's copy only, since patching speechd itself would rebuild everything that links it, Firefox and Qt speech among them | [nixpkgs#576062](https://github.com/NixOS/nixpkgs/pull/576062) is merged | `nix build .#nixosConfigurations.Whopper.pkgs.calibre` |
 | Ghostty's user service runs as `Type=notify` | [modules/home/workstation/ghostty.nix](modules/home/workstation/ghostty.nix), Whopper and ShackStack | systemd 262 refuses to start a `Type=notify-reload` unit if the process reports ready before it has a handler for the reload signal. Ghostty 1.3.1 sometimes does, so roughly every other launch from Meta+Return or the app menu fails with "Remote peer disconnected". `ExecReload` sends SIGUSR2 itself, so the config still reloads on rebuild | A Ghostty release with [ghostty-org/ghostty#14399](https://github.com/ghostty-org/ghostty/pull/14399) reaches nixpkgs | With every Ghostty window closed, start and stop `app-com.mitchellh.ghostty.service` ten times with `systemctl --user`. `journalctl --user` should show no `lacks handler for reload signal` |
+| codex gets the system libraries its crates now link | [overlays/codex-sys-libs.nix](overlays/codex-sys-libs.nix), every NixOS host | Since [nixpkgs#537108](https://github.com/NixOS/nixpkgs/pull/537108), Rust builds link system copies of aws-lc, SQLite, zstd and oniguruma instead of building their own. codex 0.167.0 lists none of them, so `aws-lc-sys` fails to build. The overlay adds the four libraries that [nixpkgs#584667](https://github.com/NixOS/nixpkgs/pull/584667) adds | nixpkgs#584667 reaches `nixos-unstable` | `nix build .#nixosConfigurations.Whopper.pkgs.codex` |
+| Concierge, Ensemblr, the Sync server and Clokkr build with their bundled libraries | [concierge.nix](hosts/whopper/home/programs/concierge.nix), [ensemblr.nix](hosts/whopper/home/programs/ensemblr.nix) and [clokkr.nix](hosts/whopper/home/programs/clokkr.nix) on Whopper, [concierge-server.nix](hosts/bigtasty/modules/services/concierge-server.nix) on BigTasty | The nixpkgs#537108 hook also makes rusqlite link a system SQLite and points `JEMALLOC_OVERRIDE` at a system jemalloc. These packages bundle SQLite and build jemalloc themselves, so linking fails. Each one is built with `dontCargoUseSystemLibs = true`, which turns the hook off | psoldunov/concierge and psoldunov/clokkr set `dontCargoUseSystemLibs` in their own packages | `nix build .#nixosConfigurations.Whopper.config.system.build.toplevel`, then the same for BigTasty |
+| Notion's node_modules hash is pinned here | [hosts/whopper/home/programs/notion.nix](hosts/whopper/home/programs/notion.nix), Whopper | The notion flake follows this repo's nixpkgs, which moved bun from 1.4.2 to 1.4.4. The node_modules that bun 1.4.4 installs no longer match the hash in psoldunov/notion, so the fixed-output build fails. The override swaps in the new hash, and only while notion still carries the old one. Once notion changes it, evaluation warns that the override can go | psoldunov/notion updates its x86_64-linux node_modules hash | `nix build .#nixosConfigurations.Whopper.config.system.build.toplevel` |
 
 ## History
 

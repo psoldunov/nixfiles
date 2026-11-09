@@ -17,6 +17,7 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: {
   imports = [
@@ -26,6 +27,12 @@
   programs.clokkr = {
     enable = true;
     plasmaWidget.enable = true;
+    # shortcut: nixpkgs#537108's cargo hook makes rusqlite link a system
+    # SQLite the package doesn't have; it bundles its own. Drop once
+    # psoldunov/clokkr's nix/clokkr.nix sets dontCargoUseSystemLibs.
+    package = inputs.clokkr.packages.${pkgs.stdenv.hostPlatform.system}.clokkr.overrideAttrs {
+      dontCargoUseSystemLibs = true;
+    };
   };
 
   programs.mcp.servers.clokkr = {

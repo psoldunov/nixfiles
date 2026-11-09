@@ -10,7 +10,11 @@
 # Both packages ship `bin/ensemblr`. The Rust package sets priority 6, so the
 # Electron launcher keeps that name; run the Rust CLI by its store path or
 # `ensemblr-app` for the app.
-{inputs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.concierge.homeManagerModules.ensemblr
   ];
@@ -18,5 +22,11 @@
   programs.ensemblr = {
     enable = true;
     ui.autostart = true;
+    # shortcut: nixpkgs#537108's cargo hook points JEMALLOC_OVERRIDE at a
+    # system jemalloc that doesn't exist; the package builds its own. Drop
+    # once psoldunov/concierge's nix/ensemblr.nix sets dontCargoUseSystemLibs.
+    package = inputs.concierge.packages.${pkgs.stdenv.hostPlatform.system}.ensemblr.overrideAttrs {
+      dontCargoUseSystemLibs = true;
+    };
   };
 }

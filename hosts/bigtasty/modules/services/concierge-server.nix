@@ -5,9 +5,17 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: {
   imports = [inputs.concierge.nixosModules.concierge-server];
+
+  # shortcut: nixpkgs#537108's cargo hook makes rusqlite link a system
+  # SQLite the package doesn't have; it bundles its own. Drop once
+  # psoldunov/concierge's nix/concierge-server.nix sets dontCargoUseSystemLibs.
+  services.concierge-server.package = inputs.concierge.packages.${pkgs.stdenv.hostPlatform.system}.concierge-server.overrideAttrs {
+    dontCargoUseSystemLibs = true;
+  };
 
   services.cloudflared.tunnels."CFD_MAIN_TUNNEL".ingress = {
     # 127.0.0.1, not localhost: the server listens on IPv4 loopback only,

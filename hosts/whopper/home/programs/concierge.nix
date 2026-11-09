@@ -16,7 +16,11 @@
 #
 # The daemon finds `claude` through the login shell's PATH, which
 # home-manager's programs.claude-code already puts there.
-{inputs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     inputs.concierge.homeManagerModules.default
   ];
@@ -24,5 +28,11 @@
   programs.concierge = {
     enable = true;
     ui.autostart = true;
+    # shortcut: nixpkgs#537108's cargo hook makes rusqlite link a system
+    # SQLite the package doesn't have; it bundles its own. Drop once
+    # psoldunov/concierge's nix/concierge.nix sets dontCargoUseSystemLibs.
+    package = inputs.concierge.packages.${pkgs.stdenv.hostPlatform.system}.concierge.overrideAttrs {
+      dontCargoUseSystemLibs = true;
+    };
   };
 }
