@@ -91,6 +91,11 @@ class Rebuild(FlowCase):
         self.assertIn("not answering over ssh", status["BigKing"][1])
         self.assertEqual(status["BigTasty"], ("ok", ""))
 
+    def test_a_host_that_never_answered_holds_the_commit_back(self):
+        run = self.go(self.plan("rebuild", ["BigTasty", "BigKing"]), online=lambda t: t.endswith("bigtasty")).run
+        self.assertNotIn("commit and push", [e.phase for e in run.entries])
+        self.assertIn("not committing, since BigKing failed", self.console.text())
+
     def test_missing_checkout(self):
         self.cfg = support.config("Whopper", state=self.cfg.state_dir, flake=str(Path(self.tmp.name, "nowhere")))
         run = self.go(self.plan("rebuild", ["BigTasty"])).run

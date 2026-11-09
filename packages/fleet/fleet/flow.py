@@ -120,8 +120,10 @@ class Execution:
             return
         done = self._phase(action, ready, lambda h, tty: actions.BUILDERS[action](self.cfg, h, tty), cwd=self.cfg.flake_dir)
         if action in SWITCHING:
-            if any(e.status != "ok" for e in done):
-                self.console.line(f"fleet: not committing, since {', '.join(e.host for e in done if e.status != 'ok')} failed.")
+            # Hosts that never answered count too; ones skipped as asleep don't.
+            failed = sorted({e.host for e in self._entries if e.failed and e.host != FLAKE})
+            if failed:
+                self.console.line(f"fleet: not committing, since {', '.join(failed)} failed.")
             else:
                 self._commit()
         if self.plan.reboot:
