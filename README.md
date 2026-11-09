@@ -84,6 +84,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
 ├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules and codex on every NixOS host, the rest Whopper-only)
+├── packages/                       # Python CLIs with their tests (flake checks): adguard-cli, and fleet (deploy, clean, reboot, sleep and wake the hosts; see "Deploy")
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
 │   ├── dns.yaml                    # SOPS-encrypted AdGuard credentials (BigTasty; PiHome makes its own)
@@ -455,40 +456,53 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
    };
    ```
 3. Create `secrets/<name>.yaml` and add a matching `creation_rules` entry to [.sops.yaml](.sops.yaml).
-4. Add `<Name>` to `ALL_HOSTS` and `KIND` in [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) so `rebuild_system <Name>` and `all` know it. A host the others depend on while they build, like PiHome for DNS, also goes in `LAST_HOSTS`.
+4. Add `<Name>` to `fleetHosts` in [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) so `fleet` and `all` know it. A host the others depend on while they build, like PiHome for DNS, gets `last = true`; one that is often asleep or away gets `roaming = true`.
 
-A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its directory, add `<Name> = mkMac "<name>";` to `darwinConfigurations` in [flake.nix](flake.nix), and use `KIND=darwin`. Remote sudo also needs a `sudo-<name>` key: its public half in [lib/ssh-keys.nix](lib/ssh-keys.nix) (`identities`, `authorized` and `sudo`), its private half as `SSH_KEY_SUDO_<NAME>` in `secrets/shared.yaml`, and a host block in [workstation/ssh.nix](modules/home/workstation/ssh.nix). Then bootstrap it (see [Bootstrapping a Mac](#bootstrapping-a-mac)).
+A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its directory, add `<Name> = mkMac "<name>";` to `darwinConfigurations` in [flake.nix](flake.nix), and give it `kind = "darwin"` in `fleetHosts`. Remote sudo also needs a `sudo-<name>` key: its public half in [lib/ssh-keys.nix](lib/ssh-keys.nix) (`identities`, `authorized` and `sudo`), its private half as `SSH_KEY_SUDO_<NAME>` in `secrets/shared.yaml`, and a host block in [workstation/ssh.nix](modules/home/workstation/ssh.nix). Then bootstrap it (see [Bootstrapping a Mac](#bootstrapping-a-mac)).
 
 ## Deploy
 
-`rebuild_system` is host-aware. It lives in the workstation scripts ([modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix)), so Whopper and the Macs have it and BigTasty doesn't. It runs locally when the argument is the current host (`nixos-rebuild` or `darwin-rebuild`). Otherwise it works on `psoldunov@<host>`:
-
-- Linux to Linux (Whopper to BigTasty, BigKing or ShackStack): `nixos-rebuild --target-host --use-substitutes --sudo`. Whopper builds the system and sends over only what it compiled; the target downloads everything else from cache.nixos.org. A package two hosts share, such as Concierge's crates, compiles once. From another NixOS host, `rebuild_system` passes `--build-host psoldunov@whopper`, so Whopper still does the building. PiHome is aarch64 and builds itself.
-- Anything involving macOS: `nix flake archive --to ssh-ng://<host>` copies the flake and every input, private ones included, into the target's store. Then `ssh -t <host> sudo <nixos|darwin>-rebuild switch` builds and activates it there. sudo asks for the target's password once, and the session keeps that ticket alive for Homebrew's `.pkg` installs and, under `update_system`, for `update_bleeding_edge`. Like `--target-host`, this deploys the local working tree.
+`fleet` deploys and looks after every host. Only the workstations (Whopper and the Macs) have it: [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) installs it and holds its host list, and the code is in [packages/fleet](packages/fleet). On a terminal, plain `fleet` asks what to do and on which hosts, in a gum menu that shows which hosts answer. For rebuild, update and clean it also asks whether to wake sleeping hosts first and whether to reboot afterwards.
 
 ```fish
-rebuild_system                # rebuild current host locally
-rebuild_system Whopper        # explicit local
-rebuild_system BigTasty       # remote build + activate via SSH agent
-rebuild_system BigKing        # same for the NAS
-rebuild_system PiHome         # same for the DNS Pi
-rebuild_system ShackStack     # same for the HTPC
-rebuild_system BigMac         # from Whopper: copy the flake, build and switch on the Mac
-rebuild_system MacFlurry      # same for the laptop
-rebuild_system all            # Whopper, BigTasty, BigKing, ShackStack, BigMac, MacFlurry in parallel, then PiHome; skips ShackStack, BigMac and MacFlurry when they don't answer
-update_system [host|all]      # runs `nix flake update` + update_claude_code, update_duckstation, update_motrix, update_t3code, update_codex, update_pi_coding_agent first, switches with --upgrade-all (NixOS); on the Macs also brew update/upgrade + mise upgrade
-clean_system [host|all]       # nix-collect-garbage -d (sudo + user) + docker image prune (skipped if docker doesn't answer in 20s), + brew cleanup on the Macs
+fleet                               # menu: pick an action, then the hosts
+fleet rebuild [host...|all]         # switch hosts to the flake, then commit and push
+fleet update [host...|all]          # nix flake update and the update_* pins, switch (--upgrade-all on NixOS, brew and mise upgrades on the Macs), commit and push
+fleet clean [host...|all]           # nix-collect-garbage -d as root and as the user, docker image prune (skipped if docker doesn't answer in 20 s), brew cleanup
+fleet clean all --reboot            # then reboot each host that succeeded and wait for it to come back
+fleet rebuild ShackStack --wake     # send Wake-on-LAN first if it doesn't answer
+fleet reboot [host...|all]          # reboot, then wait up to 10 min for ssh to answer again
+fleet sleep [host...]               # suspend Whopper, ShackStack or a Mac
+fleet wake [host...]                # Wake-on-LAN (Whopper, ShackStack), then wait for ssh
+fleet status                        # which hosts answer over ssh
+fleet report                        # print the last run's report
+fleet fix [--agent claude|codex|pi] # hand the last run's failures and evaluation warnings to an agent
 ```
 
-`rebuild_system` and `update_system` work in `~/.nixfiles` (or `$FLAKE_DIR`). Every workstation commits there, so they first run `git pull --rebase --autostash`. A conflict stops the script. Then they `git add -A`, and after a successful switch they commit everything (`rebuild commit <date>` / `update commit <date>`) and push.
+Host names work in any case. `rebuild_system`, `update_system` and `clean_system` still exist and call `fleet rebuild`, `fleet update` and `fleet clean`, with this machine as the host when none is given. `shackstack-sleep` and `shackstack-wake` call `fleet sleep ShackStack` and `fleet wake ShackStack`.
 
-`all` switches the hosts in parallel, after `update_system` has run `nix flake update` and the pin scripts. If the local host is one of them, sudo asks for its password first. The remote hosts authenticate with the forwarded agent, so nothing prompts once the builds start. Each output line starts with `[Host]`, and each host's output also goes to its own log under `$TMPDIR`. The script waits for every host and commits only if all of them succeeded. When one fails, it names the host and keeps the logs. Ctrl-C stops every host.
+A switch on this machine runs `nixos-rebuild` or `darwin-rebuild` locally. Any other host is reached as `psoldunov@<host>`:
 
-PiHome is the exception to "in parallel". Every other host resolves names through it, and a switch that restarts AdGuard or Unbound would break their downloads mid-build. So `all` switches PiHome on its own after the others have finished, and does so even when one of them failed. `LAST_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts handled this way.
+- Linux to Linux (Whopper to BigTasty, BigKing or ShackStack): `nixos-rebuild --target-host --use-substitutes --sudo`. Whopper builds the system and sends over only what it compiled; the target downloads everything else from cache.nixos.org. A package two hosts share, such as Concierge's crates, compiles once. From another NixOS host, fleet passes `--build-host psoldunov@whopper`, so Whopper still does the building. PiHome is aarch64 and builds itself.
+- Anything involving macOS: `nix flake archive --to ssh-ng://<host>` copies the flake and every input, private ones included, into the target's store. Then `ssh -t <host> sudo <nixos|darwin>-rebuild switch` builds and activates it there. sudo asks for the target's password once, and the session keeps that ticket alive for Homebrew's `.pkg` installs and, under `fleet update`, for `update_bleeding_edge`. Like `--target-host`, this deploys the local working tree.
 
-MacFlurry is a laptop, BigMac a desktop Mac and ShackStack an HTPC, and any of them can be asleep or away. `all` checks them first with a 5-second `ssh` that can't prompt. If one doesn't answer, the script prints a warning and runs the other hosts without it. The other hosts are not checked this way: when one of them is down, `all` fails. `ROAMING_HOSTS` in [scripts.nix](modules/home/workstation/scripts.nix) lists the hosts that get the check. The check runs in batch mode, so it also skips a host until the machine running `all` has its host key in `known_hosts`.
+`fleet rebuild` and `fleet update` work in `~/.nixfiles` (or `$FLAKE_DIR`). Every workstation commits there, so they first run `git pull --rebase --autostash`. A conflict stops the run. Then they `git add -A`, and once every host has switched they commit everything (`rebuild commit <date>` / `update commit <date>`) and push. A host skipped because it was asleep doesn't hold the commit back; a failed one does.
 
-Inside an Ensemblr worktree, use the run scripts in [.ensemblr/settings.toml](.ensemblr/settings.toml) instead. They target the worktree's flake (`.#<Host>`) and leave staging and committing to you. PiHome has `rebuild-pihome` and `update-pihome` like the other hosts, plus `eval-pihome`, `build-pihome-image` and `test-adguard-cli`. `rebuild-all` and `update-all` switch one host at a time, so PiHome never restarts DNS while another host builds. They run ShackStack, BigMac and MacFlurry last with `scripts/switch-host.sh <Host> --if-online`, which makes the same 5-second check and skips a host that doesn't answer instead of failing the run. Evaluation and `nix flake check --no-build` passed. The initial ARM image was built and booted, and subsequent system updates were built and verified on the Pi; see [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations and rollback.
+Several hosts switch in parallel. If this machine is one of them, or the run is an update, sudo asks for its password first. The remote hosts authenticate with the forwarded agent, so nothing prompts once the builds start. Each output line starts with `[Host]`. Ctrl-C stops every host. A single host gets the terminal's input, so its sudo and ssh can still prompt.
+
+PiHome is the exception to "in parallel". Every other host resolves names through it, and a switch that restarts AdGuard or Unbound would break their downloads mid-build. So PiHome goes on its own after the others have finished, even when one of them failed. Reboots follow the same order. Hosts marked `last = true` in `fleetHosts` ([scripts.nix](modules/home/workstation/scripts.nix)) are handled this way.
+
+MacFlurry is a laptop, BigMac a desktop Mac and ShackStack an HTPC, and any of them can be asleep or away. fleet checks every remote host first with a 5-second `ssh` that can't prompt. Under `all`, a host marked `roaming = true` that doesn't answer is skipped with a warning; any other host that doesn't answer is reported as failed and the rest carry on. With `--wake`, a host that has a `wakeMac` gets a Wake-on-LAN packet instead and joins the run once ssh answers. The check runs in batch mode, so it also counts a host as down until this machine has its host key in `known_hosts`.
+
+`--reboot` reboots only the hosts whose action succeeded. fleet watches each one go down and come back over ssh, and reports it as failed when it isn't back within 10 minutes. A Mac with FileVault stays at its login screen after a reboot, so it shows up that way until someone unlocks it. This machine reboots last, after the report is written, and fleet asks first when it runs on a terminal.
+
+### Errors, evaluation warnings and agents
+
+Every run keeps a directory under `~/.local/state/fleet/runs/` with one log per host and step, plus `report.md` and `report.json`. The newest 30 runs are kept. fleet reads each log for nix `error:` blocks, taking the innermost message of a `--show-trace` as the headline, and for git, ssh, sudo, Homebrew and activation failures. It also collects `evaluation warning:` and `trace: warning:` lines. Errors come from the hosts that failed; warnings come from every host, failed or not. The summary at the end lists each host's result with its first error and its warning count.
+
+When a run has failures or warnings, fleet offers to start Claude Code, Codex or pi in the flake checkout. The agent's first message names each failed host, how fleet reached it, the error headlines, the log paths and the warnings, and points it at `report.md`. It is told to fix the cause, check the fix by evaluating or building the host's configuration, leave the hosts alone, and say which `fleet` command to run next. If you skip the offer, `fleet fix` hands over the newest run later, and `fleet fix --agent codex <run>` picks both.
+
+Inside an Ensemblr worktree, use the run scripts in [.ensemblr/settings.toml](.ensemblr/settings.toml) instead. They target the worktree's flake (`.#<Host>`) and leave staging and committing to you. PiHome has `rebuild-pihome` and `update-pihome` like the other hosts, plus `eval-pihome`, `build-pihome-image` and `test-adguard-cli`; `test-fleet` runs fleet's tests. `rebuild-all` and `update-all` switch one host at a time, so PiHome never restarts DNS while another host builds. They run ShackStack, BigMac and MacFlurry last with `scripts/switch-host.sh <Host> --if-online`, which makes the same 5-second check and skips a host that doesn't answer instead of failing the run. Evaluation and `nix flake check --no-build` passed. The initial ARM image was built and booted, and subsequent system updates were built and verified on the Pi; see [hosts/pihome/INSTALL.md](hosts/pihome/INSTALL.md) for repeat spare-card installations and rollback.
 
 When deploying from a machine that is not managed by this flake, the helper scripts
 and `nixos-rebuild` may not exist on `$PATH`. Use the full command from a checkout

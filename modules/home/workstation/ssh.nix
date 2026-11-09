@@ -82,8 +82,8 @@ in {
           ForwardAgent = true;
         };
 
-        # The DNS appliance. `all` switches it after the other hosts finish
-        # (LAST_HOSTS in ./scripts.nix). Its dedicated sudo key is loaded and
+        # The DNS appliance. fleet switches it after the other hosts finish
+        # (`last` in fleetHosts, ./scripts.nix). Its dedicated sudo key is loaded and
         # forwarded so ordinary login keys cannot authorize sudo.
         "pihome" = {
           HostName = "10.24.24.9";
