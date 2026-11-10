@@ -83,3 +83,19 @@ Each entry's tag line names the versions and platform it was seen on, then the a
     per portal session: `zbus::Connection::session().await`, then
     `GlobalShortcuts::with_connection(conn)`. Dropping it ends the session and its shortcut. Bake the
     keys into the shortcut id so a changed shortcut is confirmed again.
+
+### 6. The `gpui-fast` feature compiles both cores, and `Cargo.lock` holds its version
+*gpui-kit 0.9.1 · gpui-pre 0.3.12 · gpui-fast 0.1.14 · Linux · Concierge*
+
+- **Symptom:** with `features = ["gpui-fast"]` on `gpui-kit`, the build compiles `gpui-pre` and
+  `gpui-fast` and the linker receives both. `cargo update` could move `gpui-fast` to a release
+  `gpui-kit` wasn't built with.
+- **Cause:** gpui-kit, gpui-base, gpui-component and gpui-kit-assets 0.9.1 each depend on
+  `gpui-pre =0.3.12` unconditionally. The feature adds `gpui-fast` beside it and switches each crate
+  with `extern crate gpui_fast as gpui;`. gpui-kit only asks `gpui-fast ^0.1.14`.
+- **Fix:** nothing removes the second core short of patching the crates. Hold `gpui-fast` and each
+  `gpui-fast-*` crate at the newest release published before the `gpui-kit` release, with
+  `cargo update -p gpui-fast --precise V`, and check `cargo tree -e normal -i gpui-fast`. Build with
+  `--locked`. Don't use the `compat/` `[patch.crates-io]` git route in the gpui-fast repository: it
+  adds a git source. An exact pin in your manifest needs an unused dependency in a crate that never
+  names it.

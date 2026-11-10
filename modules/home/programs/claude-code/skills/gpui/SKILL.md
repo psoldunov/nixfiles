@@ -11,18 +11,29 @@ that hit it.
 
 ## 1. Match the versions
 
-GPUI changes between snapshots, so every entry is a fact about the release it names. All three apps
-pin the same stack:
+GPUI changes between snapshots, so every entry is a fact about the release it names. Concierge now
+runs the stack below; Clokkr and Numero may still be on older pins:
 
 | Crate | Version |
 |---|---|
-| `gpui-kit`, imported as `gpui` | `=0.7.1` |
-| `gpui-component` | `=0.7.1` |
-| `gpui-pre` and its `gpui-pre-*` crates | 0.3.8 (Zed commit `279fe07`) |
+| `gpui-kit`, imported as `gpui` | `=0.9.1`, with its `gpui-fast` feature on |
+| `gpui-component` | `=0.9.1` |
+| `gpui-pre` and its `gpui-pre-*` crates | 0.3.12 |
+| `gpui-fast` and its `gpui-fast-*` crates | 0.1.14, held by `Cargo.lock` |
 
 Read the project's own pins first: `grep -A1 -E 'name = "(gpui-pre|gpui-kit|gpui-component)"' Cargo.lock`.
 Where the project runs a newer release than an entry names, treat the entry as a lead and check the
 crate source under `~/.cargo/registry/src/*/gpui-pre-*/` before you build on it.
+
+Concierge runs gpui-kit and gpui-component =0.9.1 on gpui-pre 0.3.12 with the gpui-fast 0.1.14
+core. Known changes there:
+
+- Keystrokes are `&'static str` and `KeyBinding::load` takes `cx` ([input-and-lifetimes.md](references/input-and-lifetimes.md) #16).
+- `ScrollWheelEvent` is `ScrollEvent` ([testing.md](references/testing.md) #7).
+- `ThemeConfig` is non-exhaustive, a submenu's side follows its drawn width, and a plugin block in
+  Markdown is atomic in selections ([gpui-component-widgets.md](references/gpui-component-widgets.md) #13).
+- gpui-fast retains views, so untracked state must notify ([layout-and-rendering.md](references/layout-and-rendering.md) #14).
+- The `gpui-fast` feature compiles both cores, and `Cargo.lock` holds the fork's version ([build-and-runtime.md](references/build-and-runtime.md) #6).
 
 Known changes in gpui-pre 0.3.10, which gpui-kit 0.8.1 pins (Clokkr tried that update and reverted):
 

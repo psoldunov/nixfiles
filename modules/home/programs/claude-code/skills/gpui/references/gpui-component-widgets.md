@@ -157,3 +157,17 @@ Everything here was seen on gpui-component 0.7.1 over gpui-pre 0.3.8 unless the 
   changed range, which keeps the scroll anchor. Call `remeasure_items` for a row that grew in place.
 - **Padding:** its row wrapper pads every row but the last, so a side guide line breaks at each pad.
   Give the row's own element `pb(gap)` and `mb(-gap)`.
+
+### 13. gpui-component 0.9: ThemeConfig, submenu side and Markdown selection
+*gpui-component 0.9.1 · gpui-pre 0.3.12 · gpui-fast 0.1.14 · Linux · Concierge*
+
+- **ThemeConfig:** it is `#[non_exhaustive]`, so a struct literal fails to compile outside the crate.
+  Build it from its default and set fields.
+- **Submenu side:** replaces the 0.7 rule in #8. The side comes from the submenu's drawn width against
+  the viewport, and from the menu's own width before the submenu's first draw. `max_w` no longer
+  decides it, so tests that fixed positions from `max_w` need new numbers.
+- **Markdown selection:** a plugin's block, such as a custom table, is atomic
+  (`custom_block_is_selected`, `text/node.rs`). A drag from the text into a cell takes the whole
+  table. A drag from a cell out of the table selects nothing: the cells leave selections when the
+  pointer leaves, and gpui-base drops a selection once the view holding one of its ends stops taking
+  part (`endpoint_departed`, `text_selection.rs`). This changes #3's behaviour for custom tables.

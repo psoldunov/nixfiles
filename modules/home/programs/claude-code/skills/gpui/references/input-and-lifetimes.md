@@ -190,3 +190,16 @@ Keep the main window's `AnyWindowHandle` and a `WeakEntity` of its view in a `Gl
   and then the toggle arrives.
 - **Fix:** record when the popover closed on losing focus, and ignore a toggle shortly after (Clokkr
   uses 350 ms).
+
+### 16. Keystrokes are `&'static str`, and `KeyBinding::load` takes `cx`
+*gpui-kit 0.9.1 · gpui-pre 0.3.12 · gpui-fast 0.1.14 · Linux · Concierge*
+
+- **Symptom:** `KeyBinding::new` and `Keystroke::parse` no longer take an owned `String`, and a
+  `secondary-` chord is rejected. A chord list parsed with `Keystroke::parse` quietly lost its
+  `secondary-` entries, and only a test noticed.
+- **Cause:** keystrokes are `&'static str`, and `secondary-` needs an OS to resolve. `KeyBinding::load`
+  now ends in `cx: &App` and reads the platform's keyboard mapper and OS from it.
+- **Fix:** build every binding through one helper that takes `cx` and returns `Option<KeyBinding>`
+  (Concierge `crates/ensemblr-ui/src/keys.rs`). Parse chords with
+  `Keystroke::parse_with_os(chord, os)`. Callers that built bindings without a context now thread
+  `cx` through, and their tests become `#[gpui::test]` ([testing.md](testing.md) #7).

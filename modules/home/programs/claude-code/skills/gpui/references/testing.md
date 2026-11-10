@@ -50,3 +50,14 @@ Each entry's tag line names the versions and platform it was seen on, then the a
 ### 6. Focus tests need an active window
 `on_blur` and other focus events fire only in the active window; call `window.activate_window()`
 first ([input-and-lifetimes.md](input-and-lifetimes.md) #12).
+
+### 7. Tests around `KeyBinding::load` and `ScrollEvent`
+*gpui-kit 0.9.1 · gpui-pre 0.3.12 · gpui-fast 0.1.14 · Linux · Concierge*
+
+- **Symptom:** a plain `#[test]` that builds a key binding no longer compiles or passes, and a
+  struct-literal `ScrollEvent` fails on the new `source` field.
+- **Cause:** `KeyBinding::load` takes `cx: &App` ([input-and-lifetimes.md](input-and-lifetimes.md)
+  #16), and `ScrollEvent` replaces `ScrollWheelEvent` with an added `source`.
+- **Fix:** make such tests `#[gpui::test]` and pass the test context. Build scroll events with
+  `ScrollEvent { delta, ..Default::default() }`, so the next added field doesn't break them. Parse
+  chords in tests with `Keystroke::parse_with_os`.

@@ -141,3 +141,27 @@ Each entry's tag line names the versions and platform it was seen on, then the a
   `text_sm`.
 - **OpenType features are ignored on Linux:** tabular digits don't apply, so a running timer
   jitters. Put each digit in a fixed-width cell (colons in a narrower one).
+
+### 14. gpui-fast retains views, so untracked state must notify
+*gpui-kit 0.9.1 `gpui-fast` feature · gpui-pre 0.3.12 · gpui-fast 0.1.14 · Linux · Concierge*
+
+- **Symptom:** a view stops updating: a relative time stays put, a canvas-measured value goes stale.
+  Or the frame cost doesn't drop, because something rebuilds every view on every frame.
+- **Cause:** a view that read nothing that changed isn't rendered, laid out or painted again. It
+  tracks entities, globals, list and scroll state. Writing a global doesn't schedule a frame; an
+  entity notify does. An entity or global written while the window draws, in prepaint or paint,
+  counts as changed even when the value is the same, so every reader is built again next frame.
+- **Fix:**
+  - Notify a view that shows untracked state: the time, or an `Rc<RefCell<..>>`. Concierge keeps the
+    time in an entity ticking every 10 s that views read through `clock::watch(cx)`.
+  - In a prepaint `canvas`, read before you write, and write only when the value differs. Never write
+    a global or update an entity on every frame.
+  - A canvas that compares what a list measured with what a child view drew, and notifies the
+    child, belongs in the view that holds the list: that view draws again when the list moves, the
+    child doesn't (Concierge's timeline rail).
+  - At its end a scroll box doesn't move for a wheel (stock GPUI added the wheel and clamped at
+    layout), so note the offset before the handlers run instead of subtracting the wheel's distance.
+  - A test that draws a frame where nothing changed gets the last frame back: no row renders and no
+    measuring canvas prepaints. Notify the view first, or keep what the last frame measured.
+  - `GPUI_VIEW_RETENTION=0` draws every view from scratch, as upstream does, to tell a stale view
+    from another bug.
