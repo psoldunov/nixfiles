@@ -51,7 +51,8 @@
     builtins.hashString "sha256"
     (builtins.unsafeDiscardStringContext "${src}" + builtins.toJSON buildArgs)
   );
-  image = "localhost/cal-diy:${tag}";
+  repo = "localhost/cal-diy";
+  image = "${repo}:${tag}";
 in {
   virtualisation.oci-containers.containers = {
     cal-diy = {
@@ -112,11 +113,12 @@ in {
     };
   };
 
-  # Builds the image when its tag is missing: after a bump, or when the tag is
-  # gone for any other reason. BuildKit's cache makes a rebuild of the same
-  # commit quicker. No RemainAfterExit: every start of the container runs the
-  # check again. With it, a unit still "active" from an earlier start skipped
-  # the check, and docker-cal-diy failed with "No such image".
+  # Builds the image when its tag is missing: after a bump, or after the daily
+  # image prune removed it while the container was down. BuildKit's cache
+  # makes a rebuild of the same commit quicker. No RemainAfterExit: every
+  # start of the container runs the check again. With it, a unit still
+  # "active" from an earlier start skipped the check, and docker-cal-diy failed
+  # with "No such image".
   systemd.services.cal-diy-image = {
     description = "Build the cal.diy image";
     after = ["docker.service" "network-online.target"];
@@ -132,14 +134,21 @@ in {
       set -euo pipefail
       if ${docker} image inspect ${image} >/dev/null 2>&1; then
         echo "${image} is already built."
-        exit 0
+      else
+        # The store copy is read-only; build from a writable one, as a checkout.
+        ctx=$(mktemp -d /var/tmp/cal-diy-build.XXXXXX)
+        trap 'rm -rf "$ctx"' EXIT
+        cp -r ${src}/. "$ctx"
+        chmod -R u+w "$ctx"
+        ${docker} build --progress=plain --tag ${image} ${buildArgFlags} "$ctx"
       fi
-      # The store copy is read-only; build from a writable one, as a checkout.
-      ctx=$(mktemp -d /var/tmp/cal-diy-build.XXXXXX)
-      trap 'rm -rf "$ctx"' EXIT
-      cp -r ${src}/. "$ctx"
-      chmod -R u+w "$ctx"
-      ${docker} build --progress=plain --tag ${image} ${buildArgFlags} "$ctx"
+      # A cached rebuild after a bump gives the same image a second tag, and
+      # `docker image prune -a` (fleet clean, the daily prune) untags all but
+      # one tag of an image even while a container runs it. Keep only this one.
+      ${docker} image ls ${repo} --format '{{.Repository}}:{{.Tag}}' \
+        | { grep -vxF ${image} || true; } \
+        | xargs -r ${docker} image rm \
+        || echo "Could not remove an old ${repo} tag; the next start retries." >&2
     '';
   };
 
