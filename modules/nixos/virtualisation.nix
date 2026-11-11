@@ -2,7 +2,11 @@
 # by every host; everything else (portainer agent, transmission, slskd,
 # immich, …) lives in the host's virtualisation module and merges into
 # `oci-containers.containers` by key. The daily image prune is shared too.
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   virtualisation = {
     docker.enable = true;
     docker.enableOnBoot = true;
@@ -25,23 +29,33 @@
     };
   };
 
-  # Watchtower's cleanup only drops the image it just replaced. Images left
-  # behind any other way (a container dropped from the config, a pinned tag
-  # bumped) pile up, so prune every image no container uses once a day, an
-  # hour after watchtower runs; Persistent catches up a run missed while the
-  # machine was off. Images only: `virtualisation.docker.autoPrune` runs
-  # `docker system prune`, which also removes unused networks and would
-  # delete BigTasty's immich-network & co. from under a container that is
-  # down at the time. `until=24h` spares an image pulled moments ago.
-  systemd.services.docker-image-prune = {
-    description = "Prune unused docker images";
-    after = ["docker.service"];
-    requires = ["docker.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${config.virtualisation.docker.package}/bin/docker image prune --all --force --filter until=24h";
+  # Watchtower updates a container by stopping it and starting a replacement.
+  # An app that exits 0 on SIGTERM (Infisical) ends its unit cleanly, so the
+  # nixpkgs default Restart=on-failure left it dead, and the unit's
+  # ExecStopPost `docker rm -f` removed watchtower's replacement too. With
+  # Restart=always the unit comes straight back on the freshly pulled image.
+  systemd.services =
+    lib.mapAttrs' (_: c: lib.nameValuePair c.serviceName {serviceConfig.Restart = lib.mkForce "always";})
+    config.virtualisation.oci-containers.containers
+    // {
+      # Watchtower's cleanup only drops the image it just replaced. Images left
+      # behind any other way (a container dropped from the config, a pinned tag
+      # bumped) pile up, so prune every image no container uses once a day, an
+      # hour after watchtower runs; Persistent catches up a run missed while the
+      # machine was off. Images only: `virtualisation.docker.autoPrune` runs
+      # `docker system prune`, which also removes unused networks and would
+      # delete BigTasty's immich-network & co. from under a container that is
+      # down at the time. `until=24h` spares an image pulled moments ago.
+      docker-image-prune = {
+        description = "Prune unused docker images";
+        after = ["docker.service"];
+        requires = ["docker.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${config.virtualisation.docker.package}/bin/docker image prune --all --force --filter until=24h";
+        };
+      };
     };
-  };
 
   systemd.timers.docker-image-prune = {
     wantedBy = ["timers.target"];
