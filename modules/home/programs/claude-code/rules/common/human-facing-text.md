@@ -38,7 +38,7 @@ Text written for someone other than the user in this chat goes through the
 
 ## The gate
 
-The `humanizer-gate` mod (Claude Code) and its pi extension refuse the first
-human-facing write or send of a session, and the first one after a compaction,
-until the skill is loaded. Load it and retry. Do not route around the gate
+The `humanizer-gate` mod (Claude Code), its pi extension and its Codex hook
+refuse the first human-facing write or send of a session, and the first one
+after a compaction, until the skill is loaded. Load it and retry. Do not route around the gate
 with shell redirection or another tool.

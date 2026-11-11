@@ -11,9 +11,10 @@ the Macs through the Homebrew cask in `modules/darwin/homebrew.nix`.
 
 ```
 ~/.nixfiles/modules/home/programs/codex/
-├── default.nix          # enable glue, plugins, hooks, settings
+├── default.nix          # enable glue, hooks, settings
 ├── mcp.nix              # programs.mcp.servers -> Codex mcp_servers, + context7/vercel
 ├── instructions.nix     # ~/.codex/AGENTS.md and the tailwind skill
+├── plugins.nix          # context-mode, ponytail: copied into ~/.codex/plugins/cache/
 ├── preamble.md          # top of AGENTS.md: Claude -> Codex translation, guards
 ├── skills.nix           # programs.codex.skills -> ~/.codex/skills/
 ├── agents.nix           # ~/.codex/agents/*.toml
@@ -32,10 +33,14 @@ the Macs through the Homebrew cask in `modules/darwin/homebrew.nix`.
 | skills | `~/.codex/skills/<name>` (`skills.nix`) |
 | `agents/*.md` | `~/.codex/agents/<name>.toml` |
 | pstack plugin | not ported (Codex has no user-only skills) |
-| context-mode, ponytail plugins | Codex plugins, `programs.codex.plugins` |
+| context-mode, ponytail plugins | Codex plugins, copied into place by `plugins.nix` |
 | `hooks/block-rm-rf.sh` | `~/.codex/hooks.json` PreToolUse `^Bash$` |
+| `mods/nix-owned-paths` | its `codex.ts`, PreToolUse `^apply_patch$` |
+| `mods/humanizer-gate` | its `codex.ts`, PreToolUse `^(Bash\|apply_patch\|mcp__.*)$` |
+| impeccable plugin hooks | PostToolUse `^apply_patch$` and Stop, as its repo's `.codex/hooks.json` |
 | `WebSearch` hook (searxng only) | `web_search = "disabled"` plus a line in `preamble.md` |
 | i-have-adhd always-on hook | the "Output style" section of `preamble.md` |
+| `hooks/adhd-final-response.sh` | UserPromptSubmit, same script (plain stdout becomes context) |
 
 `~/.agents/skills/` keeps the four skills `../claude-code/settings.nix` links
 there (design-taste-frontend, security-audit, brag, brag-slim). Codex reads
@@ -72,6 +77,22 @@ OAuth servers sign in once per machine: `codex mcp login <name>` for
 `figma-almost-always`, `figma-personal`, `linear-swiss-cheese`,
 `linear-almost-always`, `cloudflare-api` and `vercel`. Context7 needs no login.
 
+## Plugins
+
+Home Manager's `programs.codex.plugins` links each plugin's cache entry into
+the Nix store, and Codex 0.167 lists a linked entry as "not installed": the
+plugin's skills, hooks and MCP server never load. `plugins.nix` leaves that
+option unset. It writes the same `~/.agents/plugins/marketplace.json` and
+`[plugins."<name>@home-manager"]` keys itself, and its activation step copies
+each plugin into `~/.codex/plugins/cache/home-manager/<name>/<version>/` as a
+real, writable folder. A copy is redone only when its store path changes
+(`.nix-source` in the folder records it). Check with `codex plugin list`: both
+should read `installed, enabled`.
+
+context-mode is taken from its repo's `plugins/claude-code/` folder, the
+built plugin; the repo root is a marketplace since 2.1. Claude Code links the
+same folder (`../claude-code/settings.nix`).
+
 ## Writable state
 
 - `config.toml` stays a real file (`mutableSettings = true`). Codex writes
@@ -79,17 +100,20 @@ OAuth servers sign in once per machine: `codex mcp login <name>` for
   activation merges the declared keys over it. Removing a key from nix does
   not remove it from the file.
 - Hooks run only after they are trusted: open `/hooks` in Codex once per
-  machine and trust the block-rm-rf, context-mode and ponytail hooks. A
-  changed hook (new store path) needs trusting again. Plugin hooks run under
+  machine and trust the ones in `~/.codex/hooks.json` plus the context-mode
+  and ponytail plugin hooks. A changed hook (new store path) needs trusting
+  again, so `default.nix` copies each hook script to the store on its own
+  rather than the whole `../claude-code/` folder. Plugin hooks run under
   the stable `hooks` feature; the old `plugin_hooks` flag is removed in 0.163.
 - Codex 0.163 offers to import the Claude Code configuration. Decline: the
   import writes into files this module owns.
 
 ## Not ported
 
-- `mods/humanizer-gate` and `mods/nix-owned-paths` use Claude Code's
-  in-process hook engine. `preamble.md` states both rules instead.
 - `hooks/context-mode-cache-heal.mjs` fixes Claude's plugin marketplace only.
+- i-have-adhd's own Codex plugin: its SessionStart hook would repeat the
+  "Output style" section `preamble.md` already puts in every session.
+- impeccable's SessionStart hook: its Codex config has none.
 - `skills/codex-imagegen`: Codex has its own `imagegen`.
 - claude.ai connectors other than Context7 and Vercel (Slack, Google
   Calendar, Claude Docs). Codex reaches Slack and Calendar as ChatGPT apps.

@@ -94,9 +94,13 @@ nixpkgs.
 ## Plugins
 
 The `context-mode` plugin is installed via a flake input pinned in
-`~/.nixfiles/flake.nix`. The `plugins` set in `settings.nix` links it whole
-into `~/.claude/skills/context-mode/`, where Claude Code loads it as a
-skills-directory plugin. Updating it:
+`~/.nixfiles/flake.nix`. Since 2.1 its repo is a marketplace, so the
+`plugins` set in `settings.nix` links its `plugins/claude-code/` folder (the
+built plugin: `server.mjs`, `hook.mjs`, hooks) into
+`~/.claude/skills/context-mode/`, where Claude Code loads it as a
+skills-directory plugin. Linking the repo root loads only its skills: the
+root manifest points at a `start.mjs` that no longer exists, and its
+`hooks/hooks.json` is Gemini's. Updating it:
 
 ```bash
 nix flake update context-mode
@@ -219,6 +223,13 @@ same folder is also pi's `humanizer-gate` extension: pi loads its root
 `index.ts`, which imports the same policy. `claude plugin test` skips the pi
 side; test that with
 `node --test modules/home/programs/claude-code/mods/humanizer-gate/tests/pi-extension.node.ts`.
+
+Both mods also carry a root `codex.ts`, the same check as a Codex command
+hook (`../codex/default.nix` registers them). Codex hooks see neither the
+model's context nor an engine state store, so the Codex `humanizer-gate`
+reads the session transcript: a tool call that mentions `humanizer/SKILL.md`,
+or the user's own `$humanizer` prompt, since the last compaction. Test them
+with `node --test 'modules/home/programs/claude-code/mods/*/tests/codex.node.ts'`.
 
 Microsoft's official `playwright-cli` skill comes from the `playwright-cli`
 flake input too. `settings.nix` links its `skills/playwright-cli/` directory
@@ -377,8 +388,9 @@ claude-bridge extension (`../pi/`). A change here reaches pi after the same
 rebuild. Skills and agents that need Claude-only features (hooks, MCP tools)
 are excluded or tuned in `../pi/default.nix`.
 
-Codex gets the MCP servers, rules, agents and `block-rm-rf.sh` from this
-folder through `../codex/`, which converts them at build time. Skills are
+Codex gets the MCP servers, rules, agents, `block-rm-rf.sh`,
+`adhd-final-response.sh` and both mods from this folder through `../codex/`,
+which converts them at build time. Skills are
 listed one by one in `../codex/skills.nix`, so add a new skill there too
 (Matt Pocock's come from `mattpocock-skills.nix` instead).
 

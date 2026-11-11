@@ -13,7 +13,9 @@
   # ./skills/ folder, a hooks module) whose real location falls outside that
   # directory. A single symlink keeps the source tree as the plugin's real root.
   plugins = {
-    context-mode = inputs.context-mode;
+    # Since 2.1 the repo is a marketplace; the built plugin (server.mjs,
+    # hooks) lives in plugins/claude-code. Codex loads the same folder.
+    context-mode = "${inputs.context-mode}/plugins/claude-code";
     # Cursor's marketplace repo; pstack's Claude Code port is generated here.
     pstack = "${inputs.cursor-plugins}/harness/pstack/claude-code";
     # The repo is a marketplace; the plugin itself lives in plugin/.

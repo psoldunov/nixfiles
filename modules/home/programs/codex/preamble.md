@@ -27,10 +27,13 @@ The rules below are shared with Claude Code and use its names. In Codex:
 
 ## Guards Claude Code enforces with hooks
 
-Codex has no hook for these, so follow them yourself:
+Codex runs the same hooks once they are trusted in `/hooks`. Follow these
+rules yourself either way:
 
-- Before you write or send human-facing text, invoke `$humanizer` (see
-  "Human-Facing Text" below).
+- Before you write or send human-facing text, invoke `$humanizer`, or read
+  its `SKILL.md` with a shell command (see "Human-Facing Text" below). The
+  humanizer-gate hook refuses that write until one of the two has happened
+  since the last compaction.
 - Never edit a file whose real path is under `/nix/store`. Edit the Nix
   source that produces it, usually under `~/.nixfiles/`.
 - Search the web with the `searxng` MCP server's `searxng_web_search`, and
