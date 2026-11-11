@@ -112,9 +112,11 @@ in {
     };
   };
 
-  # Builds the image when its tag is missing: after a bump, or after the daily
-  # image prune removed it while the container was down. BuildKit's cache
-  # makes a rebuild of the same commit quicker.
+  # Builds the image when its tag is missing: after a bump, or when the tag is
+  # gone for any other reason. BuildKit's cache makes a rebuild of the same
+  # commit quicker. No RemainAfterExit: every start of the container runs the
+  # check again. With it, a unit still "active" from an earlier start skipped
+  # the check, and docker-cal-diy failed with "No such image".
   systemd.services.cal-diy-image = {
     description = "Build the cal.diy image";
     after = ["docker.service" "network-online.target"];
@@ -124,7 +126,6 @@ in {
     requiredBy = ["docker-cal-diy.service"];
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;
       TimeoutStartSec = "2h";
     };
     script = ''
