@@ -1,6 +1,6 @@
 /**
  * What counts as human-facing text, shared by the Claude Code hooks
- * (./register.ts) and the pi extension (../index.ts).
+ * (./register.ts), the pi extension (../index.ts) and the Codex hook (../codex.ts).
  *
  * Pure functions with no imports, in erasable TypeScript only, so the Claude
  * Code engine, pi's jiti and plain Node all load this file as it is.
@@ -15,7 +15,7 @@ export type Target =
 
 export type Verdict = { gated: false } | { gated: true; what: string }
 
-export type Agent = 'claude' | 'pi'
+export type Agent = 'claude' | 'pi' | 'codex'
 
 /** Edits adding less text than this pass: typo fixes, version bumps. */
 export const MIN_EDIT_CHARS = 200
@@ -149,6 +149,7 @@ export function contextHasHumanizer(messages: readonly unknown[]): boolean {
 const HOW_TO_LOAD: Record<Agent, string> = {
   claude: 'Load the humanizer skill first (Skill tool, skill "humanizer")',
   pi: 'Load the humanizer skill first (read its SKILL.md, path in the skill listing)',
+  codex: 'Load the humanizer skill first (read its SKILL.md with a shell command such as `cat`, path in the skill listing)',
 }
 
 /** The refusal the agent reads, naming what was gated and how to get past it. */
