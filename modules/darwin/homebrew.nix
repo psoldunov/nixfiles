@@ -54,7 +54,6 @@
       "ctx7"
       "neonctl"
       "sanity"
-      "vercel"
 
       # macOS-specific, or absent from nixpkgs.
       "fallow"
@@ -82,6 +81,8 @@
       # Anthropic's `latest` channel; Linux pins it in overlays/claude-code.
       "claude-code@latest"
       "codex"
+      # Vercel CLI; Homebrew ships it as a cask, no longer a formula.
+      "vercel"
       "1password"
       "1password-cli"
       "balenaetcher"
