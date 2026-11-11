@@ -9,9 +9,12 @@ to Clokkr, as one session per turn on the client's `Agents` task.
    `~/.local/state/clokkr-gate/<session>.json`; pi keeps it in memory).
 2. At the first stop it reads the repo's `origin` remote and Clokkr's tasks.
    For client work it blocks the stop once and hands the agent the exact
-   `add_session` values: task id, start, end. The agent writes the notes.
-3. At the next stop it checks Clokkr for a session on that task starting near
-   the turn's start. If there is none, it writes one itself with the CLI.
+   `add_session` values: task id, start, end, and a `[turn …]` marker (the
+   turn's start in base 36) that the agent's notes end with.
+3. At the next stop it checks Clokkr for a session on that task whose notes
+   carry the marker. If there is none, it writes one itself with the CLI,
+   marker included. A nearby start does not count: two short turns can start
+   70 s apart.
 
 Turns under a minute, sub-agents (`ENSEMBLR_CONTROL_DEPTH`,
 `PI_CLAUDE_BRIDGE_DEPTH`, a hook's `agent_id`) and non-client repos are

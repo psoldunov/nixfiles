@@ -1,5 +1,9 @@
 import io
+import os
+import signal
+import tempfile
 import unittest
+from pathlib import Path
 
 import support
 from runner import Jobs, Sink, Step, run_steps, wait_for
@@ -62,6 +66,29 @@ class RunSteps(unittest.TestCase):
     def test_env(self):
         _, log, _ = run([sh('echo "dir=$FLAKE_DIR"', env=(("FLAKE_DIR", "/flake"),))])
         self.assertIn("dir=/flake", log)
+
+
+class Interrupted(unittest.TestCase):
+    def test_ctrl_c_mid_step_kills_and_reaps_the_child_and_still_raises(self):
+        class CtrlC:
+            def note(self, text):
+                pass
+
+            def feed(self, data):
+                raise KeyboardInterrupt
+
+        with tempfile.TemporaryDirectory() as tmp:
+            pid_file = Path(tmp, "pid")
+            step = sh(f'echo $$ > "{pid_file}"; echo started; exec sleep 30')
+            with self.assertRaises(KeyboardInterrupt):
+                run_steps([step], CtrlC(), jobs=Jobs())
+            pid = int(pid_file.read_text())
+        try:
+            os.kill(pid, 0)  # a zombie still answers, so this passes only once it is reaped
+        except ProcessLookupError:
+            return
+        os.kill(pid, signal.SIGKILL)
+        self.fail("the child kept running after run_steps was interrupted")
 
 
 class WaitFor(unittest.TestCase):

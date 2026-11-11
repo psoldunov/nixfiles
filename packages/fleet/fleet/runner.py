@@ -18,6 +18,7 @@ from report import clean_line
 # Stands for the store path `nix flake archive` printed, in the steps after it.
 SRC = "{src}"
 _COLOURS = ("36", "35", "33", "32", "34", "96", "95", "93")
+STOP_GRACE = 5  # seconds an interrupted child gets to exit before SIGKILL
 
 
 @dataclass(frozen=True)
@@ -158,6 +159,17 @@ def _run_one(argv, step: Step, sink: Sink, cwd, solo: bool, jobs: Jobs) -> tuple
         code = proc.wait()
         reader.join()
         return code, captured
+    except BaseException:
+        # Ctrl-C (or anything else) mid-step: once jobs.done() forgets the child,
+        # stop_all() can't reach it, so end it here and let the error go on.
+        # SIGTERM first, as stop_all() does, so sudo and ssh pass it on.
+        proc.terminate()
+        try:
+            proc.wait(STOP_GRACE)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait()
+        raise
     finally:
         for stream in (proc.stdout, proc.stderr):
             if stream:

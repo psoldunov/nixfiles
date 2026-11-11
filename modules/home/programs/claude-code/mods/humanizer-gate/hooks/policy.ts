@@ -42,12 +42,13 @@ const GH_EDIT_TEXT = /\s(--body|--body-file|--notes|--notes-file|-b|-F|-n)(\s|=|
 const GH_API_TEXT = /\bgh\s+api\b.*\/(comments|reviews|issues|pulls)\b.*\s-[fF]\s+body=/
 const REDIRECT = /(?:^|[^<>&0-9])(?:>>?|\btee\s+(?:-a\s+)?)\s*["']?([^\s"'|;&<>()]+)/g
 
-// MCP tools (`mcp__<server>__<name>`) that send a message, at any length.
+// MCP tools that send a message, at any length. Named `mcp__<server>__<name>` in
+// Claude Code and Codex, `<server>_<name>` or bare `<name>` in pi-mcp-adapter.
 const SEND_TOOL =
-  /(^|__)(slack_send_message|slack_send_message_draft|slack_schedule_message|slack_create_canvas|slack_update_canvas|send_email|send_message|create_draft|draft_email|reply_email)$/
+  /(^|_)(slack_send_message|slack_send_message_draft|slack_schedule_message|slack_create_canvas|slack_update_canvas|send_email|send_message|create_draft|draft_email|reply_email)$/
 // MCP tools that store prose, gated when a string argument reaches MIN_TOOL_CHARS.
 const PROSE_TOOL =
-  /(^|__)(save_issue|save_comment|save_document|save_status_update|save_release_note|save_project|save_diff_comment|ensemblr_linear_create_comment|ensemblr_linear_create_issue|ensemblr_linear_update_issue|create_documents|patch_documents|create_version)$/
+  /(^|_)(save_issue|save_comment|save_document|save_status_update|save_release_note|save_project|save_diff_comment|ensemblr_linear_create_comment|ensemblr_linear_create_issue|ensemblr_linear_update_issue|create_documents|patch_documents|create_version)$/
 
 const HUMANIZER_NAME = /^\/?([\w-]+:)?humanizer$/
 const HUMANIZER_FILE = /(^|\/)humanizer\/SKILL\.md$/

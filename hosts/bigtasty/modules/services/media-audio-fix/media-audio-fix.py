@@ -9,28 +9,38 @@ marks it as the original; when the original language is unknown, nothing
 is dropped.
 
 Each file is written next to the original as a hidden temp file, checked
-with ffprobe, then renamed over it. Video, subtitles, chapters and
-attachments are copied untouched.
+with ffprobe, then swapped in, unless Sonarr/Radarr replaced the original
+meanwhile (see swap_in). Video, subtitles, chapters and attachments are
+copied untouched.
 """
 
 import argparse
 import datetime
+import fcntl
 import json
 import os
+import shlex
 import stat
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOTS = ["/mnt/Media/Movies", "/mnt/Media/TV Shows"]
+# Real runs lock this directory (made by default.nix) so only one rewrites
+# and cleans up at a time. Dry runs only read and skip it.
+LOCK_DIR = "/run/media-audio-fix"
 ALWAYS_KEEP = {"eng", "rus"}
 UNDETERMINED = {"", "und", "mul", "mis", "zxx"}
 ORIGINAL_WORDS = ("original", "оригинал")
 CONVERT_CODECS = {"dts"}
 TMP_SUFFIX = ".audiofix.tmp"
+# The library file while it is moved aside for the swap. Never cleaned up
+# automatically: a leftover one is the only copy of that file.
+HELD_SUFFIX = ".audiofix.held"
 # Files touched more recently may still be mid-import by Sonarr/Radarr.
 MIN_AGE_SECONDS = 3600
 DURATION_TOLERANCE = 2.0
@@ -93,6 +103,8 @@ def arr_titles(config_xml, endpoint):
     root = ET.parse(config_xml).getroot()
     key = root.findtext("ApiKey")
     port = root.findtext("Port")
+    if not key or not port:
+        raise ValueError("config.xml is missing ApiKey or Port")
     base = (root.findtext("UrlBase") or "").rstrip("/")
     url = f"http://127.0.0.1:{port}{base}/api/v3/{endpoint}"
     request = urllib.request.Request(url, headers={"X-Api-Key": key})
@@ -234,19 +246,82 @@ def describe(streams, keep, convert):
     return " ".join(parts)
 
 
-def rewrite(path, source, keep, convert):
-    tmp = str(Path(path).with_name(f".{Path(path).name}{TMP_SUFFIX}"))
-    free = os.statvfs(os.path.dirname(path))
-    if free.f_bavail * free.f_frsize < os.path.getsize(path) * 1.2:
+def identity(st):
+    return st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns
+
+
+def restore_command(held, path):
+    return f"mv -n {shlex.quote(held)} {shlex.quote(path)}"
+
+
+def swap_in(tmp, path, before):
+    """Put tmp at path only if path still holds the file that was encoded.
+
+    os.replace would overwrite a file Sonarr/Radarr imported during the
+    encode, and a stat check before it still races: rename is not
+    compare-and-swap. So the current file is first moved aside and checked,
+    then the winner is hard-linked back, which refuses to overwrite.
+    Nothing is ever put back with a rename: when that link fails, the
+    moved file stays under its held name and the error says how to restore
+    it, since path may be missing until then.
+    """
+    held = tmp[:-len(TMP_SUFFIX)] + HELD_SUFFIX
+    # Claims the held name (a link never overwrites) and proves the share
+    # has hard links, before the library file is touched.
+    os.link(tmp, held)
+    try:
+        os.rename(path, held)  # replaces only our own claim
+    except OSError:
+        os.remove(held)  # still just our claim: nothing was moved
+        raise
+    try:
+        unchanged = identity(os.stat(held)) == identity(before)
+        os.link(tmp if unchanged else held, path)
+    except OSError as error:
+        raise RuntimeError(
+            f"{error}; the library file is kept as {held}; "
+            f"if {path} is missing, restore it with: {restore_command(held, path)}"
+        ) from error
+    os.remove(held)
+    if not unchanged:
+        raise RuntimeError("replaced by a new import during the rewrite, left as it is")
+
+
+def held_original(name):
+    """The library file name a held copy belongs to, or None.
+
+    Held names are ".<file>.<mkstemp random, no dots>.audiofix.held".
+    """
+    if not (name.startswith(".") and name.endswith(HELD_SUFFIX)):
+        return None
+    original, _, random = name[1:-len(HELD_SUFFIX)].rpartition(".")
+    return original if original and random else None
+
+
+def rewrite(path, before, source, keep, convert):
+    folder = os.path.dirname(path)
+    # A copy kept by an earlier run waits for a person; never pile a second on.
+    for name in os.listdir(folder or "."):
+        if held_original(name) == os.path.basename(path):
+            held = os.path.join(folder, name)
+            raise RuntimeError(
+                f"an earlier copy is kept as {held}; check it, then delete it, "
+                f"or if {path} is missing: {restore_command(held, path)}"
+            )
+    free = os.statvfs(folder)
+    if free.f_bavail * free.f_frsize < before.st_size * 1.2:
         raise RuntimeError("not enough free space for the temp file")
+    # A fresh name of our own, so no other file is ever written or removed.
+    fd, tmp = tempfile.mkstemp(dir=folder, prefix=f".{Path(path).name}.", suffix=TMP_SUFFIX)
+    os.close(fd)
     try:
         subprocess.run(ffmpeg_command(path, tmp, source["streams"], keep, convert),
                        check=True, capture_output=True, text=True)
         problem = verify(tmp, source, keep, convert)
         if problem:
             raise RuntimeError(f"check failed: {problem}")
-        os.chmod(tmp, stat.S_IMODE(os.stat(path).st_mode))
-        os.replace(tmp, path)
+        os.chmod(tmp, stat.S_IMODE(before.st_mode))
+        swap_in(tmp, path, before)
     finally:
         if os.path.exists(tmp):
             os.remove(tmp)
@@ -254,6 +329,7 @@ def rewrite(path, source, keep, convert):
 
 def process(path, folders, dry_run):
     """Return True when the file was (or, dry, would be) rewritten."""
+    before = os.stat(path)  # before the probe, so any later import shows up
     source = probe(path)
     result = plan(source["streams"], original_language(path, folders))
     if result is None:
@@ -264,20 +340,34 @@ def process(path, folders, dry_run):
         log(f"would fix: {path} [{change}]")
         return True
     started = time.monotonic()
-    rewrite(path, source, keep, convert)
+    rewrite(path, before, source, keep, convert)
     log(f"fixed in {time.monotonic() - started:.0f}s: {path} [{change}]")
     return True
 
 
-def candidates(roots):
+def candidates(roots, clean, counts):
+    """Yield files old enough to fix; with clean, delete leftover temp files.
+
+    Only a run holding the lock may clean: a leftover is then from a run
+    that died, not the output of one still encoding. A library file that
+    exists only as a held copy counts as failed, so the run says so.
+    """
     now = time.time()
     for root in roots:
         for dirpath, _, filenames in os.walk(root):
             for name in sorted(filenames):
                 path = os.path.join(dirpath, name)
                 if name.startswith(".") and name.endswith(TMP_SUFFIX):
-                    log(f"removing leftover temp file: {path}")
-                    os.remove(path)
+                    if clean:
+                        log(f"removing leftover temp file: {path}")
+                        os.remove(path)
+                elif original := held_original(name):
+                    original = os.path.join(dirpath, original)
+                    if os.path.lexists(original):
+                        log(f"warning: older copy kept by an interrupted swap, check it and delete it: {path}")
+                    else:
+                        log(f"error: library file missing: {original}; restore it with: {restore_command(path, original)}")
+                        counts["failed"] += 1
                 elif name.lower().endswith(".mkv") and now - os.path.getmtime(path) > MIN_AGE_SECONDS:
                     yield path
 
@@ -292,7 +382,7 @@ def deadline_from(value):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser = argparse.ArgumentParser(description=(__doc__ or "").partition("\n")[0])
     parser.add_argument("paths", nargs="*", help="files to fix instead of the whole library")
     parser.add_argument("--dry-run", action="store_true", help="only print what would change")
     parser.add_argument("--deadline", help="HH:MM after which no new file is started")
@@ -301,14 +391,31 @@ def parse_args():
     return parser.parse_args()
 
 
+def locked():
+    """Take the run lock for the rest of the process, False if another run has it.
+
+    It lives on local /run: the NFS library is mounted nolock.
+    """
+    fd = os.open(LOCK_DIR, os.O_RDONLY)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        os.close(fd)
+        return False
+    return True
+
+
 def main():
     args = parse_args()
+    if not args.dry_run and not locked():
+        log("another media-audio-fix run is active, not starting")
+        return 1
     configs = [(c, e) for c, e in [(args.sonarr_config, "series"), (args.radarr_config, "movie")] if c]
     folders = load_languages(configs)
     log(f"original language known for {len(folders)} titles")
     deadline = deadline_from(args.deadline)
     counts = {"fixed": 0, "failed": 0}
-    for path in args.paths or candidates(ROOTS):
+    for path in args.paths or candidates(ROOTS, clean=not args.dry_run, counts=counts):
         if deadline and datetime.datetime.now() >= deadline:
             log("deadline reached, the rest waits for the next run")
             break

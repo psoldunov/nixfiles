@@ -50,8 +50,6 @@
       "grafana"
       "prometheus"
       "prometheus-blackbox-exporter"
-      "sharesSync"
-      "immichSync"
     ];
   # A host running the household DNS server (modules/nixos/home-dns).
   dnsUnits = lib.optionals config.services.adguardhome.enable [
@@ -69,7 +67,12 @@
       "docker-image-prune"
       "server-intel-gpu-sample"
     ]
-    ++ lib.optionals (!isNas) ["media-audio-fix"];
+    # Timer-driven jobs: inactive between runs is healthy.
+    ++ lib.optionals (!isNas) [
+      "media-audio-fix"
+      "sharesSync"
+      "immichSync"
+    ];
   units = lib.unique (commonUnits ++ hostUnits ++ dnsUnits ++ containerUnits ++ tunnelUnits ++ scheduled);
   inventory = pkgs.writeText "server-monitoring-inventory.prom" (
     lib.concatMapStrings (name: ''

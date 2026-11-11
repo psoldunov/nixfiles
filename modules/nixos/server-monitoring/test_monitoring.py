@@ -1,6 +1,7 @@
 """Focused configuration invariants; run through the compute queue, no server access."""
 
 import json
+import os
 import re
 from pathlib import Path
 import subprocess
@@ -9,63 +10,29 @@ import unittest
 ROOT = Path(__file__).resolve().parents[3]
 
 # Evaluate actual composed host options, not regexes over the Nix implementation.
-EXPR = r'''
-let
-  f = builtins.getFlake (toString ./.);
-  lib = f.inputs.nixpkgs.lib;
-  select = c: {
-    node = { inherit (c.services.prometheus.exporters.node) listenAddress openFirewall extraFlags; };
-    unitNames = builtins.attrNames c.systemd.services;
-    unitTypes = lib.mapAttrs (_: s: s.serviceConfig.Type or "simple") c.systemd.services;
-    containers = lib.mapAttrs (_: s: s.serviceName) c.virtualisation.oci-containers.containers;
-    ports = c.networking.firewall.allowedTCPPorts;
-    firewallStart = c.networking.firewall.extraCommands;
-    firewallStop = c.networking.firewall.extraStopCommands;
-    sampler = c.systemd.services.server-intel-gpu-sample.serviceConfig;
-    perf = c.boot.kernel.sysctl."kernel.perf_event_paranoid" or null;
-  };
-  t = f.nixosConfigurations.BigTasty.config;
-  k = f.nixosConfigurations.BigKing.config;
-in {
-  tasty = select t;
-  king = select k;
-  grafana = {
-    inherit (t.services.grafana) settings openFirewall;
-    provision = {
-      datasources.settings = t.services.grafana.provision.datasources.settings;
-      dashboards.settings = t.services.grafana.provision.dashboards.settings;
-    };
-    plugins = map toString t.services.grafana.declarativePlugins;
-  };
-  prometheus = { inherit (t.services.prometheus) listenAddress port retentionTime extraFlags scrapeConfigs; };
-  blackbox = { inherit (t.services.prometheus.exporters.blackbox) listenAddress openFirewall; };
-  vhost = { inherit (t.services.nginx.virtualHosts."dashboard.theswisscheese.com") extraConfig locations forceSSL; };
-  nginxConfig = t.environment.etc."nginx/nginx.conf".source.text;
-  tunnels = lib.mapAttrs (_: s: builtins.attrNames s.ingress) t.services.cloudflared.tunnels;
-  bootstrap = { inherit (t.systemd.services.grafana-bootstrap) before serviceConfig script; };
-  services = import ./hosts/bigtasty/modules/monitoring/services.nix;
-  dns = import ./hosts/bigtasty/modules/monitoring/dns.nix;
-  dashboard = import ./hosts/bigtasty/modules/monitoring/dashboard.nix {
-    inherit lib;
-    services = import ./hosts/bigtasty/modules/monitoring/services.nix;
-    dns = import ./hosts/bigtasty/modules/monitoring/dns.nix;
-  };
-  homarr.volumes = t.virtualisation.oci-containers.containers.homarr.volumes;
-  kuma = t.services.uptime-kuma.enable;
-}
-'''
+# The flake check evaluates the fixture outside the sandbox and passes the JSON
+# in MONITORING_TEST_CONFIG; run standalone, the test evaluates it itself.
+FIXTURE = ROOT / "modules/nixos/server-monitoring/fixtures/composed-config.nix"
+EXPR = f'import {FIXTURE} {{ flake = builtins.getFlake (toString {ROOT}); }}'
+
+
+def load_configuration():
+    precomputed = os.environ.get("MONITORING_TEST_CONFIG")
+    if precomputed:
+        return json.loads(Path(precomputed).read_text())
+    result = subprocess.run(
+        ["nix", "eval", "--impure", "--json", "--expr", EXPR],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(result.stderr)
+    return json.loads(result.stdout)
 
 
 class MonitoringConfigurationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        result = subprocess.run(
-            ["nix", "eval", "--impure", "--json", "--expr", EXPR],
-            cwd=ROOT, text=True, capture_output=True, check=False,
-        )
-        if result.returncode:
-            raise RuntimeError(result.stderr)
-        cls.c = json.loads(result.stdout)
+        cls.c = load_configuration()
 
     def test_loopback_bindings_and_nas_source_firewall(self):
         c = self.c
@@ -104,11 +71,8 @@ class MonitoringConfigurationTests(unittest.TestCase):
         self.assertIn("proxy_set_header Upgrade $http_upgrade;", location)
         include = re.search(r"include (/nix/store/[^;]*nginx-recommended-proxy_set_header-headers.conf);", location)
         self.assertIsNotNone(include, "Grafana's proxy location must preserve the public Host and HTTPS scheme")
-        # Realize only the tiny native header snippet, not every nginx vhost dependency.
-        headers_path = include.group(1)
-        subprocess.run(["nix-store", "--realise", headers_path],
-                       cwd=ROOT, text=True, capture_output=True, check=True)
-        headers = Path(headers_path).read_text()
+        # The fixture read the tiny native header snippet the location includes.
+        headers = self.c["proxyHeaders"]
         for name, value in (("Host", "$host"), ("X-Forwarded-Host", "$host"),
                             ("X-Forwarded-Proto", "$scheme")):
             self.assertRegex(headers, rf"proxy_set_header\s+{name}\s+{re.escape(value)};")
@@ -145,8 +109,8 @@ class MonitoringConfigurationTests(unittest.TestCase):
             self.assertEqual(c["unitTypes"]["server-intel-gpu-sample"], "oneshot")
             self.assertEqual(c["unitTypes"]["docker-image-prune"], "oneshot")
             if host == "tasty":
-                self.assertEqual(c["unitTypes"]["sharesSync"], "simple")
-                self.assertEqual(c["unitTypes"]["immichSync"], "simple")
+                self.assertEqual(c["unitTypes"]["sharesSync"], "oneshot")
+                self.assertEqual(c["unitTypes"]["immichSync"], "oneshot")
             for s in self.c["services"] if host == "tasty" else []:
                 self.assertIn(s["unit"] + ".service", units)
             for unit in ("adguardhome.service", "unbound.service"):

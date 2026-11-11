@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import actions
@@ -117,15 +118,32 @@ def print_summary(result: Result, console: Console) -> None:
     console.line(f"Report: {result.report_path}")
 
 
-def power_local(cfg: Config, action: str, host: Host, console: Console, tty: bool) -> int:
+def settle_local(result: Result, status: str, note: str, exit_code: int | None = None) -> None:
+    """Rewrite the report once this machine's deferred reboot or suspend is
+    known not to happen. One that runs keeps the entry as written."""
+    action, host = result.local_power
+    deferred = (host.name, action, "deferred")
+    entries = tuple(
+        replace(e, status=status, note=note, exit_code=exit_code) if (e.host, e.phase, e.status) == deferred else e
+        for e in result.run.entries
+    )
+    report.write(replace(result.run, entries=entries))
+
+
+def power_local(cfg: Config, result: Result, console: Console, tty: bool) -> int:
     """Reboot or suspend this machine, the last thing a run does."""
+    action, host = result.local_power
     verb = "Reboot" if action == "reboot" else "Suspend"
     if tty and not interactive.confirm(cfg, f"{verb} {host.name} (this machine) now?"):
         console.line(f"Left {host.name} running.")
+        settle_local(result, "skipped", "declined at the prompt; left running")
         return 0
     with open(os.devnull, "w") as devnull:
         outcome = run_steps(actions.BUILDERS[action](cfg, host, tty), Sink(devnull, console, None), jobs=Jobs(), solo=True)
-    return 0 if outcome.ok else EXIT_FAILED
+    if outcome.ok:
+        return 0
+    settle_local(result, "failed", f"the {action} command failed; left running", outcome.exit_code)
+    return EXIT_FAILED
 
 
 def offer_agent(cfg: Config, result: Result, console: Console, tty: bool) -> None:
@@ -143,6 +161,7 @@ def offer_agent(cfg: Config, result: Result, console: Console, tty: bool) -> Non
     if result.local_power:
         action, host = result.local_power
         console.line(f"fleet: {host.name} stays up while {chosen} works; run `fleet {action} {host.name}` after.")
+        settle_local(result, "skipped", f"left running while {chosen} works on this run")
     agent.hand_off(chosen, result.run)
 
 
@@ -158,8 +177,7 @@ def execute(cfg: Config, plan: Plan, console: Console, tty: bool) -> int:
         offer_agent(cfg, result, console, tty)
     code = EXIT_FAILED if run.failures() else 0
     if result.local_power:
-        action, host = result.local_power
-        code = power_local(cfg, action, host, console, tty) or code
+        code = power_local(cfg, result, console, tty) or code
     return code
 
 

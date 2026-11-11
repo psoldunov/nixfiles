@@ -37,7 +37,7 @@ class IntelGpuSamplerTests(unittest.TestCase):
         self.output = self.root / "textfile" / "intel-gpu.prom"
         self.fake_top = self.root / "fake-intel-gpu-top"
         self.fake_top.write_text(
-            "#!/usr/bin/env python3\n"
+            f"#!{sys.executable}\n"  # no /usr/bin/env in the flake check sandbox
             "import json, os, sys, time\n"
             "log = os.environ.get('FAKE_CALL_LOG')\n"
             "if log:\n"

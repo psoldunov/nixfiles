@@ -6,8 +6,9 @@ rebuilding into the KWallet-only configuration. The companion script
 keyring-import.py replays the dump into whichever daemon owns the bus
 afterwards.
 
-The output file contains plaintext secrets. It is written with mode 0600 and
-should be shredded as soon as the import has been verified.
+The output file contains plaintext secrets. It is created exclusively with
+mode 0600; an existing path (file or symlink) is refused, never overwritten.
+Shred it as soon as the import has been verified.
 """
 
 import json
@@ -30,7 +31,14 @@ def item_to_dict(item):
     }
 
 
+def refuse_existing(path):
+    sys.exit(f"refusing to write {path}: it already exists (file or symlink). Remove it or pick another path.")
+
+
 def main(path):
+    # Fail before unlocking anything; lexists also catches dangling symlinks.
+    if os.path.lexists(path):
+        refuse_existing(path)
     connection = secretstorage.dbus_init()
     collections = []
     for collection in secretstorage.get_all_collections(connection):
@@ -46,7 +54,12 @@ def main(path):
             }
         )
 
-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, stat.S_IRUSR | stat.S_IWUSR)
+    # O_EXCL closes the race after the check above: it never reuses a file
+    # (keeping its mode) and never follows a symlink planted meanwhile.
+    try:
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, stat.S_IRUSR | stat.S_IWUSR)
+    except FileExistsError:
+        refuse_existing(path)
     with os.fdopen(fd, "w") as handle:
         json.dump({"collections": collections}, handle, indent=2)
 

@@ -22,8 +22,6 @@ import { pathToFileURL } from 'node:url'
 
 // Shorter turns are not logged.
 export const MIN_TURN_MS = 60_000
-// How far a logged session's start may sit from the turn's start and still count.
-const START_SLACK_MS = 90_000
 // A prompt this soon after a block is pi's continuation of the blocked turn.
 const CONTINUE_MS = 120_000
 const UNSORTED = 'Unsorted'
@@ -77,9 +75,13 @@ export function classify(repo, nodes, config) {
   return isClient ? { kind: 'new' } : { kind: 'none' }
 }
 
-/** Whether a session on the task (from `clokkr sessions --json`) starts where the turn did. */
+// A turn's identity in a session's notes: its start, which no other turn of the session shares.
+// A nearby start is not enough: two short turns can start well inside any slack.
+const turnMark = start => `[turn ${start.toString(36)}]`
+
+/** Whether a session on the task (from `clokkr sessions --json`) carries the turn's marker in its notes. */
 export const hasLogged = (sessions, taskId, start) =>
-  sessions.some(session => session.task === taskId && Math.abs(session.begin - start) <= START_SLACK_MS)
+  sessions.some(session => session.task === taskId && (session.notes ?? '').includes(turnMark(start)))
 
 /** RFC 3339 in local time, which Clokkr reads: `2026-10-29T10:02:31+02:00`. */
 export function localTime(ms) {
@@ -91,11 +93,11 @@ export function localTime(ms) {
   return `${day}T${time}${offset < 0 ? '-' : '+'}${pad(offset / 60)}:${pad(offset % 60)}`
 }
 
-const NOTES = 'notes: one line on what you did this turn, for someone reading an invoice'
+const notes = start => `notes ending with "${turnMark(start)}": one line on what you did this turn, for someone reading an invoice, then the marker exactly`
 
 const logMessage = (task, start, end) =>
   `This turn was client work: log it to Clokkr before you finish. Call the Clokkr MCP tool add_session with ` +
-  `task "${task.id}" (${task.path}), start "${localTime(start)}", end "${localTime(end)}", and ${NOTES}. ` +
+  `task "${task.id}" (${task.path}), start "${localTime(start)}", end "${localTime(end)}", and ${notes(start)}. ` +
   `Then finish; your answer does not need to mention it.`
 
 const newClientMessage = (repo, start, end) =>
@@ -103,7 +105,7 @@ const newClientMessage = (repo, start, end) =>
     `This turn was work on ${repo}, a client repo that no Clokkr task names yet. Before you finish:`,
     `1. Call the Clokkr MCP tool list_tasks and find this client's folder. Match the client's name (its project in the Almost Always Linear workspace, the README, the repo name), not the repo name verbatim.`,
     `2. If that folder has an "${TASK}" task, add the line "repo: ${repo}" to its notes with update_node, keeping the lines already there. If it has none, create_task "${TASK}" in it with billable false and notes "repo: ${repo}". If no folder fits, create_folder with the client's name first.`,
-    `3. Call add_session on that ${TASK} task with start "${localTime(start)}", end "${localTime(end)}", and ${NOTES}.`,
+    `3. Call add_session on that ${TASK} task with start "${localTime(start)}", end "${localTime(end)}", and ${notes(start)}.`,
     `4. Tell the user in your answer which Clokkr folder and task you used or created.`,
   ].join('\n')
 
@@ -165,8 +167,8 @@ function writeFallback(cli, { cls, nodes, state, repo, lastMessage }) {
   const what = lines(lastMessage)[0] || state.prompt || 'Agent turn'
   const known = cls.kind === 'known'
   const task = known ? String(cls.task.id) : unsortedTask(cli, nodes)
-  const notes = `${known ? '' : `repo: ${repo}; `}${what} (logged by clokkr-gate)`
-  run(cli, ['session', 'add', task, '--from', localTime(state.start), '--to', localTime(state.end), '--notes', notes])
+  const text = `${known ? '' : `repo: ${repo}; `}${what} (logged by clokkr-gate) ${turnMark(state.start)}`
+  run(cli, ['session', 'add', task, '--from', localTime(state.start), '--to', localTime(state.end), '--notes', text])
 }
 
 /**

@@ -9,10 +9,14 @@ from pathlib import Path
 from unittest import mock
 
 import support
+import actions
 import agent
+import flow
 import report
+import test_flow
 from report import Entry, Problem, Run
 from inventory import UsageError
+from runner import Step
 
 import importlib.util
 
@@ -123,6 +127,51 @@ class Commands(unittest.TestCase):
         self.assertIn("FAILED   BigTasty", text)
         self.assertIn("attribute 'bar' missing; 1 evaluation warning", text)
         self.assertIn("Report: ", text)
+
+
+class LocalPower(test_flow.FlowCase):
+    """This machine reboots after the report is written, so the report says
+    it is deferred, and is rewritten when it turns out not to happen."""
+
+    def execute(self, script, tty=False, confirm=True, problems=False):
+        hosts = ["Whopper", "BigTasty"] if problems else ["Whopper"]
+        reboot = lambda cfg, host, tty: [Step(("sh", "-c", script))]
+        execution = lambda cfg, plan, console: flow.Execution(cfg, plan, console, probe=lambda t: True)
+        with mock.patch.object(cli, "Execution", execution), \
+                mock.patch.dict(actions.BUILDERS, {"reboot": reboot}), \
+                mock.patch.object(flow, "wait_for", lambda *a, **k: None), \
+                mock.patch.object(cli.interactive, "confirm", return_value=confirm):
+            code = cli.execute(self.cfg, self.plan("reboot", hosts), self.console, tty)
+        return code, self.local_entry()
+
+    def local_entry(self):
+        run = report.load(report.find_run(self.cfg.state_dir, None))
+        (entry,) = [e for e in run.entries if e.host == "Whopper"]
+        return entry
+
+    def test_a_reboot_that_runs_stays_deferred(self):
+        code, entry = self.execute("true")
+        self.assertEqual((code, entry.status), (0, "deferred"))
+        self.assertIn("after writing this report", entry.note)
+
+    def test_a_declined_reboot_is_recorded(self):
+        code, entry = self.execute("echo never; exit 1", tty=True, confirm=False)
+        self.assertEqual((code, entry.status), (0, "skipped"))
+        self.assertIn("declined", entry.note)
+
+    def test_a_failed_reboot_is_recorded(self):
+        code, entry = self.execute("exit 5")
+        self.assertEqual((code, entry.status, entry.exit_code), (cli.EXIT_FAILED, "failed", 5))
+
+    def test_handing_off_to_an_agent_records_the_reboot_as_skipped(self):
+        with mock.patch.object(cli.interactive, "pick_agent", return_value="claude"), \
+                mock.patch.object(cli.agent, "installed", return_value=["claude"]), \
+                mock.patch.object(cli.agent, "hand_off", side_effect=SystemExit):  # the real one execs
+            with self.assertRaises(SystemExit):
+                self.execute("exit 1", tty=True, problems=True)
+        entry = self.local_entry()
+        self.assertEqual(entry.status, "skipped")
+        self.assertIn("claude", entry.note)
 
 
 if __name__ == "__main__":

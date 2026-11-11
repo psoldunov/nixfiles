@@ -39,11 +39,13 @@ test('classify sends unnamed client-org repos to setup, the rest nowhere', () =>
   assert.deepEqual(classify(undefined, nodes, config), { kind: 'none' })
 })
 
-test('hasLogged wants a session on the task starting near the turn', () => {
+test('hasLogged wants a session on the task whose notes carry the turn marker', () => {
   const start = 1_000_000_000
-  assert.equal(hasLogged([{ task: 17, begin: start + 30_000 }], 17, start), true)
-  assert.equal(hasLogged([{ task: 17, begin: start + 600_000 }], 17, start), false)
-  assert.equal(hasLogged([{ task: 21, begin: start }], 17, start), false)
+  assert.equal(hasLogged([{ task: 17, begin: start + 600_000, notes: 'Fixed it [turn gjdgxs]' }], 17, start), true)
+  assert.equal(hasLogged([{ task: 17, begin: start, notes: 'Fixed it' }], 17, start), false)
+  assert.equal(hasLogged([{ task: 17, begin: start }], 17, start), false)
+  assert.equal(hasLogged([{ task: 17, begin: start, notes: 'Fixed it [turn gjdgxt]' }], 17, start), false)
+  assert.equal(hasLogged([{ task: 21, begin: start, notes: '[turn gjdgxs]' }], 17, start), false)
 })
 
 test('decide asks once, then falls back', () => {
@@ -69,6 +71,7 @@ test('decide has a new client set up before logging', () => {
   assert.equal(act, 'ask')
   assert.match(message, /create_folder/)
   assert.match(message, /repo: boundary-digital\/new-client/)
+  assert.match(message, /notes ending with "\[turn 0\]"/)
 })
 
 test('onPrompt starts a turn, but keeps a blocked one pi is continuing', () => {
@@ -105,9 +108,10 @@ function fixture() {
   writeFileSync(join(root, 'tasks.json'), JSON.stringify({ nodes }))
   writeFileSync(
     cli,
-    `#!/bin/sh\necho "$*" >> ${calls}\ncase "$1" in tasks) cat ${join(root, 'tasks.json')};; sessions) echo '[]';; esac\n`,
+    `#!/bin/sh\necho "$*" >> ${calls}\ncase "$1" in tasks) cat ${join(root, 'tasks.json')};; sessions) cat ${join(root, 'sessions.json')};; esac\n`,
   )
   chmodSync(cli, 0o755)
+  writeFileSync(join(root, 'sessions.json'), '[]')
   mkdirSync(join(root, 'config', 'clokkr-gate'), { recursive: true })
   writeFileSync(join(root, 'config', 'clokkr-gate', 'config.json'), JSON.stringify({ ...config, cli }))
   const env = { PATH: process.env.PATH, XDG_CONFIG_HOME: join(root, 'config'), XDG_STATE_HOME: join(root, 'state') }
@@ -135,7 +139,35 @@ test(`hook: blocks the first stop, writes the session at the second${viaLink ? '
   assert.match(first.reason, /add_session with task "17"/)
 
   assert.equal(hook('stop', { session_id: 's1', cwd: repo, last_assistant_message: 'Header fixed.\nMore.' }), '')
-  assert.match(sessionAdd(), /^session add 17 --from \S+ --to \S+ --notes Header fixed\. \(logged by clokkr-gate\)$/)
+  assert.match(sessionAdd(), /^session add 17 --from \S+ --to \S+ --notes Header fixed\. \(logged by clokkr-gate\) \[turn \w+\]$/)
+})
+
+// Two one-minute turns 70 s apart: the first turn's session must not count for the second.
+test('hook: a session is matched to its turn by the marker in its notes, not by a nearby start', () => {
+  const { root, repo, env, sessionAdd } = fixture()
+  const hook = (event, input) => execFileSync('node', [realScript, event], { env, input: JSON.stringify(input), encoding: 'utf8' })
+  const statePath = join(root, 'state', 'clokkr-gate', 's1.json')
+  const sessions = list => writeFileSync(join(root, 'sessions.json'), JSON.stringify(list))
+  const runTurn = () => {
+    hook('prompt', { session_id: 's1', prompt: 'next' })
+    const state = JSON.parse(readFileSync(statePath, 'utf8'))
+    writeFileSync(statePath, JSON.stringify({ ...state, start: state.start - 2 * 60_000 }))
+    const asked = JSON.parse(hook('stop', { session_id: 's1', cwd: repo }))
+    const [, mark] = /notes ending with "(\[turn \w+\])"/.exec(asked.reason)
+    return { start: state.start - 2 * 60_000, mark }
+  }
+
+  const first = runTurn()
+  sessions([{ task: 17, begin: first.start, notes: `Fixed the header ${first.mark}` }])
+  assert.equal(hook('stop', { session_id: 's1', cwd: repo }), '')
+  assert.equal(sessionAdd(), undefined)
+
+  // The second turn starts 70 s after the first; its agent did not log.
+  const second = runTurn()
+  assert.notEqual(second.mark, first.mark)
+  sessions([{ task: 17, begin: second.start - 70_000, notes: `Fixed the header ${first.mark}` }])
+  assert.equal(hook('stop', { session_id: 's1', cwd: repo }), '')
+  assert.match(sessionAdd(), /^session add 17 .* \[turn \w+\]$/)
 })
 
 test('pi: asks with a follow-up, keeps the turn through it, then falls back', async t => {
@@ -164,5 +196,5 @@ test('pi: asks with a follow-up, keeps the turn through it, then falls back', as
   handlers.before_agent_start({ messageType: 'user', prompt: sent[0] })
   await handlers.agent_end(answer, ctx)
   assert.equal(sent.length, 1)
-  assert.match(sessionAdd(), /^session add 17 .* --notes Header fixed\. \(logged by clokkr-gate\)$/)
+  assert.match(sessionAdd(), /^session add 17 .* --notes Header fixed\. \(logged by clokkr-gate\) \[turn \w+\]$/)
 })

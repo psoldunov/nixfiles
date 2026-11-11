@@ -54,6 +54,12 @@ icon = "test-tube"
 command = "nix build .#checks.x86_64-linux.fleet --no-link"
 icon = "test-tube"
 
+# Every flake check: all the suites above plus UniFi, monitoring, backup jobs,
+# the home scripts, Clokkr and the Node hook adapters. Unlike `check`, this builds.
+[scripts.run.test]
+command = "nix flake check"
+icon = "test-tube"
+
 # rebuild-* mirror `rebuild_system [host|all]`: switch to this worktree's flake.
 # scripts/switch-host.sh picks the route from the host running it, so they
 # work from Whopper and from the Macs, which have no nixos-rebuild: a Mac

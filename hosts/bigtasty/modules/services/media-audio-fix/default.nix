@@ -21,6 +21,9 @@
 in {
   environment.systemPackages = [mediaAudioFix];
 
+  # The script's run lock, shared by the timer and manual runs.
+  systemd.tmpfiles.rules = ["d /run/media-audio-fix 0755 psoldunov users -"];
+
   systemd.services.media-audio-fix = {
     description = "Replace DTS with AC3 and drop unwanted audio languages in /mnt/Media";
     after = ["network-online.target" "sonarr.service" "radarr.service"];
