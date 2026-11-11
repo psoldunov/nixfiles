@@ -1,32 +1,3 @@
-# Per-host knobs for Whopper. Threaded into every module via specialArgs
-# as `hostConfig`. Schema is shared with hosts/bigtasty/hostConfig.nix.
-# Server flags default to false here; modules gate on them via
-# `lib.mkIf hostConfig.<flag>`.
-#
-# Schema:
-#   role :: "desktop" | "server" | "htpc"
-#
-#   enableRaid              :: bool  (mdadm + /RAID fileSystems)
-#   enableNfsServer         :: bool  (NFS server exports)
-#   enableSambaShares       :: bool  (Samba + samba-wsdd)
-#   enableNetatalk          :: bool  (AFP shares)
-#   enableMediaStack        :: bool  (jellyfin + plex + uptime-kuma)
-#   enableArrStack          :: bool  (sonarr/radarr/lidarr/prowlarr/jellyseerr)
-#   enableNginxVhosts       :: bool  (nginx + ACME)
-#   enableCloudflareTunnels :: bool  (cloudflared tunnels)
-#   enableDyndns            :: bool  (cloudflare-dyndns)
-#   enableDockerOci         :: bool  (virtualisation.oci-containers)
 {
   role = "desktop";
-
-  enableRaid = false;
-  enableNfsServer = false;
-  enableSambaShares = false;
-  enableNetatalk = false;
-  enableMediaStack = false;
-  enableArrStack = false;
-  enableNginxVhosts = false;
-  enableCloudflareTunnels = false;
-  enableDyndns = false;
-  enableDockerOci = false;
 }

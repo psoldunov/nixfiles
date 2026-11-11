@@ -177,9 +177,14 @@ class Execution:
             self.console.label(host.name)
 
         def task(host: Host) -> None:
-            entry = self._job(host.name, phase, steps_for(host, tty), solo, cwd, self._route(phase, host))
-            if follow and entry.status == "ok":
-                entry = follow(host, entry)
+            try:
+                entry = self._job(host.name, phase, steps_for(host, tty), solo, cwd, self._route(phase, host))
+                if follow and entry.status == "ok":
+                    entry = follow(host, entry)
+            # Threads never see Ctrl-C; anything else escaping must fail the
+            # host, or it drops out of the run and the commit goes ahead.
+            except BaseException as error:
+                entry = Entry(host.name, phase, "failed", note=f"fleet hit an error running this host: {error!r}")
             results[host.name] = self._add(entry)
             self.console.line(f"===== {host.name}: {phase} {entry.status} =====")
 
@@ -239,7 +244,10 @@ class Execution:
         woken: list[Host] = []
 
         def task(host: Host) -> None:
-            entry = self._add(self._wake_one(host))
+            try:
+                entry = self._add(self._wake_one(host))
+            except BaseException as error:  # as in _phase: fail the host, don't drop it
+                entry = self._add(Entry(host.name, "wake", "failed", note=f"fleet hit an error waking this host: {error!r}"))
             if entry.status == "ok":
                 woken.append(host)
 
@@ -279,6 +287,8 @@ class Execution:
             self._phase(action, remote, lambda h, tty: actions.BUILDERS[action](self.cfg, h, tty), follow=confirm)
         local = next((h for h in hosts if self.cfg.is_local(h)), None)
         if local:
+            note = "left for last: fleet runs it after writing this report, so the report can't show whether it happened"
+            self._add(Entry(local.name, action, "deferred", note=note, route="on this machine"))
             self.local_power = (action, local)
 
     def _reboot_first(self, hosts: list[Host]) -> list[Host]:
@@ -337,8 +347,18 @@ class Execution:
                 return False
             self.console.line("fleet: git pull failed; building the local tree as it is.")
             pull = replace(pull, status="ok", errors=(), note="git pull failed; built the local tree as it is")
+        # An autostash that doesn't apply cleanly still exits 0, leaving conflicts
+        # that `git add -A` would stage, markers and all, for the commit.
+        unmerged = _git(cwd, "diff", "--name-only", "--diff-filter=U")
+        if unmerged.returncode != 0 or unmerged.stdout.strip():
+            files = ", ".join(unmerged.stdout.splitlines()) or "the checkout (git diff failed)"
+            note = f"unresolved conflicts in {files}; resolve them and rerun (an autostash that didn't apply stays in git stash list)"
+            self._add(replace(pull, status="failed", note=note))
+            return False
         self._add(pull)
-        _git(cwd, "add", "-A")
+        if _git(cwd, "add", "-A").returncode != 0:
+            self._add(Entry(FLAKE, "git add", "failed", note=f"git add -A failed in {cwd}, so nothing was switched"))
+            return False
         self.revision = _revision(cwd)
         if self.plan.action == "update":
             bumped = self._add(self._flake_job("flake update", actions.flake_update(self.cfg)))

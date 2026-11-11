@@ -41,7 +41,7 @@ class Entry:
 
     host: str
     phase: str
-    status: str = "ok"  # ok | failed | skipped | interrupted
+    status: str = "ok"  # ok | failed | skipped | interrupted | deferred (this machine's reboot or suspend)
     note: str = ""
     route: str = ""
     exit_code: int | None = None

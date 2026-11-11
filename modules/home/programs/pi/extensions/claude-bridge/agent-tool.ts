@@ -201,9 +201,11 @@ function spawnPi(args: string[], options: RunOptions, run: AgentRun): Promise<{ 
 		proc.stderr.on("data", (chunk) => {
 			run.stderr += chunk.toString();
 		});
-		proc.on("close", (code) => {
+		proc.on("close", (code, signal) => {
 			if (buffer.trim()) onLine(buffer);
-			resolve({ exitCode: code ?? 0, aborted });
+			// A child killed by a signal has no exit code; that is a failure, not success.
+			if (code === null) run.stderr += `\nkilled by ${signal ?? "an unknown signal"}`;
+			resolve({ exitCode: code ?? 1, aborted });
 		});
 		proc.on("error", (error) => {
 			run.stderr += error.message;

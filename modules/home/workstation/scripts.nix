@@ -434,11 +434,40 @@
       '';
 
       convert_all_to_webp = pkgs.writeShellScriptBin "convert_all_to_webp" ''
+        status=0
+        set -C # the only redirect below is the claim on the output file
         for img in *.{jpg,jpeg,png,gif}; do
-            if [ -e "$img" ]; then
-                ${pkgs.imagemagick}/bin/magick "$img" "$(echo "$img" | sed 's/\.[^.]*$//').webp" && rm "$img"
+            [ -e "$img" ] || continue
+            dest="''${img%.*}.webp"
+            # Never overwrite: photo.jpg and photo.png share photo.webp, and a
+            # symlink (even dangling) would redirect the write elsewhere.
+            if [ -e "$dest" ] || [ -L "$dest" ]; then
+                echo "Refusing $img: $dest already exists. Keeping $img." >&2
+                status=1
+                continue
+            fi
+            # The check above is only for a friendly message. This open is the
+            # claim: noclobber makes it O_EXCL (no reuse, no symlink follow), so
+            # a concurrent run or a file planted since loses. Nothing is deleted
+            # unless it succeeds, so a foreign $dest is never touched.
+            if ! { exec 3> "$dest"; } 2>/dev/null; then
+                echo "Refusing $img: could not create $dest. Keeping $img." >&2
+                status=1
+                continue
+            fi
+            # magick writes to stdout (the fd we own), so it never reads the
+            # output name: %d, %o or a "format:" prefix in it mean nothing.
+            if ${pkgs.imagemagick}/bin/magick "./$img" webp:- >&3 3>&-; then
+                exec 3>&-
+                rm -- "$img" || status=1
+            else
+                exec 3>&-
+                echo "Failed to convert $img. Keeping it." >&2
+                rm -f -- "$dest"
+                status=1
             fi
         done
+        exit $status
       '';
 
       convert_all_to_woff2 = pkgs.writeShellScriptBin "convert_all_to_woff2" ''

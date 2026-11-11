@@ -216,12 +216,11 @@ zsh is the login shell on every host except PiHome, which keeps NixOS's default 
 
 ## `hostConfig`
 
-Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/shackstack/hostConfig.nix](hosts/shackstack/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
+Per-host roles passed to modules through `specialArgs`. PiHome has none. The roles are set in [hosts/whopper/hostConfig.nix](hosts/whopper/hostConfig.nix), [hosts/bigtasty/hostConfig.nix](hosts/bigtasty/hostConfig.nix), [hosts/bigking/hostConfig.nix](hosts/bigking/hostConfig.nix), [hosts/shackstack/hostConfig.nix](hosts/shackstack/hostConfig.nix), [hosts/bigmac/hostConfig.nix](hosts/bigmac/hostConfig.nix) and [hosts/macflurry/hostConfig.nix](hosts/macflurry/hostConfig.nix):
 
 | Field | Type | Meaning |
 |---|---|---|
 | `role` | `"desktop" \| "server" \| "htpc"` | Broad-stroke gate. `modules/home/shell/` uses it to omit desktop-only env vars (ghostty/mailspring/prisma/deno), aliases (`suspend`), fish and zsh functions (`open`, `fzf_kill`), and the `git` keychain key on servers. `"htpc"` (ShackStack) gets the server shell too, since it runs games, not a dev setup. macOS vs Linux is not a flag: shared home modules check `pkgs.stdenv.hostPlatform.isDarwin`. |
-| `enableRaid`, `enableNfsServer`, `enableSambaShares`, `enableNetatalk`, `enableMediaStack`, `enableArrStack`, `enableNginxVhosts`, `enableCloudflareTunnels`, `enableDyndns`, `enableDockerOci` | bool | Server-side feature flags. All `false` on Whopper, `true` on BigTasty, the storage ones `true` on BigKing. Currently informational — no module reads them; host modules under `hosts/bigtasty/modules/` import unconditionally. Flags reserved for a future host that wants a partial server stack. |
 
 ## Shared NixOS modules
 
@@ -280,12 +279,16 @@ Per-host knobs threaded via `specialArgs`. PiHome has none. Shared schema in [ho
 | `services-media.nix` | jellyfin, plex (library in `/var/lib/plex`, copied from ADM's Plex on BigKing; Quick Sync through `/dev/dri/renderD128`; requires the `/mnt/Media` mount), uptime-kuma, *arr stack (sonarr/radarr/lidarr/prowlarr/seerr), flaresolverr (Prowlarr Cloudflare proxy), `programs.chromium` |
 | `services-web.nix` | nginx vhosts + ACME with Cloudflare DNS-01, catch-all default vhost, LAN-only access lists from `nginx-lan-only.nix` |
 | `services-cloudflare.nix` | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL`, `services.cloudflare-dyndns` |
-| `services-shares.nix` | `services.nfs.server`, Samba (workgroup WORKGROUP, MacSamba/fruit), samba-wsdd, netatalk, `systemd.services.sharesSync` (inotify → rsync) |
+| `services-shares.nix` | `services.nfs.server`, Samba (workgroup WORKGROUP, MacSamba/fruit), samba-wsdd, netatalk, `systemd.services.sharesSync` (hourly rsync timer requiring the source and NAS mounts) |
 | `services-misc.nix` | gnupg agent |
 | `virtualisation.nix` | Host `oci-containers`, transmission restart policy, `systemd.services.docker-networks` oneshot creating immich-/paperless-/nocodb-/infisical-/cal-diy-network |
 | `sops.nix` | sops secrets for env files referenced by docker containers + ACME |
 | `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server`, `cal-diy`, `searxng`, `t3code` |
 | `services/media-audio-fix/` | Nightly job (01:00) that rewrites audio in `/mnt/Media` for the LG C2, which can't decode DTS. DTS tracks become AC3, and audio that isn't English, Russian or the title's original language (from Sonarr/Radarr) is dropped. It only touches files that need a change and starts no new file after 07:30. Preview with `media-audio-fix --dry-run`; add `--sonarr-config` and `--radarr-config` to include the language drops |
+
+`sharesSync` and `immichSync` run hourly, starting 10 and 5 minutes after boot respectively. Both require their source filesystem and `/mnt/Backup` to be mounted. They mirror deletions too, so they do not replace a versioned backup. Immich's live PostgreSQL directory is excluded; the job checks for a non-empty, gzip-intact database dump less than 48 hours old in the NAS copy of `uploads/backups`. That check does not prove a restore works. Any old raw PostgreSQL copy on the NAS is left untouched.
+
+Real `media-audio-fix` runs take a local lock; previews do not alter files. Installation of a converted file uses hard links to avoid overwriting a concurrent import. If a run stops during the final swap, the original may remain under a hidden `.audiofix.held` name and need manual recovery. Later runs warn about these files and leave them alone.
 
 ### cal.diy
 
@@ -577,7 +580,8 @@ On Whopper and the Macs, `sops-code <file>` opens the same editor session in VS 
 ## Inspect
 
 ```fish
-nix flake check --no-build
+nix flake check --no-build  # evaluate without running the test derivations
+nix flake check             # build and run the registered safety checks
 nix eval .#nixosConfigurations.Whopper.config.system.build.toplevel.drvPath
 nix eval .#nixosConfigurations.BigTasty.config.system.build.toplevel.drvPath
 nix eval .#darwinConfigurations.BigMac.system.drvPath     # evaluates on Linux too; building needs the Mac
@@ -588,7 +592,7 @@ nixos-rebuild dry-activate --flake .#BigTasty --target-host psoldunov@bigtasty -
 ## Conventions
 
 - **`/modules` is shared-only.** Anything host-specific lives under `hosts/<host>/`. Shared modules hold the host-agnostic baseline; hosts append to lists and attrsets rather than redefine them.
-- **`hostConfig` over `mkOption`.** No formal module options for now; flags threaded via `specialArgs`. Upgrade if/when a third host needs diverging settings.
+- **Host roles.** `hostConfig.role` is passed through `specialArgs` for shared shell settings. Each host's modules select its services explicitly.
 - **Scripts on `$PATH`.** Everything in `modules/home/workstation/scripts.nix` and `hosts/whopper/home/scripts/` lands in `home.packages`, so other modules and shortcuts call scripts by bare name, not by Nix store path.
 - **Closure isolation.** Shared modules that pull desktop-heavy deps (ghostty, mailspring, prisma-engines) must gate them behind `lib.optionalAttrs (hostConfig.role == "desktop")` — see [modules/home/shell/shell.nix](modules/home/shell/shell.nix) for the pattern.
 - **Flake visibility.** `nix flake` only sees git-tracked files. `git add` new files before `nixos-rebuild build`.

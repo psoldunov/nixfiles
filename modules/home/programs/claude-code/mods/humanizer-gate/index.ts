@@ -14,10 +14,28 @@ import { classify, contextHasHumanizer, gateMessage, type Target } from './hooks
 
 const text = (value: unknown): string => (typeof value === 'string' ? value : '')
 
-/** pi's write, edit and bash arguments as a policy target; any other tool as itself. */
+// pi-mcp-adapter's `mcp` gateway and `mcp__<server>` namespace proxies, whose
+// `{ tool, args }` name the MCP tool they run.
+const ADAPTER_PROXY = /^mcp(__[\w-]+)?$/
+
+/** The adapter's `args`, an object or a JSON string; a string that does not parse stays as it is. */
+function adapterArgs(args: unknown): unknown {
+  if (typeof args !== 'string') return args
+  try {
+    return JSON.parse(args)
+  } catch {
+    return args
+  }
+}
+
+/** pi's write, edit and bash arguments as a policy target; an adapter proxy call as the MCP tool it runs; any other tool as itself. */
 export function targetOf(event: Pick<ToolCallEvent, 'toolName' | 'input'>): Target {
   const input = event.input as Record<string, unknown>
   const path = text(input.path).replace(/^@/, '')
+  // Only the proxy's own top level is unwrapped: nested values are arguments, never calls.
+  if (ADAPTER_PROXY.test(event.toolName) && text(input.tool) !== '') {
+    return { kind: 'tool', name: text(input.tool), input: adapterArgs(input.args) }
+  }
   switch (event.toolName) {
     case 'write':
       return { kind: 'write', path, text: text(input.content), partial: false }

@@ -96,25 +96,57 @@
     };
   };
 
-  systemd.services = {
-    immichSync = {
-      after = ["network.target"];
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        Type = "simple";
-        Restart = "always";
-        ExecStart = pkgs.writeShellScript "sync-immich" ''
-          SRC="/RAID/apps/immich"
-          DEST="/mnt/Backup"
+  # Mirrors /RAID/apps/immich to /mnt/Backup/immich: the uploads (media plus
+  # the database dumps Immich writes itself into uploads/backups, daily at
+  # 2:00, last 14 kept). The live PostgreSQL data directory is not copied: a
+  # file copy of a running cluster is not restorable. --delete-excluded is
+  # absent on purpose, so the raw copy already on the NAS stays untouched.
+  # The job fails when the NAS copy has no gzip-intact dump from the last 48
+  # hours, so a stale or media-only backup shows up as a failed unit. That is
+  # a freshness and integrity check only: older dumps may still restore, and
+  # gzip -t does not prove the SQL restores. Verify a restore separately.
+  systemd.services.immichSync = {
+    description = "Mirror Immich media and database dumps to /mnt/Backup";
+    # Requires and orders after both ends, so a restart or unmount of /RAID
+    # cannot leave an empty underlying directory for rsync --delete to
+    # mirror. The mountpoint check below covers the NFS side on manual runs.
+    unitConfig.RequiresMountsFor = ["/RAID/apps/immich" "/mnt/Backup"];
+    path = [pkgs.rsync pkgs.util-linux pkgs.gzip];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = pkgs.writeShellScript "sync-immich" ''
+        set -euo pipefail
+        SRC="/RAID/apps/immich"
+        DEST="/mnt/Backup"
 
-          while ${pkgs.inotify-tools}/bin/inotifywait -r -e modify,create,delete,move $SRC; do
-              ${pkgs.rsync}/bin/rsync -av --delete $SRC $DEST
-          done
-        '';
-        User = "root";
-        StandardOutput = "journal";
-        StandardError = "journal";
-      };
+        if ! mountpoint -q "$DEST"; then
+          echo "$DEST is not mounted, not copying" >&2
+          exit 1
+        fi
+
+        rsync -a --delete \
+          --exclude=/immich/postgres \
+          --exclude='/immich/uploads/backups/*.tmp' \
+          "$SRC" "$DEST/"
+
+        DUMPS="$DEST/immich/uploads/backups"
+        newest=$(find "$DUMPS" -maxdepth 1 -name '*.sql.gz' -size +0 -mmin -2880 \
+          -printf '%T@ %p\n' 2>/dev/null | sort -nr | head -n1 | cut -d' ' -f2-) || true
+        if [ -z "$newest" ] || ! gzip -t "$newest"; then
+          echo "no usable Immich database dump in $DUMPS: backup freshness/integrity requirement failed (need a gzip-intact .sql.gz under 48h old). Media is mirrored; verify dump restoration separately." >&2
+          exit 1
+        fi
+        echo "newest database dump: $newest"
+      '';
+    };
+  };
+
+  systemd.timers.immichSync = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnBootSec = "5min";
+      OnUnitInactiveSec = "1h";
     };
   };
 }

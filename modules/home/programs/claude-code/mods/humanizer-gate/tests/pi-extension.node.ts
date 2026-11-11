@@ -66,6 +66,45 @@ test('a failing context read lets the call through', () => {
   assert.equal(load()(README, broken), undefined)
 })
 
+// pi-mcp-adapter's shapes: the `mcp` gateway with `{ tool, args }` (args an
+// object or a JSON string), a `mcp__<server>` namespace proxy, and direct tools,
+// all named with the adapter's default `<server>_<tool>` prefix.
+const PARAGRAPH = 'This guide walks through installing the tool and wiring it into an existing project. '.repeat(2)
+
+test('MCP calls through the adapter are classified by the tool they run', () => {
+  const onToolCall = load()
+  const ctx = ctxWith([])
+  const comment = { issueId: 'ABC-1', body: PARAGRAPH }
+  const calls = [
+    { toolName: 'mcp', input: { tool: 'linear-swiss-cheese_save_comment', args: comment } },
+    { toolName: 'mcp', input: { tool: 'linear-swiss-cheese_save_comment', args: JSON.stringify(comment) } },
+    { toolName: 'mcp__linear_swiss_cheese', input: { tool: 'save_comment', args: comment } },
+    { toolName: 'linear-swiss-cheese_save_comment', input: comment },
+    { toolName: 'mcp', input: { tool: 'mailspring_send_email', args: '{"to":"a@b.c","body":"hi"}' } },
+  ]
+  for (const call of calls) {
+    const blocked = onToolCall(call, ctx)
+    assert.equal(blocked?.block, true, JSON.stringify(call))
+    assert.match(blocked?.reason ?? '', /`(linear-swiss-cheese_save_comment|save_comment|mailspring_send_email)` call/)
+    assert.equal(onToolCall(call, ctxWith([SKILL_READ])), undefined)
+  }
+})
+
+test('adapter calls that run no gated tool pass, whatever their arguments hold', () => {
+  const onToolCall = load()
+  const ctx = ctxWith([])
+  const nested = { tool: 'slack_send_message', args: { message: PARAGRAPH } }
+  const calls = [
+    { toolName: 'mcp', input: { search: 'save_comment send_email' } },
+    { toolName: 'mcp', input: { describe: 'linear-swiss-cheese_save_comment' } },
+    { toolName: 'mcp', input: { tool: 'linear-swiss-cheese_save_issue', args: { id: 'ABC-1', state: 'Done' } } },
+    { toolName: 'mcp', input: { tool: 'linear-swiss-cheese_list_issues', args: { query: PARAGRAPH, filter: nested } } },
+    { toolName: 'mcp__linear_swiss_cheese', input: { tool: 'list_issues', args: JSON.stringify({ filter: nested }) } },
+    { toolName: 'subagent', input: nested },
+  ]
+  for (const call of calls) assert.equal(onToolCall(call, ctx), undefined, JSON.stringify(call))
+})
+
 test('edit targets carry only the new text', () => {
   const target = targetOf({ toolName: 'edit', input: { path: '@docs/a.md', edits: [{ oldText: 'a', newText: 'b' }, { oldText: 'c', newText: 'd' }] } } as never)
   assert.deepEqual(target, { kind: 'write', path: 'docs/a.md', text: 'b\nd', partial: true })

@@ -554,8 +554,49 @@
       modules = [./hosts/pihome];
     };
 
+    # Every suite runs against the sources in the store, with fakes standing in
+    # for the network, hosts and secrets. Suites that read an evaluated host
+    # (monitoring, backup jobs, the webp script) get that data from a fixture
+    # evaluated here, outside the sandbox, so no check needs a nested Nix.
+    # Not wired: the claude-code/testing suites (`policy.test.ts`,
+    # `register.test.ts` under mods/*/tests) need the Claude Code engine; run
+    # them with `claude plugin test modules/home/programs/claude-code/mods/<name>`.
     checks.${system} = let
       pkgs = nixpkgs.legacyPackages.${system};
+      node = pkgs.nodejs_24;
+      # An evaluated fixture as a JSON file. The string context is dropped so a
+      # check does not depend on (build) the host closures the values came from.
+      evaluated = name: value:
+        pkgs.writeText name (builtins.unsafeDiscardStringContext (builtins.toJSON value));
+      monitoring = import ./modules/nixos/server-monitoring/fixtures/composed-config.nix {flake = self;};
+      backupJobs = import ./hosts/bigtasty/tests/backup-jobs.nix {flake = self;};
+      # A skipped test is a test that did not run, so any skip fails the check.
+      unittestCheck = {
+        name,
+        dir,
+        python ? pkgs.python3,
+        inputs ? [],
+        env ? {},
+        pattern ? "test_*.py",
+      }:
+        pkgs.runCommand "${name}-tests" ({nativeBuildInputs = [python] ++ inputs;} // env) ''
+          set -o pipefail
+          export PYTHONDONTWRITEBYTECODE=1 HOME="$TMPDIR"
+          python3 -m unittest discover -s ${dir} -p '${pattern}' -v 2>&1 | tee "$TMPDIR/log"
+          if grep -Eq '^OK \(.*skipped=' "$TMPDIR/log"; then echo "skipped tests: fix the environment" >&2; exit 1; fi
+          touch "$out"
+        '';
+      nodeCheck = {
+        name,
+        dir,
+        files,
+      }:
+        pkgs.runCommand "${name}-tests" {nativeBuildInputs = [node pkgs.git];} ''
+          export HOME="$TMPDIR"
+          cd ${dir}
+          node --test ${files}
+          touch "$out"
+        '';
     in {
       adguard-cli =
         pkgs.runCommand "adguard-cli-tests" {
@@ -578,6 +619,73 @@
           python3 -m unittest discover -s ${./packages/fleet}/tests -v
           touch "$out"
         '';
+
+      # The MCP stdio test needs the SDK and the pinning tests urllib3, so a
+      # skipped test fails the check. mcp_1: unifi_readonly.py imports
+      # mcp.server.fastmcp, which mcp 2.x (python3Packages.mcp) removed.
+      unifi = unittestCheck {
+        name = "unifi";
+        dir = "${./modules/home/programs/unifi}/tests";
+        python = pkgs.python3.withPackages (ps: [ps.mcp_1 ps.urllib3]);
+      };
+
+      intel-gpu-sample = unittestCheck {
+        name = "intel-gpu-sample";
+        dir = "${./modules/nixos/server-monitoring}";
+        pattern = "test_intel_gpu_sample.py";
+      };
+
+      # The composed BigTasty and BigKing options, not the Nix source.
+      server-monitoring = unittestCheck {
+        name = "server-monitoring";
+        dir = "${./modules/nixos/server-monitoring}";
+        pattern = "test_monitoring.py";
+        env.MONITORING_TEST_CONFIG = evaluated "server-monitoring.json" monitoring;
+      };
+
+      media-audio-fix = unittestCheck {
+        name = "media-audio-fix";
+        dir = "${./hosts/bigtasty/modules/services/media-audio-fix}";
+      };
+
+      # The job scripts run for real, against scratch directories. Their PATH
+      # packages are named in the environment so the sandbox has them.
+      bigtasty-backup-jobs = unittestCheck {
+        name = "bigtasty-backup-jobs";
+        dir = "${./hosts/bigtasty/tests}";
+        env = {
+          BACKUP_JOBS_TEST_CONFIG = evaluated "bigtasty-backup-jobs.json" backupJobs;
+          BACKUP_JOBS_PATH = "${backupJobs.jobs.immichSync.path}:${backupJobs.jobs.sharesSync.path}";
+        };
+      };
+
+      # convert_all_to_webp and keyring-export. The script text comes from the
+      # home-manager module, evaluated against a stub pkgs.
+      scripts = unittestCheck {
+        name = "scripts";
+        dir = "${./scripts}/tests";
+        env.CONVERT_ALL_TO_WEBP_SCRIPT = pkgs.writeText "convert_all_to_webp.sh" (builtins.unsafeDiscardStringContext (import ./scripts/tests/convert-all-to-webp-script.nix {flake = self;}));
+      };
+
+      clokkr-gate = nodeCheck {
+        name = "clokkr-gate";
+        dir = ./modules/home/programs/clokkr-gate;
+        files = "clokkr-gate.test.mjs";
+      };
+
+      # pi's claude-bridge, including the Agent tool against stand-in children.
+      claude-bridge = nodeCheck {
+        name = "claude-bridge";
+        dir = ./modules/home/programs/pi/extensions/claude-bridge;
+        files = "'tests/*.test.ts'";
+      };
+
+      # The humanizer-gate pi extension and the Codex hooks of both mods.
+      hook-adapters = nodeCheck {
+        name = "hook-adapters";
+        dir = ./modules/home/programs/claude-code/mods;
+        files = "'humanizer-gate/tests/*.node.ts' 'nix-owned-paths/tests/codex.node.ts'";
+      };
     };
 
     # Apply on a Mac with `sudo darwin-rebuild switch --flake .#<Host>`, or

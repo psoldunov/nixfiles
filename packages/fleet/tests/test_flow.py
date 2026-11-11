@@ -111,6 +111,50 @@ class Rebuild(FlowCase):
         self.assertNotIn("commit and push", [e.phase for e in run.entries])
         self.assertIn("not committing, since BigKing failed", self.console.text())
 
+    def test_autostash_conflict_stops_before_staging_anything(self):
+        def git(*args, cwd=self.flake):
+            subprocess.run(["git", *args], cwd=cwd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        remote, other = Path(self.tmp.name, "remote.git"), Path(self.tmp.name, "other")
+        git("init", "-q", "--bare", str(remote))
+        git("remote", "add", "origin", str(remote))
+        git("push", "-q", "-u", "origin", "HEAD")
+        git("clone", "-q", str(remote), str(other))
+        (other / "flake.nix").write_text("{ upstream = true; }\n")
+        git("commit", "-qam", "upstream", cwd=other)
+        git("push", "-q", cwd=other)
+        (self.flake / "flake.nix").write_text("{ local = true; }\n")
+        run = self.go(self.plan("rebuild", ["BigTasty"])).run
+        self.assertEqual([(e.host, e.phase, e.status) for e in run.entries], [("flake", "git pull", "failed")])
+        self.assertIn("flake.nix", run.entries[0].note)
+        unmerged = subprocess.run(["git", "ls-files", "-u"], cwd=self.flake, stdout=subprocess.PIPE, text=True).stdout
+        self.assertIn("flake.nix", unmerged)  # left for the user to resolve, not staged with its markers
+
+    def test_a_host_whose_job_raises_is_failed_and_holds_the_commit_back(self):
+        def crashing_builder(cfg, host, tty):
+            if host.name == "BigKing":
+                raise RuntimeError("builder bug")
+            return fake_builder(cfg, host, tty)
+
+        (self.flake / "new.nix").write_text("{}\n")
+        with mock.patch.dict(actions.BUILDERS, {"rebuild": crashing_builder}):
+            run = self.go(self.plan("rebuild", ["BigTasty", "BigKing"])).run
+        status = {(e.host, e.phase): (e.status, e.note) for e in run.entries}
+        self.assertEqual(status[("BigKing", "rebuild")][0], "failed")
+        self.assertIn("builder bug", status[("BigKing", "rebuild")][1])
+        self.assertNotIn(("flake", "commit and push"), status)
+
+    def test_a_wake_that_raises_holds_the_commit_back(self):
+        def broken_wake(mac, broadcast):
+            raise ValueError("bad MAC")
+
+        (self.flake / "new.nix").write_text("{}\n")
+        with mock.patch.object(flow.inventory, "send_wake", broken_wake):
+            run = self.go(self.plan("rebuild", ["BigTasty", "ShackStack"], wake=True), online=lambda t: t.endswith("bigtasty")).run
+        status = {(e.host, e.phase): e.status for e in run.entries}
+        self.assertEqual(status[("ShackStack", "wake")], "failed")
+        self.assertNotIn(("flake", "commit and push"), status)
+
     def test_missing_checkout(self):
         self.cfg = support.config("Whopper", state=self.cfg.state_dir, flake=str(Path(self.tmp.name, "nowhere")))
         run = self.go(self.plan("rebuild", ["BigTasty"])).run
@@ -127,10 +171,13 @@ class Power(FlowCase):
 
         with mock.patch.object(flow, "wait_for", fake_wait):
             result = self.go(self.plan("reboot", ["Whopper", "BigTasty"]))
-        (entry,) = result.run.entries
+        entry, deferred = result.run.entries
         self.assertEqual((entry.host, entry.status, entry.note), ("BigTasty", "ok", "back after 14 s"))
         self.assertEqual(waits, [("psoldunov@bigtasty", False), ("psoldunov@bigtasty", True)])
         self.assertEqual(result.local_power, ("reboot", self.cfg.host("Whopper")))
+        # The report is written before this machine reboots, so it says so.
+        self.assertEqual((deferred.host, deferred.phase, deferred.status), ("Whopper", "reboot", "deferred"))
+        self.assertIn("| Whopper | reboot | deferred |", result.report_path.read_text())
 
     def test_mac_that_stays_down_gets_the_filevault_hint(self):
         answers = iter([7.0, None])

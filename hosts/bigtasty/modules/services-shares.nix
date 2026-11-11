@@ -117,23 +117,38 @@
     };
   };
 
+  # Mirrors /RAID/shares to /mnt/Backup/shares. A missing source makes rsync
+  # fail before it deletes anything. Staggered 5 minutes after immichSync.
   systemd.services.sharesSync = {
-    after = ["network.target"];
-    wantedBy = ["multi-user.target"];
+    description = "Mirror /RAID/shares to /mnt/Backup";
+    # Requires and orders after both ends, so a restart or unmount of /RAID
+    # cannot leave an empty underlying directory for rsync --delete to
+    # mirror. The mountpoint check below covers the NFS side on manual runs.
+    unitConfig.RequiresMountsFor = ["/RAID/shares" "/mnt/Backup"];
+    path = [pkgs.rsync pkgs.util-linux];
     serviceConfig = {
-      Type = "simple";
-      Restart = "always";
-      ExecStart = pkgs.writeShellScript "shares-immich" ''
+      Type = "oneshot";
+      User = "root";
+      ExecStart = pkgs.writeShellScript "sync-shares" ''
+        set -euo pipefail
         SRC="/RAID/shares"
         DEST="/mnt/Backup"
 
-        while ${pkgs.inotify-tools}/bin/inotifywait -r -e modify,create,delete,move $SRC; do
-            ${pkgs.rsync}/bin/rsync -av --delete $SRC $DEST
-        done
+        if ! mountpoint -q "$DEST"; then
+          echo "$DEST is not mounted, not copying" >&2
+          exit 1
+        fi
+
+        rsync -a --delete "$SRC" "$DEST/"
       '';
-      User = "root";
-      StandardOutput = "journal";
-      StandardError = "journal";
+    };
+  };
+
+  systemd.timers.sharesSync = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnBootSec = "10min";
+      OnUnitInactiveSec = "1h";
     };
   };
 }
