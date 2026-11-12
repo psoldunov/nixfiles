@@ -36,7 +36,6 @@
     ./services/searxng.nix
     ./services/sotf-server.nix
     ./services/syncthing.nix
-    ./services/t3code.nix
     ./services/vaultwarden.nix
   ];
 }

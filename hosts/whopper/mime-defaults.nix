@@ -129,9 +129,6 @@ in
     "x-scheme-handler/linear" = "linear.desktop";
     "x-scheme-handler/notion" = "notion.desktop";
     "x-scheme-handler/numero" = "dev.soldunov.numero.desktop";
-    # T3 Code writes its own com.t3tools.T3Code.desktop handler at launch, but
-    # it execs the AppImage's bare binary outside the FHS env. Use the wrapper.
-    "x-scheme-handler/t3code" = "t3code.desktop";
     # SteamGridDB's "Boop" buttons; sgdboop comes from modules/packages.nix.
     "x-scheme-handler/sgdb" = "com.steamgriddb.SGDBoop.desktop";
   }

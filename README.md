@@ -12,7 +12,7 @@ Personal NixOS, nix-darwin and home-manager configuration. Multi-host flake, sin
 | **BigMac** | Workstation | Apple silicon Mac on macOS, managed by nix-darwin, GUI apps from Homebrew |
 | **MacFlurry** | Laptop | MacBook Pro (M1 Pro) on Wi-Fi, managed by nix-darwin like BigMac, with a smaller app set |
 
-Whopper, BigTasty, BigKing and ShackStack share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). ShackStack turns docker and libvirt off. PiHome takes nothing from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which has no Home Manager at all, and ShackStack, which gets `shell`, fastfetch and its own Plasma settings. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. Each of the three also runs a T3 Code background service in `~/.t3`, which the local app and other machines' apps share ([t3code.nix](modules/home/workstation/t3code.nix)). Whopper's is a Nix user service; the Macs use upstream's `t3 service install`. BigTasty imports the parts its T3 Code server's agents use: the CLI tools, the headless Playwright server, Codex and pi ([agents.nix](hosts/bigtasty/home/agents.nix)). Everything else is host-scoped.
+Whopper, BigTasty, BigKing and ShackStack share a NixOS baseline (`modules/nixos/`: boot loader, locale, nix settings, users, login shell, openssh, sops, docker/libvirt). ShackStack turns docker and libvirt off. PiHome takes nothing from it. BigMac and MacFlurry share a nix-darwin baseline (`modules/darwin/`: nix settings, overlays, sops, login shell, sudo, and the Homebrew apps both Macs get). Every host shares a set of home-manager modules (`shell`, `git`, `nix-index`, `sops`, Claude Code and pi config), except PiHome, which has no Home Manager at all, and ShackStack, which gets `shell`, fastfetch and its own Plasma settings. Whopper and the two Macs also share `modules/home/workstation/`, so their shell, SSH, Claude Code and pi setups match: the same SSH keys and hosts, CLI tools, system scripts, Ghostty config, Playwright and Mailspring MCP servers, and pi. BigTasty imports the agent parts: the CLI tools, the headless Playwright server, Codex and pi ([agents.nix](hosts/bigtasty/home/agents.nix)). Everything else is host-scoped.
 
 A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them can rebuild any host (see [Deploy](#deploy)).
 
@@ -40,7 +40,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │       ├── sops.nix                # HM sops preamble + SHELL_SECRETS
 │       ├── programs/claude-code/   # Declarative Claude Code (agents/hooks/skills/rules/MCP/settings)
 │       ├── programs/pi/            # Pi coding agent + claude-bridge extension (Claude rules/skills/agents in pi)
-│       ├── workstation/            # Whopper + the Macs: SSH, CLI set, system scripts, Ghostty, Playwright/Mailspring MCP, pi, T3 Code server
+│       ├── workstation/            # Whopper + the Macs: SSH, CLI set, system scripts, Ghostty, Playwright/Mailspring MCP, pi
 │       └── darwin/                 # The Macs only: CLI extras, mise, Syncthing, Token Station statusline
 ├── hosts/
 │   ├── whopper/
@@ -83,7 +83,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 │   │   ├── modules/                # modules/darwin + host name + BigMac-only Homebrew apps — see "Macs"
 │   │   └── home/                   # Shared HM + workstation layer + modules/home/darwin
 │   └── macflurry/                  # Same shape as bigmac/
-├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, t3code on Whopper + BigTasty, atuin-darwin on the Macs, aggregate-modules and codex on every NixOS host, the rest Whopper-only)
+├── overlays/                       # Custom nixpkgs overlays (claude-code on Whopper + BigTasty, pi-coding-agent on Whopper, BigTasty + the Macs, atuin-darwin on the Macs, aggregate-modules and codex on every NixOS host, the rest Whopper-only)
 ├── packages/                       # Python CLIs with their tests (flake checks): adguard-cli, and fleet (deploy, clean, reboot, sleep and wake the hosts; see "Deploy")
 ├── scripts/                        # Helpers: switch-host.sh, bootstrap-mac.sh, keyring-export.py / keyring-import.py (KWallet migration)
 ├── secrets/
@@ -117,7 +117,7 @@ A checkout lives at `~/.nixfiles` on Whopper and on each Mac, and any of them ca
 | GPU | Intel iGPU (intel-media-driver, Quick Sync, VAAPI) |
 | Storage | mdadm RAID array mounted at `/RAID`, NFS mounts `/mnt/{Media,Backup}` |
 | Network | static IP `10.24.24.2` (`enp8s0`), openssh (`AllowUsers psoldunov`) |
-| Services | jellyfin, plex, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server, concierge-server (Concierge's Sync server), cal-diy (scheduling, see [cal.diy](#caldiy)), searx (SearXNG web search for agents, behind Basic Auth), t3code-server (T3 Code nightly on loopback; Whopper's desktop app reaches it over SSH) |
+| Services | jellyfin, plex, sonarr/radarr/lidarr/prowlarr/seerr, flaresolverr, uptime-kuma, immich, paperless, vaultwarden, infisical, nocodb, n8n, syncthing, sotf-server, concierge-server (Concierge's Sync server), cal-diy (scheduling, see [cal.diy](#caldiy)), searx (SearXNG web search for agents, behind Basic Auth) |
 | Reverse proxy | nginx vhosts with Cloudflare DNS-01 ACME for `*.theswisscheese.com`. The UniFi port forward sends WAN 80/443 here from Cloudflare's IP ranges only. Kuma, Jellyfin, Immich, Home Assistant and cal.diy are public through Cloudflare. The \*arr apps, Jellyseerr, Homarr, Portainer, Syncthing and the dashboard take LAN, loopback and Docker peers only ([nginx-lan-only.nix](hosts/bigtasty/modules/nginx-lan-only.nix)). A catch-all vhost refuses the bare IP and unknown names |
 | Tunnels | `services.cloudflared` tunnel `CFD_MAIN_TUNNEL` (each service module adds its own hostname), `services.cloudflare-dyndns` syncing DNS records |
 | Docker | `oci-containers`: slskd, transmission, homeassistant, portainer-ce, homarr (+ watchtower from the shared baseline). Networks created by `systemd.services.docker-networks` (After=docker.service), which also removes unused ones |
@@ -255,7 +255,7 @@ Per-host roles passed to modules through `specialArgs`. PiHome has none. The rol
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
 | `networking.nix` | hostname, static IP on `enp10s0`, firewall ports, openssh hardening, avahi, Skrepka firewall |
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
-| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, t3code, pi-coding-agent, bambu-studio, periphery, solaar) |
+| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pi-coding-agent, bambu-studio, periphery, solaar) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
@@ -283,7 +283,7 @@ Per-host roles passed to modules through `specialArgs`. PiHome has none. The rol
 | `services-misc.nix` | gnupg agent |
 | `virtualisation.nix` | Host `oci-containers`, transmission restart policy, `systemd.services.docker-networks` oneshot creating immich-/paperless-/nocodb-/infisical-/cal-diy-network |
 | `sops.nix` | sops secrets for env files referenced by docker containers + ACME |
-| `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server`, `cal-diy`, `searxng`, `t3code` |
+| `services/` | Pre-extracted service modules: `immich`, `paperless`, `syncthing`, `sotf-server`, `n8n`, `nocodb`, `vaultwarden`, `infisical`, `concierge-server`, `cal-diy`, `searxng` |
 | `services/media-audio-fix/` | Nightly job (01:00) that rewrites audio in `/mnt/Media` for the LG C2, which can't decode DTS. DTS tracks become AC3, and audio that isn't English, Russian or the title's original language (from Sonarr/Radarr) is dropped. It only touches files that need a change and starts no new file after 07:30. Preview with `media-audio-fix --dry-run`; add `--sonarr-config` and `--radarr-config` to include the language drops |
 
 `sharesSync` and `immichSync` run hourly, starting 10 and 5 minutes after boot respectively. Both require their source filesystem and `/mnt/Backup` to be mounted. They mirror deletions too, so they do not replace a versioned backup. Immich's live PostgreSQL directory is excluded; the job checks for a non-empty, gzip-intact database dump less than 48 hours old in the NAS copy of `uploads/backups`. That check does not prove a restore works. Any old raw PostgreSQL copy on the NAS is left untouched.

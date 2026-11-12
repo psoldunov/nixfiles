@@ -39,7 +39,6 @@
       }) [
         "antoniorodr/memo"
         "browsh-org/browsh"
-        "ensemblr-hq/tap"
         "mongodb/brew"
         "nubjs/tap"
         "openclaw/tap"
@@ -91,7 +90,6 @@
       "cleanshot"
       "cyberduck"
       "discord"
-      "ensemblr-hq/tap/ensemblr"
       "figma"
       "font-jetbrains-mono-nerd-font"
       "ghostty"
@@ -118,9 +116,6 @@
       "screen-studio"
       "psoldunov/tap/skrepka"
       "slack"
-      # Nightly channel, to match Whopper and BigTasty's server. It updates
-      # itself, so it can run a nightly ahead of overlays/t3code/pin.json.
-      "t3-code@nightly"
       "telegram-desktop"
       "tg-pro"
       # Also feeds Claude Code's statusline (modules/home/darwin/default.nix).

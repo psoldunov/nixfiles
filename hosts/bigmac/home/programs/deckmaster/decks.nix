@@ -104,11 +104,6 @@ in {
       app = "/System/Library/CoreServices/Finder.app";
       fallback = icon "apps/64/system-file-manager";
     })
-    (app 4 {
-      label = "Ensemblr";
-      app = "/Applications/Ensemblr.app";
-      fallback = icon "apps/48/utilities-terminal";
-    })
   ];
 
   weather.keys = deck.weatherPage;

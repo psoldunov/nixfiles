@@ -1,5 +1,5 @@
-# The workstations' agent setup (../../../modules/home/workstation), for the
-# agents BigTasty's T3 Code server runs (../modules/services/t3code.nix).
+# The workstations' agent setup (../../../modules/home/workstation), for
+# agents run on BigTasty.
 # Claude Code, its MCP servers, skills and rules already come from
 # ../../../modules/home on every host. Left out: Mailspring's MCP server and
 # Clokkr (desktop apps), Concierge (Whopper's), and the workstation SSH keys
