@@ -295,27 +295,6 @@
         "type": "github"
       }
     },
-    "ensemblr": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1793179868,
-        "narHash": "sha256-f2P9rPiPuhv1HNrmxbmyPwiydIx9AuRssnJeO/CDLY8=",
-        "owner": "ensemblr-hq",
-        "repo": "ensemblr",
-        "rev": "032b6d0fe5114196aebe80d29ad344656788697c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ensemblr-hq",
-        "ref": "master",
-        "repo": "ensemblr",
-        "type": "github"
-      }
-    },
     "ex-ussr-kinship-research": {
       "flake": false,
       "locked": {
@@ -976,7 +955,6 @@
         "cursor-plugins": "cursor-plugins",
         "deckmaster": "deckmaster",
         "disko": "disko",
-        "ensemblr": "ensemblr",
         "ex-ussr-kinship-research": "ex-ussr-kinship-research",
         "figma": "figma",
         "firecrawl-cli": "firecrawl-cli",

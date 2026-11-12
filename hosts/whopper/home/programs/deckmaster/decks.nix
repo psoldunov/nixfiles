@@ -211,8 +211,8 @@ in {
     })
     (app 4 {
       label = "Ensemblr";
-      icon = appIcon pkgs.ensemblr-master "ensemblr";
-      desktopId = "ensemblr";
+      icon = appIcon config.programs.ensemblr.package "dev.soldunov.ensemblr";
+      desktopId = "dev.soldunov.ensemblr";
     })
   ];
 

@@ -7,7 +7,6 @@
   # Filelight maps disk usage and Tremotesf drives the Transmission daemon on
   # BigTasty.
   home.packages = with pkgs; [
-    ensemblr-master
     zed-editor
     cider-2
     ledger-live-desktop
