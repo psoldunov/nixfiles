@@ -255,7 +255,7 @@ Per-host roles passed to modules through `specialArgs`. PiHome has none. The rol
 | `mounts.nix` | `/NVMe`, `/SATA`, NFS mounts under `/mnt` |
 | `networking.nix` | hostname, static IP on `enp10s0`, firewall ports, openssh hardening, avahi, Skrepka firewall |
 | `nix.nix` | nix-path, nix-gaming Cachix substituter, idle daemon scheduling, `max-jobs`/`cores` |
-| `overlays.nix` | catppuccin-vsc, ensemblr, and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pi-coding-agent, bambu-studio, periphery, solaar) |
+| `overlays.nix` | catppuccin-vsc and the local overlays (mpv-mpris, vapor-kde, duckstation, motrix, pi-coding-agent, bambu-studio, periphery, solaar) |
 | `packages.nix` | System packages, unfree/insecure allowances, Steam + steam-presence, gamescope, gamemode, nano, 1Password |
 | `security.nix` | polkit, rtkit, PAM Yubikey + u2f, gnupg agent |
 | `services.nix` | vscode-server, syncthing, and other desktop services |
@@ -423,7 +423,6 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
 | `zen-browser`, `apple-fonts` | Whopper |
 | `steam-presence` | Whopper Steam Discord presence |
 | `skrepka` | Whopper clipboard history with LAN sync (HM module + NixOS firewall ports) |
-| `ensemblr` | Whopper overlay providing `ensemblr` / `ensemblr-master` |
 | `token-station` | Whopper tray monitor for Claude Code and Codex plan usage |
 | `solaar` | Non-flake source for `overlays/solaar.nix` (psoldunov/Solaar fork) |
 | `context-mode`, `cursor-plugins` | Claude Code plugin sources (`cursor-plugins` supplies pstack) |
