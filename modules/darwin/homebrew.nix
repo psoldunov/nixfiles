@@ -98,9 +98,6 @@
       "iina"
       "linear"
       "localsend"
-      # Mail client whose built-in MCP server Claude Code uses
-      # (modules/home/workstation/mailspring.nix).
-      "mailspring"
       "nextcloud"
       "notion"
       "notion-calendar"

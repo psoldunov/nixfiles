@@ -69,9 +69,12 @@ rewrites each placeholder to the key Codex reads that variable from
 if one is left. Stdio servers carry no placeholder by then: `mcpLaunchEnv`
 (`../claude-code/mcp-secrets.nix`) wraps them so they read their own secrets.
 HTTP header values come from the shell environment that
-`../claude-code/mcp.nix` and `../../workstation/mailspring.nix` export, so
-Codex has to start from a shell that ran its init, and Codex agents started by
-Concierge see a new key only after `concierge-daemon` restarts.
+`../claude-code/mcp.nix` and, on Whopper, `../../workstation/mailspring.nix`
+export, so Codex has to start from a shell that ran its init. Codex agents
+started by Concierge see a new key only after `concierge-daemon` restarts.
+
+The Macs use `mail-app` for Apple Mail. `../../darwin/default.nix` removes
+the old Mailspring entry after the mutable settings merge on activation.
 
 OAuth servers sign in once per machine: `codex mcp login <name>` for
 `figma-almost-always`, `figma-personal`, `linear-swiss-cheese`,
