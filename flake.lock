@@ -616,11 +616,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1794586877,
-        "narHash": "sha256-CROOtoaMMnosa+y6uvr8JTE1OfHn72BJegbq1keZ7Ao=",
+        "lastModified": 1794588860,
+        "narHash": "sha256-gpMOMdInyU2Zrl7i//eLYiW77NJZag04lxAbNCMMw84=",
         "owner": "psoldunov",
         "repo": "mail-app-mcp",
-        "rev": "ecb0d43aa8e076dd1af88d7bcde4afa014320b52",
+        "rev": "eb790e925aa1ce89edcafaebfbf0b8217aa0ce78",
         "type": "github"
       },
       "original": {
