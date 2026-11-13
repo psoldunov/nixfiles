@@ -1,7 +1,12 @@
 # What every Mac's home-manager config shares on top of ../ and
 # ../workstation: the extra CLI set, mise runtimes, Syncthing and Token
 # Station. Imported by hosts/bigmac/home and hosts/macflurry/home.
-{lib, ...}: let
+{
+  config,
+  inputs,
+  lib,
+  ...
+}: let
   # The cask installs only the app, with no link in /opt/homebrew/bin, so
   # the CLI is called inside the bundle.
   tokenStation = "/Applications/Token Station.app/Contents/MacOS/token-station";
@@ -10,7 +15,17 @@ in {
     ./mise.nix
     ./packages.nix
     ./syncthing.nix
+    inputs.mail-app-mcp.homeManagerModules.default
   ];
+
+  # Shared programs.mcp feeds Claude Code, Codex and pi. Mail must be open;
+  # macOS asks the launcher for Automation permission on first use.
+  services.mail-app-mcp.enable = true;
+
+  # Codex's mutable merge preserves servers removed from Nix declarations.
+  home.activation.removeMailspringMcp = lib.hm.dag.entryAfter ["codexMutableSettings"] ''
+    run env CODEX_HOME=${lib.escapeShellArg "${config.home.homeDirectory}/.codex"} /opt/homebrew/bin/codex mcp remove mailspring
+  '';
 
   # Preamble lives in ../sops.nix. Every secret a Mac's user needs
   # (SHELL_SECRETS, SSH keys, MCP tokens) names secrets/shared.yaml itself,

@@ -1,7 +1,7 @@
 # Mailspring's built-in MCP server (Preferences > MCP), which gives Claude
-# Code access to mail and calendar while Mailspring runs. The app itself is
-# installed by hosts/whopper/modules/desktop-environment.nix on Whopper and
-# by the `mailspring` cask on the Macs (modules/darwin/homebrew.nix).
+# Code access to mail and calendar while Mailspring runs on Whopper. The app
+# is installed by hosts/whopper/modules/desktop-environment.nix. The Macs
+# use Apple Mail through modules/home/darwin/default.nix instead.
 #
 # Mailspring generates the bearer token and keeps it in its own config, so
 # the shells read it from there at startup instead of from sops. A token
@@ -26,24 +26,25 @@
       export MAILSPRING_MCP_TOKEN
     fi
   '';
-in {
-  programs.fish.shellInitLast = lib.mkAfter ''
-    if test -r ${mailspringConfig}
-      set -gx MAILSPRING_MCP_TOKEN (${jq} -r '${tokenQuery}' ${mailspringConfig})
-    end
-  '';
-  programs.bash.bashrcExtra = lib.mkAfter posixExport;
-  programs.zsh.initContent = lib.mkAfter posixExport;
+in
+  lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) {
+    programs.fish.shellInitLast = lib.mkAfter ''
+      if test -r ${mailspringConfig}
+        set -gx MAILSPRING_MCP_TOKEN (${jq} -r '${tokenQuery}' ${mailspringConfig})
+      end
+    '';
+    programs.bash.bashrcExtra = lib.mkAfter posixExport;
+    programs.zsh.initContent = lib.mkAfter posixExport;
 
-  # Claude Code reads the token at connect time through this, so a token
-  # regenerated in Mailspring reaches it without a restart. Codex and pi
-  # take the shell export above.
-  programs.claude-code.mcpSecretReaders.MAILSPRING_MCP_TOKEN = "${jq} -r '${tokenQuery}' ${mailspringConfig}";
+    # Claude Code reads the token at connect time through this, so a token
+    # regenerated in Mailspring reaches it without a restart. Codex and pi
+    # take the shell export above.
+    programs.claude-code.mcpSecretReaders.MAILSPRING_MCP_TOKEN = "${jq} -r '${tokenQuery}' ${mailspringConfig}";
 
-  # The `:-` default keeps Codex and pi's config valid when Mailspring has not
-  # created a token yet; the server then answers 401 until it has one.
-  programs.mcp.servers.mailspring = {
-    url = "http://127.0.0.1:2587/mcp";
-    headers.Authorization = "Bearer \${MAILSPRING_MCP_TOKEN:-}";
-  };
-}
+    # The `:-` default keeps Codex and pi's config valid when Mailspring has not
+    # created a token yet; the server then answers 401 until it has one.
+    programs.mcp.servers.mailspring = {
+      url = "http://127.0.0.1:2587/mcp";
+      headers.Authorization = "Bearer \${MAILSPRING_MCP_TOKEN:-}";
+    };
+  }

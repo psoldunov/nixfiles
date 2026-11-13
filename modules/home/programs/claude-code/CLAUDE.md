@@ -270,8 +270,12 @@ Where his skills overlap ours, his won and ours went:
 ## MCP servers
 
 User-level MCP servers are declared in `programs.mcp.servers` in `mcp.nix`.
-Playwright and Mailspring live in `../../workstation/` (Whopper and the Macs),
-with macOS paths for Chrome and Mailspring on the Macs. BigTasty imports
+Playwright lives in `../../workstation/` (Whopper and the Macs), with macOS
+paths for Chrome on the Macs. Mailspring in that directory is Whopper-only;
+the Macs use the `mail-app` stdio server from `../../darwin/default.nix`,
+through the `mail-app-mcp` input's Home Manager module. Open Mail and grant
+the launcher's macOS Automation permission on first use. Moves and Trash
+stay disabled until account mailbox policy is configured. BigTasty imports
 `playwright.nix` alone (`hosts/bigtasty/home/agents.nix`) and gets only the
 headless `playwright` server: the Chrome-profile servers load where there is
 a Chrome, the Macs' cask or `programs.google-chrome`.
@@ -326,7 +330,7 @@ instead:
 - A sops secret's reader is `cat` on its decrypted file, so adding the secret
   to `sops.secrets` is enough. Anything else needs
   `programs.claude-code.mcpSecretReaders.<VAR>`, a shell command that prints
-  the value (Mailspring's token, read from its own config, in
+  the value (Whopper's Mailspring token, read from its own config, in
   `../../workstation/mailspring.nix`).
 
 Evaluation fails on a placeholder with no reader, and on one outside an HTTP
