@@ -74,9 +74,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Apple Mail MCP for the Macs. Bump the reviewed commit deliberately.
+    # Apple Mail MCP for the Macs.
     mail-app-mcp = {
-      url = "github:psoldunov/mail-app-mcp/fc2be2345cf5c0588a498ba195cd3229a7237acf";
+      url = "github:psoldunov/mail-app-mcp/main";
       # Its MCP SDK 1.x needs upstream's nixpkgs pin; unstable ships 2.x.
       inputs.home-manager.follows = "home-manager";
     };
