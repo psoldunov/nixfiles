@@ -13,6 +13,7 @@ final: prev: let
   hashes = {
     "18.23.0" = "sha256-yYi+HN4ZzXKVzmS8i5VdQvsYVeUifLZAyH/AnIQIw/w=";
     "18.24.5" = "sha256-ZE6S1WZ+LrvAB1jHHVl0vJB9I46qbNwysk63Pc5/mlo=";
+    "18.24.6" = "sha256-dWt9L4y5GdKYiOpSsvsZq6ku1S3bykVoOQiMzGMlf1s=";
   };
   newest = lib.last (lib.sort lib.versionOlder (lib.attrNames hashes));
   version =
