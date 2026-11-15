@@ -1,10 +1,16 @@
 {
   config,
+  inputs,
   lib,
   ...
 }: let
   wirelessEnabled = config.networking.wireless.enable;
 in {
+  # Ensemblr's daemon runs from Home Manager (../home/ensemblr.nix), which
+  # can't open ports; this NixOS module only opens the Fleet's TCP 7362.
+  imports = [inputs.concierge.nixosModules.ensemblr];
+  programs.ensemblr.fleet.openFirewall = true;
+
   networking = {
     hostName = "BigTasty";
     defaultGateway = "10.24.24.1";

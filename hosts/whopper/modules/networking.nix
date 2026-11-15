@@ -3,9 +3,17 @@
   # (home/programs/skrepka.nix). Home Manager cannot open firewall ports, so
   # the NixOS module is imported here for `openFirewall` alone, which works
   # without `enable`: TCP 27182-27183 for LAN sync and UDP 5353 for mDNS.
-  imports = [inputs.skrepka.nixosModules.default];
+  #
+  # Ensemblr is the same: its Home Manager module (home/programs/ensemblr.nix)
+  # runs the daemon, and this NixOS module only opens the Fleet's port, TCP
+  # 7362 (Release), so the other Machines in the Fleet reach this one.
+  imports = [
+    inputs.skrepka.nixosModules.default
+    inputs.concierge.nixosModules.ensemblr
+  ];
 
   programs.skrepka.openFirewall = true;
+  programs.ensemblr.fleet.openFirewall = true;
 
   networking.hostName = "Whopper";
 
