@@ -59,10 +59,26 @@
   # The nixpkgs wrapper exports PLAYWRIGHT_MCP_ISOLATED=1 whenever
   # PLAYWRIGHT_MCP_USER_DATA_DIR is empty, and Playwright checks isolated mode
   # before --extension, so without the user data dir it launches a fresh
-  # throwaway profile instead of attaching to the real one.
-  chromeProfileServer = name: {
-    command = playwrightMcp;
-    env.PLAYWRIGHT_MCP_USER_DATA_DIR = chrome.userDataDir;
+  # throwaway profile instead of attaching to the real one. The script
+  # exports it itself because some MCP clients (Concierge) drop a server's
+  # `env` block.
+  #
+  # The extension token (see tokenSecrets) is read here too, at launch.
+  chromeProfileServer = name: let
+    tokenFile = lib.escapeShellArg config.sops.secrets.${tokenSecrets.${name}}.path;
+  in {
+    command = toString (pkgs.writeShellScript "playwright-mcp-${name}" ''
+      export PLAYWRIGHT_MCP_USER_DATA_DIR=${lib.escapeShellArg chrome.userDataDir}
+      ${lib.optionalString (tokenSecrets ? ${name}) ''
+        if [ -r ${tokenFile} ]; then
+          PLAYWRIGHT_MCP_EXTENSION_TOKEN="$(<${tokenFile})"
+          export PLAYWRIGHT_MCP_EXTENSION_TOKEN
+        else
+          echo "playwright-mcp-${name}: ${tokenFile} unreadable, using the connect page" >&2
+        fi
+      ''}
+      exec ${playwrightMcp} "$@"
+    '');
     args = [
       "--extension"
       "--browser"
@@ -75,7 +91,7 @@
   };
 
   # The extension shows a per-profile token that skips the connect page.
-  # It lives in sops and this wrapper reads it at launch, so the value
+  # It lives in sops and chromeProfileServer reads it at launch, so the value
   # never reaches /nix/store or the generated MCP config. Without a
   # readable token the server still starts and falls back to the page.
   # The tokens belong to one Chrome install, so they are listed per host,
@@ -91,21 +107,6 @@
     }
     .${osConfig.networking.hostName}
     or {};
-
-  withExtensionToken = name: let
-    tokenFile = lib.escapeShellArg config.sops.secrets.${tokenSecrets.${name}}.path;
-  in
-    lib.optionalAttrs (tokenSecrets ? ${name}) {
-      command = toString (pkgs.writeShellScript "playwright-mcp-${name}" ''
-        if [ -r ${tokenFile} ]; then
-          PLAYWRIGHT_MCP_EXTENSION_TOKEN="$(<${tokenFile})"
-          export PLAYWRIGHT_MCP_EXTENSION_TOKEN
-        else
-          echo "playwright-mcp-${name}: ${tokenFile} unreadable, using the connect page" >&2
-        fi
-        exec ${playwrightMcp} "$@"
-      '');
-    };
 in
   lib.mkMerge [
     {
@@ -121,10 +122,8 @@ in
     # programs.google-chrome. BigTasty imports this file for the server above.
     (lib.mkIf (isDarwin || config.programs.google-chrome.enable) {
       programs.mcp.servers = {
-        playwright-swiss-cheese =
-          chromeProfileServer "swiss-cheese" // withExtensionToken "swiss-cheese";
-        playwright-almost-always =
-          chromeProfileServer "almost-always" // withExtensionToken "almost-always";
+        playwright-swiss-cheese = chromeProfileServer "swiss-cheese";
+        playwright-almost-always = chromeProfileServer "almost-always";
       };
 
       sops.secrets = lib.genAttrs (lib.attrValues tokenSecrets) (_: {});
