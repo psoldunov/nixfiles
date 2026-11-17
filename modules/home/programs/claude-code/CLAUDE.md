@@ -298,8 +298,8 @@ the OAuth screen chooses which permissions the agent gets.
 `CFD_MAIN_TUNNEL`'s public hostnames are managed in the dashboard, so add
 them there or through this server; Nix `ingress` entries have no effect.
 
-`resend` is Resend's remote server (`https://mcp.resend.com/mcp`): sending
-email, domains, audiences. Sign in through `/mcp` (OAuth, no key in sops).
+`resend` is Resend's remote server (`https://mcp.resend.com/mcp`), for its
+email API. Sign in through `/mcp` (OAuth, no key in sops).
 Resend documents a `claude plugin install resend@claude-plugins-official`
 route; skip it, since a marketplace copy would add this server a second time.
 
