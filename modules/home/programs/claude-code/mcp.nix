@@ -132,6 +132,9 @@ in {
         # docs(). Sign in through /mcp; the OAuth grant picks the permissions.
         cloudflare-api.url = "https://mcp.cloudflare.com/mcp";
 
+        # Resend's hosted server for its email API. OAuth: sign in through /mcp.
+        resend.url = "https://mcp.resend.com/mcp";
+
         # BigTasty's SearXNG (hosts/bigtasty/modules/services/searxng.nix).
         # The Basic Auth login rides in the URL, which mcp-searxng accepts.
         searxng = mcpLaunchEnv "searxng" {
