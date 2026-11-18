@@ -241,7 +241,7 @@
     # hosts/whopper/home/programs/concierge.nix (app + daemon),
     # hosts/whopper/home/programs/ensemblr.nix (Ensemblr's Rust build),
     # hosts/bigtasty/home/ensemblr.nix (headless Ensemblr), both hosts'
-    # modules/networking.nix (Ensemblr's Fleet port) and
+    # modules/networking.nix (Ensemblr's Fleet port and Workspace port range) and
     # hosts/bigtasty/modules/services/concierge-server.nix (Sync server). Bump with
     # `nix flake update concierge`. The repo is private: fetching it needs the
     # GitHub token wired in hosts/whopper/modules/nix.nix.

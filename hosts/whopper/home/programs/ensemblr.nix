@@ -8,6 +8,7 @@
 # `systemctl --user restart ensemblr-daemon`.
 {
   inputs,
+  osConfig,
   pkgs,
   ...
 }: {
@@ -18,6 +19,8 @@
   programs.ensemblr = {
     enable = true;
     ui.autostart = true;
+    # The range the firewall opens (../../modules/networking.nix).
+    portRange = {inherit (osConfig.programs.ensemblr.portRange) from to;};
     # shortcut: nixpkgs#537108's cargo hook points JEMALLOC_OVERRIDE at a
     # system jemalloc that doesn't exist; the package builds its own. Drop
     # once psoldunov/concierge's nix/ensemblr.nix sets dontCargoUseSystemLibs.
