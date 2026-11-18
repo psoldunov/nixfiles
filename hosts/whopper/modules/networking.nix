@@ -5,15 +5,27 @@
   # without `enable`: TCP 27182-27183 for LAN sync and UDP 5353 for mDNS.
   #
   # Ensemblr is the same: its Home Manager module (home/programs/ensemblr.nix)
-  # runs the daemon, and this NixOS module only opens the Fleet's port, TCP
-  # 7362 (Release), so the other Machines in the Fleet reach this one.
+  # runs the daemon, and this NixOS module only opens ports: the Fleet's TCP
+  # 7362 (Release), so the other Machines in the Fleet reach this one, and the
+  # Workspaces' dev-server range, which the Home Manager side reads from here.
   imports = [
     inputs.skrepka.nixosModules.default
     inputs.concierge.nixosModules.ensemblr
   ];
 
   programs.skrepka.openFirewall = true;
-  programs.ensemblr.fleet.openFirewall = true;
+  programs.ensemblr = {
+    fleet.openFirewall = true;
+    # Ensemblr's default 41000-41999 sits inside the kernel's ephemeral range
+    # (32768-60999), where Steam and others bind random ports (Steam held
+    # 41287). 62000-62999 is above it, clear of mosh's UDP 60000-61000, and in
+    # IANA's unassigned dynamic range.
+    portRange = {
+      openFirewall = true;
+      from = 62000;
+      to = 62999;
+    };
+  };
 
   networking.hostName = "Whopper";
 

@@ -7,9 +7,19 @@
   wirelessEnabled = config.networking.wireless.enable;
 in {
   # Ensemblr's daemon runs from Home Manager (../home/ensemblr.nix), which
-  # can't open ports; this NixOS module only opens the Fleet's TCP 7362.
+  # can't open ports; this NixOS module only opens the Fleet's TCP 7362 and
+  # the Workspaces' dev-server range, which the Home Manager side reads from
+  # here. The range is Whopper's, chosen in hosts/whopper/modules/networking.nix:
+  # above the kernel's ephemeral 32768-60999, unlike Ensemblr's default.
   imports = [inputs.concierge.nixosModules.ensemblr];
-  programs.ensemblr.fleet.openFirewall = true;
+  programs.ensemblr = {
+    fleet.openFirewall = true;
+    portRange = {
+      openFirewall = true;
+      from = 62000;
+      to = 62999;
+    };
+  };
 
   networking = {
     hostName = "BigTasty";
