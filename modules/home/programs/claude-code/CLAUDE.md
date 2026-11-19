@@ -169,6 +169,17 @@ pi), and `../codex/skills.nix` links them for Codex. They sit beside the local
 `gpui` skill, which logs runtime quirks; `rules/rust/gpui.md` points at all
 three. Update with `nix flake update gpui-kit` and `rebuild_system`.
 
+Google Chrome's Modern Web Guidance (github.com/GoogleChrome/modern-web-guidance)
+ships two skills in `skills/`: `modern-web-guidance` (web platform best
+practices for HTML, CSS and client-side JS) and `chrome-extensions` (Manifest
+V3). `settings.nix` links both from the `modern-web-guidance` input into
+`~/.claude/skills/` (Claude Code and pi), and `../codex/skills.nix` links them
+for Codex. Skip the repo's marketplace plugin and its `npx modern-web-guidance
+install`, which would shadow these copies. The skill fetches its guides at run
+time with `npx -y modern-web-guidance@latest search|retrieve`, so it needs
+`node` and network; Codex asks to run that outside its sandbox. Update with
+`nix flake update modern-web-guidance` and `rebuild_system`.
+
 `i-have-adhd` shapes answers for an ADHD reader: next action first, numbered
 steps, one closing next action. Its SessionStart hook injects the full ruleset
 only when `~/.claude/.i-have-adhd-always` exists, and `settings.nix` declares
