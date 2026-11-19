@@ -21,5 +21,11 @@ export function cn(...inputs: ClassValue[]) {
 Put it in `lib/utils.ts` (`src/lib/utils.ts` in a `src/` layout), imported as `@/lib/utils` (the
 shadcn/ui location), unless the project already has a home for shared utilities. In plain JavaScript, drop the type import.
 
+**Never store Tailwind class names in constants**, such as `const card = 'rounded-lg border p-6'`
+or a `styles.ts` of class strings, in any file type. Write the classes on the element. A group
+reused frequently becomes a custom utility built with `@apply` in the main stylesheet (`@utility card
+{ @apply …; }` in v4). A lookup keyed by a prop (`sizes[size]`) and shadcn's `cva()` are allowed.
+Rule 6 of the Tailwind rules has the details.
+
 The full Tailwind rules are in [web/tailwind.md](./tailwind.md). They load when you read a
 stylesheet or component file.

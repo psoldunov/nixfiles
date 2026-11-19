@@ -13,7 +13,7 @@ paths:
 
 > Tailwind is the default styling for web frontends ([web/defaults.md](./defaults.md)). This rule
 > applies wherever Tailwind is in use; skip it only in a project that styles with something else.
-> Rules 3 and 4 assume Tailwind v4's CSS-first configuration. Where v3 differs, the rule says so.
+> Rules 3, 4 and 6 assume Tailwind v4's CSS-first configuration. Where v3 differs, the rule says so.
 
 **Use rem for custom lengths. Built-in Tailwind utilities are always allowed, regardless of their
 underlying units. Prefer existing utilities over custom values, and shared theme tokens over
@@ -211,3 +211,38 @@ Arithmetic is not verification. Compile and compare the declarations.
 ```tsx
 className={cn('flex gap-6 p-4', isActive && 'bg-accent', className)}
 ```
+
+## 6. Never store class names in constants
+
+- Do not put Tailwind classes in a variable or constant and pass it to `className`:
+  `const card = 'rounded-lg border p-6'`, `export const focusRing = '…'`, a `styles.ts` of class
+  strings. Write the classes on the element. A constant hides the element's styling from whoever
+  reads the markup, and class sorting and IntelliSense skip plain strings.
+- When a group of classes is reused frequently, make it a custom utility with `@apply` in the
+  project's main stylesheet (the one with `@import "tailwindcss"`), and use its name like any other
+  class. Check the stylesheet for an existing utility first. Name it by role (`card`,
+  `field-label`), not by look (`rounded-gray-box`).
+
+```css
+@utility card {
+  @apply rounded-card border border-line bg-surface p-6 shadow-sm;
+}
+```
+
+```tsx
+<article className={cn('card', isFeatured && 'ring-2 ring-accent', className)}>
+```
+
+- Use `@utility`, not a plain `.card {}` rule: a `@utility` works with variants (`hover:card`,
+  `lg:card`) and is emitted only when used. In v3, write `@layer components { .card { @apply …; } }`
+  instead.
+- Overrides need no extra setup. v4 sorts custom utilities by how many properties they set, so a
+  single-property utility such as `p-8` in `cn('card', 'p-8')` wins over the padding inside `card`;
+  in v3 the `components` layer comes before utilities. `tailwind-merge` keeps both classes, which is
+  correct here. Rule 4's `tailwind-merge` entry is for theme tokens; a composite utility needs none.
+- Two patterns are not constants under this rule:
+  - A lookup keyed by a prop or state that selects whole classes, `const sizes = { sm: 'h-8 px-3',
+    lg: 'h-12 px-6' }` read as `sizes[size]`, kept in the component that reads it (rule 5).
+  - `cva()` variant definitions in shadcn-style components, such as `buttonVariants`.
+- An object of named groups that is not keyed by a prop, `const styles = { card: '…', title: '…' }`,
+  is still a constant. Inline the classes, or make the reused ones utilities.
