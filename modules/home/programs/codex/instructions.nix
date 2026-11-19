@@ -46,7 +46,7 @@
   tailwindFrontmatter = pkgs.writeText "codex-tailwind-frontmatter" ''
     ---
     name: tailwind
-    description: "The user's Tailwind CSS rules: v4, rem lengths, scale tokens over arbitrary values, theme extension, and composing classes with cn(). Use when writing, editing or reviewing CSS, or styled markup in .tsx, .jsx, .html, .vue, .svelte, .astro or .mdx files."
+    description: "The user's Tailwind CSS rules: v4, rem lengths, scale tokens over arbitrary values, theme extension, composing classes with cn(), and reusing class groups as @apply utilities instead of constants. Use when writing, editing or reviewing CSS, or styled markup in .tsx, .jsx, .html, .vue, .svelte, .astro or .mdx files."
     ---
   '';
   tailwindSkill = pkgs.runCommand "codex-tailwind-SKILL.md" {} ''
