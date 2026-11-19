@@ -47,6 +47,10 @@ in {
       # ../codex/skills.nix.
       "${configDir}/skills/gpui-kit".source = "${inputs.gpui-kit}/skills/gpui-kit";
       "${configDir}/skills/gpui-kit-design-guides".source = "${inputs.gpui-kit}/skills/gpui-kit-design-guides";
+      # Google Chrome's Modern Web Guidance; its plugin is only these two skills.
+      # Codex gets them from ../codex/skills.nix.
+      "${configDir}/skills/modern-web-guidance".source = "${inputs.modern-web-guidance}/skills/modern-web-guidance";
+      "${configDir}/skills/chrome-extensions".source = "${inputs.modern-web-guidance}/skills/chrome-extensions";
       # Genealogy research for the former USSR; the repo root is the skill.
       # Codex gets it from ../codex/skills.nix.
       "${configDir}/skills/ex-ussr-kinship-research".source = inputs.ex-ussr-kinship-research;

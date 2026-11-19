@@ -29,6 +29,8 @@ in {
         gpui = local + "/gpui";
         gpui-kit = "${inputs.gpui-kit}/skills/gpui-kit";
         gpui-kit-design-guides = "${inputs.gpui-kit}/skills/gpui-kit-design-guides";
+        modern-web-guidance = "${inputs.modern-web-guidance}/skills/modern-web-guidance";
+        chrome-extensions = "${inputs.modern-web-guidance}/skills/chrome-extensions";
         linear-issue = local + "/linear-issue";
         # The repo root is the skill; Codex reads its agents/openai.yaml too.
         humanizer = "${inputs.humanizer}";
