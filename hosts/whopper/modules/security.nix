@@ -39,8 +39,9 @@ in {
     pki.certificateFiles = ["${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"];
   };
 
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
+  # One plain ssh-agent for the whole session; keychain loads into it. gpg-agent
+  # as the SSH agent wrapped every key AddKeysToAgent handed it in a passphrase
+  # of its own, so apps started by systemd (Ensemblr) kept asking for it.
+  programs.gnupg.agent.enable = true;
+  programs.ssh.startAgent = true;
 }
