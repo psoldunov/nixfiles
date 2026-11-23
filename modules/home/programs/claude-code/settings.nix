@@ -23,6 +23,8 @@
     i-have-adhd = inputs.i-have-adhd;
     # Also pi's extension of the same name (../pi/default.nix).
     ponytail = inputs.ponytail;
+    # Builds a Next.js + Sanity site on psoldunov/sanity-starter.
+    sanity-factory = inputs.sanity-factory;
     # Local mods: function-hook plugins kept in this repo.
     nix-owned-paths = ./mods/nix-owned-paths;
     # Also pi's extension of the same name (../pi/default.nix).

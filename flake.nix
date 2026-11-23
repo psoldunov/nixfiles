@@ -155,6 +155,11 @@
       flake = false;
     };
 
+    sanity-factory = {
+      url = "github:psoldunov/sanity-factory/master";
+      flake = false;
+    };
+
     playwright-cli = {
       url = "github:microsoft/playwright-cli";
       flake = false;

@@ -1034,6 +1034,7 @@
         "playwright-cli": "playwright-cli",
         "ponytail": "ponytail",
         "rea": "rea",
+        "sanity-factory": "sanity-factory",
         "security-audit-skill": "security-audit-skill",
         "skrepka": "skrepka",
         "solaar": "solaar",
@@ -1107,6 +1108,23 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sanity-factory": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1795452336,
+        "narHash": "sha256-tOZcljzDMBdzT+LGW37j724l1xVksQgBOEBZo7kJfZo=",
+        "owner": "psoldunov",
+        "repo": "sanity-factory",
+        "rev": "39e387be6031cf95a031b40b7c8083babaa7f800",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psoldunov",
+        "ref": "master",
+        "repo": "sanity-factory",
         "type": "github"
       }
     },
