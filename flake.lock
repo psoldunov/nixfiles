@@ -1114,11 +1114,11 @@
     "sanity-factory": {
       "flake": false,
       "locked": {
-        "lastModified": 1795464150,
-        "narHash": "sha256-Hyez2mYypUT9zapgOpWzeTH2d3A7fmjK68HKw/4Ji5A=",
+        "lastModified": 1795466230,
+        "narHash": "sha256-jFBjsccE8Y2txfFUVRYxa13mE7bi0AgQFFuU0vNgiNE=",
         "owner": "psoldunov",
         "repo": "sanity-factory",
-        "rev": "86df1e8a343bf0866b8afcde84959a790c475e05",
+        "rev": "2d9ebc14d1f691a8b8bcb1eec8409198c7813c83",
         "type": "github"
       },
       "original": {
