@@ -107,7 +107,12 @@ nix flake update context-mode
 rebuild_system
 ```
 
-`pstack`, `impeccable`, `i-have-adhd` and `ponytail` are wired the same way.
+`pstack`, `impeccable`, `i-have-adhd`, `ponytail` and `sanity-factory` are
+wired the same way. `sanity-factory` (the private repo
+github.com/psoldunov/sanity-factory) builds a Next.js + Sanity site on
+psoldunov/sanity-starter from a Figma file or Linear ticket; its
+`scripts/preflight.sh` checks for `gh`, `bun`, `sanity`, `vercel` and
+`infisical` on `PATH`. Update with `nix flake update sanity-factory`.
 The `impeccable` repo is a marketplace, so `settings.nix` points at its
 `plugin/` subdirectory.
 
