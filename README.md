@@ -458,7 +458,7 @@ Inside Ensemblr, run tests and evaluations through its compute queue.
    };
    ```
 3. Create `secrets/<name>.yaml` and add a matching `creation_rules` entry to [.sops.yaml](.sops.yaml).
-4. Add `<Name>` to `fleetHosts` in [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) so `fleet` and `all` know it. A host the others depend on while they build, like PiHome for DNS, gets `last = true`; one that is often asleep or away gets `roaming = true`.
+4. Add `<Name>` to `fleetHosts` in [modules/home/workstation/scripts.nix](modules/home/workstation/scripts.nix) so `fleet` and `all` know it. Give it a row in the table in [rules/common/fleet.md](modules/home/programs/claude-code/rules/common/fleet.md) too: that rule tells every agent what the host is and how to reach it, and evaluation fails until the row exists. A host the others depend on while they build, like PiHome for DNS, gets `last = true`; one that is often asleep or away gets `roaming = true`.
 
 A macOS host follows [hosts/macflurry](hosts/macflurry) instead: copy its directory, add `<Name> = mkMac "<name>";` to `darwinConfigurations` in [flake.nix](flake.nix), and give it `kind = "darwin"` in `fleetHosts`. Remote sudo also needs a `sudo-<name>` key: its public half in [lib/ssh-keys.nix](lib/ssh-keys.nix) (`identities`, `authorized` and `sudo`), its private half as `SSH_KEY_SUDO_<NAME>` in `secrets/shared.yaml`, and a host block in [workstation/ssh.nix](modules/home/workstation/ssh.nix). Then bootstrap it (see [Bootstrapping a Mac](#bootstrapping-a-mac)).
 
