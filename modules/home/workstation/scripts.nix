@@ -288,6 +288,12 @@
     }
   ];
 
+  # Agents learn the hosts from this rule's table, so every fleet host needs a row.
+  missingFromFleetRule = let
+    rule = builtins.readFile ../programs/claude-code/rules/common/fleet.md;
+  in
+    map (h: h.name) (builtins.filter (h: !lib.hasInfix "| ${h.name} |" rule) fleetHosts);
+
   # Rebuilds, updates and cleans the hosts, reboots, suspends and wakes them,
   # and keeps a report of every run that `fleet fix` hands to an agent.
   fleet = pkgs.callPackage ../../../packages/fleet {
@@ -295,7 +301,10 @@
       localHost = osConfig.networking.hostName;
       sshUser = config.home.username;
       builder = "Whopper";
-      hosts = fleetHosts;
+      hosts =
+        lib.throwIfNot (missingFromFleetRule == [])
+        "Add ${lib.concatStringsSep ", " missingFromFleetRule} to the table in modules/home/programs/claude-code/rules/common/fleet.md"
+        fleetHosts;
       # `fleet update` runs these, in this order, after `nix flake update`.
       pins = map lib.getExe [
         update_claude_code
