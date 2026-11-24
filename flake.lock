@@ -178,11 +178,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1795189840,
-        "narHash": "sha256-RaKp9LQxOuxojAf/9RdvOnh38M8rP4JZenh6buIWfhA=",
+        "lastModified": 1795498026,
+        "narHash": "sha256-HxhquX+E3z6NJ4/DATJAVgjMH0BbcxIwxGzP8VtL364=",
         "owner": "psoldunov",
         "repo": "concierge",
-        "rev": "8fcb6193e1b8d3b771bb66121df0e2f9c05e5005",
+        "rev": "bf4dd469572d8209808ea42dbe66dcb0735c4fa0",
         "type": "github"
       },
       "original": {
@@ -1114,11 +1114,11 @@
     "sanity-factory": {
       "flake": false,
       "locked": {
-        "lastModified": 1795468421,
-        "narHash": "sha256-M12k68Cy97XOH5UluWo/24HoMNtM9O3NvcjPFgIW0m0=",
+        "lastModified": 1795470161,
+        "narHash": "sha256-QOd2NDg++odMqHVaArf6ygf6bIlC/R2B7UvbyrB/IpU=",
         "owner": "psoldunov",
         "repo": "sanity-factory",
-        "rev": "44c4c05ce35c77f807ec9082dba6b70d34325f3c",
+        "rev": "aaed9c438b3cfd6007acd01045b06c39d274efd4",
         "type": "github"
       },
       "original": {
