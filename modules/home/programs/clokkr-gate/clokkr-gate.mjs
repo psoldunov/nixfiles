@@ -98,7 +98,8 @@ const notes = start => `notes ending with "${turnMark(start)}": one line on what
 const logMessage = (task, start, end) =>
   `This turn was client work: log it to Clokkr before you finish. Call the Clokkr MCP tool add_session with ` +
   `task "${task.id}" (${task.path}), start "${localTime(start)}", end "${localTime(end)}", and ${notes(start)}. ` +
-  `Then finish; your answer does not need to mention it.`
+  `The answer you already wrote is your final message: after add_session, end the turn with no more text. ` +
+  `Do not repeat or summarise that answer.`
 
 const newClientMessage = (repo, start, end) =>
   [
@@ -106,7 +107,7 @@ const newClientMessage = (repo, start, end) =>
     `1. Call the Clokkr MCP tool list_tasks and find this client's folder. Match the client's name (its project in the Almost Always Linear workspace, the README, the repo name), not the repo name verbatim.`,
     `2. If that folder has an "${TASK}" task, add the line "repo: ${repo}" to its notes with update_node, keeping the lines already there. If it has none, create_task "${TASK}" in it with billable false and notes "repo: ${repo}". If no folder fits, create_folder with the client's name first.`,
     `3. Call add_session on that ${TASK} task with start "${localTime(start)}", end "${localTime(end)}", and ${notes(start)}.`,
-    `4. Tell the user in your answer which Clokkr folder and task you used or created.`,
+    `4. Write one short line naming the Clokkr folder and task you used or created, and nothing more. Do not repeat or summarise the answer you already wrote.`,
   ].join('\n')
 
 /** The turn as noted at a prompt: `{ start, prompt }`, or the blocked turn pi is continuing. */

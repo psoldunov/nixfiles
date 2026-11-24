@@ -10,7 +10,10 @@ to Clokkr, as one session per turn on the client's `Agents` task.
 2. At the first stop it reads the repo's `origin` remote and Clokkr's tasks.
    For client work it blocks the stop once and hands the agent the exact
    `add_session` values: task id, start, end, and a `[turn …]` marker (the
-   turn's start in base 36) that the agent's notes end with.
+   turn's start in base 36) that the agent's notes end with. The message says
+   the answer already written is the final one, so after `add_session` the
+   agent ends the turn without repeating it (a new client gets one line naming
+   the folder and task). Telling it to "finish" made agents restate the answer.
 3. At the next stop it checks Clokkr for a session on that task whose notes
    carry the marker. If there is none, it writes one itself with the CLI,
    marker included. A nearby start does not count: two short turns can start
