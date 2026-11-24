@@ -55,6 +55,9 @@ test('decide asks once, then falls back', () => {
   const asked = decide({ state, now, repo: 'boundary-digital/amplify-15', cls: known, logged: false })
   assert.equal(asked.act, 'ask')
   assert.match(asked.message, /add_session with task "17" \(Amplify\/Agents\)/)
+  // Agents restated their whole answer after add_session when told to "finish".
+  assert.match(asked.message, /end the turn with no more text/)
+  assert.match(asked.message, /Do not repeat or summarise that answer/)
   assert.equal(decide({ state: { ...state, end: now, asked: true }, now, cls: known, logged: true }).act, 'allow')
   assert.equal(decide({ state: { ...state, end: now, asked: true }, now, cls: known, logged: false }).act, 'fallback')
 })
@@ -72,6 +75,8 @@ test('decide has a new client set up before logging', () => {
   assert.match(message, /create_folder/)
   assert.match(message, /repo: boundary-digital\/new-client/)
   assert.match(message, /notes ending with "\[turn 0\]"/)
+  assert.match(message, /one short line naming the Clokkr folder and task/)
+  assert.match(message, /Do not repeat or summarise the answer you already wrote/)
 })
 
 test('onPrompt starts a turn, but keeps a blocked one pi is continuing', () => {
@@ -190,6 +195,7 @@ test('pi: asks with a follow-up, keeps the turn through it, then falls back', as
   await handlers.agent_end(answer, ctx)
   assert.equal(sent.length, 1)
   assert.match(sent[0], /add_session with task "17"/)
+  assert.match(sent[0], /end the turn with no more text/)
 
   // The follow-up run is the same turn; it ends without logging.
   now += 10_000
