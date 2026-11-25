@@ -73,7 +73,7 @@ in {
       "${configDir}/skills/reverse-engineer-anything".source = "${inputs.rea}/.agents/skills/reverse-engineer-anything";
     }
     // lib.mapAttrs' (name: source: lib.nameValuePair "${configDir}/skills/${name}" {inherit source;}) plugins
-    // lib.mapAttrs' (name: path: lib.nameValuePair "${configDir}/skills/${name}" {source = "${inputs.mattpocock-skills}/skills/${path}";}) (import ./mattpocock-skills.nix);
+    // lib.mapAttrs' (name: source: lib.nameValuePair "${configDir}/skills/${name}" {inherit source;}) (import ./mattpocock-skill-sources.nix {inherit inputs lib pkgs;});
 
   programs.claude-code = {
     enable = true;

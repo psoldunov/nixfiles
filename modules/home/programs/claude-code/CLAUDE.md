@@ -272,6 +272,12 @@ caller. Skip the repo's marketplace plugin and his issue-tracker pipeline
 a per-repo GitHub or GitLab setup, and his `code-review` collides with the
 local one. Update with `nix flake update mattpocock-skills`.
 
+To extend one of his skills without forking it, write
+`skill-addons/<name>.md`: `mattpocock-skill-sources.nix` appends it to that
+skill's `SKILL.md` at build time, for all three agents. `grilling.md` there
+makes `grill-me` and `grill-with-docs` ask each round through Ensemblr's
+`ensemblr_ask_user_question` tool when it is available.
+
 Where his skills overlap ours, his won and ours went:
 
 - `tdd` replaced the `tdd-guide` agent; the testing and workflow rules point

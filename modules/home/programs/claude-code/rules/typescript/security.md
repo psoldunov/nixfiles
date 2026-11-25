@@ -11,11 +11,15 @@ paths:
 
 ## Secret Management
 
-```typescript
-// NEVER: Hardcoded secrets
-const apiKey = "sk-proj-xxxxx"
+Never hardcode a secret:
 
-// ALWAYS: Environment variables
+```typescript
+const apiKey = "sk-proj-xxxxx"
+```
+
+Read it from the environment, and fail fast when it is missing:
+
+```typescript
 const apiKey = process.env.OPENAI_API_KEY
 
 if (!apiKey) {

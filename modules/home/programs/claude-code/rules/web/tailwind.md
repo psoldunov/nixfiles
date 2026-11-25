@@ -148,8 +148,11 @@ on the framework: `.next/static` for Next.js, `dist/` for Vite, and so on.
 ```bash
 find .next/static -name '*.css' -exec cat {} + > /tmp/compiled.css
 grep -o 'aspect-video[^{]*{[^}]*}' /tmp/compiled.css
+```
 
-# Is a variable emitted?
+Check whether a variable is emitted:
+
+```bash
 grep -q -- '--color-accent:' /tmp/compiled.css && echo emitted || echo 'not emitted'
 ```
 
@@ -158,11 +161,11 @@ grep -q -- '--color-accent:' /tmp/compiled.css && echo emitted || echo 'not emit
 - Search the concatenated file rather than passing `--include='*.css'` to a recursive grep: on
   macOS `grep` is often `ugrep`, which warns on that flag and can return a different result set.
 - A fractional step is escaped in the compiled selector, so escape it in the pattern too. A plain
-  `w-155\.5` matches nothing and looks like a class that failed to emit:
+  `w-155\.5` matches nothing and looks like a class that failed to emit. This one prints
+  `w-155\.5{width:calc(var(--spacing) * 155.5)}`:
 
   ```bash
   grep -o 'w-155\\\.5[^{]*{[^}]*}' /tmp/compiled.css
-  # w-155\.5{width:calc(var(--spacing) * 155.5)}
   ```
 
 - Variant-prefixed classes land as `.lg\:w-155\.5` and pseudo-element ones as

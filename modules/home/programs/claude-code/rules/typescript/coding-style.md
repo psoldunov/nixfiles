@@ -11,17 +11,28 @@ paths:
 
 ## Immutability
 
-Use spread operator for immutable updates:
+Use spread operator for immutable updates.
+
+Wrong, it mutates the caller's object:
 
 ```typescript
-// WRONG: Mutation
 function updateUser(user, name) {
-  user.name = name  // MUTATION!
+  user.name = name
   return user
 }
+```
 
-// CORRECT: Immutability
-function updateUser(user, name) {
+Right, it returns a new object:
+
+```typescript
+/**
+ * Renames a user without touching the original.
+ *
+ * @param user - The user to rename.
+ * @param name - The new name.
+ * @returns A copy of `user` with `name` replaced.
+ */
+function updateUser(user: User, name: string): User {
   return {
     ...user,
     name
