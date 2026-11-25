@@ -1,6 +1,7 @@
 # Matt Pocock's skills (the mattpocock-skills flake input), linked one by one:
-# skill name -> its folder under the input's skills/. settings.nix links them
-# for Claude Code and pi, ../codex/skills.nix for Codex.
+# skill name -> its folder under the input's skills/.
+# ./mattpocock-skill-sources.nix turns this into store folders (adding any
+# ./skill-addons/<name>.md); settings.nix and ../codex/skills.nix link those.
 # Left out on purpose: the issue-tracker pipeline (to-spec, to-tickets,
 # implement*, wayfinder, triage, setup-matt-pocock-skills, ask-matt) and his
 # code-review, which collides with the local one.

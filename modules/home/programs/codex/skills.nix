@@ -20,7 +20,7 @@
 in {
   config = lib.mkIf config.programs.codex.enable {
     programs.codex.skills =
-      lib.mapAttrs (_: path: "${inputs.mattpocock-skills}/skills/${path}") (import ../claude-code/mattpocock-skills.nix)
+      import ../claude-code/mattpocock-skill-sources.nix {inherit inputs lib pkgs;}
       // {
         code-review = local + "/code-review";
         council = local + "/council";
