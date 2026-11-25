@@ -84,6 +84,8 @@ violation:
    — "Many small files > few large files")`. The author needs to be able to find and read
    the rule for themselves.
 4. **Severity follows the rule's intent**, not its location:
+   - A rule that states its own severity → that severity
+     (`~/.claude/rules/common/comments.md` → **Blocking**).
    - Security / data-integrity / auth rules → **Blocking**.
    - Architecture / patterns / file organization / TDD rules → **Should fix before merge**.
    - Style / naming / comment-policy rules → **Nits** (unless the rule explicitly says
@@ -108,7 +110,7 @@ they don't.
 4. **Data integrity** — race conditions, missing transactions, optimistic UI without rollback, cache invalidation gaps after mutations.
 5. **Performance** — N+1 queries, waterfall fetches, blocking the main thread, oversized client bundles, hydration cost, missing memoization where it actually matters (and removing it where it doesn't).
 6. **API design** — naming, surface area, backward compatibility, error shapes, idempotency.
-7. **Readability** — naming, function size, nesting depth, comment quality (defaults: no comments unless the WHY is non-obvious).
+7. **Readability** — naming, function size, nesting depth, doc comments and comment placement (`~/.claude/rules/common/comments.md`).
 8. **Tests** — coverage of the change, not coverage as a number. Integration > unit when both are an option for the same behavior.
 9. **Style** — last. Lint should catch this; you should not.
 
@@ -137,7 +139,7 @@ Produce a single review report with this structure:
 
 - Cite `path:line` for every concrete issue. Vague reviews are useless reviews.
 - When you say "this is wrong," say *why* and what the right shape looks like — in code, not prose.
-- Distinguish **blocking** (correctness, security, data integrity, type holes) from **should fix** (design, perf with measurable impact) from **nits** (taste, style, comments). Do not pad blocking with nits.
+- Distinguish **blocking** (correctness, security, data integrity, type holes) from **should fix** (design, perf with measurable impact) from **nits** (taste, style). Do not pad blocking with nits.
 - If the diff is too large to review responsibly in one pass, say so and propose how to split it. Do not rubber-stamp.
 - If you don't have enough context (missing file, unclear intent), ask — do not guess and approve.
 - Never invent issues to look thorough. If the change is good, say so plainly.
