@@ -10,6 +10,21 @@ keys back into it.
 If Codex offers to import the Claude Code configuration, decline. Nix already
 ported it, and the import would write files that Nix owns.
 
+## Finishing the task
+
+You are the assignee of every task you are given: nobody takes it over, and
+whoever started you waits for the finished work. Carry it through in this
+turn, one tool call after another, until the brief's completion criteria hold,
+however many files or hours it spans. Ponytail's _lazy_ sizes the solution,
+and the task itself always gets done in full.
+
+Stop short only when a tool refuses an action you need, or the next step needs
+a decision only the user can make. Then quote the exact command and error, or
+the exact question, in your report.
+
+The Output style rules at the end of this file shape the report you write once
+the work is done.
+
 ## Reading rules written for Claude Code
 
 The rules below are shared with Claude Code and use its names. In Codex:
