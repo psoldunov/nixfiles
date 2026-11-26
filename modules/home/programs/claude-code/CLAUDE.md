@@ -325,6 +325,17 @@ email API. Sign in through `/mcp` (OAuth, no key in sops).
 Resend documents a `claude plugin install resend@claude-plugins-official`
 route; skip it, since a marketplace copy would add this server a second time.
 
+`insane-forms` and `insane-forms-admin` are the two remote servers of Insane
+Forms, the user's own form backend (github.com/psoldunov/insane-forms; ADR
+`docs/adr/0005-admins-have-their-own-portal-and-mcp.md` there). `insane-forms`
+(`https://app.insaneforms.com/mcp`) works on the user's own Workspaces, Sites,
+Forms and Submissions, with the `submissions` and `manage` scopes.
+`insane-forms-admin` (`https://app.insaneforms.com/mcp/admin`) is the platform
+admin portal: people, Workspaces, failed Deliveries and server logs, never
+Submission content. Its `admin` scope is granted only to an Admin with
+two-factor authentication on, and a token for one server does not work on the
+other. Both are OAuth only: sign in to each through `/mcp`.
+
 `searxng` is nixpkgs' `mcp-searxng` (stdio) pointed at BigTasty's SearXNG
 (`hosts/bigtasty/modules/services/searxng.nix`). `SEARXNG_URL`
 (`secrets/shared.yaml`) is `https://psoldunov:<password>@search.theswisscheese.com`;

@@ -78,7 +78,8 @@ the old Mailspring entry after the mutable settings merge on activation.
 
 OAuth servers sign in once per machine: `codex mcp login <name>` for
 `figma-almost-always`, `figma-personal`, `linear-swiss-cheese`,
-`linear-almost-always`, `cloudflare-api`, `resend` and `vercel`. Context7 needs
+`linear-almost-always`, `cloudflare-api`, `resend`, `insane-forms`,
+`insane-forms-admin` and `vercel`. Context7 needs
 no login.
 
 ## Plugins

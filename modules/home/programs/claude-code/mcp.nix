@@ -135,6 +135,14 @@ in {
         # Resend's hosted server for its email API. OAuth: sign in through /mcp.
         resend.url = "https://mcp.resend.com/mcp";
 
+        # Insane Forms (github.com/psoldunov/insane-forms). Two servers, as the
+        # app keeps them apart: /mcp reaches your own Workspaces, Sites, Forms
+        # and Submissions; /mcp/admin is the platform admin portal (people,
+        # Workspaces, Deliveries, logs) and grants its `admin` scope only to an
+        # Admin with two-factor auth on. OAuth only: sign in to each via /mcp.
+        insane-forms.url = "https://app.insaneforms.com/mcp";
+        insane-forms-admin.url = "https://app.insaneforms.com/mcp/admin";
+
         # BigTasty's SearXNG (hosts/bigtasty/modules/services/searxng.nix).
         # The Basic Auth login rides in the URL, which mcp-searxng accepts.
         searxng = mcpLaunchEnv "searxng" {
